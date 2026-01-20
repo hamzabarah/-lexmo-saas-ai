@@ -18,8 +18,8 @@ function PricingContent() {
     const hasAmbassadorCode = searchParams.get('ref') || searchParams.get('code');
 
     // PLACEHOLDERS - REPLACE WITH YOUR ACTUAL STRIPE PAYMENT LINKS
-    const SPARK_LINK = "https://buy.stripe.com/PLACEHOLDER_SPARK";
-    const EMPEROR_LINK = "https://buy.stripe.com/PLACEHOLDER_EMPEROR";
+    const SPARK_LINK = "https://buy.stripe.com/test_3cIcN55WU4bLeOheJ5gfu07"; // Updated
+    const EMPEROR_LINK = "https://buy.stripe.com/test_00w9ATcligYx0Xr1Wjgfu08"; // Updated
     const LEGEND_LINK = "https://buy.stripe.com/PLACEHOLDER_LEGEND";
 
     return (
