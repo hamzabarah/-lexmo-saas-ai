@@ -52,31 +52,34 @@ export default function AvisClients() {
                         <FadeIn
                             key={review.id}
                             delay={index * 0.05}
-                            className="group relative rounded-2xl overflow-hidden glass-card hover:border-[#ffd700]/50 transition-all duration-300"
+                            className="group"
                         >
-                            {/* Badge Amount & Time - Top Left */}
-                            <div dir="ltr" className="absolute top-3 left-3 z-10 bg-gradient-to-r from-[#ffd700] to-orange-500 px-3 py-1.5 rounded-full shadow-lg flex items-center gap-2">
+                            {/* Badge Amount & Time - OUTSIDE, ABOVE the card */}
+                            <div dir="ltr" className="mb-2 bg-gradient-to-r from-[#ffd700] to-orange-500 px-3 py-1.5 rounded-full shadow-lg flex items-center gap-2 w-fit">
                                 <span className="text-black font-bold font-orbitron text-sm">💰 {review.amount}</span>
                                 <span className="text-black/80 text-xs font-bold">⏱️ {review.time}</span>
                             </div>
 
-                            {/* Verified Badge - Top Right */}
-                            <div className="absolute top-3 right-3 z-10 bg-green-500 p-1.5 rounded-full shadow-lg">
-                                <CheckCircle size={16} className="text-white" />
-                            </div>
+                            {/* Card with Image - Clean, no overlays */}
+                            <div className="relative rounded-2xl overflow-hidden glass-card hover:border-[#ffd700]/50 transition-all duration-300">
+                                {/* Verified Badge - Top Right INSIDE card */}
+                                <div className="absolute top-3 right-3 z-10 bg-green-500 p-1.5 rounded-full shadow-lg">
+                                    <CheckCircle size={16} className="text-white" />
+                                </div>
 
-                            {/* Full Image - No Cropping */}
-                            <div className="relative bg-gray-900">
-                                <img
-                                    src={review.image}
-                                    alt={`Témoignage ${review.amount} en ${review.time}`}
-                                    className="w-full h-auto object-contain"
-                                    loading="lazy"
-                                />
-                            </div>
+                                {/* Full Image - No Cropping */}
+                                <div className="relative bg-gray-900">
+                                    <img
+                                        src={review.image}
+                                        alt={`Témoignage ${review.amount} en ${review.time}`}
+                                        className="w-full h-auto object-contain"
+                                        loading="lazy"
+                                    />
+                                </div>
 
-                            {/* Subtle Bottom Gradient */}
-                            <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
+                                {/* Subtle Bottom Gradient */}
+                                <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
+                            </div>
                         </FadeIn>
                     ))}
                 </div>
