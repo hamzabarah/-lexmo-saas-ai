@@ -6,13 +6,17 @@ import supabaseAdmin from '@/lib/supabaseAdmin';
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 export async function POST(req: Request) {
+    console.log('🔔 Webhook received at:', new Date().toISOString());
+
     const body = await req.text();
     const sig = (await headers()).get('stripe-signature') as string;
+
+    console.log('📝 Signature present:', !!sig);
 
     // Lazy initialization of Stripe to avoid build-time errors
     const stripeKey = process.env.STRIPE_SECRET_KEY;
     if (!stripeKey) {
-        console.error('Missing STRIPE_SECRET_KEY');
+        console.error('❌ Missing STRIPE_SECRET_KEY');
         return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
     }
 
@@ -25,46 +29,48 @@ export async function POST(req: Request) {
     try {
         if (!endpointSecret) throw new Error('Missing STRIPE_WEBHOOK_SECRET');
         event = stripe.webhooks.constructEvent(body, sig, endpointSecret);
+        console.log('✅ Webhook signature verified. Event type:', event.type);
     } catch (err: any) {
-        console.error(`Webhook Error: ${err.message}`);
+        console.error(`❌ Webhook Error: ${err.message}`);
         return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 });
     }
 
     // Handle the event
     switch (event.type) {
         case 'checkout.session.completed':
+            console.log('💳 Processing checkout.session.completed');
             const session = event.data.object as Stripe.Checkout.Session;
             await handleCheckoutSessionCompleted(session);
             break;
         default:
-            console.log(`Unhandled event type ${event.type}`);
+            console.log(`ℹ️ Unhandled event type ${event.type}`);
     }
 
     return NextResponse.json({ received: true });
 }
 
 async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
+    console.log('🎯 handleCheckoutSessionCompleted started');
+
     const email = session.customer_details?.email;
-    const clientReferenceId = session.client_reference_id; // Could be affiliate ID
-    const metadata = session.metadata; // Expecting { plan: 'spark' | 'emperor' | 'legend' }
+    const clientReferenceId = session.client_reference_id;
+    const metadata = session.metadata;
+
+    console.log('📧 Email:', email);
+    console.log('🏷️ Metadata:', metadata);
 
     if (!email) {
-        console.error('No email found in session');
+        console.error('❌ No email found in session');
         return;
     }
 
-    const plan = metadata?.plan || 'spark'; // Default to spark if missing
-
-    // 1. Check if user exists
-    const { data: { users }, error: searchError } = await supabaseAdmin.auth.admin.listUsers();
-    // Note: listUsers isn't efficient for lookup by email but standard 'getUserByEmail' doesn't exist in admin API directly in same way. 
-    // Actually, supabaseAdmin.auth.admin.listUsers() is paginated.
-    // Better: Try to create, catch error if exists.
+    const plan = metadata?.plan || 'spark';
+    console.log('📦 Plan:', plan);
 
     let userId: string | null = null;
 
     // Try to create user
-    // We set email_confirm: true so they can login immediately (if we send them a magic link or they reset password)
+    console.log('👤 Attempting to create user...');
     const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
         email: email,
         email_confirm: true,
@@ -72,8 +78,7 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
     });
 
     if (createError) {
-        // User likely exists
-        console.log('User might already exist:', createError.message);
+        console.log('⚠️ User creation error (might already exist):', createError.message);
 
         // Find the user ID by email manually? Or just upsert profile by email? 
         // Profiles table uses ID as PK. We need the ID.
@@ -104,9 +109,10 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
 
     } else {
         userId = newUser.user.id;
-        console.log('Created new user:', userId);
+        console.log('✅ Created new user with ID:', userId);
 
         // Send password reset email (acts as magic link for first login)
+        console.log('📨 Attempting to send welcome email...');
         try {
             const { data: resetData, error: resetError } = await supabaseAdmin.auth.resetPasswordForEmail(
                 email,
@@ -116,17 +122,18 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
             );
 
             if (resetError) {
-                console.error('Error sending reset email:', resetError);
+                console.error('❌ Error sending reset email:', resetError);
             } else {
-                console.log('Reset/Welcome email sent to:', email);
+                console.log('✅ Reset/Welcome email sent successfully to:', email);
             }
         } catch (error) {
-            console.error('Failed to send welcome email:', error);
+            console.error('❌ Failed to send welcome email:', error);
         }
     }
 
     if (userId) {
         // 2. Grant Access (Update Profile)
+        console.log('💾 Updating profile for user:', userId);
         const { error: updateError } = await supabaseAdmin
             .from('profiles')
             .upsert({
@@ -138,9 +145,11 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
             });
 
         if (updateError) {
-            console.error('Error updating profile:', updateError);
+            console.error('❌ Error updating profile:', updateError);
         } else {
-            console.log(`Successfully granted ${plan} access to ${email}`);
+            console.log(`✅ Successfully granted ${plan} access to ${email}`);
         }
     }
+
+    console.log('🏁 handleCheckoutSessionCompleted completed');
 }
