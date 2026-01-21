@@ -125,7 +125,7 @@ export default function PaymentSuccessPage() {
                 </div>
 
                 {/* Info Box */}
-                <div className="bg-[#0f172a] border border-white/10 rounded-xl p-4 text-center">
+                <div className="bg-[#0f172a] border border-white/10 rounded-xl p-4 text-center mb-6">
                     <p className="text-gray-400 text-sm font-cairo mb-2">
                         💡 نصيحة: افتح بريدك الإلكتروني وأرسل لنا الآن
                     </p>
@@ -133,6 +133,18 @@ export default function PaymentSuccessPage() {
                         هل تحتاج مساعدة؟ راسلنا على نفس البريد
                     </p>
                 </div>
+
+                {/* Email Button */}
+                <a
+                    href="mailto:contact@lexmo.ai?subject=تفعيل حساب LEXMO&body=مرحباً،%0D%0A%0D%0Aالبريد الإلكتروني المستخدم في الدفع: %0D%0Aالباقة المشتراة: %0D%0A%0D%0A(يرجى إرفاق لقطة شاشة لتأكيد الدفع)"
+                    className="block w-full bg-gradient-to-r from-[#00d2ff] to-[#9d50bb] text-white text-center py-4 rounded-xl font-bold text-lg hover:scale-[1.02] transition-transform shadow-lg shadow-cyan-500/25 font-cairo"
+                >
+                    📧 إرسال البريد الإلكتروني الآن
+                </a>
+
+                <p className="text-center text-gray-500 text-xs mt-4 font-cairo">
+                    سيتم فتح تطبيق البريد الإلكتروني الخاص بك مع رسالة جاهزة
+                </p>
             </div>
         </div>
     );
