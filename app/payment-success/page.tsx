@@ -124,26 +124,32 @@ export default function PaymentSuccessPage() {
                     </div>
                 </div>
 
-                {/* Info Box */}
-                <div className="bg-[#0f172a] border border-white/10 rounded-xl p-4 text-center mb-6">
-                    <p className="text-gray-400 text-sm font-cairo mb-2">
-                        💡 نصيحة: افتح بريدك الإلكتروني وأرسل لنا الآن
+                {/* Simple Email Copy Box */}
+                <div className="bg-gradient-to-r from-[#00d2ff]/10 to-[#9d50bb]/10 border-2 border-[#00d2ff]/30 rounded-xl p-6 text-center">
+                    <p className="text-white font-bold text-lg mb-3 font-cairo">
+                        📧 أرسل بريد إلكتروني إلى:
                     </p>
-                    <p className="text-gray-500 text-xs font-cairo">
-                        هل تحتاج مساعدة؟ راسلنا على نفس البريد
-                    </p>
+                    <div className="flex items-center justify-center gap-3 mb-4">
+                        <code className="text-[#00d2ff] font-mono text-xl bg-[#0f172a] px-4 py-2 rounded-lg">
+                            contact@lexmo.ai
+                        </code>
+                        <button
+                            onClick={() => handleCopy('contact@lexmo.ai')}
+                            className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors flex items-center gap-2"
+                        >
+                            <Copy className="w-5 h-5 text-white" />
+                            <span className="text-white font-cairo text-sm">نسخ</span>
+                        </button>
+                    </div>
+                    {copied && (
+                        <p className="text-green-400 font-bold font-cairo animate-pulse">
+                            ✅ تم النسخ !
+                        </p>
+                    )}
                 </div>
 
-                {/* Email Button */}
-                <a
-                    href="mailto:contact@lexmo.ai?subject=Activation LEXMO&body=Email:%20%0D%0APack:%20%0D%0A%0D%0A(Attach payment screenshot)"
-                    className="block w-full bg-gradient-to-r from-[#00d2ff] to-[#9d50bb] text-white text-center py-4 rounded-xl font-bold text-lg hover:scale-[1.02] transition-transform shadow-lg shadow-cyan-500/25 font-cairo"
-                >
-                    📧 إرسال البريد الإلكتروني الآن
-                </a>
-
-                <p className="text-center text-gray-500 text-xs mt-4 font-cairo">
-                    سيتم فتح تطبيق البريد الإلكتروني الخاص بك مع رسالة جاهزة
+                <p className="text-center text-gray-400 text-sm mt-4 font-cairo">
+                    💡 انسخ البريد الإلكتروني وأرسل لنا رسالة مع معلومات الدفع
                 </p>
             </div>
         </div>
