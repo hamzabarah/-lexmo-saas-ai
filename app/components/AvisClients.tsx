@@ -43,12 +43,12 @@ export default function AvisClients() {
             <style jsx>{`
                 @keyframes verified-pulse {
                     0%, 100% {
+                        transform: scale(1);
                         opacity: 1;
-                        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
                     }
                     50% {
-                        opacity: 0.9;
-                        box-shadow: 0 0 15px 5px rgba(34, 197, 94, 0.4);
+                        transform: scale(1.1);
+                        opacity: 0.7;
                     }
                 }
                 .verified-badge {
@@ -71,19 +71,14 @@ export default function AvisClients() {
                             delay={index * 0.05}
                             className="group"
                         >
-                            {/* Badge Amount & Time - OUTSIDE, ABOVE the card */}
+                            {/* Badge Amount & Time - ABOVE the card */}
                             <div dir="ltr" className="mb-2 bg-gradient-to-r from-[#ffd700] to-orange-500 px-3 py-1.5 rounded-full shadow-lg flex items-center gap-2 w-fit">
                                 <span className="text-black font-bold font-orbitron text-sm">💰 {review.amount}</span>
                                 <span className="text-black/80 text-xs font-bold">⏱️ {review.time}</span>
                             </div>
 
-                            {/* Card with Image - Clean, no overlays */}
+                            {/* Card with Image */}
                             <div className="relative rounded-2xl overflow-hidden glass-card hover:border-[#ffd700]/50 transition-all duration-300">
-                                {/* Verified Badge - Top Right with PULSE animation */}
-                                <div className="verified-badge absolute top-3 right-3 z-10 bg-green-500 p-1.5 rounded-full shadow-lg">
-                                    <CheckCircle size={16} className="text-white" />
-                                </div>
-
                                 {/* Full Image - No Cropping */}
                                 <div className="relative bg-gray-900">
                                     <img
@@ -92,6 +87,12 @@ export default function AvisClients() {
                                         className="w-full h-auto object-contain"
                                         loading="lazy"
                                     />
+                                </div>
+
+                                {/* Verified Badge - BOTTOM RIGHT with PULSE animation */}
+                                <div className="verified-badge absolute bottom-3 right-3 z-10 bg-green-500 px-2 py-1 rounded-full shadow-lg flex items-center gap-1">
+                                    <CheckCircle size={14} className="text-white" />
+                                    <span className="text-white text-xs font-bold">Verified</span>
                                 </div>
 
                                 {/* Subtle Bottom Gradient */}
