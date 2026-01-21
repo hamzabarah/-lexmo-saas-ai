@@ -79,7 +79,6 @@ export default function Hero() {
                     className="relative"
                 >
                     <div className="relative w-full aspect-square max-w-md mx-auto">
-                        <div className="absolute inset-0 bg-gradient-to-br from-[#00d2ff] to-[#9d50bb] rounded-3xl opacity-20 blur-3xl transform rotate-6 animate-pulse"></div>
                         <div className="relative w-full h-full bg-[#0f172a] border border-white/10 rounded-3xl flex items-center justify-center overflow-hidden shadow-2xl backdrop-blur-sm">
                             <img src="/images/mokup.jpg" alt="Dashboard Mockup" className="w-full h-full object-cover rounded-3xl" />
                         </div>
