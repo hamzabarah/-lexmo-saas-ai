@@ -140,8 +140,8 @@ function PricingContent() {
             </div>
         </section>
     );
-    );
 }
+
 
 function CountdownTimer() {
     const [time, setTime] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
