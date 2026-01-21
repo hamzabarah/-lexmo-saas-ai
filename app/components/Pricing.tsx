@@ -17,11 +17,6 @@ function PricingContent() {
     const searchParams = useSearchParams();
     const hasAmbassadorCode = searchParams.get('ref') || searchParams.get('code');
 
-    // PLACEHOLDERS - REPLACE WITH YOUR ACTUAL STRIPE PAYMENT LINKS
-    const SPARK_LINK = "https://buy.stripe.com/test_3cIcN55WU4bLeOheJ5gfu07"; // Updated
-    const EMPEROR_LINK = "https://buy.stripe.com/test_00w9ATcligYx0Xr1Wjgfu08"; // Updated
-    const LEGEND_LINK = "https://buy.stripe.com/PLACEHOLDER_LEGEND";
-
     return (
         <section id="pricing" className="py-20 relative overflow-hidden">
             {/* Background Glows */}
@@ -67,7 +62,7 @@ function PricingContent() {
                         ]}
                         buttonText="🚀 ابدأ رحلتك"
                         ambassadorProfit="498"
-                        paymentLink={SPARK_LINK}
+                        plan="spark"
                     />
 
                     {/* PACK 2: EMPEROR */}
@@ -95,7 +90,7 @@ function PricingContent() {
                             isPopular
                             buttonText="⚡ انضم إلى النخبة"
                             ambassadorProfit="748"
-                            paymentLink={EMPEROR_LINK}
+                            plan="emperor"
                         />
                     </div>
 
@@ -122,28 +117,29 @@ function PricingContent() {
                         badge="للجادين فقط"
                         paymentOption="أو 3 × €3,500"
                         warningText="⚠️ 5 أماكن فقط شهرياً"
-                        paymentLink={LEGEND_LINK}
+                        plan="legend"
                     />
                 </FadeIn>
+            </FadeIn>
 
-                <div className="mt-20 text-center">
-                    <div className="flex justify-center flex-wrap gap-8 mb-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-                        <div className="flex items-center gap-2 text-xl font-bold text-gray-400"><CreditCard /> STRIPE</div>
-                        <div className="flex items-center gap-2 text-xl font-bold text-gray-400">VISA</div>
-                        <div className="flex items-center gap-2 text-xl font-bold text-gray-400">MASTERCARD</div>
-                        <div className="flex items-center gap-2 text-xl font-bold text-gray-400">PAYPAL</div>
-                    </div>
-                    <div className="flex items-center justify-center gap-2 text-gray-400 text-sm mb-4">
-                        <Shield className="w-4 h-4 text-[#10b981]" />
-                        دفع آمن 100% عبر Stripe
-                    </div>
-                    <div className="flex items-center justify-center gap-2 text-gray-400 text-sm">
-                        <Shield className="w-4 h-4 text-[#10b981]" />
-                        ضمان استرداد 30 يوم - بدون أسئلة
-                    </div>
+            <div className="mt-20 text-center">
+                <div className="flex justify-center flex-wrap gap-8 mb-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+                    <div className="flex items-center gap-2 text-xl font-bold text-gray-400"><CreditCard /> STRIPE</div>
+                    <div className="flex items-center gap-2 text-xl font-bold text-gray-400">VISA</div>
+                    <div className="flex items-center gap-2 text-xl font-bold text-gray-400">MASTERCARD</div>
+                    <div className="flex items-center gap-2 text-xl font-bold text-gray-400">PAYPAL</div>
+                </div>
+                <div className="flex items-center justify-center gap-2 text-gray-400 text-sm mb-4">
+                    <Shield className="w-4 h-4 text-[#10b981]" />
+                    دفع آمن 100% عبر Stripe
+                </div>
+                <div className="flex items-center justify-center gap-2 text-gray-400 text-sm">
+                    <Shield className="w-4 h-4 text-[#10b981]" />
+                    ضمان استرداد 30 يوم - بدون أسئلة
                 </div>
             </div>
-        </section>
+        </div>
+        </section >
     );
 }
 
@@ -195,12 +191,38 @@ function TimeBox({ value, label }: { value: number, label: string }) {
 
 function PriceCard({
     title, subtitle, price, original, features, missingFeatures, badge, isPopular, buttonText, accentColor,
-    ambassadorProfit, paymentOption, warningText, paymentLink
+    ambassadorProfit, paymentOption, warningText, plan
 }: {
-    title: string, subitle?: string, subtitle: string, price: string, original: string, features: string[],
+    title: string, subtitle: string, price: string, original: string, features: string[],
     missingFeatures?: string[], badge?: string, isPopular?: boolean, buttonText: string, accentColor?: 'violet' | 'cyan',
-    ambassadorProfit?: string, paymentOption?: string, warningText?: string, paymentLink?: string
+    ambassadorProfit?: string, paymentOption?: string, warningText?: string, plan: string
 }) {
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleCheckout = async () => {
+        setIsLoading(true);
+        try {
+            const response = await fetch('/api/create-checkout-session', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ plan })
+            });
+
+            const data = await response.json();
+
+            if (data.url) {
+                window.location.href = data.url;
+            } else {
+                alert('Erreur lors de la création de la session de paiement');
+                setIsLoading(false);
+            }
+        } catch (error) {
+            console.error('Checkout error:', error);
+            alert('Erreur réseau. Veuillez réessayer.');
+            setIsLoading(false);
+        }
+    };
+
     const borderColor = accentColor === 'violet' ? 'border-[#a855f7]/50 hover:border-[#a855f7]' : isPopular ? 'border-[#00d2ff]' : 'border-white/10';
     const btnClass = accentColor === 'violet'
         ? 'bg-[#a855f7] hover:bg-[#9333ea] text-white shadow-lg shadow-purple-500/25'
@@ -231,20 +253,13 @@ function PriceCard({
                 )}
             </div>
 
-            {paymentLink ? (
-                <a
-                    href={paymentLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`block w-full text-center py-4 rounded-xl font-bold mb-6 transition-all hover:scale-[1.02] active:scale-95 duration-200 ${btnClass}`}
-                >
-                    {buttonText}
-                </a>
-            ) : (
-                <button className={`w-full py-4 rounded-xl font-bold mb-6 transition-all hover:scale-[1.02] active:scale-95 duration-200 ${btnClass}`}>
-                    {buttonText}
-                </button>
-            )}
+            <button
+                onClick={handleCheckout}
+                disabled={isLoading}
+                className={`w-full py-4 rounded-xl font-bold mb-6 transition-all hover:scale-[1.02] active:scale-95 duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${btnClass}`}
+            >
+                {isLoading ? '⏳ جاري التحميل...' : buttonText}
+            </button>
 
             {warningText && (
                 <div className="text-center text-xs text-red-400 font-bold mb-6 animate-pulse border border-red-500/20 bg-red-500/5 py-2 rounded-lg">
