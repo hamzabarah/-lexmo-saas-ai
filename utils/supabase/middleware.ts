@@ -56,7 +56,25 @@ export async function updateSession(request: NextRequest) {
 
     const { data: { user } } = await supabase.auth.getUser()
 
-    // Protect /dashboard routes
+    // Public routes that don't require authentication
+    const publicRoutes = [
+        '/',
+        '/login',
+        '/register',
+        '/reset-password',
+        '/payment-success',
+        '/api/webhooks/stripe',
+    ];
+
+    const isPublicRoute = publicRoutes.some(route =>
+        request.nextUrl.pathname === route || request.nextUrl.pathname.startsWith(route)
+    );
+
+    // Allow public routes without authentication
+    if (isPublicRoute) {
+        return response;
+    }
+
     // Protect /dashboard routes
     if (request.nextUrl.pathname.startsWith('/dashboard') && !user) {
         return NextResponse.redirect(new URL('/login', request.url))
