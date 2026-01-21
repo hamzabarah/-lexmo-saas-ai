@@ -23,24 +23,24 @@ export default function PaymentSuccessPage() {
                 </div>
 
                 {/* Title */}
-                <h1 className="text-3xl md:text-4xl font-bold text-center mb-4 text-white">
-                    🎉 Paiement réussi !
+                <h1 className="text-3xl md:text-4xl font-bold text-center mb-4 text-white font-cairo">
+                    🎉 الدفع تم بنجاح !
                 </h1>
 
-                <p className="text-center text-gray-300 mb-8 text-lg">
-                    Merci pour votre achat ! Votre paiement a été confirmé.
+                <p className="text-center text-gray-300 mb-8 text-lg font-cairo">
+                    شكراً لك على الشراء ! تم تأكيد دفعتك بنجاح.
                 </p>
 
                 {/* Instructions Box */}
                 <div className="bg-[#0f172a] border border-[#00d2ff]/30 rounded-xl p-6 mb-6">
                     <div className="flex items-start gap-3 mb-4">
                         <Mail className="w-6 h-6 text-[#00d2ff] mt-1 flex-shrink-0" />
-                        <div>
-                            <h2 className="text-xl font-bold text-white mb-2">
-                                📧 Dernière étape pour activer votre accès
+                        <div className="flex-1">
+                            <h2 className="text-xl font-bold text-white mb-2 font-cairo">
+                                📧 الخطوة الأخيرة لتفعيل حسابك
                             </h2>
-                            <p className="text-gray-300 mb-4">
-                                Pour activer votre compte, envoyez-nous un email avec les informations suivantes :
+                            <p className="text-gray-300 mb-4 font-cairo">
+                                لتفعيل حسابك، أرسل لنا بريد إلكتروني يحتوي على المعلومات التالية:
                             </p>
                         </div>
                     </div>
@@ -48,13 +48,13 @@ export default function PaymentSuccessPage() {
                     <div className="bg-[#1e293b] border border-white/10 rounded-lg p-4 mb-4">
                         <div className="space-y-3">
                             <div>
-                                <p className="text-sm text-gray-400 mb-1">📩 À :</p>
-                                <div className="flex items-center gap-2">
+                                <p className="text-sm text-gray-400 mb-1 font-cairo">📩 إلى:</p>
+                                <div className="flex items-center gap-2 flex-wrap">
                                     <code className="text-[#00d2ff] font-mono text-lg">contact@lexmo.ai</code>
                                     <button
                                         onClick={() => handleCopy('contact@lexmo.ai')}
-                                        className="p-1 hover:bg-white/10 rounded transition-colors"
-                                        title="Copier l'email"
+                                        className="p-2 hover:bg-white/10 rounded transition-colors bg-white/5"
+                                        title="نسخ البريد الإلكتروني"
                                     >
                                         <Copy className="w-4 h-4 text-gray-400" />
                                     </button>
@@ -62,24 +62,24 @@ export default function PaymentSuccessPage() {
                             </div>
 
                             <div>
-                                <p className="text-sm text-gray-400 mb-1">📝 Objet :</p>
-                                <code className="text-white">Activation compte LEXMO</code>
+                                <p className="text-sm text-gray-400 mb-1 font-cairo">📝 الموضوع:</p>
+                                <code className="text-white font-cairo">تفعيل حساب LEXMO</code>
                             </div>
 
                             <div>
-                                <p className="text-sm text-gray-400 mb-2">✍️ Dans le message, incluez :</p>
-                                <ul className="space-y-2 text-gray-300">
+                                <p className="text-sm text-gray-400 mb-2 font-cairo">✍️ في الرسالة، قم بتضمين:</p>
+                                <ul className="space-y-2 text-gray-300 font-cairo">
                                     <li className="flex items-start gap-2">
                                         <span className="text-[#00d2ff] mt-1">•</span>
-                                        <span>Votre <strong>email de paiement</strong></span>
+                                        <span><strong>بريدك الإلكتروني</strong> المستخدم في الدفع</span>
                                     </li>
                                     <li className="flex items-start gap-2">
                                         <span className="text-[#00d2ff] mt-1">•</span>
-                                        <span>Une <strong>capture d'écran</strong> de la confirmation de paiement Stripe</span>
+                                        <span><strong>لقطة شاشة</strong> لتأكيد الدفع من Stripe</span>
                                     </li>
                                     <li className="flex items-start gap-2">
                                         <span className="text-[#00d2ff] mt-1">•</span>
-                                        <span>Le <strong>pack acheté</strong> (Spark, Emperor ou Legend)</span>
+                                        <span><strong>الباقة المشتراة</strong> (Spark أو Emperor أو Legend)</span>
                                     </li>
                                 </ul>
                             </div>
@@ -87,54 +87,52 @@ export default function PaymentSuccessPage() {
                     </div>
 
                     {copied && (
-                        <p className="text-green-500 text-sm text-center mb-2">
-                            ✅ Email copié dans le presse-papier !
+                        <p className="text-green-500 text-sm text-center mb-2 font-cairo">
+                            ✅ تم نسخ البريد الإلكتروني !
                         </p>
                     )}
                 </div>
 
                 {/* Timeline */}
                 <div className="bg-gradient-to-r from-[#00d2ff]/10 to-[#9d50bb]/10 border border-[#00d2ff]/20 rounded-xl p-6 mb-6">
-                    <h3 className="text-lg font-bold text-white mb-4">⏱️ Que se passe-t-il ensuite ?</h3>
-                    <div className="space-y-3 text-gray-300">
+                    <h3 className="text-lg font-bold text-white mb-4 font-cairo">⏱️ ماذا سيحدث بعد ذلك؟</h3>
+                    <div className="space-y-3 text-gray-300 font-cairo">
                         <div className="flex items-start gap-3">
                             <div className="w-8 h-8 bg-[#00d2ff]/20 rounded-full flex items-center justify-center flex-shrink-0">
                                 <span className="text-[#00d2ff] font-bold">1</span>
                             </div>
-                            <p>Vous nous envoyez l'email avec vos informations</p>
+                            <p>ترسل لنا البريد الإلكتروني مع معلوماتك</p>
                         </div>
                         <div className="flex items-start gap-3">
                             <div className="w-8 h-8 bg-[#00d2ff]/20 rounded-full flex items-center justify-center flex-shrink-0">
                                 <span className="text-[#00d2ff] font-bold">2</span>
                             </div>
-                            <p>Nous vérifions votre paiement (sous 24h max)</p>
+                            <p>نتحقق من دفعتك (خلال 24 ساعة كحد أقصى)</p>
                         </div>
                         <div className="flex items-start gap-3">
                             <div className="w-8 h-8 bg-[#00d2ff]/20 rounded-full flex items-center justify-center flex-shrink-0">
                                 <span className="text-[#00d2ff] font-bold">3</span>
                             </div>
-                            <p>Nous vous envoyons un lien d'inscription personnalisé</p>
+                            <p>نرسل لك رابط تسجيل مخصص</p>
                         </div>
                         <div className="flex items-start gap-3">
                             <div className="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center flex-shrink-0">
                                 <span className="text-green-500 font-bold">✓</span>
                             </div>
-                            <p className="font-bold text-white">Vous créez votre compte et accédez immédiatement au contenu !</p>
+                            <p className="font-bold text-white">تنشئ حسابك وتصل فوراً إلى المحتوى !</p>
                         </div>
                     </div>
                 </div>
 
-                {/* CTA Button */}
-                <a
-                    href="mailto:contact@lexmo.ai?subject=Activation%20compte%20LEXMO&body=Bonjour,%0D%0A%0D%0AEmail%20de%20paiement%20:%20%0D%0APack%20acheté%20:%20%0D%0A%0D%0A(Joindre%20capture%20d'écran%20du%20paiement)"
-                    className="block w-full bg-gradient-to-r from-[#00d2ff] to-[#9d50bb] text-white text-center py-4 rounded-xl font-bold text-lg hover:scale-[1.02] transition-transform shadow-lg shadow-cyan-500/25"
-                >
-                    📧 Envoyer l'email maintenant
-                </a>
-
-                <p className="text-center text-gray-400 text-sm mt-6">
-                    Besoin d'aide ? Répondez à l'email de confirmation Stripe ou contactez-nous.
-                </p>
+                {/* Info Box */}
+                <div className="bg-[#0f172a] border border-white/10 rounded-xl p-4 text-center">
+                    <p className="text-gray-400 text-sm font-cairo mb-2">
+                        💡 نصيحة: افتح بريدك الإلكتروني وأرسل لنا الآن
+                    </p>
+                    <p className="text-gray-500 text-xs font-cairo">
+                        هل تحتاج مساعدة؟ راسلنا على نفس البريد
+                    </p>
+                </div>
             </div>
         </div>
     );
