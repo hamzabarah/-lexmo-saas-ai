@@ -42,7 +42,7 @@ export async function GET() {
         // Step 2: Create new webhook
         const newWebhook = await stripe.webhookEndpoints.create({
             url: WEBHOOK_URL,
-            enabled_events: EVENTS,
+            enabled_events: EVENTS as any, // TypeScript workaround for Stripe API version
             description: 'Lexmo SaaS - Auto-configured',
         });
 
