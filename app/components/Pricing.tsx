@@ -43,8 +43,8 @@ function PricingContent() {
                     <PriceCard
                         title="الشرارة 🚀"
                         subtitle="أشعل بداية رحلتك"
-                        price={hasAmbassadorCode ? "997" : "1,497"}
-                        original={hasAmbassadorCode ? "1,497" : "2,997"}
+                        price={hasAmbassadorCode ? "697" : "997"}
+                        original={hasAmbassadorCode ? "997" : "1,997"}
                         features={[
                             "نظام Lexmo.AI الأساسي",
                             "دورة التجارة الإلكترونية الشاملة (10 وحدات)",
@@ -71,8 +71,8 @@ function PricingContent() {
                         <PriceCard
                             title="الإمبراطور 👑"
                             subtitle="ابنِ إمبراطوريتك الخاصة"
-                            price={hasAmbassadorCode ? "1,497" : "2,497"}
-                            original={hasAmbassadorCode ? "2,497" : "4,997"}
+                            price={hasAmbassadorCode ? "997" : "1,497"}
+                            original={hasAmbassadorCode ? "1,497" : "2,997"}
                             features={[
                                 "كل ما في \"الشرارة\"",
                                 "28 مكافأة \"غير عادلة\" حصرية (قيمتها €20,000+)",
@@ -98,8 +98,8 @@ function PricingContent() {
                     <PriceCard
                         title="الأسطورة 💎"
                         subtitle="نحن نبني إمبراطوريتك معك"
-                        price={hasAmbassadorCode ? "4,997" : "9,997"}
-                        original={hasAmbassadorCode ? "9,997" : "14,997"}
+                        price={hasAmbassadorCode ? "2,997" : "3,997"}
+                        original={hasAmbassadorCode ? "3,997" : "7,997"}
                         features={[
                             "كل ما في \"الإمبراطور\"",
                             "مرافقة شخصية 1-على-1 (12 جلسة)",
@@ -115,7 +115,7 @@ function PricingContent() {
                         accentColor="violet"
                         ambassadorProfit="1,000"
                         badge="للجادين فقط"
-                        paymentOption="أو 3 × €3,500"
+                        paymentOption="أو 3 × €1,500"
                         warningText="⚠️ 5 أماكن فقط شهرياً"
                         plan="legend"
                     />
