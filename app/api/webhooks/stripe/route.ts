@@ -5,6 +5,17 @@ import supabaseAdmin from '@/lib/supabaseAdmin';
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
+// Test endpoint to verify webhook is accessible
+export async function GET() {
+    return NextResponse.json({
+        status: 'OK',
+        message: 'Webhook endpoint is accessible. Use POST with Stripe signature for actual webhooks.',
+        timestamp: new Date().toISOString(),
+        endpoint: '/api/webhooks/stripe'
+    }, { status: 200 });
+}
+
+
 export async function POST(req: Request) {
     console.log('🔔 Webhook received at:', new Date().toISOString());
 
