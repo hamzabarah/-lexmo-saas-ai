@@ -136,7 +136,7 @@ export default function PaymentSuccessPage() {
 
                 {/* Email Button */}
                 <a
-                    href="mailto:contact@lexmo.ai?subject=تفعيل حساب LEXMO&body=مرحباً،%0D%0A%0D%0Aالبريد الإلكتروني المستخدم في الدفع: %0D%0Aالباقة المشتراة: %0D%0A%0D%0A(يرجى إرفاق لقطة شاشة لتأكيد الدفع)"
+                    href="mailto:contact@lexmo.ai?subject=Activation LEXMO&body=Email:%20%0D%0APack:%20%0D%0A%0D%0A(Attach payment screenshot)"
                     className="block w-full bg-gradient-to-r from-[#00d2ff] to-[#9d50bb] text-white text-center py-4 rounded-xl font-bold text-lg hover:scale-[1.02] transition-transform shadow-lg shadow-cyan-500/25 font-cairo"
                 >
                     📧 إرسال البريد الإلكتروني الآن
