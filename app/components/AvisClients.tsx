@@ -47,31 +47,36 @@ export default function AvisClients() {
                     <p className="text-gray-400 text-lg">موظفون، طلاب، آباء وأمهات — أشخاص عاديون كسروا حاجز الشك والخوف.</p>
                 </FadeIn>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {REVIEWS.slice(0, visibleCount).map((review, index) => (
                         <FadeIn
                             key={review.id}
-                            delay={index * 0.05} // Stagger effect
-                            className="group relative aspect-[3/4] rounded-2xl overflow-hidden glass-card hover:border-[#ffd700]/50 transition-all duration-300"
+                            delay={index * 0.05}
+                            className="group relative rounded-2xl overflow-hidden glass-card hover:border-[#ffd700]/50 transition-all duration-300"
                         >
-                            {/* Badge Amount */}
-                            <div dir="ltr" className="absolute top-4 left-4 z-10 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 flex items-center gap-2">
-                                <span className="text-[#ffd700] font-bold font-orbitron">{review.amount}</span>
-                                <span className="text-gray-400 text-xs">• {review.time}</span>
+                            {/* Badge Amount & Time - Top Left */}
+                            <div dir="ltr" className="absolute top-3 left-3 z-10 bg-gradient-to-r from-[#ffd700] to-orange-500 px-3 py-1.5 rounded-full shadow-lg flex items-center gap-2">
+                                <span className="text-black font-bold font-orbitron text-sm">💰 {review.amount}</span>
+                                <span className="text-black/80 text-xs font-bold">⏱️ {review.time}</span>
                             </div>
 
-                            {/* Verified Badge */}
-                            <div className="absolute top-4 right-4 z-10 bg-green-500/20 backdrop-blur-md p-1.5 rounded-full border border-green-500/30">
-                                <CheckCircle size={16} className="text-green-500" />
+                            {/* Verified Badge - Top Right */}
+                            <div className="absolute top-3 right-3 z-10 bg-green-500 p-1.5 rounded-full shadow-lg">
+                                <CheckCircle size={16} className="text-white" />
                             </div>
 
-                            {/* Image */}
-                            <div className="absolute inset-0 bg-gray-800 flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
-                                <img src={review.image} alt="" className="w-full h-full object-cover" />
+                            {/* Full Image - No Cropping */}
+                            <div className="relative bg-gray-900">
+                                <img
+                                    src={review.image}
+                                    alt={`Témoignage ${review.amount} en ${review.time}`}
+                                    className="w-full h-auto object-contain"
+                                    loading="lazy"
+                                />
                             </div>
 
-                            {/* Gradient Overlay */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
+                            {/* Subtle Bottom Gradient */}
+                            <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
                         </FadeIn>
                     ))}
                 </div>
