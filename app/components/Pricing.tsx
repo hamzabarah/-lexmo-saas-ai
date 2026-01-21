@@ -197,30 +197,11 @@ function PriceCard({
     missingFeatures?: string[], badge?: string, isPopular?: boolean, buttonText: string, accentColor?: 'violet' | 'cyan',
     ambassadorProfit?: string, paymentOption?: string, warningText?: string, plan: string
 }) {
-    const [isLoading, setIsLoading] = useState(false);
-
-    const handleCheckout = async () => {
-        setIsLoading(true);
-        try {
-            const response = await fetch('/api/create-checkout-session', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ plan })
-            });
-
-            const data = await response.json();
-
-            if (data.url) {
-                window.location.href = data.url;
-            } else {
-                alert('Erreur lors de la création de la session de paiement');
-                setIsLoading(false);
-            }
-        } catch (error) {
-            console.error('Checkout error:', error);
-            alert('Erreur réseau. Veuillez réessayer.');
-            setIsLoading(false);
-        }
+    // Direct Stripe payment links for each pack
+    const STRIPE_LINKS = {
+        spark: 'https://buy.stripe.com/28obJg1i37vIgmIcMN',
+        emperor: 'https://buy.stripe.com/3cI3cvada37Hay1cAXgfu02',
+        legend: 'https://buy.stripe.com/3cIdR9adabEd0Xr6czgfu03'
     };
 
     const borderColor = accentColor === 'violet' ? 'border-[#a855f7]/50 hover:border-[#a855f7]' : isPopular ? 'border-[#00d2ff]' : 'border-white/10';
@@ -253,13 +234,14 @@ function PriceCard({
                 )}
             </div>
 
-            <button
-                onClick={handleCheckout}
-                disabled={isLoading}
-                className={`w-full py-4 rounded-xl font-bold mb-6 transition-all hover:scale-[1.02] active:scale-95 duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${btnClass}`}
+            <a
+                href={STRIPE_LINKS[plan as keyof typeof STRIPE_LINKS]}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`block w-full text-center py-4 rounded-xl font-bold mb-6 transition-all hover:scale-[1.02] active:scale-95 duration-200 ${btnClass}`}
             >
-                {isLoading ? '⏳ جاري التحميل...' : buttonText}
-            </button>
+                {buttonText}
+            </a>
 
             {warningText && (
                 <div className="text-center text-xs text-red-400 font-bold mb-6 animate-pulse border border-red-500/20 bg-red-500/5 py-2 rounded-lg">
