@@ -200,8 +200,8 @@ function PriceCard({
     // Direct Stripe payment links for each pack
     const STRIPE_LINKS = {
         spark: 'https://buy.stripe.com/28obJg1i37vIgmIcMN',
-        emperor: 'https://buy.stripe.com/3cI3cvada37Hay1cAXgfu02',
-        legend: 'https://buy.stripe.com/3cIdR9adabEd0Xr6czgfu03'
+        emperor: 'https://buy.stripe.com/3cI3cvada37Hay1cAX',
+        legend: 'https://buy.stripe.com/3cIdR9adabEd0Xr6cz'
     };
 
     const borderColor = accentColor === 'violet' ? 'border-[#a855f7]/50 hover:border-[#a855f7]' : isPopular ? 'border-[#00d2ff]' : 'border-white/10';
