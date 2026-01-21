@@ -120,26 +120,26 @@ function PricingContent() {
                         plan="legend"
                     />
                 </FadeIn>
-            </FadeIn>
 
-            <div className="mt-20 text-center">
-                <div className="flex justify-center flex-wrap gap-8 mb-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-                    <div className="flex items-center gap-2 text-xl font-bold text-gray-400"><CreditCard /> STRIPE</div>
-                    <div className="flex items-center gap-2 text-xl font-bold text-gray-400">VISA</div>
-                    <div className="flex items-center gap-2 text-xl font-bold text-gray-400">MASTERCARD</div>
-                    <div className="flex items-center gap-2 text-xl font-bold text-gray-400">PAYPAL</div>
-                </div>
-                <div className="flex items-center justify-center gap-2 text-gray-400 text-sm mb-4">
-                    <Shield className="w-4 h-4 text-[#10b981]" />
-                    دفع آمن 100% عبر Stripe
-                </div>
-                <div className="flex items-center justify-center gap-2 text-gray-400 text-sm">
-                    <Shield className="w-4 h-4 text-[#10b981]" />
-                    ضمان استرداد 30 يوم - بدون أسئلة
+                <div className="mt-20 text-center">
+                    <div className="flex justify-center flex-wrap gap-8 mb-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+                        <div className="flex items-center gap-2 text-xl font-bold text-gray-400"><CreditCard /> STRIPE</div>
+                        <div className="flex items-center gap-2 text-xl font-bold text-gray-400">VISA</div>
+                        <div className="flex items-center gap-2 text-xl font-bold text-gray-400">MASTERCARD</div>
+                        <div className="flex items-center gap-2 text-xl font-bold text-gray-400">PAYPAL</div>
+                    </div>
+                    <div className="flex items-center justify-center gap-2 text-gray-400 text-sm mb-4">
+                        <Shield className="w-4 h-4 text-[#10b981]" />
+                        دفع آمن 100% عبر Stripe
+                    </div>
+                    <div className="flex items-center justify-center gap-2 text-gray-400 text-sm">
+                        <Shield className="w-4 h-4 text-[#10b981]" />
+                        ضمان استرداد 30 يوم - بدون أسئلة
+                    </div>
                 </div>
             </div>
-        </div>
-        </section >
+        </section>
+    );
     );
 }
 
