@@ -39,6 +39,23 @@ export default function AvisClients() {
 
     return (
         <section id="reviews" className="py-20 bg-black/50 overflow-hidden">
+            {/* Verified Badge Animation */}
+            <style jsx>{`
+                @keyframes verified-pulse {
+                    0%, 100% {
+                        opacity: 1;
+                        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+                    }
+                    50% {
+                        opacity: 0.9;
+                        box-shadow: 0 0 15px 5px rgba(34, 197, 94, 0.4);
+                    }
+                }
+                .verified-badge {
+                    animation: verified-pulse 2s ease-in-out infinite;
+                }
+            `}</style>
+
             <div className="container mx-auto px-4">
                 <FadeIn className="text-center mb-16">
                     <h2 className="text-4xl lg:text-5xl font-bold font-cairo mb-4">
@@ -62,8 +79,8 @@ export default function AvisClients() {
 
                             {/* Card with Image - Clean, no overlays */}
                             <div className="relative rounded-2xl overflow-hidden glass-card hover:border-[#ffd700]/50 transition-all duration-300">
-                                {/* Verified Badge - Top Right INSIDE card */}
-                                <div className="absolute top-3 right-3 z-10 bg-green-500 p-1.5 rounded-full shadow-lg">
+                                {/* Verified Badge - Top Right with PULSE animation */}
+                                <div className="verified-badge absolute top-3 right-3 z-10 bg-green-500 p-1.5 rounded-full shadow-lg">
                                     <CheckCircle size={16} className="text-white" />
                                 </div>
 
