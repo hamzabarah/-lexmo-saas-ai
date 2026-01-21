@@ -15,7 +15,7 @@ export async function POST(req: Request) {
         const { data, error } = await supabase.auth.signInWithOtp({
             email: email,
             options: {
-                emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://lexmo-saas-ai.vercel.app'}/dashboard`,
+                emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://lexmo-saas-ai.vercel.app'}/auth/callback?next=/dashboard`,
             }
         });
 

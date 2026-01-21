@@ -1,18 +1,16 @@
-import { NextResponse } from "next/server";
+import { createClient } from '@/utils/supabase/server';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
-    const { searchParams, origin } = new URL(request.url);
+    const requestUrl = new URL(request.url);
+    const code = requestUrl.searchParams.get('code');
+    const next = requestUrl.searchParams.get('next') ?? '/dashboard';
 
-    // STRATEGY: Forward EVERYTHING to the client-side verification page.
-    // We do NOT attempt to exchange the code on the server, to avoid "PKCE verifier not found" issues
-    // often caused by cookie unavailability in Server Actions/Route Handlers vs Browser logic.
+    if (code) {
+        const supabase = await createClient();
+        await supabase.auth.exchangeCodeForSession(code);
+    }
 
-    const forwardUrl = new URL(`${origin}/auth/verify`);
-
-    // Copy all search params (code, next, token_hash, type, etc.)
-    searchParams.forEach((value, key) => {
-        forwardUrl.searchParams.set(key, value);
-    });
-
-    return NextResponse.redirect(forwardUrl);
+    // Redirect to the specified next URL or dashboard
+    return NextResponse.redirect(new URL(next, request.url));
 }

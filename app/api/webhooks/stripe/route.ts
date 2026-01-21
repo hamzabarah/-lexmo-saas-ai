@@ -108,19 +108,17 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
 
         // Send Magic Link email for first-time login
         try {
-            const { data: magicLinkData, error: magicLinkError } = await supabaseAdmin.auth.admin.generateLink({
-                type: 'magiclink',
+            const { data: magicLinkData, error: magicLinkError } = await supabaseAdmin.auth.signInWithOtp({
                 email: email,
                 options: {
-                    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://lexmo-saas-ai.vercel.app'}/dashboard`
+                    emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://lexmo-saas-ai.vercel.app'}/auth/callback?next=/dashboard`
                 }
             });
 
             if (magicLinkError) {
-                console.error('Error generating magic link:', magicLinkError);
+                console.error('Error sending magic link:', magicLinkError);
             } else {
-                console.log('Magic link sent to:', email);
-                // Note: Supabase automatically sends the email when using generateLink with type 'magiclink'
+                console.log('Magic link email sent to:', email);
             }
         } catch (error) {
             console.error('Failed to send magic link:', error);

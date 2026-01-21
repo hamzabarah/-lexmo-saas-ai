@@ -66,8 +66,8 @@ export default function LoginPage() {
                 <button
                     onClick={() => { setMode('magic-link'); setError(null); setMagicLinkSent(false); }}
                     className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all flex items-center justify-center gap-2 ${mode === 'magic-link'
-                            ? 'bg-[#00d2ff] text-black'
-                            : 'text-gray-400 hover:text-white'
+                        ? 'bg-[#00d2ff] text-black'
+                        : 'text-gray-400 hover:text-white'
                         }`}
                 >
                     <Sparkles size={16} />
@@ -76,8 +76,8 @@ export default function LoginPage() {
                 <button
                     onClick={() => { setMode('password'); setError(null); setMagicLinkSent(false); }}
                     className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all flex items-center justify-center gap-2 ${mode === 'password'
-                            ? 'bg-[#00d2ff] text-black'
-                            : 'text-gray-400 hover:text-white'
+                        ? 'bg-[#00d2ff] text-black'
+                        : 'text-gray-400 hover:text-white'
                         }`}
                 >
                     <Lock size={16} />
@@ -192,8 +192,8 @@ export default function LoginPage() {
 
             <div className="mt-6 text-center text-sm text-gray-400">
                 ليس لديك حساب؟{" "}
-                <Link href="/register" className="text-[#00d2ff] font-bold hover:underline">
-                    سجل الآن
+                <Link href="/#pricing" className="text-[#00d2ff] font-bold hover:underline">
+                    اشترِ الآن
                 </Link>
             </div>
         </Card>
