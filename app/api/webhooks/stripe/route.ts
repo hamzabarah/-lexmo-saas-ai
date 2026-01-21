@@ -106,22 +106,22 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
         userId = newUser.user.id;
         console.log('Created new user:', userId);
 
-        // Send Magic Link email for first-time login
+        // Send password reset email (acts as magic link for first login)
         try {
-            const { data: magicLinkData, error: magicLinkError } = await supabaseAdmin.auth.signInWithOtp({
-                email: email,
-                options: {
-                    emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://lexmo-saas-ai.vercel.app'}/auth/callback?next=/dashboard`
+            const { data: resetData, error: resetError } = await supabaseAdmin.auth.resetPasswordForEmail(
+                email,
+                {
+                    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://lexmo-saas-ai.vercel.app'}/auth/callback?next=/dashboard`
                 }
-            });
+            );
 
-            if (magicLinkError) {
-                console.error('Error sending magic link:', magicLinkError);
+            if (resetError) {
+                console.error('Error sending reset email:', resetError);
             } else {
-                console.log('Magic link email sent to:', email);
+                console.log('Reset/Welcome email sent to:', email);
             }
         } catch (error) {
-            console.error('Failed to send magic link:', error);
+            console.error('Failed to send welcome email:', error);
         }
     }
 
