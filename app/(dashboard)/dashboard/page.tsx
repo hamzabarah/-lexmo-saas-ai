@@ -48,9 +48,9 @@ export default async function DashboardPage() {
                 <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
                     <StatCard
                         title="إجمالي الأرباح"
-                        value="$1,234.00"
+                        value="€0"
                         icon={DollarSign}
-                        trend="+12% هذا الشهر"
+                        trend=""
                         trendUp={true}
                         color="#ffd700"
                     />
@@ -62,7 +62,7 @@ export default async function DashboardPage() {
                     />
                     <StatCard
                         title="الترتيب الحالي"
-                        value="#42"
+                        value="#-"
                         icon={Trophy}
                         color="#9d50bb"
                     />

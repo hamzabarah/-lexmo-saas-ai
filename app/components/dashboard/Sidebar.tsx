@@ -21,10 +21,7 @@ import { createClient } from "@/utils/supabase/client";
 
 const MENU_ITEMS = [
     { icon: LayoutDashboard, label: "لوحة التحكم", href: "/dashboard" },
-    { icon: DollarSign, label: "أرباحي", href: "/dashboard/affiliate" },
     { icon: BookOpen, label: "المراحل", href: "/dashboard/phases" },
-    { icon: Gift, label: "الهدايا", href: "/dashboard/bonuses" },
-    { icon: Bot, label: "الكوتش الذكي", href: "/dashboard/coach" },
     { icon: Settings, label: "الإعدادات", href: "/dashboard/settings" },
 ];
 

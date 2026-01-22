@@ -63,12 +63,12 @@ export default function Hero() {
                         className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
                     >
                         <div className="flex flex-col items-center lg:items-start gap-2">
-                            <button
-                                onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
+                            <a
+                                href="#pricing"
                                 className="bg-gradient-to-r from-[#00d2ff] to-[#9d50bb] text-white px-8 py-4 rounded-full font-bold text-lg hover:shadow-[0_0_40px_rgba(0,210,255,0.6)] transition-all transform hover:scale-105 active:scale-95 duration-300"
                             >
-                                🚀 ابدأ رحلة النجاح الآن
-                            </button>
+                                ابدأ الآن
+                            </a>
                             <span className="text-sm text-gray-400 animate-pulse">⚡ انضم إلى نخبة رواد الأعمال اليوم</span>
                         </div>
                     </motion.div>

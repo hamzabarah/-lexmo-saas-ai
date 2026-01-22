@@ -26,12 +26,12 @@ export default function Navbar() {
 
                 {/* CTA Button */}
                 <div className="hidden md:block">
-                    <button
-                        onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
+                    <a
+                        href="#pricing"
                         className="bg-gradient-to-r from-[#00d2ff] to-[#9d50bb] text-white px-6 py-2.5 rounded-full font-bold hover:shadow-[0_0_20px_rgba(0,210,255,0.5)] transition-all transform hover:scale-105"
                     >
-                        احجز مكانك
-                    </button>
+                        ابدأ الآن
+                    </a>
                 </div>
 
                 {/* Mobile Menu Toggle */}
@@ -50,15 +50,13 @@ export default function Navbar() {
                     <Link href="#reviews" onClick={() => setIsOpen(false)} className="hover:text-[#00d2ff]">آراء العملاء</Link>
                     <Link href="#pricing" onClick={() => setIsOpen(false)} className="hover:text-[#00d2ff]">الأسعار</Link>
                     <Link href="#faq" onClick={() => setIsOpen(false)} className="hover:text-[#00d2ff]">الأسئلة الشائعة</Link>
-                    <button
-                        onClick={() => {
-                            setIsOpen(false);
-                            document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
-                        }}
+                    <a
+                        href="#pricing"
+                        onClick={() => setIsOpen(false)}
                         className="bg-gradient-to-r from-[#00d2ff] to-[#9d50bb] text-white px-6 py-3 rounded-full font-bold mt-2"
                     >
-                        احجز مكانك
-                    </button>
+                        ابدأ الآن
+                    </a>
                 </div>
             )}
         </nav>

@@ -10,6 +10,12 @@
   --font-cairo: var(--font-cairo);
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  /* 80px for standard headers */
+}
+
 @utility glass {
   @apply bg-white/5 backdrop-blur-lg border border-white/10;
 }
