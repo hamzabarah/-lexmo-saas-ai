@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js';
-import { Shield, Mail, AlertCircle, UserPlus, TrendingUp } from 'lucide-react';
+import { Shield, Mail, AlertCircle, UserPlus, TrendingUp, Copy, Check } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 interface UserData {
@@ -25,6 +25,13 @@ interface Subscription {
     created_at: string;
 }
 
+interface CreatedStudent {
+    email: string;
+    name: string;
+    password: string;
+    plan: string;
+}
+
 export default function AdminPage() {
     const [user, setUser] = useState<User | null>(null);
     const [users, setUsers] = useState<UserData[]>([]);
@@ -33,15 +40,20 @@ export default function AdminPage() {
     const [unauthorized, setUnauthorized] = useState(false);
 
     // Add Student Form State
+    const [newStudentName, setNewStudentName] = useState('');
     const [newStudentEmail, setNewStudentEmail] = useState('');
     const [newStudentPlan, setNewStudentPlan] = useState('spark');
-    const [addingStudent, setAddingStudent] = useState(false);
+    const [creatingStudent, setCreatingStudent] = useState(false);
+
+    // Created student credentials
+    const [createdStudent, setCreatedStudent] = useState<CreatedStudent | null>(null);
+    const [passwordCopied, setPasswordCopied] = useState(false);
 
     const supabase = createClient();
     const router = useRouter();
 
     const ADMIN_EMAIL = 'academyfrance75@gmail.com';
-    const REGISTER_URL = 'https://lexmo-saas-ai.vercel.app/register';
+    const LOGIN_URL = 'https://lexmo-saas-ai.vercel.app/login';
 
     useEffect(() => {
         checkUser();
@@ -87,58 +99,97 @@ export default function AdminPage() {
         }
     };
 
-    const handleAddStudent = async () => {
-        if (!newStudentEmail || !newStudentEmail.includes('@')) {
-            alert('يرجى إدخال بريد إلكتروني صحيح');
+    const handleCreateStudent = async () => {
+        if (!newStudentName || !newStudentEmail || !newStudentEmail.includes('@')) {
+            alert('يرجى ملء جميع الحقول بشكل صحيح');
             return;
         }
 
-        setAddingStudent(true);
+        setCreatingStudent(true);
+        setCreatedStudent(null);
 
         try {
-            // Create pending subscription
-            const { error } = await supabase
-                .from('user_subscriptions')
-                .insert({
+            // Get auth token
+            const { data: { session } } = await supabase.auth.getSession();
+
+            // Call API to create student
+            const response = await fetch('/api/admin/create-student', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${session?.access_token}`
+                },
+                body: JSON.stringify({
+                    name: newStudentName,
                     email: newStudentEmail,
                     plan: newStudentPlan,
-                    status: 'pending',
-                    user_id: null
-                });
+                    adminEmail: ADMIN_EMAIL
+                })
+            });
 
-            if (error) throw error;
+            const result = await response.json();
 
-            // Prepare email
-            const subject = '🎉 مرحباً بك في LEXMO.AI - أنشئ حسابك الآن';
-            const body = `مرحباً،
+            if (!response.ok) {
+                throw new Error(result.error || 'Failed to create student');
+            }
 
-تم تسجيلك في برنامج LEXMO.AI للتجارة الإلكترونية!
-
-لإكمال التسجيل وإنشاء حسابك، يرجى الضغط على الرابط التالي:
-${REGISTER_URL}
-
-بعد إنشاء حسابك، ستتمكن من الوصول إلى جميع محتويات البرنامج.
-
-مع تحياتنا،
-فريق LEXMO.AI`;
-
-            // Open mailto
-            window.location.href = `mailto:${newStudentEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            // Store credentials
+            setCreatedStudent({
+                email: result.user.email,
+                name: result.user.name,
+                password: result.password,
+                plan: result.plan
+            });
 
             // Reload data
             await loadData();
 
             // Reset form
+            setNewStudentName('');
             setNewStudentEmail('');
             setNewStudentPlan('spark');
 
-            alert('تم إضافة الطالب بنجاح! ✅');
-        } catch (error) {
-            console.error('Error adding student:', error);
-            alert('حدث خطأ أثناء إضافة الطالب');
+        } catch (error: any) {
+            console.error('Error creating student:', error);
+            alert(`حدث خطأ: ${error.message}`);
         } finally {
-            setAddingStudent(false);
+            setCreatingStudent(false);
         }
+    };
+
+    const copyPassword = () => {
+        if (createdStudent) {
+            navigator.clipboard.writeText(createdStudent.password);
+            setPasswordCopied(true);
+            setTimeout(() => setPasswordCopied(false), 2000);
+        }
+    };
+
+    const sendEmail = () => {
+        if (!createdStudent) return;
+
+        const subject = '🎉 مرحباً بك في LEXMO.AI - بيانات الدخول الخاصة بك';
+        const body = `مرحباً ${createdStudent.name}،
+
+تهانينا! 🎉
+
+لقد أصبح بإمكانك الآن الوصول إلى LEXMO.AI - أفضل تدريب في التجارة الإلكترونية.
+
+بيانات تسجيل الدخول الخاصة بك:
+
+📧 البريد الإلكتروني: ${createdStudent.email}
+🔐 كلمة المرور: ${createdStudent.password}
+
+👉 اضغط هنا لتسجيل الدخول:
+${LOGIN_URL}
+
+ننصحك بتغيير كلمة المرور بعد أول تسجيل دخول من إعدادات حسابك.
+
+نراك قريباً في التدريب!
+
+فريق LEXMO.AI`;
+
+        window.location.href = `mailto:${createdStudent.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     };
 
     const handleActivate = async (email: string, plan: string) => {
@@ -253,7 +304,19 @@ ${REGISTER_URL}
                         <h2 className="text-2xl font-bold text-white">إضافة طالب جديد</h2>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                        {/* Name Input */}
+                        <div>
+                            <label className="block text-sm text-gray-400 mb-2">الاسم</label>
+                            <input
+                                type="text"
+                                value={newStudentName}
+                                onChange={(e) => setNewStudentName(e.target.value)}
+                                placeholder="الاسم الكامل"
+                                className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
+
                         {/* Email Input */}
                         <div>
                             <label className="block text-sm text-gray-400 mb-2">البريد الإلكتروني</label>
@@ -283,14 +346,69 @@ ${REGISTER_URL}
                         {/* Submit Button */}
                         <div className="flex items-end">
                             <button
-                                onClick={handleAddStudent}
-                                disabled={addingStudent}
+                                onClick={handleCreateStudent}
+                                disabled={creatingStudent}
                                 className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-bold px-6 py-3 rounded-lg transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                {addingStudent ? 'جاري الإضافة...' : 'إرسال رابط التسجيل'}
+                                {creatingStudent ? 'جاري الإنشاء...' : 'إنشاء الحساب وإرسال الدعوة'}
                             </button>
                         </div>
                     </div>
+
+                    {/* Created Student Credentials Display */}
+                    {createdStudent && (
+                        <div className="bg-green-900/20 border border-green-500/30 rounded-xl p-6 mt-6">
+                            <div className="flex items-center gap-2 mb-4">
+                                <Check className="w-6 h-6 text-green-500" />
+                                <h3 className="text-xl font-bold text-green-500">تم إنشاء الحساب بنجاح! ✅</h3>
+                            </div>
+
+                            <div className="space-y-3 mb-6">
+                                <div className="flex items-center gap-3">
+                                    <span className="text-gray-400 font-semibold min-w-[120px]">الاسم:</span>
+                                    <span className="text-white">{createdStudent.name}</span>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <span className="text-gray-400 font-semibold min-w-[120px]">البريد الإلكتروني:</span>
+                                    <span className="text-white font-mono">{createdStudent.email}</span>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <span className="text-gray-400 font-semibold min-w-[120px]">كلمة المرور:</span>
+                                    <code className="bg-gray-800 px-3 py-1 rounded text-yellow-400 font-mono text-lg">
+                                        {createdStudent.password}
+                                    </code>
+                                    <button
+                                        onClick={copyPassword}
+                                        className="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded transition"
+                                    >
+                                        {passwordCopied ? (
+                                            <>
+                                                <Check className="w-4 h-4 text-green-500" />
+                                                <span className="text-green-500 text-sm">تم النسخ</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Copy className="w-4 h-4 text-gray-300" />
+                                                <span className="text-gray-300 text-sm">نسخ</span>
+                                            </>
+                                        )}
+                                    </button>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <span className="text-gray-400 font-semibold min-w-[120px]">الخطة:</span>
+                                    <span className="text-white">{createdStudent.plan === 'spark' ? '🚀 Spark' : createdStudent.plan === 'emperor' ? '👑 Emperor' : '💎 Legend'}</span>
+                                </div>
+                            </div>
+
+                            <button
+                                onClick={sendEmail}
+                                className="w-full bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white font-bold px-6 py-3 rounded-lg transition-all flex items-center justify-center gap-2"
+                            >
+                                <Mail className="w-5 h-5" />
+                                <span>إرسال البريد الإلكتروني</span>
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 {/* Members Table */}
