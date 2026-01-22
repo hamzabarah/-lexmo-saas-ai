@@ -12,7 +12,8 @@ import {
     Settings,
     LogOut,
     Menu,
-    X
+    X,
+    Shield
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import clsx from "clsx";
@@ -29,12 +30,14 @@ export default function Sidebar() {
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const [profile, setProfile] = useState<{ name: string | null } | null>(null);
+    const [userEmail, setUserEmail] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchUser = async () => {
             const supabase = createClient();
             const { data: { user } } = await supabase.auth.getUser();
             if (user) {
+                setUserEmail(user.email || null);
                 const { data } = await supabase
                     .from('users')
                     .select('name')
@@ -119,6 +122,33 @@ export default function Sidebar() {
                                 </Link>
                             );
                         })}
+
+                        {/* Admin Panel Link - Only visible for admin */}
+                        {userEmail === 'academyfrance75@gmail.com' && (
+                            <Link
+                                href="/dashboard/admin"
+                                className={clsx(
+                                    "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative overflow-hidden",
+                                    pathname === '/dashboard/admin'
+                                        ? "bg-white/10 text-white shadow-[0_0_15px_rgba(0,210,255,0.1)]"
+                                        : "text-gray-400 hover:text-white hover:bg-white/5"
+                                )}
+                                onClick={() => setIsOpen(false)}
+                            >
+                                {pathname === '/dashboard/admin' && (
+                                    <div className="absolute top-0 bottom-0 right-0 w-1 bg-[#00d2ff] rounded-l shadow-[0_0_10px_#00d2ff]" />
+                                )}
+                                <Shield
+                                    size={20}
+                                    className={clsx(
+                                        pathname === '/dashboard/admin'
+                                            ? "text-[#00d2ff] drop-shadow-[0_0_5px_rgba(0,210,255,0.5)]"
+                                            : "group-hover:text-white transition-colors"
+                                    )}
+                                />
+                                <span className="font-bold">لوحة الإدارة</span>
+                            </Link>
+                        )}
                     </nav>
 
                     {/* Logout */}
