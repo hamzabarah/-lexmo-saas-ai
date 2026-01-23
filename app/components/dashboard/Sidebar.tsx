@@ -125,29 +125,55 @@ export default function Sidebar() {
 
                         {/* Admin Panel Link - Only visible for admin */}
                         {userEmail === 'academyfrance75@gmail.com' && (
-                            <Link
-                                href="/dashboard/admin"
-                                className={clsx(
-                                    "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative overflow-hidden",
-                                    pathname === '/dashboard/admin'
-                                        ? "bg-white/10 text-white shadow-[0_0_15px_rgba(0,210,255,0.1)]"
-                                        : "text-gray-400 hover:text-white hover:bg-white/5"
-                                )}
-                                onClick={() => setIsOpen(false)}
-                            >
-                                {pathname === '/dashboard/admin' && (
-                                    <div className="absolute top-0 bottom-0 right-0 w-1 bg-[#00d2ff] rounded-l shadow-[0_0_10px_#00d2ff]" />
-                                )}
-                                <Shield
-                                    size={20}
+                            <>
+                                <Link
+                                    href="/dashboard/admin"
                                     className={clsx(
+                                        "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative overflow-hidden",
                                         pathname === '/dashboard/admin'
-                                            ? "text-[#00d2ff] drop-shadow-[0_0_5px_rgba(0,210,255,0.5)]"
-                                            : "group-hover:text-white transition-colors"
+                                            ? "bg-white/10 text-white shadow-[0_0_15px_rgba(0,210,255,0.1)]"
+                                            : "text-gray-400 hover:text-white hover:bg-white/5"
                                     )}
-                                />
-                                <span className="font-bold">لوحة الإدارة</span>
-                            </Link>
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    {pathname === '/dashboard/admin' && (
+                                        <div className="absolute top-0 bottom-0 right-0 w-1 bg-[#00d2ff] rounded-l shadow-[0_0_10px_#00d2ff]" />
+                                    )}
+                                    <Shield
+                                        size={20}
+                                        className={clsx(
+                                            pathname === '/dashboard/admin'
+                                                ? "text-[#00d2ff] drop-shadow-[0_0_5px_rgba(0,210,255,0.5)]"
+                                                : "group-hover:text-white transition-colors"
+                                        )}
+                                    />
+                                    <span className="font-bold">لوحة الإدارة</span>
+                                </Link>
+
+                                <Link
+                                    href="/dashboard/ventes-live"
+                                    className={clsx(
+                                        "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative overflow-hidden",
+                                        pathname === '/dashboard/ventes-live'
+                                            ? "bg-white/10 text-white shadow-[0_0_15px_rgba(0,210,255,0.1)]"
+                                            : "text-gray-400 hover:text-white hover:bg-white/5"
+                                    )}
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    {pathname === '/dashboard/ventes-live' && (
+                                        <div className="absolute top-0 bottom-0 right-0 w-1 bg-[#00d2ff] rounded-l shadow-[0_0_10px_#00d2ff]" />
+                                    )}
+                                    <DollarSign
+                                        size={20}
+                                        className={clsx(
+                                            pathname === '/dashboard/ventes-live'
+                                                ? "text-[#00d2ff] drop-shadow-[0_0_5px_rgba(0,210,255,0.5)]"
+                                                : "group-hover:text-white transition-colors"
+                                        )}
+                                    />
+                                    <span className="font-bold">المبيعات المباشرة</span>
+                                </Link>
+                            </>
                         )}
                     </nav>
 

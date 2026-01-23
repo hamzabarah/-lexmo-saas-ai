@@ -1,0 +1,32 @@
+{
+    "ventes": [
+        {
+            "heure": "19:37",
+            "nom": "Anas Mansouri",
+            "pays": "🇫🇷",
+            "pack": "Emperor",
+            "prix": 1497,
+            "gain": 748
+        },
+        {
+            "heure": "19:42",
+            "nom": "Sarah Al-Rahman",
+            "pays": "🇸🇦",
+            "pack": "Legend",
+            "prix": 3997,
+            "gain": 1000
+        },
+        {
+            "heure": "19:45",
+            "nom": "Mohamed Benali",
+            "pays": "🇲🇦",
+            "pack": "Spark",
+            "prix": 997,
+            "gain": 497
+        }
+    ],
+    "stats": {
+        "total_gains": 2245,
+        "total_ventes": 3
+    }
+}
