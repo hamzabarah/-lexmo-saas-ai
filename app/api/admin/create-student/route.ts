@@ -108,7 +108,8 @@ export async function POST(request: NextRequest) {
 
         const userId = authData.user.id;
 
-        // Create entry in users table
+        // Create entry in users table - COMMENTED OUT TO AVOID TRIGGER CONFLICT
+        /*
         const { error: usersError } = await supabaseAdmin
             .from('users')
             .insert({
@@ -121,6 +122,7 @@ export async function POST(request: NextRequest) {
         if (usersError) {
             console.error('Error creating user entry:', usersError);
         }
+        */
 
         // Create entry in user_subscriptions with active status
         const { error: subscriptionError } = await supabaseAdmin
