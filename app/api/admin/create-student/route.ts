@@ -66,6 +66,29 @@ export async function POST(request: NextRequest) {
             }
         );
 
+        // Check if email already exists in user_subscriptions
+        const { data: existingSubscription } = await supabaseAdmin
+            .from('user_subscriptions')
+            .select('email')
+            .eq('email', email)
+            .single();
+
+        if (existingSubscription) {
+            return NextResponse.json({
+                error: 'هذا البريد الإلكتروني مسجل بالفعل في قاعدة البيانات'
+            }, { status: 400 });
+        }
+
+        // Check if email already exists in auth.users
+        const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers();
+        const emailExists = existingUsers.users.some(u => u.email === email);
+
+        if (emailExists) {
+            return NextResponse.json({
+                error: 'هذا البريدالإلكتروني مسجل بالفعل في النظام'
+            }, { status: 400 });
+        }
+
         // Generate password
         const password = generatePassword(8);
 
