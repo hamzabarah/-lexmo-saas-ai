@@ -53,7 +53,7 @@ export default function AdminPage() {
     const router = useRouter();
 
     const ADMIN_EMAIL = 'academyfrance75@gmail.com';
-    const LOGIN_URL = 'https://lexmo-saas-ai.vercel.app/login';
+    const LOGIN_URL = 'https://lexmo-saas-ai.vercel.app/#login';
 
     useEffect(() => {
         checkUser();

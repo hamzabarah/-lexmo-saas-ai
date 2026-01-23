@@ -31,7 +31,7 @@ export default function AuthErrorPage({ searchParams }: { searchParams: { error?
 
                 <div className="pt-4">
                     <Link
-                        href="/login"
+                        href="/#login"
                         className="inline-flex items-center gap-2 bg-white text-black font-bold px-6 py-3 rounded-xl hover:bg-gray-200 transition-colors w-full justify-center"
                     >
                         <ArrowRight size={18} />

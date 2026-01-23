@@ -39,7 +39,7 @@ export default function ForgotPasswordPage() {
 
     return (
         <Card className="w-full">
-            <Link href="/login" className="flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors text-sm">
+            <Link href="/#login" className="flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors text-sm">
                 <ArrowLeft size={16} />
                 عودة لتسجيل الدخول
             </Link>

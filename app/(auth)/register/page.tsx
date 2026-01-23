@@ -121,7 +121,7 @@ export default function RegisterPage() {
 
             <div className="mt-6 text-center text-sm text-gray-400">
                 لديك حساب بالفعل؟{" "}
-                <Link href="/login" className="text-[#00d2ff] font-bold hover:underline">
+                <Link href="/#login" className="text-[#00d2ff] font-bold hover:underline">
                     سجل دخولك
                 </Link>
             </div>

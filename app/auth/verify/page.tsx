@@ -100,7 +100,7 @@ export default function VerifyPage() {
                     <p className="text-gray-300 font-mono text-sm break-words">{error}</p>
                     <div className="pt-4">
                         <button
-                            onClick={() => router.push("/login")}
+                            onClick={() => router.push("/#login")}
                             className="bg-[#00d2ff] text-black font-bold px-6 py-2 rounded-lg hover:bg-[#00c2ee] transition-colors"
                         >
                             Retour à la connexion
