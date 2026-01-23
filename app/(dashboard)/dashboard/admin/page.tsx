@@ -373,7 +373,7 @@ ${LOGIN_URL}
                                     <span className="text-white font-mono">{createdStudent.email}</span>
                                 </div>
                                 <div className="flex items-center gap-3">
-                                    <span className="text-gray-400 font-semibold min-w-[120px]">كلمة المرور:</span>
+                                    <span className="text-gray-400 font-semibold min-w-[120px]">كود الدخول:</span>
                                     <code className="bg-gray-800 px-3 py-1 rounded text-yellow-400 font-mono text-lg">
                                         {createdStudent.password}
                                     </code>

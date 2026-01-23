@@ -30,6 +30,22 @@ export async function checkUserSubscription(): Promise<SubscriptionCheckResult> 
             return { hasAccess: false, subscription: null };
         }
 
+        // Admin Bypass
+        if (user.email === 'academyfrance75@gmail.com') {
+            return {
+                hasAccess: true,
+                subscription: {
+                    id: 'admin-override',
+                    user_id: user.id,
+                    email: user.email!,
+                    plan: 'legend',
+                    status: 'active',
+                    activated_at: new Date().toISOString(),
+                    created_at: new Date().toISOString()
+                }
+            };
+        }
+
         // Query user_subscriptions table
         const { data: subscription, error: subscriptionError } = await supabase
             .from('user_subscriptions')

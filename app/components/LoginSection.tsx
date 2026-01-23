@@ -80,7 +80,7 @@ export default function LoginSection() {
                             {/* Password Field */}
                             <div>
                                 <label className="block text-sm font-semibold text-gray-300 mb-2">
-                                    كلمة المرور
+                                    كود الدخول (كلمة المرور)
                                 </label>
                                 <div className="relative">
                                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={20} />
@@ -89,7 +89,7 @@ export default function LoginSection() {
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         required
-                                        placeholder="••••••••"
+                                        placeholder="أدخل كود الدخول"
                                         className="w-full bg-gray-800 border border-gray-700 text-white rounded-xl px-12 py-4 focus:outline-none focus:ring-2 focus:ring-[#00d2ff] focus:border-transparent transition-all"
                                     />
                                 </div>

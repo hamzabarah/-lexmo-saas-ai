@@ -56,7 +56,7 @@ export default function PaymentSuccessPage() {
 
                     {/* Footer Message */}
                     <p className="text-gray-400 text-sm" dir="rtl">
-                        سنقوم بتفعيل حسابك وإرسال رابط التسجيل خلال 24 ساعة
+                        سنقوم بإرسال كود الدخول الخاص بك خلال 24 ساعة
                     </p>
                 </div>
             </div>
