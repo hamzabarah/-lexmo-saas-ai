@@ -43,82 +43,74 @@ export default function SettingsPage() {
     };
 
     return (
-        <div className="container mx-auto px-4 py-8 max-w-4xl">
-            <h1 className="text-3xl font-bold text-white mb-8 text-right font-orbitron">⚙️ إعدادات الحساب</h1>
+        <div className="container mx-auto px-4 py-8 max-w-2xl relative">
+            {/* Background Glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#00d2ff]/5 rounded-full blur-[100px] -z-10" />
+
+            <h1 className="text-3xl font-bold text-white mb-8 text-center font-orbitron">إعدادات الحساب ⚙️</h1>
 
             {/* Password Section */}
-            <div className="bg-[#0f172a] border border-white/10 rounded-2xl p-6 md:p-8">
-                <div className="flex items-center gap-3 mb-6 flex-row-reverse">
-                    <div className="w-12 h-12 bg-[#00d2ff]/10 rounded-xl flex items-center justify-center">
-                        <Lock className="w-6 h-6 text-[#00d2ff]" />
+            <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-8 backdrop-blur-sm">
+                <div className="text-center mb-8">
+                    <div className="w-16 h-16 bg-[#00d2ff]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <Lock className="w-8 h-8 text-[#00d2ff]" />
                     </div>
-                    <div className="text-right">
-                        <h2 className="text-xl font-bold text-white">كلمة المرور</h2>
-                        <p className="text-sm text-gray-400">قم بتعيين كلمة مرور لتسجيل الدخول</p>
-                    </div>
+                    <h2 className="text-2xl font-bold text-white mb-2">كلمة المرور</h2>
+                    <p className="text-gray-400">قم بتعيين كلمة مرور لتسجيل الدخول</p>
                 </div>
 
-                <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4 mb-6 text-right" dir="rtl">
-                    <p className="text-sm text-blue-400">
+                <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4 mb-8 text-right" dir="rtl">
+                    <p className="text-sm text-blue-400 leading-relaxed">
                         💡 <strong>اختياري:</strong> يمكنك دائمًا تسجيل الدخول باستخدام الرابط السحري (Magic Link) المرسل عبر البريد الإلكتروني.
                         تعيين كلمة مرور يسمح لك بتسجيل الدخول بشكل أسرع.
                     </p>
                 </div>
 
-                <form onSubmit={handleSetPassword} className="space-y-4">
+                <form onSubmit={handleSetPassword} className="space-y-6">
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-300 block text-right">كلمة المرور الجديدة</label>
+                        <label className="text-sm font-semibold text-gray-300 block text-right mb-2">كلمة المرور الجديدة</label>
                         <input
                             name="newPassword"
                             type="password"
                             required
                             minLength={6}
                             placeholder="6 أحرف كحد أدنى"
-                            className="w-full bg-[#030712] border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d2ff] transition-colors text-right"
+                            className="w-full bg-gray-800 border border-gray-700 text-white rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-[#00d2ff] focus:border-transparent transition-all text-right"
                             dir="rtl"
                         />
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-300 block text-right">تأكيد كلمة المرور</label>
+                        <label className="text-sm font-semibold text-gray-300 block text-right mb-2">تأكيد كلمة المرور</label>
                         <input
                             name="confirmPassword"
                             type="password"
                             required
                             minLength={6}
                             placeholder="أعد كتابة كلمة المرور"
-                            className="w-full bg-[#030712] border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[#00d2ff] transition-colors text-right"
+                            className="w-full bg-gray-800 border border-gray-700 text-white rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-[#00d2ff] focus:border-transparent transition-all text-right"
                             dir="rtl"
                         />
                     </div>
 
                     {message && (
-                        <div className={`p-3 rounded-lg flex items-center gap-2 flex-row-reverse ${message.type === 'success'
+                        <div className={`p-4 rounded-xl flex items-center gap-3 flex-row-reverse ${message.type === 'success'
                             ? 'bg-green-500/10 border border-green-500/20 text-green-500'
                             : 'bg-red-500/10 border border-red-500/20 text-red-500'
                             }`} dir="rtl">
-                            {message.type === 'success' ? <CheckCircle2 size={18} /> : <AlertCircle size={18} />}
-                            <span className="text-sm font-medium">{message.text}</span>
+                            {message.type === 'success' ? <CheckCircle2 size={20} /> : <AlertCircle size={20} />}
+                            <span className="font-medium">{message.text}</span>
                         </div>
                     )}
 
                     <button
                         type="submit"
                         disabled={isPending}
-                        className="w-full bg-[#00d2ff] hover:bg-[#00c2ee] text-black font-bold py-3 rounded-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full bg-gradient-to-r from-[#00d2ff] to-[#9d50bb] hover:from-[#00c2ee] hover:to-[#8d40ab] text-white font-bold py-4 rounded-xl transition-all duration-200 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed text-lg mt-4"
                     >
                         {isPending ? 'جاري الحفظ...' : 'حفظ كلمة المرور'}
                     </button>
                 </form>
-            </div>
-
-            {/* Info Section */}
-            <div className="mt-6 bg-gray-900/30 border border-white/5 rounded-xl p-4 text-right" dir="rtl">
-                <h3 className="text-sm font-bold text-white mb-2">📧 طرق تسجيل الدخول المتاحة</h3>
-                <ul className="text-xs text-gray-400 space-y-1 mr-4">
-                    <li>• <strong>الرابط السحري (Magic Link):</strong> استلم رابطًا عبر البريد الإلكتروني (متاح دائمًا)</li>
-                    <li>• <strong>كلمة المرور:</strong> تسجيل دخول سريع باستخدام البريد الإلكتروني + كلمة المرور (بعد الإعداد)</li>
-                </ul>
             </div>
         </div>
     );
