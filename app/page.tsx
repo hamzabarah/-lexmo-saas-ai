@@ -6,7 +6,6 @@ import Bonus from "./components/Bonus";
 import WhoIsThisFor from "./components/WhoIsThisFor";
 import Pricing from "./components/Pricing";
 import FAQ from "./components/FAQ";
-import LoginSection from "./components/LoginSection";
 import Footer from "./components/Footer";
 import FloatingCTA from "./components/FloatingCTA";
 
@@ -21,7 +20,6 @@ export default function Home() {
       <WhoIsThisFor />
       <Pricing />
       <FAQ />
-      <LoginSection />
       <Footer />
 
       {/* Floating CTA - appears on scroll */}

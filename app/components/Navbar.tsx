@@ -24,14 +24,8 @@ export default function Navbar() {
                     <Link href="#faq" className="hover:text-[#00d2ff] transition-colors">الأسئلة الشائعة</Link>
                 </div>
 
-                {/* CTA Buttons */}
-                <div className="hidden md:flex items-center gap-3">
-                    <a
-                        href="#login"
-                        className="text-white px-5 py-2.5 rounded-full font-bold hover:bg-white/5 transition-all border border-white/10"
-                    >
-                        تسجيل الدخول
-                    </a>
+                {/* CTA Button */}
+                <div className="hidden md:block">
                     <a
                         href="#pricing"
                         className="bg-gradient-to-r from-[#00d2ff] to-[#9d50bb] text-white px-6 py-2.5 rounded-full font-bold hover:shadow-[0_0_20px_rgba(0,210,255,0.5)] transition-all transform hover:scale-105"
@@ -57,16 +51,9 @@ export default function Navbar() {
                     <Link href="#pricing" onClick={() => setIsOpen(false)} className="hover:text-[#00d2ff]">الأسعار</Link>
                     <Link href="#faq" onClick={() => setIsOpen(false)} className="hover:text-[#00d2ff]">الأسئلة الشائعة</Link>
                     <a
-                        href="#login"
-                        onClick={() => setIsOpen(false)}
-                        className="border border-white/10 text-white px-6 py-3 rounded-full font-bold mt-2"
-                    >
-                        تسجيل الدخول
-                    </a>
-                    <a
                         href="#pricing"
                         onClick={() => setIsOpen(false)}
-                        className="bg-gradient-to-r from-[#00d2ff] to-[#9d50bb] text-white px-6 py-3 rounded-full font-bold"
+                        className="bg-gradient-to-r from-[#00d2ff] to-[#9d50bb] text-white px-6 py-3 rounded-full font-bold mt-2"
                     >
                         ابدأ الآن
                     </a>
