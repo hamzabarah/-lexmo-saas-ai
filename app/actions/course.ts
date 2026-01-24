@@ -84,7 +84,7 @@ export async function getPhases() {
     return phases as Phase[];
 }
 
-// Fetch a Phase and its Units (course_modules)
+// Fetch a Phase and its Units (modules)
 export async function getPhaseDetails(phaseNumber: number) {
     const supabase = await createClient();
 
@@ -100,20 +100,29 @@ export async function getPhaseDetails(phaseNumber: number) {
         return null;
     }
 
-    // 2. Fetch Units (course_modules)
-    const { data: units, error: unitsError } = await supabase
-        .from('course_modules')
-        .select('*')
+    // 2. Fetch modules with lesson count
+    const { data: modules, error: modulesError } = await supabase
+        .from('modules')
+        .select(`
+            *,
+            lessons:lessons(count)
+        `)
         .eq('phase_id', phase.id)
         .order('module_number', { ascending: true });
 
-    if (unitsError) {
-        console.error('Error fetching units:', unitsError);
+    if (modulesError) {
+        console.error('Error fetching modules:', modulesError);
     }
+
+    // 3. Transform data to include lessons_count
+    const unitsWithCount = modules?.map(module => ({
+        ...module,
+        lessons_count: module.lessons?.[0]?.count || 0
+    })) || [];
 
     return {
         ...phase,
-        units: units || []
+        units: unitsWithCount
     };
 }
 
@@ -125,9 +134,9 @@ export async function getUnitDetails(phaseNumber: number, unitNumber: number) {
     const { data: phase } = await supabase.from('phases').select('id').eq('phase_number', phaseNumber).single();
     if (!phase) return null;
 
-    // 2. Get Unit
+    // 2. Get Unit (module)
     const { data: unit, error: unitError } = await supabase
-        .from('course_modules')
+        .from('modules')
         .select('*')
         .eq('phase_id', phase.id)
         .eq('module_number', unitNumber)
@@ -138,12 +147,12 @@ export async function getUnitDetails(phaseNumber: number, unitNumber: number) {
         return null;
     }
 
-    // 3. Get Lessons for this Unit
+    // 3. Get Lessons for this module
     const { data: lessons, error: lessonsError } = await supabase
-        .from('lessons') // Renamed table
-        .select('id, module_number, title_ar, title_en, is_locked')
-        .eq('course_module_id', unit.id)
-        .order('module_number', { ascending: true }); // Assuming 'order_index' or 'module_number'
+        .from('lessons')
+        .select('id, lesson_number, title_ar, title_en, is_locked')
+        .eq('module_id', unit.id)
+        .order('lesson_number', { ascending: true });
 
     if (lessonsError) {
         console.error('Error fetching lessons:', lessonsError);
@@ -164,8 +173,8 @@ export async function getLessonDetails(unitId: string, lessonNumber: number) {
     const { data: lesson, error } = await supabase
         .from('lessons')
         .select('*')
-        .eq('course_module_id', unitId)
-        .eq('module_number', lessonNumber)
+        .eq('module_id', unitId)
+        .eq('lesson_number', lessonNumber)
         .single();
 
     if (error || !lesson) {

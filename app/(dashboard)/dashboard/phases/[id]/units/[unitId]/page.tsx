@@ -69,7 +69,7 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
                     {unit.lessons.map((lesson: any, index: number) => {
                         const isAvailable = !lesson.is_locked;
                         const lessonUrl = isAvailable
-                            ? `/dashboard/phases/${phaseNumber}/units/${unitNumber}/lessons/${lesson.module_number}`
+                            ? `/dashboard/phases/${phaseNumber}/units/${unitNumber}/lessons/${lesson.lesson_number}`
                             : "#";
 
                         return (
@@ -94,7 +94,7 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
                                         </div>
                                         <div>
                                             <h4 className="text-white font-medium mb-0.5">
-                                                الدرس {lesson.module_number}: {lesson.title_ar}
+                                                الدرس {lesson.lesson_number}: {lesson.title_ar}
                                             </h4>
                                             <p className="text-xs text-gray-500 font-mono">
                                                 {lesson.title_en}
