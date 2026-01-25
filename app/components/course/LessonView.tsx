@@ -47,7 +47,7 @@ export default function LessonView({
             prev.map((t) => (t.id === taskId ? { ...t, is_completed: newStatus } : t))
         );
 
-    start Transition(async () => {
+        startTransition(async () => {
             await toggleTask(taskId, lesson.id, newStatus);
             router.refresh();
         });
@@ -129,14 +129,14 @@ export default function LessonView({
                                     transition={{ delay: index * 0.05 }}
                                     onClick={() => handleToggleTask(task.id, task.is_completed)}
                                     className={`flex items-start gap-4 p-4 rounded-xl cursor-pointer transition-all duration-300 border ${task.is_completed
-                                            ? "bg-green-500/10 border-green-500/30"
-                                            : "bg-neo-gray-900/50 border-neo-gray-800 hover:border-neo-cyan/30 hover:bg-neo-gray-900"
+                                        ? "bg-green-500/10 border-green-500/30"
+                                        : "bg-neo-gray-900/50 border-neo-gray-800 hover:border-neo-cyan/30 hover:bg-neo-gray-900"
                                         }`}
                                 >
                                     <div
                                         className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 border-2 transition-all mt-0.5 ${task.is_completed
-                                                ? "bg-green-500 border-green-500 scale-110"
-                                                : "border-neo-cyan bg-neo-black hover:bg-neo-cyan/10"
+                                            ? "bg-green-500 border-green-500 scale-110"
+                                            : "border-neo-cyan bg-neo-black hover:bg-neo-cyan/10"
                                             }`}
                                     >
                                         {task.is_completed && (
@@ -152,8 +152,8 @@ export default function LessonView({
 
                                     <span
                                         className={`flex-1 text-lg transition-all ${task.is_completed
-                                                ? "text-gray-400 line-through"
-                                                : "text-white hover:text-neo-cyan"
+                                            ? "text-gray-400 line-through"
+                                            : "text-white hover:text-neo-cyan"
                                             }`}
                                     >
                                         {task.task_text_ar}
@@ -185,6 +185,7 @@ export default function LessonView({
 
             {/* Footer Navigation */}
             <LessonFooter
+                isLessonCompleted={isLessonCompleted}
                 nextLesson={
                     nextLessonId
                         ? {

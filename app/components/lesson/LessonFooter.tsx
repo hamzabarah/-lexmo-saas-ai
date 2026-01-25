@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Lock } from 'lucide-react';
 
 interface LessonFooterProps {
     nextLesson?: {
@@ -11,9 +11,10 @@ interface LessonFooterProps {
         title: string;
     };
     onComplete?: () => void;
+    isLessonCompleted?: boolean;
 }
 
-export default function LessonFooter({ nextLesson, onComplete }: LessonFooterProps) {
+export default function LessonFooter({ nextLesson, onComplete, isLessonCompleted = false }: LessonFooterProps) {
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -33,15 +34,25 @@ export default function LessonFooter({ nextLesson, onComplete }: LessonFooterPro
                     </button>
                 )}
 
-                {/* Next Lesson */}
+                {/* Next Lesson - Conditional on Completion */}
                 {nextLesson && (
-                    <Link
-                        href={nextLesson.url}
-                        className="group flex items-center gap-4 px-8 py-4 bg-gradient-neo hover:shadow-neo-lg rounded-xl transition-all duration-300 text-white font-semibold hover:scale-105"
-                    >
-                        <span>الدرس التالي: {nextLesson.title}</span>
-                        <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform rotate-180" />
-                    </Link>
+                    isLessonCompleted ? (
+                        <Link
+                            href={nextLesson.url}
+                            className="group flex items-center gap-4 px-8 py-4 bg-gradient-neo hover:shadow-neo-lg rounded-xl transition-all duration-300 text-white font-semibold hover:scale-105"
+                        >
+                            <span>الدرس التالي: {nextLesson.title}</span>
+                            <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform rotate-180" />
+                        </Link>
+                    ) : (
+                        <div className="group flex items-center gap-4 px-8 py-4 bg-neo-gray-800/50 border-2 border-neo-gray-700 rounded-xl cursor-not-allowed opacity-60">
+                            <Lock size={20} className="text-neo-gray-400" />
+                            <div className="flex flex-col items-start">
+                                <span className="text-neo-gray-400 font-semibold">الدرس التالي مقفل</span>
+                                <span className="text-xs text-neo-gray-500">أكمل المهام أولاً</span>
+                            </div>
+                        </div>
+                    )
                 )}
             </div>
 
