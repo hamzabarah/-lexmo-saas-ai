@@ -169,9 +169,9 @@ export default function VentesLivePage() {
         },
         animation: {
             duration: 2000,
-            easing: 'easeInOutQuart'
+            easing: 'easeInOutQuart' as const
         }
-    };
+    } as const;
 
     useEffect(() => {
         const fetchData = async () => {
