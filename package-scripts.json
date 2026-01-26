@@ -1,11 +1,10 @@
 {
     "scripts": {
-        "dev": "next dev --turbopack",
+        "dev": "next dev",
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
         "inject-lessons": "tsx scripts/inject-lessons.ts",
-        "inject-lessons:dry-run": "tsx scripts/inject-lessons.ts --dry-run",
-        "inject-lessons:module": "tsx scripts/inject-lessons.ts --module"
+        "extract-tasks": "tsx scripts/extract-tasks.ts"
     }
 }

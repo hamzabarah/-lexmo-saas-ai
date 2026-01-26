@@ -72,7 +72,7 @@ export default function LessonView({
                 title_ar={lesson.title_ar}
                 title_en={lesson.title_en || ""}
                 module_number={unitId}
-                lesson_number={lesson.lesson_number}
+                lesson_number={lesson.module_number}
                 badge="📚"
                 duration_minutes={15}
                 progress={progress}

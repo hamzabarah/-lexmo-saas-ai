@@ -197,10 +197,10 @@ function PriceCard({
     missingFeatures?: string[], badge?: string, isPopular?: boolean, buttonText: string, accentColor?: 'violet' | 'cyan',
     ambassadorProfit?: string, paymentOption?: string, warningText?: string, plan: string
 }) {
-    // Direct Stripe payment links for each pack
+    // Direct Stripe payment links for each pack (PRODUCTION)
     const STRIPE_LINKS = {
-        spark: 'https://buy.stripe.com/test_3cIcN55WU4bLeOheJ5gfu07',
-        emperor: 'https://buy.stripe.com/test_00w9ATcligYx0Xr1Wjgfu08',
+        spark: 'https://buy.stripe.com/28obJg1i37vIgmIcMN',
+        emperor: 'https://buy.stripe.com/3cI3cvada37Hay1cAXgfu02',
         legend: 'https://buy.stripe.com/3cIdR9adabEd0Xr6czgfu03'
     };
 

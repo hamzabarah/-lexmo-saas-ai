@@ -1,99 +1,34 @@
 import { createClient } from '@supabase/supabase-js';
-import * as fs from 'fs';
-import * as path from 'path';
+import { readdirSync, readFileSync } from 'fs';
+import { join } from 'path';
 import matter from 'gray-matter';
-import { config } from 'dotenv';
 
-// Load environment variables from .env.local
-config({ path: path.join(process.cwd(), '.env.local') });
-
-// ====================================
-// 🔧 CONFIGURATION
-// ====================================
-
-const SUPABASE_URL = process.env.SUPABASE_URL!;
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-
-if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-    console.error('❌ Missing environment variables!');
-    console.error('Please set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env.local');
-    process.exit(1);
-}
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
-
-// ====================================
-// 📝 TYPES
-// ====================================
-
-interface LessonMetadata {
-    phase: number;
-    module: number;
-    lesson: number;
-    title_ar: string;
-    title_en?: string;
-    duration_minutes?: number;
-    difficulty?: string;
-    badge?: string;
-}
-
-interface LessonData extends LessonMetadata {
-    content_ar: string;
-    tasks: string[];
-}
-
-interface InjectionResult {
-    success: boolean;
-    filename: string;
-    error?: string;
-}
-
-// ====================================
-// 🛠️ HELPER FUNCTIONS
-// ====================================
+// Initialize Supabase
+const supabaseUrl = process.env.SUPABASE_URL || 'https://ruhkuamtmgzjkcdyrpel.supabase.co';
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1aGt1YW10bWd6amtjZHlycGVsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2ODcwMzcwNSwiZXhwIjoyMDg0Mjc5NzA1fQ.W4wsKofubQAWladqLvPyy6L68eBEI_RtK0bwChbTuc0';
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 /**
- * Parse un fichier markdown avec frontmatter YAML
+ * Extract tasks from markdown
  */
-function parseMarkdownFile(filePath: string): LessonData | null {
-    try {
-        const fileContent = fs.readFileSync(filePath, 'utf-8');
-        const { data, content } = matter(fileContent);
+function extractTasks(markdown: string): string[] {
+    const tasks: string[] = [];
+    const lines = markdown.split('\n');
 
-        // Validation des champs requis
-        const required = ['phase', 'module', 'lesson', 'title_ar'];
-        for (const field of required) {
-            if (!(field in data)) {
-                throw new Error(`Missing required field: ${field}`);
-            }
+    for (const line of lines) {
+        const trimmed = line.trim();
+        const match = trimmed.match(/^-\s+\[\s*\]\s+(.+)$/);
+        if (match) {
+            const taskText = match[1].trim().replace(/\*\*/g, '');
+            tasks.push(taskText);
         }
-
-        // Extraire les tâches (lignes commençant par - [ ])
-        const tasks = content
-            .split('\n')
-            .filter(line => line.trim().startsWith('- [ ]'))
-            .map(line => line.replace('- [ ]', '').trim());
-
-        return {
-            phase: data.phase,
-            module: data.module,
-            lesson: data.lesson,
-            title_ar: data.title_ar,
-            title_en: data.title_en,
-            duration_minutes: data.duration_minutes || 15,
-            difficulty: data.difficulty || 'intermediate',
-            badge: data.badge || '📚',
-            content_ar: content.trim(),
-            tasks,
-        };
-    } catch (error: any) {
-        console.error(`❌ Error parsing ${filePath}:`, error.message);
-        return null;
     }
+
+    return tasks;
 }
 
 /**
- * Récupère l'ID du module depuis Supabase
+ * Get module ID from phase and module numbers
  */
 async function getModuleId(phaseNumber: number, moduleNumber: number): Promise<string | null> {
     const { data: phase } = await supabase
@@ -102,10 +37,7 @@ async function getModuleId(phaseNumber: number, moduleNumber: number): Promise<s
         .eq('phase_number', phaseNumber)
         .single();
 
-    if (!phase) {
-        console.error(`❌ Phase ${phaseNumber} not found`);
-        return null;
-    }
+    if (!phase) return null;
 
     const { data: module } = await supabase
         .from('modules')
@@ -114,231 +46,223 @@ async function getModuleId(phaseNumber: number, moduleNumber: number): Promise<s
         .eq('module_number', moduleNumber)
         .single();
 
-    if (!module) {
-        console.error(`❌ Module ${moduleNumber} not found in Phase ${phaseNumber}`);
-        return null;
-    }
-
-    return module.id;
+    return module?.id || null;
 }
 
 /**
- * Récupère l'ID de la leçon depuis Supabase
+ * Inject a single lesson
  */
-async function getLessonId(moduleId: string, lessonNumber: number): Promise<string | null> {
-    const { data: lesson } = await supabase
-        .from('lessons')
-        .select('id')
-        .eq('module_id', moduleId)
-        .eq('lesson_number', lessonNumber)
-        .single();
-
-    return lesson?.id || null;
-}
-
-/**
- * Met à jour une leçon dans Supabase
- */
-async function updateLesson(lessonData: LessonData, dryRun: boolean): Promise<InjectionResult> {
-    const filename = `lesson-${String(lessonData.module).padStart(2, '0')}-${String(lessonData.lesson).padStart(2, '0')}.md`;
-
-    if (dryRun) {
-        console.log(`🔍 [DRY RUN] Would update: ${filename}`);
-        return { success: true, filename };
-    }
+async function injectLesson(
+    filePath: string,
+    metadata: any,
+    content: string,
+    moduleId: string
+) {
+    console.log(`\n📖 Injecting: Phase ${metadata.phase}, Module ${metadata.module}, Lesson ${metadata.lesson}`);
+    console.log(`   Title: ${metadata.title_ar}`);
 
     try {
-        // 1. Récupérer l'ID du module
-        const moduleId = await getModuleId(lessonData.phase, lessonData.module);
-        if (!moduleId) {
-            return {
-                success: false,
-                filename,
-                error: `Module not found: Phase ${lessonData.phase}, Module ${lessonData.module}`,
-            };
-        }
-
-        // 2. Récupérer l'ID de la leçon
-        const lessonId = await getLessonId(moduleId, lessonData.lesson);
-        if (!lessonId) {
-            return {
-                success: false,
-                filename,
-                error: `Lesson not found: Module ${moduleId}, Lesson ${lessonData.lesson}`,
-            };
-        }
-
-        // 3. Mettre à jour la leçon
-        const { error: updateError } = await supabase
+        // 1. Check if lesson already exists
+        const { data: existing } = await supabase
             .from('lessons')
-            .update({
-                title_ar: lessonData.title_ar,
-                title_en: lessonData.title_en,
-                content_ar: lessonData.content_ar,
-                updated_at: new Date().toISOString(),
-            })
-            .eq('id', lessonId);
+            .select('id')
+            .eq('module_id', moduleId)
+            .eq('lesson_number', metadata.lesson)
+            .single();
 
-        if (updateError) {
-            return {
-                success: false,
-                filename,
-                error: `Supabase error: ${updateError.message}`,
-            };
-        }
+        if (existing) {
+            console.log(`   ⚠️  Lesson already exists, updating...`);
 
-        // 4. Ajouter les tâches (si présentes)
-        if (lessonData.tasks.length > 0) {
-            // D'abord, supprimer les anciennes tâches
-            await supabase.from('lesson_tasks').delete().eq('lesson_id', lessonId);
+            // Update existing
+            const { error: updateError } = await supabase
+                .from('lessons')
+                .update({
+                    title_ar: metadata.title_ar,
+                    title_en: metadata.title_en || '',
+                    content_ar: content,
+                    duration_minutes: metadata.duration_minutes || 30,
+                    updated_at: new Date().toISOString(),
+                })
+                .eq('id', existing.id);
 
-            // Ensuite, insérer les nouvelles
-            const tasksToInsert = lessonData.tasks.map((task, index) => ({
-                lesson_id: lessonId,
-                task_text_ar: task,
-                task_order: index + 1,
-            }));
-
-            const { error: tasksError } = await supabase
-                .from('lesson_tasks')
-                .insert(tasksToInsert);
-
-            if (tasksError) {
-                console.warn(`⚠️  Tasks insertion failed for ${filename}: ${tasksError.message}`);
+            if (updateError) {
+                console.error(`   ❌ Update error:`, updateError.message);
+                return null;
             }
+
+            return existing.id;
         }
 
-        return { success: true, filename };
+        // 2. Insert new lesson
+        const { data: lesson, error: insertError } = await supabase
+            .from('lessons')
+            .insert({
+                module_id: moduleId,
+                lesson_number: metadata.lesson,
+                title_ar: metadata.title_ar,
+                title_en: metadata.title_en || '',
+                content_ar: content,
+                duration_minutes: metadata.duration_minutes || 30,
+                is_locked: false,
+            })
+            .select()
+            .single();
+
+        if (insertError) {
+            console.error(`   ❌ Insert error:`, insertError.message);
+            return null;
+        }
+
+        console.log(`   ✅ Lesson inserted successfully!`);
+        return lesson.id;
+
     } catch (error: any) {
-        return {
-            success: false,
-            filename,
-            error: error.message,
-        };
+        console.error(`   ❌ Error:`, error.message);
+        return null;
     }
 }
 
 /**
- * Scanne un dossier et retourne tous les fichiers .md
+ * Inject tasks for a lesson
  */
-function getAllMarkdownFiles(dir: string): string[] {
-    const files: string[] = [];
+async function injectTasks(lessonId: string, content: string) {
+    const tasks = extractTasks(content);
 
-    function scanDir(currentDir: string) {
-        const entries = fs.readdirSync(currentDir, { withFileTypes: true });
+    if (tasks.length === 0) {
+        console.log(`   ⚠️  No tasks found`);
+        return;
+    }
 
-        for (const entry of entries) {
-            const fullPath = path.join(currentDir, entry.name);
+    console.log(`   🔍 Found ${tasks.length} tasks`);
 
-            if (entry.isDirectory()) {
-                scanDir(fullPath);
-            } else if (entry.isFile() && entry.name.endsWith('.md')) {
-                files.push(fullPath);
+    // Delete existing tasks
+    await supabase.from('tasks').delete().eq('lesson_id', lessonId);
+
+    // Insert new tasks
+    const tasksToInsert = tasks.map((taskText, index) => ({
+        lesson_id: lessonId,
+        task_text_ar: taskText,
+        order_index: index + 1,
+    }));
+
+    const { error } = await supabase.from('tasks').insert(tasksToInsert);
+
+    if (error) {
+        console.error(`   ❌ Task insert error:`, error.message);
+    } else {
+        console.log(`   ✅ ${tasks.length} tasks injected`);
+    }
+}
+
+/**
+ * Process all lessons in a directory
+ */
+async function processLessonsDirectory(dirPath: string, phaseNumber?: number, moduleNumber?: number) {
+    console.log(`\n🚀 Processing directory: ${dirPath}\n`);
+
+    let totalInjected = 0;
+    let totalTasks = 0;
+
+    try {
+        // Get all markdown files
+        const files = readdirSync(dirPath)
+            .filter(f => f.endsWith('.md'))
+            .sort();
+
+        console.log(`📚 Found ${files.length} lesson files\n`);
+
+        for (const file of files) {
+            const filePath = join(dirPath, file);
+
+            try {
+                // Read and parse file
+                const fileContent = readFileSync(filePath, 'utf-8');
+                const { data: metadata, content } = matter(fileContent);
+
+                // Validate metadata
+                if (!metadata.phase || !metadata.module || !metadata.lesson) {
+                    console.log(`\n⚠️  Skipping ${file}: Missing required metadata`);
+                    continue;
+                }
+
+                // Skip if filtering by phase/module
+                if (phaseNumber && metadata.phase !== phaseNumber) continue;
+                if (moduleNumber && metadata.module !== moduleNumber) continue;
+
+                // Get module ID
+                const moduleId = await getModuleId(metadata.phase, metadata.module);
+                if (!moduleId) {
+                    console.log(`\n❌ Module not found for Phase ${metadata.phase}, Module ${metadata.module}`);
+                    continue;
+                }
+
+                // Inject lesson
+                const lessonId = await injectLesson(filePath, metadata, content, moduleId);
+
+                if (!lessonId) {
+                    console.log(`   ❌ Failed to inject lesson`);
+                    continue;
+                }
+
+                // Inject tasks
+                await injectTasks(lessonId, content);
+
+                totalInjected++;
+                const tasks = extractTasks(content);
+                totalTasks += tasks.length;
+
+            } catch (error: any) {
+                console.error(`\n❌ Error processing ${file}:`, error.message);
             }
         }
-    }
 
-    scanDir(dir);
-    return files;
+        console.log(`\n${'='.repeat(60)}`);
+        console.log(`🎉 COMPLETE!`);
+        console.log(`   Lessons injected: ${totalInjected}`);
+        console.log(`   Total tasks: ${totalTasks}`);
+        console.log(`${'='.repeat(60)}\n`);
+
+    } catch (error: any) {
+        console.error(`❌ Directory error:`, error.message);
+    }
 }
 
-// ====================================
-// 🚀 MAIN FUNCTION
-// ====================================
-
+/**
+ * Main execution
+ */
 async function main() {
     const args = process.argv.slice(2);
-    const dryRun = args.includes('--dry-run');
-    const moduleFilter = args.find(arg => arg.startsWith('--module='))?.split('=')[1];
 
-    console.log('🚀 Starting lesson injection...\n');
+    // Parse arguments
+    let dirPath = 'content/lessons/phase-1/module-01';
+    let phaseFilter: number | undefined;
+    let moduleFilter: number | undefined;
 
-    if (dryRun) {
-        console.log('🔍 DRY RUN MODE - No changes will be made\n');
-    }
-
-    // Dossier contenant les fichiers markdown
-    const contentDir = path.join(process.cwd(), 'content', 'lessons');
-
-    if (!fs.existsSync(contentDir)) {
-        console.error(`❌ Content directory not found: ${contentDir}`);
-        console.error('Please create the directory and add your lesson files.');
-        process.exit(1);
-    }
-
-    // Scanner tous les fichiers markdown
-    const markdownFiles = getAllMarkdownFiles(contentDir);
-
-    if (markdownFiles.length === 0) {
-        console.error('❌ No markdown files found!');
-        process.exit(1);
-    }
-
-    console.log(`📂 Found ${markdownFiles.length} markdown files\n`);
-
-    // Statistiques
-    let successCount = 0;
-    let errorCount = 0;
-    const errors: InjectionResult[] = [];
-
-    // Traiter chaque fichier
-    for (let i = 0; i < markdownFiles.length; i++) {
-        const file = markdownFiles[i];
-        const lessonData = parseMarkdownFile(file);
-
-        if (!lessonData) {
-            errorCount++;
-            errors.push({
-                success: false,
-                filename: path.basename(file),
-                error: 'Failed to parse file',
-            });
-            continue;
+    for (const arg of args) {
+        if (arg.startsWith('--dir=')) {
+            dirPath = arg.split('=')[1];
+        } else if (arg.startsWith('--phase=')) {
+            phaseFilter = parseInt(arg.split('=')[1]);
+        } else if (arg.startsWith('--module=')) {
+            moduleFilter = parseInt(arg.split('=')[1]);
         }
-
-        // Filtrer par module si spécifié
-        if (moduleFilter && lessonData.module !== parseInt(moduleFilter)) {
-            continue;
-        }
-
-        // Afficher la progression
-        const progress = `[${i + 1}/${markdownFiles.length}]`;
-        console.log(`${progress} Processing: ${path.basename(file)}`);
-        console.log(`   Module ${lessonData.module}, Lesson ${lessonData.lesson}: ${lessonData.title_ar}`);
-
-        // Injecter la leçon
-        const result = await updateLesson(lessonData, dryRun);
-
-        if (result.success) {
-            console.log(`   ✅ Success\n`);
-            successCount++;
-        } else {
-            console.log(`   ❌ Error: ${result.error}\n`);
-            errorCount++;
-            errors.push(result);
-        }
-
-        // Petite pause pour ne pas surcharger Supabase
-        await new Promise(resolve => setTimeout(resolve, 100));
     }
 
-    // Rapport final
-    console.log('━'.repeat(60));
-    console.log('📊 INJECTION SUMMARY');
-    console.log('━'.repeat(60));
-    console.log(`✅ Successful: ${successCount}`);
-    console.log(`❌ Failed: ${errorCount}`);
-    console.log(`📁 Total: ${markdownFiles.length}`);
+    console.log(`\n${'='.repeat(60)}`);
+    console.log(`📚 LESSON INJECTION SCRIPT`);
+    console.log(`${'='.repeat(60)}`);
+    console.log(`Directory: ${dirPath}`);
+    if (phaseFilter) console.log(`Phase filter: ${phaseFilter}`);
+    if (moduleFilter) console.log(`Module filter: ${moduleFilter}`);
+    console.log(`${'='.repeat(60)}`);
 
-    if (errors.length > 0) {
-        console.log('\n❌ ERRORS:');
-        errors.forEach(err => {
-            console.log(`   - ${err.filename}: ${err.error}`);
-        });
-    }
-
-    console.log('\n🎉 Injection complete!');
+    await processLessonsDirectory(dirPath, phaseFilter, moduleFilter);
 }
 
-// Exécuter le script
-main().catch(console.error);
+// Run
+main()
+    .then(() => process.exit(0))
+    .catch((error) => {
+        console.error('\n💥 Fatal error:', error);
+        process.exit(1);
+    });
