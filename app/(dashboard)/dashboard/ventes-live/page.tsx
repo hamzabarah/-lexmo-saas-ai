@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { Wallet, ShoppingBag, TrendingUp, CheckCircle, Clock } from 'lucide-react';
+import CountUp from 'react-countup';
 import { Line } from 'react-chartjs-2';
+import 'flag-icons/css/flag-icons.min.css';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -26,8 +28,6 @@ ChartJS.register(
     Filler
 );
 
-import 'flag-icons/css/flag-icons.min.css';
-
 interface Vente {
     date: string;
     heure: string;
@@ -47,7 +47,7 @@ interface VentesData {
     };
 }
 
-const PACK_CONFIG = {
+const PACK_CONFIG: Record<string, { icon: string; nameAr: string; color: string; bgColor: string; borderColor: string }> = {
     Spark: {
         icon: '🚀',
         nameAr: 'الشرارة',
@@ -250,7 +250,12 @@ export default function VentesLivePage() {
                                     filter: 'drop-shadow(0 2px 10px rgba(255, 215, 0, 0.2))'
                                 }}
                             >
-                                {data.stats.total_gains.toLocaleString()}€
+                                <CountUp
+                                    end={data.stats.total_gains}
+                                    duration={2.5}
+                                    separator=","
+                                    suffix="€"
+                                />
                             </div>
 
                             <p className="text-xs text-gray-500 uppercase tracking-[0.2em] font-orbitron">
@@ -266,7 +271,10 @@ export default function VentesLivePage() {
                             </div>
                             <div className="flex items-center gap-4">
                                 <div className="text-4xl font-black text-white font-orbitron">
-                                    {data.stats.total_ventes}
+                                    <CountUp
+                                        end={data.stats.total_ventes}
+                                        duration={2}
+                                    />
                                 </div>
                                 <div className="w-12 h-12 rounded-full bg-[#00FFA3]/10 flex items-center justify-center border border-[#00FFA3]/20">
                                     <ShoppingBag className="w-5 h-5 text-[#00FFA3]" />
