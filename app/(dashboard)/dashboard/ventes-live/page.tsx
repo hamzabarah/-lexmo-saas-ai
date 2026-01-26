@@ -317,7 +317,7 @@ export default function VentesLivePage() {
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-3 flex-row-reverse justify-end">
                                                         <span className="text-gray-200 font-medium text-sm font-inter">{vente.nom}</span>
-                                                        <span className="text-xl">{vente.pays}</span>
+                                                        <span className="text-2xl" role="img" aria-label={vente.pays}>{vente.pays}</span>
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4">
@@ -328,11 +328,12 @@ export default function VentesLivePage() {
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#00FFA3]/10 text-[#00FFA3] border border-[#00FFA3]/20 text-[10px] font-bold uppercase tracking-wider font-inter">
-                                                        PAYÉ
+                                                        PAID
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-2 justify-end">
+                                                        <span className="text-gray-500 font-mono text-xs">({vente.prix.toLocaleString()}€)</span>
                                                         <span className="text-gray-300 text-sm font-medium">{packConfig.nameAr}</span>
                                                         <span className="text-base">{packConfig.icon}</span>
                                                     </div>
