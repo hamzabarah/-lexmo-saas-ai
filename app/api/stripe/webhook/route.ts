@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { createClient } from '@/utils/supabase/server';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
     apiVersion: '2025-12-15.clover',
@@ -40,25 +39,11 @@ export async function POST(req: NextRequest) {
                 referralCode
             });
 
-            // TODO: Grant access to the course
-            // TODO: Send welcome email
-            // TODO: Record commission for ambassador if referralCode exists
-
-            const supabase = await createClient();
-
-            // Example: Update user subscription status
-            if (userId) {
-                await supabase
-                    .from('user_subscriptions')
-                    .insert({
-                        user_id: userId,
-                        plan: plan,
-                        status: 'active',
-                        stripe_session_id: session.id,
-                        amount_paid: session.amount_total,
-                        referral_code: referralCode
-                    });
-            }
+            // V1: Manual process - admin creates account and sends credentials
+            // TODO V2: Automate with Supabase
+            // const { createClient } = await import('@/utils/supabase/server');
+            // const supabase = await createClient();
+            // await supabase.from('user_subscriptions').insert({...});
 
             break;
         }
@@ -72,7 +57,6 @@ export async function POST(req: NextRequest) {
         case 'payment_intent.payment_failed': {
             const paymentIntent = event.data.object as Stripe.PaymentIntent;
             console.log('❌ Payment failed:', paymentIntent.id);
-            // TODO: Send failure email
             break;
         }
 
