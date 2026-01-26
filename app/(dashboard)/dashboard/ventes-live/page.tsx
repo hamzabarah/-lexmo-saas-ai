@@ -26,11 +26,13 @@ ChartJS.register(
     Filler
 );
 
+import 'flag-icons/css/flag-icons.min.css';
+
 interface Vente {
     date: string;
     heure: string;
     nom: string;
-    pays: string;
+    codePays: string;
     pack: 'Spark' | 'Emperor' | 'Legend';
     prix: number;
     gain: number;
@@ -317,7 +319,7 @@ export default function VentesLivePage() {
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-3 flex-row-reverse justify-end">
                                                         <span className="text-gray-200 font-medium text-sm font-inter">{vente.nom}</span>
-                                                        <span className="text-2xl" role="img" aria-label={vente.pays}>{vente.pays}</span>
+                                                        <span className={`fi fi-${vente.codePays} fis rounded-full text-xl shadow-lg border border-white/10`} />
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4">
