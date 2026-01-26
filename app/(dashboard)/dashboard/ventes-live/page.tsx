@@ -71,8 +71,44 @@ const PACK_CONFIG: Record<string, { icon: string; nameAr: string; color: string;
     }
 };
 
+// Initialize with default values to avoid "0" flash
+const [data, setData] = useState<VentesData>({
+    ventes: [
+        {
+            date: "26 Jan",
+            heure: "22:47",
+            nom: "Youssef K.",
+            codePays: "ma",
+            pack: "Emperor",
+            prix: 1497,
+            gain: 748,
+            status: "paid"
+        },
+        // ... (other items can load later, but having stats is crucial)
+    ],
+    stats: {
+        total_gains: 11964, // Default Value from JSON
+        total_ventes: 18    // Default Value from JSON 
+    }
+});
+
+    // ... (rest of the code)
+
+                                                <td className="px-6 py-5 align-middle">
+                                                    <span className="inline-flex items-center justify-center h-7 px-3 rounded-md bg-[#00FFA3]/10 text-[#00FFA3] border border-[#00FFA3]/20 text-[11px] font-bold uppercase tracking-wider font-inter shadow-[0_0_10px_rgba(0,255,163,0.1)]">
+                                                        PAID
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-5 align-middle">
 export default function VentesLivePage() {
-    const [data, setData] = useState<VentesData>({ ventes: [], stats: { total_gains: 0, total_ventes: 0 } });
+    // Initialize with default values to prevent "0" flash on load
+    const [data, setData] = useState<VentesData>({
+        ventes: [],
+        stats: {
+            total_gains: 11964, // Pre-loaded default
+            total_ventes: 18    // Pre-loaded default
+        }
+    });
 
     // Generate cumulative earnings data for chart with ENGLISH labels
     const generateChartData = () => {
@@ -346,10 +382,12 @@ export default function VentesLivePage() {
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-5 align-middle">
-                                                    <div className="flex items-center gap-3 justify-end">
+                                                    <div className="flex items-center gap-3 justify-end w-full">
                                                         <span className="text-gray-500 font-mono text-xs opacity-70">({vente.prix.toLocaleString()}€)</span>
-                                                        <span className="text-gray-200 text-sm font-bold">{packConfig.nameAr}</span>
-                                                        <span className="text-lg filter drop-shadow-md">{packConfig.icon}</span>
+                                                        <div className="flex items-center gap-2 min-w-[100px] justify-end">
+                                                            <span className="text-gray-200 text-sm font-bold">{packConfig.nameAr}</span>
+                                                            <span className="text-lg filter drop-shadow-md">{packConfig.icon}</span>
+                                                        </div>
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-5 align-middle">
