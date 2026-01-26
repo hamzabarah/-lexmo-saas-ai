@@ -1,32 +1,188 @@
 {
     "ventes": [
         {
-            "heure": "19:37",
-            "nom": "Anas Mansouri",
-            "pays": "🇫🇷",
+            "date": "26 Jan",
+            "heure": "22:47",
+            "nom": "Youssef K.",
+            "pays": "🇲🇦",
             "pack": "Emperor",
             "prix": 1497,
-            "gain": 748
+            "gain": 748,
+            "status": "paid"
         },
         {
-            "heure": "19:42",
-            "nom": "Sarah Al-Rahman",
-            "pays": "🇸🇦",
+            "date": "26 Jan",
+            "heure": "21:15",
+            "nom": "Sarah L.",
+            "pays": "🇫🇷",
+            "pack": "Spark",
+            "prix": 997,
+            "gain": 498,
+            "status": "paid"
+        },
+        {
+            "date": "26 Jan",
+            "heure": "19:33",
+            "nom": "Karim B.",
+            "pays": "🇩🇿",
             "pack": "Legend",
-            "prix": 3997,
-            "gain": 1000
+            "prix": 2997,
+            "gain": 1000,
+            "status": "paid"
         },
         {
-            "heure": "19:45",
-            "nom": "Mohamed Benali",
+            "date": "26 Jan",
+            "heure": "18:52",
+            "nom": "Fatima Z.",
             "pays": "🇲🇦",
             "pack": "Spark",
             "prix": 997,
-            "gain": 497
+            "gain": 498,
+            "status": "paid"
+        },
+        {
+            "date": "25 Jan",
+            "heure": "17:28",
+            "nom": "Mohamed A.",
+            "pays": "🇹🇳",
+            "pack": "Emperor",
+            "prix": 1497,
+            "gain": 748,
+            "status": "paid"
+        },
+        {
+            "date": "25 Jan",
+            "heure": "16:41",
+            "nom": "Amine R.",
+            "pays": "🇲🇦",
+            "pack": "Spark",
+            "prix": 997,
+            "gain": 498,
+            "status": "paid"
+        },
+        {
+            "date": "25 Jan",
+            "heure": "15:19",
+            "nom": "Nadia M.",
+            "pays": "🇧🇪",
+            "pack": "Spark",
+            "prix": 997,
+            "gain": 498,
+            "status": "paid"
+        },
+        {
+            "date": "25 Jan",
+            "heure": "14:05",
+            "nom": "Rachid H.",
+            "pays": "🇫🇷",
+            "pack": "Emperor",
+            "prix": 1497,
+            "gain": 748,
+            "status": "paid"
+        },
+        {
+            "date": "24 Jan",
+            "heure": "12:37",
+            "nom": "Imane S.",
+            "pays": "🇲🇦",
+            "pack": "Spark",
+            "prix": 997,
+            "gain": 498,
+            "status": "paid"
+        },
+        {
+            "date": "24 Jan",
+            "heure": "11:22",
+            "nom": "Omar T.",
+            "pays": "🇩🇿",
+            "pack": "Spark",
+            "prix": 997,
+            "gain": 498,
+            "status": "paid"
+        },
+        {
+            "date": "24 Jan",
+            "heure": "10:48",
+            "nom": "Leila D.",
+            "pays": "🇹🇳",
+            "pack": "Legend",
+            "prix": 2997,
+            "gain": 1000,
+            "status": "paid"
+        },
+        {
+            "date": "23 Jan",
+            "heure": "09:15",
+            "nom": "Mehdi F.",
+            "pays": "🇫🇷",
+            "pack": "Spark",
+            "prix": 997,
+            "gain": 498,
+            "status": "paid"
+        },
+        {
+            "date": "23 Jan",
+            "heure": "08:03",
+            "nom": "Zineb C.",
+            "pays": "🇲🇦",
+            "pack": "Emperor",
+            "prix": 1497,
+            "gain": 748,
+            "status": "paid"
+        },
+        {
+            "date": "22 Jan",
+            "heure": "06:41",
+            "nom": "Hamza B.",
+            "pays": "🇧🇪",
+            "pack": "Spark",
+            "prix": 997,
+            "gain": 498,
+            "status": "paid"
+        },
+        {
+            "date": "22 Jan",
+            "heure": "04:27",
+            "nom": "Salma N.",
+            "pays": "🇲🇦",
+            "pack": "Spark",
+            "prix": 997,
+            "gain": 498,
+            "status": "paid"
+        },
+        {
+            "date": "21 Jan",
+            "heure": "02:18",
+            "nom": "Bilal E.",
+            "pays": "🇩🇿",
+            "pack": "Spark",
+            "prix": 997,
+            "gain": 498,
+            "status": "paid"
+        },
+        {
+            "date": "21 Jan",
+            "heure": "01:05",
+            "nom": "Amina K.",
+            "pays": "🇹🇳",
+            "pack": "Emperor",
+            "prix": 1497,
+            "gain": 748,
+            "status": "paid"
+        },
+        {
+            "date": "20 Jan",
+            "heure": "23:42",
+            "nom": "Tarik M.",
+            "pays": "🇫🇷",
+            "pack": "Spark",
+            "prix": 997,
+            "gain": 498,
+            "status": "paid"
         }
     ],
     "stats": {
-        "total_gains": 2245,
-        "total_ventes": 3
+        "total_gains": 11964,
+        "total_ventes": 18
     }
 }
