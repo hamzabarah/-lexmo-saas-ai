@@ -251,10 +251,12 @@ export default function VentesLivePage() {
                                 }}
                             >
                                 <CountUp
+                                    start={data.stats.total_gains} // Start at current value (no animation on load)
                                     end={data.stats.total_gains}
-                                    duration={2.5}
+                                    duration={1.5}
                                     separator=","
                                     suffix="€"
+                                    preserveValue={true} // Keep value on re-render unless changed
                                 />
                             </div>
 
@@ -272,8 +274,10 @@ export default function VentesLivePage() {
                             <div className="flex items-center gap-4">
                                 <div className="text-4xl font-black text-white font-orbitron">
                                     <CountUp
+                                        start={data.stats.total_ventes}
                                         end={data.stats.total_ventes}
-                                        duration={2}
+                                        duration={1.5}
+                                        preserveValue={true}
                                     />
                                 </div>
                                 <div className="w-12 h-12 rounded-full bg-[#00FFA3]/10 flex items-center justify-center border border-[#00FFA3]/20">
@@ -324,32 +328,32 @@ export default function VentesLivePage() {
                                                 key={index}
                                                 className={`transition-colors hover:bg-white/[0.04] ${!isEven ? 'bg-white/[0.01]' : ''}`}
                                             >
-                                                <td className="px-6 py-4">
-                                                    <div className="flex items-center gap-3 flex-row-reverse justify-end">
-                                                        <span className="text-gray-200 font-medium text-sm font-inter">{vente.nom}</span>
-                                                        <span className={`fi fi-${vente.codePays} fis rounded-full text-xl shadow-lg border border-white/10`} />
+                                                <td className="px-6 py-5 align-middle">
+                                                    <div className="flex items-center gap-4 flex-row-reverse justify-end">
+                                                        <span className="text-gray-200 font-medium text-base font-inter tracking-wide">{vente.nom}</span>
+                                                        <span className={`fi fi-${vente.codePays} fis rounded-full text-2xl shadow-lg border border-white/20`} />
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-4">
+                                                <td className="px-6 py-5 align-middle">
                                                     <div className="flex items-center gap-2 justify-end text-gray-400">
-                                                        <Clock className="w-3 h-3" />
-                                                        <span className="font-mono text-sm">{vente.date || '26 Jan'}</span>
+                                                        <Clock className="w-4 h-4 opacity-50" />
+                                                        <span className="font-mono text-sm tracking-wide">{vente.date || '26 Jan'}</span>
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-4">
-                                                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#00FFA3]/10 text-[#00FFA3] border border-[#00FFA3]/20 text-[10px] font-bold uppercase tracking-wider font-inter">
+                                                <td className="px-6 py-5 align-middle">
+                                                    <span className="inline-flex items-center justify-center h-7 px-3 rounded-md bg-[#00FFA3]/10 text-[#00FFA3] border border-[#00FFA3]/20 text-[11px] font-bold uppercase tracking-wider font-inter shadow-[0_0_10px_rgba(0,255,163,0.1)]">
                                                         PAID
                                                     </span>
                                                 </td>
-                                                <td className="px-6 py-4">
-                                                    <div className="flex items-center gap-2 justify-end">
-                                                        <span className="text-gray-500 font-mono text-xs">({vente.prix.toLocaleString()}€)</span>
-                                                        <span className="text-gray-300 text-sm font-medium">{packConfig.nameAr}</span>
-                                                        <span className="text-base">{packConfig.icon}</span>
+                                                <td className="px-6 py-5 align-middle">
+                                                    <div className="flex items-center gap-3 justify-end">
+                                                        <span className="text-gray-500 font-mono text-xs opacity-70">({vente.prix.toLocaleString()}€)</span>
+                                                        <span className="text-gray-200 text-sm font-bold">{packConfig.nameAr}</span>
+                                                        <span className="text-lg filter drop-shadow-md">{packConfig.icon}</span>
                                                     </div>
                                                 </td>
-                                                <td className="px-6 py-4">
-                                                    <span className="text-[#00FFA3] font-bold text-base font-orbitron">
+                                                <td className="px-6 py-5 align-middle">
+                                                    <span className="text-[#00FFA3] font-black text-lg font-orbitron tracking-wide filter drop-shadow-[0_0_5px_rgba(0,255,163,0.3)]">
                                                         +{vente.gain.toLocaleString()}€
                                                     </span>
                                                 </td>
