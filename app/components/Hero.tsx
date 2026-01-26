@@ -11,9 +11,9 @@ export default function Hero() {
             <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#00d2ff]/10 rounded-full blur-[120px] -z-10 animate-pulse" />
             <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#9d50bb]/10 rounded-full blur-[120px] -z-10 animate-pulse delay-1000" />
 
-            <div className="container mx-auto px-4 grid lg:grid-cols-2 gap-12 items-center mb-12">
+            <div className="container mx-auto px-4 text-center space-y-8 mb-12">
                 {/* Text Content */}
-                <div className="text-center lg:text-right space-y-8">
+                <div className="max-w-4xl mx-auto space-y-8">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -51,7 +51,7 @@ export default function Hero() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.8 }}
-                        className="text-xl text-gray-400 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
+                        className="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed"
                     >
                         وحقق استقلالك المالي مثل الآلاف غيرك باتباع منهجية Lexmo الجديدة
                     </motion.p>
@@ -60,9 +60,9 @@ export default function Hero() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 1 }}
-                        className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+                        className="flex flex-col items-center gap-4"
                     >
-                        <div className="flex flex-col items-center lg:items-start gap-2">
+                        <div className="flex flex-col items-center gap-2">
                             <a
                                 href="#pricing"
                                 className="bg-gradient-to-r from-[#00d2ff] to-[#9d50bb] text-white px-8 py-4 rounded-full font-bold text-lg hover:shadow-[0_0_40px_rgba(0,210,255,0.6)] transition-all transform hover:scale-105 active:scale-95 duration-300"
@@ -73,21 +73,27 @@ export default function Hero() {
                         </div>
                     </motion.div>
                 </div>
-
-                {/* Hero Image */}
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
-                    animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                    transition={{ delay: 0.4, duration: 0.8 }}
-                    className="relative"
-                >
-                    <div className="relative w-full aspect-square max-w-md mx-auto">
-                        <div className="relative w-full h-full bg-[#0f172a] border border-white/10 rounded-3xl flex items-center justify-center overflow-hidden shadow-2xl backdrop-blur-sm">
-                            <img src="/images/mokup.jpg" alt="Dashboard Mockup" className="w-full h-full object-cover rounded-3xl" />
-                        </div>
-                    </div>
-                </motion.div>
             </div>
+
+            {/* Full-Width Hero Mockup */}
+            <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.8 }}
+                className="w-full px-4 lg:px-8 mb-12"
+            >
+                <div className="relative w-full max-w-7xl mx-auto">
+                    <div className="relative w-full aspect-video bg-gradient-to-br from-[#0f172a] to-[#1e293b] border border-white/10 rounded-2xl lg:rounded-3xl overflow-hidden shadow-2xl">
+                        <img
+                            src="/images/mokup.jpg"
+                            alt="Dashboard Mockup"
+                            className="w-full h-full object-cover"
+                        />
+                        {/* Overlay glow effect */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#030712]/80 via-transparent to-transparent pointer-events-none" />
+                    </div>
+                </div>
+            </motion.div>
 
             {/* Marquee Section */}
             <motion.div
