@@ -51,22 +51,23 @@ export default function Navbar() {
 
             {/* Mobile Menu */}
             {isOpen && (
-                <div className="md:hidden absolute top-20 w-full glass border-b border-white/10 py-6 px-4 flex flex-col gap-4 text-center">
-                    <Link href="#content" onClick={() => setIsOpen(false)} className="hover:text-[#00d2ff]">المحتوى</Link>
-                    <Link href="#reviews" onClick={() => setIsOpen(false)} className="hover:text-[#00d2ff]">آراء العملاء</Link>
-                    <Link href="#pricing" onClick={() => setIsOpen(false)} className="hover:text-[#00d2ff]">الأسعار</Link>
-                    <Link href="#faq" onClick={() => setIsOpen(false)} className="hover:text-[#00d2ff]">الأسئلة الشائعة</Link>
+                <div className="md:hidden absolute top-20 w-full bg-[#030712]/95 backdrop-blur-xl border-b border-white/10 py-6 px-4 flex flex-col gap-4 text-center shadow-2xl">
+                    <Link href="#content" onClick={() => setIsOpen(false)} className="text-white text-lg font-medium hover:text-[#00d2ff] transition-colors py-2">المحتوى</Link>
+                    <Link href="#reviews" onClick={() => setIsOpen(false)} className="text-white text-lg font-medium hover:text-[#00d2ff] transition-colors py-2">آراء العملاء</Link>
+                    <Link href="#pricing" onClick={() => setIsOpen(false)} className="text-white text-lg font-medium hover:text-[#00d2ff] transition-colors py-2">الأسعار</Link>
+                    <Link href="#faq" onClick={() => setIsOpen(false)} className="text-white text-lg font-medium hover:text-[#00d2ff] transition-colors py-2">الأسئلة الشائعة</Link>
+                    <div className="h-px bg-white/10 my-2"></div>
                     <a
                         href="#login"
                         onClick={() => setIsOpen(false)}
-                        className="border border-white/10 text-white px-6 py-3 rounded-full font-bold mt-2"
+                        className="border border-white/20 text-white px-6 py-3 rounded-full font-bold hover:bg-white/5 transition-all"
                     >
                         تسجيل الدخول
                     </a>
                     <a
                         href="#pricing"
                         onClick={() => setIsOpen(false)}
-                        className="bg-gradient-to-r from-[#00d2ff] to-[#9d50bb] text-white px-6 py-3 rounded-full font-bold"
+                        className="bg-gradient-to-r from-[#00d2ff] to-[#9d50bb] text-white px-6 py-3 rounded-full font-bold shadow-lg hover:shadow-[0_0_20px_rgba(0,210,255,0.5)] transition-all"
                     >
                         ابدأ الآن
                     </a>
