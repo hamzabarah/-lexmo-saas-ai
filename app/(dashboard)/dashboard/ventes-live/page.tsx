@@ -248,7 +248,7 @@ export default function VentesLivePage() {
 
                             {/* Metallic Gold Text */}
                             <div
-                                className="text-6xl lg:text-7xl font-black font-orbitron mb-2"
+                                className="text-5xl lg:text-6xl xl:text-7xl font-black font-orbitron mb-2 whitespace-nowrap tracking-tight"
                                 style={{
                                     backgroundImage: 'linear-gradient(180deg, #FFD700 0%, #FDB931 50%, #9E7908 100%)',
                                     backgroundClip: 'text',
