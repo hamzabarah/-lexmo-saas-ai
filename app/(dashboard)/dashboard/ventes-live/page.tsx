@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { Wallet, ShoppingBag, TrendingUp, CheckCircle, Clock } from 'lucide-react';
+import { Wallet, ShoppingBag, TrendingUp, CheckCircle, Clock, AlertTriangle, PlayCircle } from 'lucide-react';
 import CountUp from 'react-countup';
 import { Line } from 'react-chartjs-2';
 import 'flag-icons/css/flag-icons.min.css';
@@ -39,12 +39,19 @@ interface Vente {
     status: 'paid' | 'pending';
 }
 
+interface LiveActuel {
+    places_disponibles: number;
+    places_prises: number;
+    places_restantes: number;
+}
+
 interface VentesData {
     ventes: Vente[];
     stats: {
         total_gains: number;
         total_ventes: number;
     };
+    live_actuel?: LiveActuel;
 }
 
 const PACK_CONFIG: Record<string, { icon: string; nameAr: string; color: string; bgColor: string; borderColor: string }> = {
@@ -72,12 +79,17 @@ const PACK_CONFIG: Record<string, { icon: string; nameAr: string; color: string;
 };
 
 export default function VentesLivePage() {
-    // Initialize with default values to prevent "0" flash on load
+    // Initialize with default values (including live status)
     const [data, setData] = useState<VentesData>({
         ventes: [],
         stats: {
-            total_gains: 11964, // Default Value from JSON
-            total_ventes: 18    // Default Value from JSON 
+            total_gains: 11964,
+            total_ventes: 18
+        },
+        live_actuel: {
+            places_disponibles: 7,
+            places_prises: 3,
+            places_restantes: 4
         }
     });
 
@@ -88,39 +100,27 @@ export default function VentesLivePage() {
         const cumulativeData = [];
         const dailyGains = []; // Store daily gains for tooltip
 
-        // 1. Generate Raw Random Daily Gains
         let rawDailyGains = [];
         let rawTotal = 0;
 
         for (let i = 0; i < days; i++) {
-            // Random daily gain between 0 and 800 (some days are slow, some are big)
-            // Occasional "Zero" days or low days to look real
             let daily = Math.random() > 0.2 ? Math.random() * 800 + 50 : Math.random() * 100;
-
             rawDailyGains.push(daily);
             rawTotal += daily;
         }
 
-        // 2. Adjust gains to match EXACTLY the totalTarget
         const adjustmentFactor = totalTarget / rawTotal;
-
-        // 3. Rebuild timeline properly
         let runningTotal = 0;
 
         for (let i = 0; i < days; i++) {
             const date = new Date();
-            date.setDate(date.getDate() - (days - 1 - i)); // Go from past to present (Left to Right)
+            date.setDate(date.getDate() - (days - 1 - i));
             labels.push(date.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }));
 
             let adjustedDaily = Math.round(rawDailyGains[i] * adjustmentFactor);
+            if (i === days - 1) adjustedDaily = totalTarget - runningTotal;
 
-            // Force last point connection if needed (small rounding adjustments)
-            if (i === days - 1) {
-                adjustedDaily = totalTarget - runningTotal;
-            }
-
-            dailyGains.push(adjustedDaily); // Save for tooltip
-
+            dailyGains.push(adjustedDaily);
             runningTotal += adjustedDaily;
             cumulativeData.push(runningTotal);
         }
@@ -136,7 +136,6 @@ export default function VentesLivePage() {
             {
                 label: 'Gains Cumulés',
                 data: chartData.data,
-                // Pass daily gains as extra data for the tooltip
                 dailyGains: chartData.dailyGains,
                 borderColor: '#00FFA3',
                 backgroundColor: (context: any) => {
@@ -176,14 +175,11 @@ export default function VentesLivePage() {
                 padding: 12,
                 displayColors: false,
                 callbacks: {
-                    title: (context: any) => {
-                        return context[0].label; // Date
-                    },
+                    title: (context: any) => context[0].label,
                     label: (context: any) => {
                         const index = context.dataIndex;
                         const dailyGain = context.dataset.dailyGains[index];
                         const total = context.parsed.y;
-
                         return [
                             `Daily Profit: +${dailyGain.toLocaleString()}€`,
                             `Total: ${total.toLocaleString()}€`
@@ -199,7 +195,7 @@ export default function VentesLivePage() {
                     drawBorder: false
                 },
                 ticks: {
-                    color: '#6B7280', // Grey text for English labels
+                    color: '#6B7280',
                     maxRotation: 0,
                     autoSkip: true,
                     maxTicksLimit: 7,
@@ -236,25 +232,104 @@ export default function VentesLivePage() {
         };
 
         fetchData();
-        const interval = setInterval(fetchData, 5000);
+        const interval = setInterval(fetchData, 3000); // Update every 3 seconds for urgency
         return () => clearInterval(interval);
     }, []);
+
+    // Urgency Banner Logic
+    const live = data.live_actuel;
+    let urgenceStyle = {
+        bg: "bg-green-500/15",
+        border: "border-green-500",
+        text: "text-green-500",
+        message: "✅ اكتمل العدد - نراكم في البث القادم !",
+        animate: false,
+        icon: <CheckCircle className="w-5 h-5 animate-bounce" />,
+        progressColor: "bg-gradient-to-l from-green-500 to-green-400"
+    };
+
+    if (live) {
+        if (live.places_restantes >= 5) {
+            urgenceStyle = {
+                bg: "bg-yellow-500/10",
+                border: "border-yellow-500",
+                text: "text-yellow-500",
+                message: `لم يتبقى سوى ${live.places_restantes} أماكن متاحة`,
+                animate: false,
+                icon: <PlayCircle className="w-5 h-5 text-yellow-500" />,
+                progressColor: "bg-gradient-to-l from-yellow-500 to-amber-500"
+            };
+        } else if (live.places_restantes >= 3) {
+            urgenceStyle = {
+                bg: "bg-orange-500/15",
+                border: "border-orange-500",
+                text: "text-orange-500",
+                message: `⚠️ لم يتبقى سوى ${live.places_restantes} أماكن لهذا البث المباشر !`,
+                animate: false,
+                icon: <AlertTriangle className="w-5 h-5 animate-pulse text-orange-500" />,
+                progressColor: "bg-gradient-to-l from-orange-500 to-red-500"
+            };
+        } else if (live.places_restantes > 0) {
+            urgenceStyle = {
+                bg: "bg-red-500/20",
+                border: "border-red-500",
+                text: "text-red-500",
+                message: live.places_restantes === 1 ? "🔴🔴 مكان واحد فقط متبقي !" : "🔴 مكانان فقط متبقيان ! أسرع !",
+                animate: true,
+                icon: <AlertTriangle className="w-6 h-6 animate-ping text-red-500" />,
+                progressColor: "bg-gradient-to-l from-red-600 to-red-500"
+            };
+        }
+    }
+
+    const progressPercent = live ? Math.min((live.places_prises / live.places_disponibles) * 100, 100) : 0;
 
     return (
         <div className="min-h-screen bg-[#050A14] text-white font-cairo p-6 lg:p-10">
             <div className="max-w-[1600px] mx-auto space-y-8">
 
                 {/* BRAND HEADER */}
-                <div className="flex justify-between items-center">
-                    <div>
-                        {/* Optional: Add a page title or breadcrumb if needed, keeping it clean for now */}
-                    </div>
+                <div className="flex justify-between items-center mb-6">
+                    <div></div>
                     <div className="text-right">
                         <h1 className="text-2xl font-black tracking-wider font-orbitron text-white">
                             LEXMO<span className="text-[#00FFA3]">.AI</span>
                         </h1>
                     </div>
                 </div>
+
+                {/* URGENCY BANNER */}
+                {live && (
+                    <div
+                        className={`w-full rounded-2xl p-6 border-2 transition-all duration-500 relative overflow-hidden ${urgenceStyle.bg} ${urgenceStyle.border} ${urgenceStyle.animate ? 'banner-urgent' : ''}`}
+                        dir="rtl"
+                    >
+                        {/* Header */}
+                        <div className="flex items-center gap-3 mb-6">
+                            <span className="text-2xl">🔥</span>
+                            <h2 className="text-xl lg:text-2xl font-bold text-white font-cairo">أماكن محدودة اليوم</h2>
+                        </div>
+
+                        {/* Progress Bar */}
+                        <div className="relative w-full h-6 bg-white/10 rounded-full overflow-hidden mb-4 shadow-inner">
+                            <div
+                                className={`h-full transition-all duration-1000 ease-out ${urgenceStyle.progressColor}`}
+                                style={{ width: `${progressPercent}%` }}
+                            ></div>
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <span className="text-xs font-bold text-white drop-shadow-md tracking-wider">
+                                    تم حجز {live.places_prises} من {live.places_disponibles} أماكن
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Message */}
+                        <div className={`flex items-center gap-3 font-bold text-lg lg:text-xl ${urgenceStyle.text}`}>
+                            {urgenceStyle.icon}
+                            <span>{urgenceStyle.message}</span>
+                        </div>
+                    </div>
+                )}
 
                 {/* MAIN GRID: 65% Graph / 35% Stats */}
                 <div className="grid grid-cols-1 lg:grid-cols-[65%_35%] gap-6">
@@ -299,12 +374,12 @@ export default function VentesLivePage() {
                                 }}
                             >
                                 <CountUp
-                                    start={data.stats.total_gains} // Start at current value (no animation on load)
+                                    start={data.stats.total_gains}
                                     end={data.stats.total_gains}
                                     duration={1.5}
                                     separator=","
                                     suffix="€"
-                                    preserveValue={true} // Keep value on re-render unless changed
+                                    preserveValue={true}
                                 />
                             </div>
 
@@ -427,6 +502,21 @@ export default function VentesLivePage() {
                 }
                 .font-inter {
                     font-family: 'Inter', sans-serif;
+                }
+
+                @keyframes urgentPulse {
+                    0%, 100% {
+                        transform: scale(1);
+                        box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+                    }
+                    50% {
+                        transform: scale(1.02);
+                        box-shadow: 0 0 40px rgba(239, 68, 68, 0.6);
+                    }
+                }
+
+                .banner-urgent {
+                    animation: urgentPulse 1.5s ease-in-out infinite;
                 }
             `}</style>
         </div>

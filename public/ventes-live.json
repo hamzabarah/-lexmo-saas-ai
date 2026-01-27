@@ -1,4 +1,9 @@
 {
+    "live_actuel": {
+        "places_disponibles": 7,
+        "places_prises": 3,
+        "places_restantes": 4
+    },
     "ventes": [
         {
             "date": "26 Jan",
