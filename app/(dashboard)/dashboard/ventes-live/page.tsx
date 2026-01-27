@@ -87,9 +87,9 @@ export default function VentesLivePage() {
             total_ventes: 0
         },
         live_actuel: {
-            places_disponibles: 7,
+            places_disponibles: 0, // No default, wait for JSON
             places_prises: 0,
-            places_restantes: 7
+            places_restantes: 0
         }
     });
 
@@ -260,7 +260,7 @@ export default function VentesLivePage() {
         progressColor: "bg-gradient-to-l from-green-500 to-green-400"
     };
 
-    if (live) {
+    if (live && live.places_disponibles > 0) {
         if (live.places_restantes >= 5) {
             urgenceStyle = {
                 bg: "bg-yellow-500/10",
@@ -294,7 +294,9 @@ export default function VentesLivePage() {
         }
     }
 
-    const progressPercent = live ? Math.min((live.places_prises / live.places_disponibles) * 100, 100) : 0;
+    const progressPercent = live && live.places_disponibles > 0
+        ? Math.min((live.places_prises / live.places_disponibles) * 100, 100)
+        : 0;
 
     return (
         <div className="min-h-screen bg-[#050A14] text-white font-cairo p-6 lg:p-10">
@@ -311,7 +313,7 @@ export default function VentesLivePage() {
                 </div>
 
                 {/* URGENCY BANNER */}
-                {live && (
+                {live && live.places_disponibles > 0 && (
                     <div
                         className={`w-full rounded-2xl p-6 border-2 transition-all duration-500 relative overflow-hidden ${urgenceStyle.bg} ${urgenceStyle.border} ${urgenceStyle.animate ? 'banner-urgent' : ''}`}
                         dir="rtl"
