@@ -81,32 +81,51 @@ export default function VentesLivePage() {
         }
     });
 
-    // Generate cumulative earnings data for chart based on TOTAL GAINS
+    // Generate realistic earnings data for chart based on TOTAL GAINS
     const generateChartData = (totalTarget: number) => {
         const days = 30;
         const labels = [];
         const cumulativeData = [];
+        const dailyGains = []; // Store daily gains for tooltip
 
-        // Simulating a realistic growth curve ending at totalTarget
-        // We work backwards: final point is totalTarget
-        let currentAmount = totalTarget;
+        // 1. Generate Raw Random Daily Gains
+        let rawDailyGains = [];
+        let rawTotal = 0;
 
-        for (let i = 0; i <= days; i++) {
+        for (let i = 0; i < days; i++) {
+            // Random daily gain between 0 and 800 (some days are slow, some are big)
+            // Occasional "Zero" days or low days to look real
+            let daily = Math.random() > 0.2 ? Math.random() * 800 + 50 : Math.random() * 100;
+
+            rawDailyGains.push(daily);
+            rawTotal += daily;
+        }
+
+        // 2. Adjust gains to match EXACTLY the totalTarget
+        const adjustmentFactor = totalTarget / rawTotal;
+
+        // 3. Rebuild timeline properly
+        let runningTotal = 0;
+
+        for (let i = 0; i < days; i++) {
             const date = new Date();
-            date.setDate(date.getDate() - (days - i));
-            // English locale labels
+            date.setDate(date.getDate() - (days - 1 - i)); // Go from past to present (Left to Right)
             labels.push(date.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }));
+
+            let adjustedDaily = Math.round(rawDailyGains[i] * adjustmentFactor);
+
+            // Force last point connection if needed (small rounding adjustments)
+            if (i === days - 1) {
+                adjustedDaily = totalTarget - runningTotal;
+            }
+
+            dailyGains.push(adjustedDaily); // Save for tooltip
+
+            runningTotal += adjustedDaily;
+            cumulativeData.push(runningTotal);
         }
 
-        // Fill data backwards
-        for (let i = days; i >= 0; i--) {
-            cumulativeData[i] = Math.round(currentAmount);
-            // Randomly decrease to simulate history (between 100€ and 800€ less per step)
-            currentAmount -= Math.random() * 700 + 100;
-            if (currentAmount < 0) currentAmount = 0;
-        }
-
-        return { labels, data: cumulativeData };
+        return { labels, data: cumulativeData, dailyGains };
     };
 
     const chartData = generateChartData(data.stats.total_gains);
@@ -117,6 +136,8 @@ export default function VentesLivePage() {
             {
                 label: 'Gains Cumulés',
                 data: chartData.data,
+                // Pass daily gains as extra data for the tooltip
+                dailyGains: chartData.dailyGains,
                 borderColor: '#00FFA3',
                 backgroundColor: (context: any) => {
                     const ctx = context.chart.ctx;
@@ -145,17 +166,29 @@ export default function VentesLivePage() {
                 display: false
             },
             tooltip: {
-                backgroundColor: 'rgba(5, 10, 20, 0.9)',
+                backgroundColor: 'rgba(5, 10, 20, 0.95)',
                 titleColor: '#00FFA3',
-                titleFont: { family: 'Inter', size: 13 },
+                titleFont: { family: 'Orbitron', size: 13 },
                 bodyColor: '#fff',
-                bodyFont: { family: 'Inter', size: 14, weight: 'bold' },
-                borderColor: 'rgba(255,255,255,0.1)',
+                bodyFont: { family: 'Inter', size: 12 },
+                borderColor: 'rgba(255, 255, 255, 0.1)',
                 borderWidth: 1,
                 padding: 12,
                 displayColors: false,
                 callbacks: {
-                    label: (context: any) => `${context.parsed.y.toLocaleString()}€`
+                    title: (context: any) => {
+                        return context[0].label; // Date
+                    },
+                    label: (context: any) => {
+                        const index = context.dataIndex;
+                        const dailyGain = context.dataset.dailyGains[index];
+                        const total = context.parsed.y;
+
+                        return [
+                            `Daily Profit: +${dailyGain.toLocaleString()}€`,
+                            `Total: ${total.toLocaleString()}€`
+                        ];
+                    }
                 }
             }
         },
@@ -364,7 +397,7 @@ export default function VentesLivePage() {
                                                     <div className="flex items-center gap-3 justify-end w-full">
                                                         <div className="flex flex-col items-end mr-1">
                                                             <span className="text-gray-200 text-sm font-bold mb-0.5">{packConfig.nameAr}</span>
-                                                            <span className="text-gray-500 font-mono text-[10px] opacity-70 tracking-wide">{vente.prix.toLocaleString()}€</span>
+                                                            <span className="text-gray-400 font-mono text-xs tracking-wide">({vente.prix.toLocaleString()}€)</span>
                                                         </div>
                                                         <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white/5 border border-white/10 shadow-sm">
                                                             <span className="text-lg filter drop-shadow-md">{packConfig.icon}</span>
