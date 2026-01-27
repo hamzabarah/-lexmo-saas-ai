@@ -43,6 +43,9 @@ interface LiveActuel {
     places_disponibles: number;
     places_prises: number;
     places_restantes: number;
+    duree_live_minutes?: number;
+    heure_debut?: string;
+    heure_fin?: string;
 }
 
 interface VentesData {
@@ -298,6 +301,56 @@ export default function VentesLivePage() {
         ? Math.min((live.places_prises / live.places_disponibles) * 100, 100)
         : 0;
 
+    // Countdown Logic
+    const [timeLeft, setTimeLeft] = useState<string | null>(null);
+    const [urgencyLevel, setUrgencyLevel] = useState<'normal' | 'warning' | 'critical'>('normal');
+
+    useEffect(() => {
+        if (!data.live_actuel?.heure_fin) return;
+
+        const interval = setInterval(() => {
+            const now = new Date();
+            const end = new Date(data.live_actuel?.heure_fin || '');
+            const diff = end.getTime() - now.getTime();
+
+            if (diff <= 0) {
+                setTimeLeft("🔴 انتهى الوقت");
+                setUrgencyLevel('critical');
+                return;
+            }
+
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            const formattedTime = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            // Set Urgency Level
+            if (hours === 0 && minutes < 10) {
+                setTimeLeft(`🔴 آخر ${minutes} دقائق !`);
+                setUrgencyLevel('critical');
+            } else if (hours === 0) {
+                setTimeLeft(`⏰ متبقي: ${formattedTime}`);
+                setUrgencyLevel('warning');
+            } else {
+                setTimeLeft(`⏰ ينتهي في: ${formattedTime}`);
+                setUrgencyLevel('normal');
+            }
+
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [data.live_actuel?.heure_fin]);
+
+    // Dynamic styles for countdown
+    const getCountdownStyle = () => {
+        switch (urgencyLevel) {
+            case 'critical': return "text-red-500 animate-pulse font-bold";
+            case 'warning': return "text-orange-500 animate-pulse";
+            default: return "text-emerald-400";
+        }
+    };
+
     return (
         <div className="min-h-screen bg-[#050A14] text-white font-cairo p-6 lg:p-10">
             <div className="max-w-[1600px] mx-auto space-y-8">
@@ -318,10 +371,19 @@ export default function VentesLivePage() {
                         className={`w-full rounded-2xl p-6 border-2 transition-all duration-500 relative overflow-hidden ${urgenceStyle.bg} ${urgenceStyle.border} ${urgenceStyle.animate ? 'banner-urgent' : ''}`}
                         dir="rtl"
                     >
-                        {/* Header */}
-                        <div className="flex items-center gap-3 mb-6">
-                            <span className="text-2xl">🔥</span>
-                            <h2 className="text-xl lg:text-2xl font-bold text-white font-cairo">أماكن محدودة اليوم</h2>
+                        {/* Header with Title & Countdown */}
+                        <div className="flex flex-wrap justify-between items-center mb-6 gap-4">
+                            <div className="flex items-center gap-3">
+                                <span className="text-2xl">🔥</span>
+                                <h2 className="text-xl lg:text-2xl font-bold text-white font-cairo">أماكن محدودة اليوم</h2>
+                            </div>
+
+                            {/* Countdown Display */}
+                            {timeLeft && (
+                                <div className={`flex items-center gap-2 text-lg lg:text-xl font-mono dir-ltr ${getCountdownStyle()} bg-black/20 px-4 py-2 rounded-lg border border-white/5`}>
+                                    {timeLeft}
+                                </div>
+                            )}
                         </div>
 
                         {/* Progress Bar */}

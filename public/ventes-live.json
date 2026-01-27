@@ -4,7 +4,10 @@
         "places_disponibles": 7,
         "places_prises": 0,
         "places_restantes": 7,
-        "gains_du_jour": 0
+        "gains_du_jour": 0,
+        "duree_live_minutes": 180,
+        "heure_debut": "2026-01-27T06:00:00",
+        "heure_fin": "2026-01-27T10:30:00"
     },
     "ventes": [],
     "stats": {
