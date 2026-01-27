@@ -238,16 +238,21 @@ export default function VentesLivePage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('/ventes-live.json?t=' + Date.now());
+                // Fetch from Supabase API Bridge
+                const response = await fetch('/api/live/data?t=' + Date.now());
                 const jsonData = await response.json();
-                setData(jsonData);
+
+                // Only update if we have valid data
+                if (jsonData && jsonData.stats) {
+                    setData(jsonData);
+                }
             } catch (error) {
                 console.error('Erreur chargement données:', error);
             }
         };
 
         fetchData();
-        const interval = setInterval(fetchData, 3000); // Update every 3 seconds for urgency
+        const interval = setInterval(fetchData, 3000); // 3s polling for real-time feel
         return () => clearInterval(interval);
     }, []);
 
