@@ -79,17 +79,17 @@ const PACK_CONFIG: Record<string, { icon: string; nameAr: string; color: string;
 };
 
 export default function VentesLivePage() {
-    // Initialize with default values (including live status)
+    // Initialize with EMPTY/ZERO values for fresh simulation
     const [data, setData] = useState<VentesData>({
         ventes: [],
         stats: {
-            total_gains: 11964,
-            total_ventes: 18
+            total_gains: 0,
+            total_ventes: 0
         },
         live_actuel: {
             places_disponibles: 7,
-            places_prises: 3,
-            places_restantes: 4
+            places_prises: 0,
+            places_restantes: 7
         }
     });
 
@@ -102,6 +102,18 @@ export default function VentesLivePage() {
 
         let rawDailyGains = [];
         let rawTotal = 0;
+
+        // If target is 0, chart is flat 0
+        if (totalTarget === 0) {
+            for (let i = 0; i < days; i++) {
+                const date = new Date();
+                date.setDate(date.getDate() - (days - 1 - i));
+                labels.push(date.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }));
+                cumulativeData.push(0);
+                dailyGains.push(0);
+            }
+            return { labels, data: cumulativeData, dailyGains };
+        }
 
         for (let i = 0; i < days; i++) {
             let daily = Math.random() > 0.2 ? Math.random() * 800 + 50 : Math.random() * 100;
