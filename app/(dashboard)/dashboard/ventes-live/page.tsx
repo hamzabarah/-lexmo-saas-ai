@@ -81,27 +81,35 @@ export default function VentesLivePage() {
         }
     });
 
-    // Generate cumulative earnings data for chart with ENGLISH labels
-    const generateChartData = () => {
+    // Generate cumulative earnings data for chart based on TOTAL GAINS
+    const generateChartData = (totalTarget: number) => {
         const days = 30;
         const labels = [];
         const cumulativeData = [];
-        let cumulative = 0;
 
-        for (let i = days; i >= 0; i--) {
+        // Simulating a realistic growth curve ending at totalTarget
+        // We work backwards: final point is totalTarget
+        let currentAmount = totalTarget;
+
+        for (let i = 0; i <= days; i++) {
             const date = new Date();
-            date.setDate(date.getDate() - i);
-            // English locale for labels: Jan 26
+            date.setDate(date.getDate() - (days - i));
+            // English locale labels
             labels.push(date.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }));
+        }
 
-            cumulative += Math.random() * 500 + 200;
-            cumulativeData.push(Math.round(cumulative));
+        // Fill data backwards
+        for (let i = days; i >= 0; i--) {
+            cumulativeData[i] = Math.round(currentAmount);
+            // Randomly decrease to simulate history (between 100€ and 800€ less per step)
+            currentAmount -= Math.random() * 700 + 100;
+            if (currentAmount < 0) currentAmount = 0;
         }
 
         return { labels, data: cumulativeData };
     };
 
-    const chartData = generateChartData();
+    const chartData = generateChartData(data.stats.total_gains);
 
     const chartConfig = {
         labels: chartData.labels,
