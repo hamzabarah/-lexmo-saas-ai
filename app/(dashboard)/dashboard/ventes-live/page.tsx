@@ -354,9 +354,11 @@ export default function VentesLivePage() {
                                                 </td>
                                                 <td className="px-6 py-5 align-middle">
                                                     <div className="flex items-center gap-3 justify-end w-full">
-                                                        <span className="text-gray-500 font-mono text-xs opacity-70">({vente.prix.toLocaleString()}€)</span>
-                                                        <div className="flex items-center gap-2 min-w-[100px] justify-end">
-                                                            <span className="text-gray-200 text-sm font-bold">{packConfig.nameAr}</span>
+                                                        <div className="flex flex-col items-end mr-1">
+                                                            <span className="text-gray-200 text-sm font-bold mb-0.5">{packConfig.nameAr}</span>
+                                                            <span className="text-gray-500 font-mono text-[10px] opacity-70 tracking-wide">{vente.prix.toLocaleString()}€</span>
+                                                        </div>
+                                                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white/5 border border-white/10 shadow-sm">
                                                             <span className="text-lg filter drop-shadow-md">{packConfig.icon}</span>
                                                         </div>
                                                     </div>
