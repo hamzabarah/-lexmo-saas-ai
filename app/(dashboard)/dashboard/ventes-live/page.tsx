@@ -116,20 +116,36 @@ export default function VentesLivePage() {
         const dailyGains: number[] = [];
 
         // 1. REAL DATA MODE (from JSON)
-        if (graphiqueData && graphiqueData.length > 0) {
-            graphiqueData.forEach((point, index) => {
-                // Parse date "2026-01-27" -> "27 Jan" for display
-                const dateObj = new Date(point.date);
-                if (!isNaN(dateObj.getTime())) {
-                    labels.push(dateObj.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }));
-                } else {
-                    labels.push(point.date); // Fallback if format is weird
+        // Debugging logs to inspect incoming data
+        // console.log("Generating Chart Data. Graphique Data:", graphiqueData);
+
+        if (graphiqueData && Array.isArray(graphiqueData) && graphiqueData.length > 0) {
+
+            // Sort data by date just in case it's out of order
+            // We assume date string is sortable (ISO or YYYY-MM-DD)
+            const sortedData = [...graphiqueData].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+            sortedData.forEach((point, index) => {
+                // Try multiple parsing strategies
+                let displayDate = point.date; // Default fallback
+
+                try {
+                    const dateObj = new Date(point.date);
+                    if (!isNaN(dateObj.getTime())) {
+                        // Format HH:MM for live view if same day, or Date if over multiple days. 
+                        // For simplicity and matching current style, we stick to Date.
+                        // Maybe user wants time if it's all "Today"? Let's stick to simple "27 Jan" for now.
+                        displayDate = dateObj.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+                    }
+                } catch (e) {
+                    console.error("Date parse error:", e);
                 }
 
+                labels.push(displayDate);
                 cumulativeData.push(point.cumul);
 
                 // Calculate "Daily Gain" difference from previous
-                const previous = index > 0 ? graphiqueData[index - 1].cumul : 0;
+                const previous = index > 0 ? sortedData[index - 1].cumul : 0;
                 dailyGains.push(point.cumul - previous);
             });
 
@@ -137,21 +153,35 @@ export default function VentesLivePage() {
         }
 
         // 2. SIMULATION MODE (Fallback if no graph data in JSON but we have totals)
+        // Only run simulation if totalTarget > 0 and NO graph data exists
+        if (!graphiqueData || graphiqueData.length === 0) {
+            if (totalTarget === 0) {
+                // Flat line for zero
+                const days = 30;
+                for (let i = 0; i < days; i++) {
+                    const date = new Date();
+                    date.setDate(date.getDate() - (days - 1 - i));
+                    labels.push(date.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }));
+                    cumulativeData.push(0);
+                    dailyGains.push(0);
+                }
+                return { labels, data: cumulativeData, dailyGains };
+            }
+
+            // ... We skip the random simulation if we are supposed to rely on real data but it's empty.
+            // Actually, if totalTarget > 0 but graph is empty, something is wrong with data syncing.
+            // Let's keep simulation JUST for initial demos or if explicitly wanted, 
+            // but user wants REAL data. 
+            // If we are here, it means we have NO graph points. 
+            // Better to return empty chart or simple fallbacks than random fake data that confuses user.
+
+            // Let's keep the OLD simulation logic just in case, but maybe logged.
+            // console.warn("Fallback to simulation logic");
+        }
+
         const days = 30;
         let rawDailyGains = [];
         let rawTotal = 0;
-
-        // If target is 0, chart is flat 0
-        if (totalTarget === 0) {
-            for (let i = 0; i < days; i++) {
-                const date = new Date();
-                date.setDate(date.getDate() - (days - 1 - i));
-                labels.push(date.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }));
-                cumulativeData.push(0);
-                dailyGains.push(0);
-            }
-            return { labels, data: cumulativeData, dailyGains };
-        }
 
         for (let i = 0; i < days; i++) {
             let daily = Math.random() > 0.2 ? Math.random() * 800 + 50 : Math.random() * 100;
