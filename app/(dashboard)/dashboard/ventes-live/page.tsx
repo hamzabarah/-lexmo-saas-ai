@@ -48,6 +48,11 @@ interface LiveActuel {
     heure_fin?: string;
 }
 
+interface GraphiquePoint {
+    date: string;
+    cumul: number;
+}
+
 interface VentesData {
     ventes: Vente[];
     stats: {
@@ -55,7 +60,14 @@ interface VentesData {
         total_ventes: number;
     };
     live_actuel?: LiveActuel;
+    graphique?: GraphiquePoint[];
 }
+
+// ... (PACK_CONFIG stays roughly same, skipping for brevity in this replacement block if I could, but I need to be careful with context limits. 
+// I will target the interfaces first then the function separately or together if close enough. 
+// They are lines 51-58 (Interface) and 100-146 (Function).)
+
+// I'll do it in one big chunk to be safe as they are close enough in file structure (context is around line 50 to 150).
 
 const PACK_CONFIG: Record<string, { icon: string; nameAr: string; color: string; bgColor: string; borderColor: string }> = {
     Spark: {
@@ -93,16 +105,39 @@ export default function VentesLivePage() {
             places_disponibles: 0, // No default, wait for JSON
             places_prises: 0,
             places_restantes: 0
-        }
+        },
+        graphique: []
     });
 
-    // Generate realistic earnings data for chart based on TOTAL GAINS
-    const generateChartData = (totalTarget: number) => {
-        const days = 30;
-        const labels = [];
-        const cumulativeData = [];
-        const dailyGains = []; // Store daily gains for tooltip
+    // Generate chart data: Priority to JSON real data, fallback to simulation if missing
+    const generateChartData = (totalTarget: number, graphiqueData?: GraphiquePoint[]) => {
+        const labels: string[] = [];
+        const cumulativeData: number[] = [];
+        const dailyGains: number[] = [];
 
+        // 1. REAL DATA MODE (from JSON)
+        if (graphiqueData && graphiqueData.length > 0) {
+            graphiqueData.forEach((point, index) => {
+                // Parse date "2026-01-27" -> "27 Jan" for display
+                const dateObj = new Date(point.date);
+                if (!isNaN(dateObj.getTime())) {
+                    labels.push(dateObj.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }));
+                } else {
+                    labels.push(point.date); // Fallback if format is weird
+                }
+
+                cumulativeData.push(point.cumul);
+
+                // Calculate "Daily Gain" difference from previous
+                const previous = index > 0 ? graphiqueData[index - 1].cumul : 0;
+                dailyGains.push(point.cumul - previous);
+            });
+
+            return { labels, data: cumulativeData, dailyGains };
+        }
+
+        // 2. SIMULATION MODE (Fallback if no graph data in JSON but we have totals)
+        const days = 30;
         let rawDailyGains = [];
         let rawTotal = 0;
 
@@ -143,7 +178,7 @@ export default function VentesLivePage() {
         return { labels, data: cumulativeData, dailyGains };
     };
 
-    const chartData = generateChartData(data.stats.total_gains);
+    const chartData = generateChartData(data.stats.total_gains, data.graphique);
 
     const chartConfig = {
         labels: chartData.labels,
