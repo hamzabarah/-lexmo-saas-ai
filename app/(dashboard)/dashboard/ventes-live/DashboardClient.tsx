@@ -1,11 +1,10 @@
 "use client";
-// Force Deploy: 2026-01-29 20:45 - Switch to Bar Chart & Daily Gains
+// Force Deploy: 2026-01-29 20:55 - Final Graph Adjustments (Line + Padding + Dates)
 
 import { useEffect, useState } from 'react';
 import { Wallet, ShoppingBag, TrendingUp, CheckCircle, Clock, AlertTriangle, PlayCircle } from 'lucide-react';
 import CountUp from 'react-countup';
 import { Bar } from 'react-chartjs-2';
-// import 'flag-icons/css/flag-icons.min.css'; // Removed in favor of CDN for reliability
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -13,7 +12,9 @@ import {
     BarElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    PointElement,
+    LineElement
 } from 'chart.js';
 
 ChartJS.register(
@@ -22,7 +23,9 @@ ChartJS.register(
     BarElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    PointElement,
+    LineElement
 );
 
 export interface Vente {
@@ -123,15 +126,10 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
         }
 
         sortedDates.forEach(dateStr => {
-            // Format Label: "29 Jan" (using French locale as requested implicitly by "29 janvier" desire, but keeping short for axis? 
-            // User asked "Jan 29" -> "Jan 29" basically fixes the offset. 
-            // User complaint: "Jan 30 au lieu de Jan 29". 
-            // Parsing "YYYY-MM-DD" directly avoids timezone issues.
+            // FIX DATE: Manually map string "YYYY-MM-DD" to "Jan 29" to avoid ANY timezone shift
             const [y, m, d] = dateStr.split('-').map(Number);
-            const dateObj = new Date(y, m - 1, d); // Local time construction
-
-            // Format for Display: "Jan 29" to match style but correct date
-            const label = dateObj.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+            const monthsShort = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const label = `${monthsShort[m - 1]} ${d}`;
 
             labels.push(label);
 
@@ -152,16 +150,31 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
         labels: chartData.labels,
         datasets: [
             {
+                type: 'line' as const,
+                label: 'Evolution',
+                data: chartData.data,
+                dailyCounts: chartData.dailyCounts,
+                cumulativeData: chartData.cumulativeData,
+                borderColor: 'rgba(16, 185, 129, 1)', // Emerald-500
+                borderWidth: 3,
+                pointRadius: 6,
+                pointBackgroundColor: 'rgba(16, 185, 129, 1)',
+                tension: 0.4,
+                order: 1 // Top layer
+            },
+            {
+                type: 'bar' as const,
                 label: 'Gains du Jour',
                 data: chartData.data,
                 dailyCounts: chartData.dailyCounts,
                 cumulativeData: chartData.cumulativeData,
-                backgroundColor: '#00FFA3',
+                backgroundColor: 'rgba(0, 255, 163, 0.4)',
                 borderRadius: 4,
                 borderSkipped: false,
                 barThickness: 30, // Fixed pixel width
                 maxBarThickness: 30,
-                hoverBackgroundColor: '#fff',
+                hoverBackgroundColor: '#00FFA3',
+                order: 2 // Bottom layer
             }
         ]
     };
@@ -169,6 +182,9 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
     const chartOptions = {
         responsive: true,
         maintainAspectRatio: false,
+        layout: {
+            padding: { left: 20, right: 20, top: 20, bottom: 20 }
+        },
         plugins: {
             legend: {
                 display: false
@@ -475,7 +491,7 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
 
                         {/* Chart Area */}
                         <div className="h-[350px] w-full">
-                            <Bar data={chartConfig} options={chartOptions} />
+                            <Bar data={chartConfig as any} options={chartOptions as any} />
                         </div>
                     </div>
 
