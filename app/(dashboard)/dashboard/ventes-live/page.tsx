@@ -261,8 +261,8 @@ export default function VentesLivePage() {
                         const dailyGain = context.dataset.dailyGains[index];
                         const total = context.parsed.y;
                         return [
-                            `Daily Profit: +${dailyGain.toLocaleString()}€`,
-                            `Total: ${total.toLocaleString()}€`
+                            `الأرباح اليومية: +${dailyGain.toLocaleString()}€`,
+                            `الإجمالي: ${total.toLocaleString()}€`
                         ];
                     }
                 }
