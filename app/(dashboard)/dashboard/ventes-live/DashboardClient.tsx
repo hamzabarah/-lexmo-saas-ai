@@ -411,7 +411,7 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                 {timeLeft && (urgencyLevel === 'critical' || urgencyLevel === 'extreme') && (
                     <div className="w-full flex justify-center py-6">
                         <div className="text-center animate-bounce duration-[2000ms]">
-                            <p className="text-red-500 font-bold tracking-[0.5em] mb-2 uppercase text-sm">⚠️ عرض محدود</p>
+                            <p className="text-red-500 font-bold mb-2 uppercase text-sm">⚠️ عرض محدود</p>
                             <div className="text-6xl md:text-8xl font-black font-mono text-transparent bg-clip-text bg-gradient-to-b from-red-500 to-red-900 drop-shadow-[0_0_25px_rgba(220,38,38,0.5)] px-4">
                                 {timeLeft}
                             </div>
