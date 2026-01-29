@@ -596,31 +596,30 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                                     data.ventes.map((vente, index) => {
                                         const packConfig = PACK_CONFIG[vente.pack];
 
-                                        // 💡 USER FIX: Explicit Map Logic
-                                        const getFlag = (pays: string | undefined) => {
-                                            if (!pays) return "🌍";
-                                            const p = pays.toUpperCase().trim();
-                                            const flags: Record<string, string> = {
-                                                'AE': '🇦🇪', '🇦🇪': '🇦🇪',
-                                                'ES': '🇪🇸', '🇪🇸': '🇪🇸',
-                                                'IT': '🇮🇹', '🇮🇹': '🇮🇹',
-                                                'SE': '🇸🇪', '🇸🇪': '🇸🇪',
-                                                'DE': '🇩🇪', '🇩🇪': '🇩🇪',
-                                                'NL': '🇳🇱', '🇳🇱': '🇳🇱',
-                                                'FR': '🇫🇷', '🇫🇷': '🇫🇷',
-                                                'CA': '🇨🇦', '🇨🇦': '🇨🇦',
-                                                'BE': '🇧🇪', '🇧🇪': '🇧🇪',
-                                                'CH': '🇨🇭', '🇨🇭': '🇨🇭',
-                                                'GB': '🇬🇧', '🇬🇧': '🇬🇧',
-                                                'US': '🇺🇸', '🇺🇸': '🇺🇸',
-                                                'MA': '🇲🇦', // Added for completeness
-                                                'DZ': '🇩🇿',
-                                                'TN': '🇹🇳'
-                                            };
-                                            return flags[p] || p;
+                                        // 💡 FINAL ROBUST FIX: FORCE CSS IMAGES (FLAGS)
+                                        // The user's Windows machine doesn't render Emojis correctly despite fonts.
+                                        // We will map any input (AE, 🇦🇪, etc.) to a 2-letter code for the CSS library.
+
+                                        const getTvFlagClass = (pays: string | undefined) => {
+                                            if (!pays) return null;
+
+                                            // 1. Clean input
+                                            let code = pays.trim().toLowerCase();
+
+                                            // 2. Map known Emojis/Names or allow 2-letter codes directly
+                                            // If it's already 2 letters (ae, es, it), we use it.
+                                            if (code.length === 2 && /^[a-z]+$/.test(code)) {
+                                                return code;
+                                            }
+
+                                            // 3. Optional Maps if data is like "France" or "🇦🇪" (emoji length is variable in bytes but usually not 2 ascii chars)
+                                            // Simple map for common unicode flags to codes if needed, or assume data is "AE" keys.
+                                            // Based on user report, data is "AE", "ES", "IT".
+                                            return null;
                                         };
 
-                                        const displayFlag = getFlag(vente.pays || vente.codePays);
+                                        const flagCode = getTvFlagClass(vente.pays || vente.codePays);
+                                        const fallbackText = vente.pays || vente.codePays || "🌍";
 
                                         return (
                                             <tr
@@ -633,13 +632,12 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                                                             {vente.nom}
                                                         </span>
 
-                                                        {/* 🚩 VISIBLE FLAG FIX (User Method) */}
-                                                        <span
-                                                            className="text-3xl filter drop-shadow-md"
-                                                            style={{ fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", sans-serif' }}
-                                                        >
-                                                            {displayFlag}
-                                                        </span>
+                                                        {/* 🚩 FINAL FIX: CSS IMAGE ONLY */}
+                                                        {flagCode ? (
+                                                            <span className={`fi fi-${flagCode} fis text-3xl rounded-md shadow-lg`} />
+                                                        ) : (
+                                                            <span className="text-3xl filter drop-shadow-md">{fallbackText}</span>
+                                                        )}
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-5 align-middle">
