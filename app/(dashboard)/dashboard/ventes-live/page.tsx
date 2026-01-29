@@ -671,6 +671,11 @@ export default function VentesLivePage() {
                                                     <div className="flex items-center gap-3 justify-end w-full">
                                                         <div className="flex flex-col items-end mr-1">
                                                             <span className="text-white text-sm font-bold mb-0.5">{packConfig.nameAr}</span>
+                                                            <div className="flex items-center gap-1 text-xs">
+                                                                <span className="text-gray-500 line-through decoration-white/30">{vente.prix}€</span>
+                                                                <span className="text-gray-400">⬅️</span>
+                                                                <span className="text-[#00FFA3] font-bold">{vente.gain}€</span>
+                                                            </div>
                                                         </div>
                                                         <div className={`flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br ${packConfig.color} shadow-lg text-white`}>
                                                             <span className="text-lg">{packConfig.icon}</span>
