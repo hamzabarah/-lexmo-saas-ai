@@ -596,25 +596,31 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                                     data.ventes.map((vente, index) => {
                                         const packConfig = PACK_CONFIG[vente.pack];
 
-                                        // 💡 ROBUST FLAG LOGIC:
-                                        // 1. Get raw values
-                                        const rawPays = vente.pays?.trim();
-                                        const rawCode = vente.codePays?.trim();
+                                        // 💡 USER FIX: Explicit Map Logic
+                                        const getFlag = (pays: string | undefined) => {
+                                            if (!pays) return "🌍";
+                                            const p = pays.toUpperCase().trim();
+                                            const flags: Record<string, string> = {
+                                                'AE': '🇦🇪', '🇦🇪': '🇦🇪',
+                                                'ES': '🇪🇸', '🇪🇸': '🇪🇸',
+                                                'IT': '🇮🇹', '🇮🇹': '🇮🇹',
+                                                'SE': '🇸🇪', '🇸🇪': '🇸🇪',
+                                                'DE': '🇩🇪', '🇩🇪': '🇩🇪',
+                                                'NL': '🇳🇱', '🇳🇱': '🇳🇱',
+                                                'FR': '🇫🇷', '🇫🇷': '🇫🇷',
+                                                'CA': '🇨🇦', '🇨🇦': '🇨🇦',
+                                                'BE': '🇧🇪', '🇧🇪': '🇧🇪',
+                                                'CH': '🇨🇭', '🇨🇭': '🇨🇭',
+                                                'GB': '🇬🇧', '🇬🇧': '🇬🇧',
+                                                'US': '🇺🇸', '🇺🇸': '🇺🇸',
+                                                'MA': '🇲🇦', // Added for completeness
+                                                'DZ': '🇩🇿',
+                                                'TN': '🇹🇳'
+                                            };
+                                            return flags[p] || p;
+                                        };
 
-                                        // 2. Identify if we have a valid 2-letter ISO Code (e.g. "FR", "fr", "US") in EITHER field
-                                        // Priority: Pays field if it looks like a code, else CodePays field
-                                        let isoCodeToUse = null;
-
-                                        const isIsoFormat = (str?: string) => str && str.length === 2 && /^[a-zA-Z]+$/.test(str);
-
-                                        if (isIsoFormat(rawPays)) {
-                                            isoCodeToUse = rawPays!.toLowerCase();
-                                        } else if (isIsoFormat(rawCode)) {
-                                            isoCodeToUse = rawCode!.toLowerCase();
-                                        }
-
-                                        // 3. Fallback display (Emoji or Full Name or Globe) if no ISO code found
-                                        const fallbackDisplay = rawPays || rawCode || "🌍";
+                                        const displayFlag = getFlag(vente.pays || vente.codePays);
 
                                         return (
                                             <tr
@@ -627,17 +633,13 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                                                             {vente.nom}
                                                         </span>
 
-                                                        {/* 🚩 VISIBLE FLAG FIX */}
-                                                        {isoCodeToUse ? (
-                                                            <span className={`fi fi-${isoCodeToUse} fis text-3xl rounded-md shadow-lg`} />
-                                                        ) : (
-                                                            <span
-                                                                className="text-3xl filter drop-shadow-md"
-                                                                style={{ fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", sans-serif' }}
-                                                            >
-                                                                {fallbackDisplay}
-                                                            </span>
-                                                        )}
+                                                        {/* 🚩 VISIBLE FLAG FIX (User Method) */}
+                                                        <span
+                                                            className="text-3xl filter drop-shadow-md"
+                                                            style={{ fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", sans-serif' }}
+                                                        >
+                                                            {displayFlag}
+                                                        </span>
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-5 align-middle">
