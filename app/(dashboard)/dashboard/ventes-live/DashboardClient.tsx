@@ -1,5 +1,5 @@
 "use client";
-// Force Deploy: 2026-01-29 20:55 - Final Graph Adjustments (Line + Padding + Dates)
+// Force Deploy: 2026-01-29 21:05 - Fix Mixed Chart Crash (Reg Controllers)
 
 import { useEffect, useState } from 'react';
 import { Wallet, ShoppingBag, TrendingUp, CheckCircle, Clock, AlertTriangle, PlayCircle } from 'lucide-react';
@@ -14,7 +14,9 @@ import {
     Tooltip,
     Legend,
     PointElement,
-    LineElement
+    LineElement,
+    LineController,
+    BarController
 } from 'chart.js';
 
 ChartJS.register(
@@ -25,7 +27,9 @@ ChartJS.register(
     Tooltip,
     Legend,
     PointElement,
-    LineElement
+    LineElement,
+    LineController,
+    BarController
 );
 
 export interface Vente {
