@@ -412,7 +412,7 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                     <div className="w-full flex justify-center py-6">
                         <div className="text-center animate-bounce duration-[2000ms]">
                             <p className="text-red-500 font-bold tracking-[0.5em] mb-2 uppercase text-sm">⚠️ عرض محدود</p>
-                            <div className="text-6xl md:text-8xl font-black font-mono tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-red-500 to-red-900 drop-shadow-[0_0_25px_rgba(220,38,38,0.5)]">
+                            <div className="text-6xl md:text-8xl font-black font-mono text-transparent bg-clip-text bg-gradient-to-b from-red-500 to-red-900 drop-shadow-[0_0_25px_rgba(220,38,38,0.5)] px-4">
                                 {timeLeft}
                             </div>
                             <p className="text-red-400 font-bold mt-2 animate-pulse">
