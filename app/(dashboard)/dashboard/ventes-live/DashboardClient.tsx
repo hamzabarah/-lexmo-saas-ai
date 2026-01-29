@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { Wallet, ShoppingBag, TrendingUp, CheckCircle, Clock, AlertTriangle, PlayCircle } from 'lucide-react';
 import CountUp from 'react-countup';
 import { Line } from 'react-chartjs-2';
-import 'flag-icons/css/flag-icons.min.css';
+// import 'flag-icons/css/flag-icons.min.css'; // Removed in favor of CDN for reliability
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -678,10 +678,20 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
 
             <style jsx global>{`
                 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Orbitron:wght@400;700;900&display=swap');
+                @import url('https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/css/flag-icons.min.css'); 
                 
                 .font-orbitron { font-family: 'Orbitron', sans-serif; }
                 .font-inter { font-family: 'Inter', sans-serif; }
                 .text-shadow-glow { text-shadow: 0 0 10px rgba(0, 255, 163, 0.5); }
+                
+                /* Force flag visibility */
+                .fi {
+                    background-size: cover;
+                    background-position: center;
+                    width: 1.5em; /* Explicit size */
+                    height: 1.25em; /* Aspect ratio roughly */
+                    display: inline-block;
+                }
                 
                 @keyframes shimmer {
                     0% { transform: translateX(-100%); }
