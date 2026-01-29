@@ -1,4 +1,5 @@
 "use client";
+// Force Deploy: 2026-01-29 - Update Flags
 
 import { useEffect, useState } from 'react';
 import { Wallet, ShoppingBag, TrendingUp, CheckCircle, Clock, AlertTriangle, PlayCircle } from 'lucide-react';
