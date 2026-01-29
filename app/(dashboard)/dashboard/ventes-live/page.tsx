@@ -424,31 +424,7 @@ export default function VentesLivePage() {
     return (
         <div className="min-h-screen bg-[#050A14] text-white font-cairo p-6 lg:p-10 relative overflow-x-hidden">
 
-            {/* 🔴 STICKY CORNER TIMER (MOBILE & DESKTOP) */}
-            {timeLeft && (
-                <div className={`fixed top-4 right-4 z-50 flex items-center gap-3 px-4 py-3 rounded-xl border-2 backdrop-blur-md transition-all duration-300 ${getCountdownStyle()} ${urgencyLevel === 'extreme' ? 'scale-110' : ''}`}>
-                    <div className="flex flex-col items-center leading-none">
-                        <span className="text-xs font-bold uppercase tracking-widest mb-1 opacity-80">
-                            {urgencyLevel === 'extreme' ? '🚨 TERMINÉ DANS' : 'TIME LEFT'}
-                        </span>
-                        <span className="font-mono text-2xl font-black tracking-widest drop-shadow-lg">
-                            {timeLeft}
-                        </span>
-                    </div>
-                    {live && (
-                        <div className="h-10 w-[1px] bg-white/30 hidden sm:block"></div>
-                    )}
-                    {live && (
-                        <div className="flex-col items-end hidden sm:flex">
-                            <span className="text-xs font-bold opacity-80">PLACES</span>
-                            <span className="text-xl font-bold">
-                                <span className={live.places_restantes < 3 ? "text-red-300" : "text-white"}>{live.places_prises}</span>
-                                <span className="text-white/60 text-sm">/{live.places_disponibles}</span>
-                            </span>
-                        </div>
-                    )}
-                </div>
-            )}
+
 
             <div className="max-w-[1600px] mx-auto space-y-8 pt-10">
 
@@ -619,18 +595,7 @@ export default function VentesLivePage() {
                     </div>
                 </div>
 
-                {/* SOCIAL PROOF HEADER */}
-                <div className="flex items-center gap-4 bg-gradient-to-r from-blue-900/20 to-transparent p-4 rounded-xl border-l-4 border-blue-500">
-                    <div className="flex -space-x-2 rtl:space-x-reverse">
-                        <div className="w-10 h-10 rounded-full border-2 border-[#050A14] bg-white flex items-center justify-center text-xl">🇫🇷</div>
-                        <div className="w-10 h-10 rounded-full border-2 border-[#050A14] bg-white flex items-center justify-center text-xl">🇩🇪</div>
-                        <div className="w-10 h-10 rounded-full border-2 border-[#050A14] bg-white flex items-center justify-center text-xl">🇪🇸</div>
-                    </div>
-                    <div>
-                        <h3 className="font-bold text-white text-lg">Rejoignez {data.stats.total_ventes} entrepreneurs</h3>
-                        <p className="text-blue-400 text-sm">Depuis 4 pays différents aujourd'hui</p>
-                    </div>
-                </div>
+
 
                 {/* TRANSACTION TABLE */}
                 <div className="bg-[#0A0F1C] border border-white/5 rounded-3xl overflow-hidden shadow-2xl">
