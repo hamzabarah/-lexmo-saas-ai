@@ -631,7 +631,12 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                                                         {isoCodeToUse ? (
                                                             <span className={`fi fi-${isoCodeToUse} fis text-3xl rounded-md shadow-lg`} />
                                                         ) : (
-                                                            <span className="text-3xl filter drop-shadow-md">{fallbackDisplay}</span>
+                                                            <span
+                                                                className="text-3xl filter drop-shadow-md"
+                                                                style={{ fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", sans-serif' }}
+                                                            >
+                                                                {fallbackDisplay}
+                                                            </span>
                                                         )}
                                                     </div>
                                                 </td>
