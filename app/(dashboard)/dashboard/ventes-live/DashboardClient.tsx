@@ -1,32 +1,28 @@
 "use client";
-// Force Deploy: 2026-01-29 20:30 - Update Flags & Dates (Attempt 3)
+// Force Deploy: 2026-01-29 20:45 - Switch to Bar Chart & Daily Gains
 
 import { useEffect, useState } from 'react';
 import { Wallet, ShoppingBag, TrendingUp, CheckCircle, Clock, AlertTriangle, PlayCircle } from 'lucide-react';
 import CountUp from 'react-countup';
-import { Line } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 // import 'flag-icons/css/flag-icons.min.css'; // Removed in favor of CDN for reliability
 import {
     Chart as ChartJS,
     CategoryScale,
     LinearScale,
-    PointElement,
-    LineElement,
+    BarElement,
     Title,
     Tooltip,
-    Legend,
-    Filler
+    Legend
 } from 'chart.js';
 
 ChartJS.register(
     CategoryScale,
     LinearScale,
-    PointElement,
-    LineElement,
+    BarElement,
     Title,
     Tooltip,
-    Legend,
-    Filler
+    Legend
 );
 
 export interface Vente {
@@ -147,7 +143,7 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
             dailyCounts.push(dayStats.count);
         });
 
-        return { labels, data: cumulativeData, dailyGains: dailyGainsLocal, dailyCounts };
+        return { labels, data: dailyGainsLocal, dailyCounts, cumulativeData };
     };
 
     const chartData = generateChartData(data.ventes);
@@ -156,27 +152,16 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
         labels: chartData.labels,
         datasets: [
             {
-                label: 'Gains Cumulés',
+                label: 'Gains du Jour',
                 data: chartData.data,
-                dailyGains: chartData.dailyGains,
                 dailyCounts: chartData.dailyCounts,
-                borderColor: '#00FFA3',
-                backgroundColor: (context: any) => {
-                    const ctx = context.chart.ctx;
-                    const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-                    gradient.addColorStop(0, 'rgba(0, 255, 163, 0.2)');
-                    gradient.addColorStop(1, 'rgba(0, 255, 163, 0)');
-                    return gradient;
-                },
-                borderWidth: 2,
-                fill: true,
-                tension: 0.4,
-                pointRadius: 0,
-                pointHitRadius: 40, // Much easier to catch with mouse
-                pointHoverRadius: 6,
-                pointHoverBackgroundColor: '#00FFA3',
-                pointHoverBorderColor: '#fff',
-                pointHoverBorderWidth: 2,
+                cumulativeData: chartData.cumulativeData,
+                backgroundColor: '#00FFA3',
+                borderRadius: 4,
+                borderSkipped: false,
+                barThickness: 30, // Fixed pixel width
+                maxBarThickness: 30,
+                hoverBackgroundColor: '#fff',
             }
         ]
     };
@@ -223,13 +208,13 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                     },
                     label: (context: any) => {
                         const index = context.dataIndex;
-                        const dailyGain = context.dataset.dailyGains[index];
+                        const dailyGain = context.parsed.y; // Y is now Daily Gain
                         const count = context.dataset.dailyCounts[index];
-                        const total = context.parsed.y;
+                        const total = context.dataset.cumulativeData[index]; // Total is passed as extra prop
 
                         return [
                             `Gains du jour : +${dailyGain.toLocaleString()}€`,
-                            `Total : ${total.toLocaleString()}€`,
+                            `Total à date : ${total.toLocaleString()}€`,
                             `${count} ventes`
                         ];
                     }
@@ -490,7 +475,7 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
 
                         {/* Chart Area */}
                         <div className="h-[350px] w-full">
-                            <Line data={chartConfig} options={chartOptions} />
+                            <Bar data={chartConfig} options={chartOptions} />
                         </div>
                     </div>
 
