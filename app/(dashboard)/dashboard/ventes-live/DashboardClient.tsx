@@ -595,10 +595,25 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                                     data.ventes.map((vente, index) => {
                                         const packConfig = PACK_CONFIG[vente.pack];
 
-                                        // 💡 FIX: USE vente.pays first (Emoji), fallback to codePays, fallback to Globe
-                                        const displayFlag = vente.pays || vente.codePays || "🌍";
-                                        // Check if it's an ISO code (2 letters) AND we don't have a direct "pays" emoji
-                                        const isIsoCode = !vente.pays && vente.codePays && vente.codePays.length === 2 && /^[a-zA-Z]+$/.test(vente.codePays);
+                                        // 💡 ROBUST FLAG LOGIC:
+                                        // 1. Get raw values
+                                        const rawPays = vente.pays?.trim();
+                                        const rawCode = vente.codePays?.trim();
+
+                                        // 2. Identify if we have a valid 2-letter ISO Code (e.g. "FR", "fr", "US") in EITHER field
+                                        // Priority: Pays field if it looks like a code, else CodePays field
+                                        let isoCodeToUse = null;
+
+                                        const isIsoFormat = (str?: string) => str && str.length === 2 && /^[a-zA-Z]+$/.test(str);
+
+                                        if (isIsoFormat(rawPays)) {
+                                            isoCodeToUse = rawPays!.toLowerCase();
+                                        } else if (isIsoFormat(rawCode)) {
+                                            isoCodeToUse = rawCode!.toLowerCase();
+                                        }
+
+                                        // 3. Fallback display (Emoji or Full Name or Globe) if no ISO code found
+                                        const fallbackDisplay = rawPays || rawCode || "🌍";
 
                                         return (
                                             <tr
@@ -612,10 +627,10 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                                                         </span>
 
                                                         {/* 🚩 VISIBLE FLAG FIX */}
-                                                        {isIsoCode ? (
-                                                            <span className={`fi fi-${vente.codePays.toLowerCase()} fis text-3xl rounded-md shadow-lg`} />
+                                                        {isoCodeToUse ? (
+                                                            <span className={`fi fi-${isoCodeToUse} fis text-3xl rounded-md shadow-lg`} />
                                                         ) : (
-                                                            <span className="text-3xl filter drop-shadow-md">{displayFlag}</span>
+                                                            <span className="text-3xl filter drop-shadow-md">{fallbackDisplay}</span>
                                                         )}
                                                     </div>
                                                 </td>
