@@ -669,7 +669,14 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                                                 <td className="px-6 py-5 align-middle">
                                                     <div className="flex items-center gap-2 justify-end text-gray-400">
                                                         <span className="font-mono text-xs opacity-70">
-                                                            {new Date(vente.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })} • {vente.heure}
+                                                            {(() => {
+                                                                const [y, m, d] = vente.date.split('-').map(Number);
+                                                                const months: Record<number, string> = {
+                                                                    1: "Jan", 2: "Feb", 3: "Mar", 4: "Apr", 5: "May", 6: "Jun",
+                                                                    7: "Jul", 8: "Aug", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec"
+                                                                };
+                                                                return `${d} ${months[m] || vente.date}`;
+                                                            })()} • {vente.heure}
                                                         </span>
                                                         <Clock className="w-3 h-3 text-[#00FFA3]" />
                                                     </div>
