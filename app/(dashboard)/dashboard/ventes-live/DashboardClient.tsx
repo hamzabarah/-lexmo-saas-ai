@@ -205,8 +205,8 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                             const label = context[0].label; // "YYYY-MM-DD"
                             const [y, m, d] = label.split('-').map(Number);
                             const months: Record<number, string> = {
-                                1: "janvier", 2: "février", 3: "mars", 4: "avril", 5: "mai", 6: "juin",
-                                7: "juillet", 8: "août", 9: "septembre", 10: "octobre", 11: "novembre", 12: "décembre"
+                                1: "January", 2: "February", 3: "March", 4: "April", 5: "May", 6: "June",
+                                7: "July", 8: "August", 9: "September", 10: "October", 11: "November", 12: "December"
                             };
                             return `${d} ${months[m] || label}`;
                         } catch (e) {
@@ -220,9 +220,9 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                         const total = context.dataset.cumulativeData[index]; // Total is passed as extra prop
 
                         return [
-                            `Gains du jour : +${dailyGain.toLocaleString()}€`,
-                            `Total à date : ${total.toLocaleString()}€`,
-                            `${count} ventes`
+                            `أرباح اليوم : +${dailyGain.toLocaleString()}€`,
+                            `إجمالي الأرباح حتى الآن : ${total.toLocaleString()}€`,
+                            `${count} مبيعات`
                         ];
                     }
                 }
@@ -411,12 +411,12 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                 {timeLeft && (urgencyLevel === 'critical' || urgencyLevel === 'extreme') && (
                     <div className="w-full flex justify-center py-6">
                         <div className="text-center animate-bounce duration-[2000ms]">
-                            <p className="text-red-500 font-bold tracking-[0.5em] mb-2 uppercase text-sm">⚠️ OFFRE LIMITÉE</p>
+                            <p className="text-red-500 font-bold tracking-[0.5em] mb-2 uppercase text-sm">⚠️ عرض محدود</p>
                             <div className="text-6xl md:text-8xl font-black font-mono tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-red-500 to-red-900 drop-shadow-[0_0_25px_rgba(220,38,38,0.5)]">
                                 {timeLeft}
                             </div>
                             <p className="text-red-400 font-bold mt-2 animate-pulse">
-                                {urgencyLevel === 'extreme' ? "DERNIÈRE CHANCE !!" : "Bientôt terminé !"}
+                                {urgencyLevel === 'extreme' ? "الفرصة الأخيرة !!" : "ينتهي قريباً !"}
                             </p>
                         </div>
                     </div>
