@@ -536,11 +536,11 @@ export default function VentesLivePage() {
                                 <Wallet className="w-6 h-6 text-[#FFD700]" />
                             </div>
 
-                            <h3 className="text-[#FFD700] text-sm font-bold tracking-[0.3em] uppercase mb-4 opacity-80">Total aujourd'hui</h3>
+                            <h3 className="text-[#FFD700] text-sm font-bold tracking-widest uppercase mb-4 opacity-80 font-cairo">إجمالي الأرباح اليوم</h3>
 
                             {/* Metallic Gold Text */}
                             <div
-                                className="text-6xl lg:text-7xl font-black font-orbitron mb-4 whitespace-nowrap tracking-tighter scale-110"
+                                className="text-5xl lg:text-6xl font-black font-orbitron mb-4 whitespace-nowrap tracking-tighter"
                                 style={{
                                     backgroundImage: 'linear-gradient(180deg, #FFD700 0%, #FDB931 50%, #9E7908 100%)',
                                     backgroundClip: 'text',
@@ -561,7 +561,7 @@ export default function VentesLivePage() {
 
                             <div className="flex flex-col gap-1 items-center animate-pulse">
                                 <span className="text-green-400 font-bold text-lg">+1,245€</span>
-                                <span className="text-gray-500 text-xs uppercase tracking-widest">dernière vente</span>
+                                <span className="text-gray-500 text-xs uppercase tracking-widest font-cairo">آخر عملية بيع</span>
                             </div>
                         </div>
 
