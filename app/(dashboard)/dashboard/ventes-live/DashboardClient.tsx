@@ -194,6 +194,7 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                 fill: true,
                 tension: 0.4,
                 pointRadius: 0,
+                pointHitRadius: 40, // Much easier to catch with mouse
                 pointHoverRadius: 6,
                 pointHoverBackgroundColor: '#00FFA3',
                 pointHoverBorderColor: '#fff',
