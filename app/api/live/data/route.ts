@@ -17,8 +17,15 @@ export async function GET() {
 
         if (error) throw error;
 
-        // Return the nested JSON data directly
-        return NextResponse.json(data?.data || {});
+        // Return the nested JSON data with strict CACHE-CONTROL HEADERS
+        return new NextResponse(JSON.stringify(data?.data || {}), {
+            headers: {
+                'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0',
+                'Content-Type': 'application/json',
+            },
+        });
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }

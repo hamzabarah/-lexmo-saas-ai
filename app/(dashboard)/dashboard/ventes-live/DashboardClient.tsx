@@ -98,17 +98,21 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
 
     // Generate chart data: Aggregating REAL SALES data from JSON
     const generateChartData = (ventes: Vente[]) => {
-        const labels: string[] = [];
-        const cumulativeData: number[] = [];
+        // Grouper par vente.date (pas par date du jour)
+        const labels = [...new Set(ventes.map(v => v.date))].sort();
+
+        console.log('Ventes dates:', ventes.map(v => v.date));
+        console.log('Graph labels:', labels);
+
         const dailyGainsLocal: number[] = [];
         const dailyCounts: number[] = [];
+        const cumulativeData: number[] = [];
 
         // 1. Group by Date
         const salesByDate: Record<string, { gain: number, count: number }> = {};
 
         ventes.forEach(v => {
-            // Ensure date consistency
-            const dateKey = v.date; // "YYYY-MM-DD"
+            const dateKey = v.date;
             if (!salesByDate[dateKey]) {
                 salesByDate[dateKey] = { gain: 0, count: 0 };
             }
@@ -116,33 +120,16 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
             salesByDate[dateKey].count += 1;
         });
 
-        // 2. Sort Dates
-        const sortedDates = Object.keys(salesByDate).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
-
-        // 3. Build Arrays
+        // 2. Build Arrays
         let runningTotal = 0;
 
-        // If no sales, show at least today empty
-        if (sortedDates.length === 0) {
-            const today = new Date().toISOString().split('T')[0];
-            sortedDates.push(today);
-            salesByDate[today] = { gain: 0, count: 0 };
-        }
-
-        sortedDates.forEach(dateStr => {
-            // FIX DATE: Manually map string "YYYY-MM-DD" to "Jan 29" to avoid ANY timezone shift
-            const [y, m, d] = dateStr.split('-').map(Number);
-            const monthsShort = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-            const label = `${monthsShort[m - 1]} ${d}`;
-
-            labels.push(label);
-
-            const dayStats = salesByDate[dateStr];
+        labels.forEach(dateStr => {
+            const dayStats = salesByDate[dateStr] || { gain: 0, count: 0 };
             runningTotal += dayStats.gain;
 
-            cumulativeData.push(runningTotal);
             dailyGainsLocal.push(dayStats.gain);
             dailyCounts.push(dayStats.count);
+            cumulativeData.push(runningTotal);
         });
 
         return { labels, data: dailyGainsLocal, dailyCounts, cumulativeData };
@@ -187,7 +174,7 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
         responsive: true,
         maintainAspectRatio: false,
         layout: {
-            padding: { left: 20, right: 20, top: 20, bottom: 20 }
+            padding: { left: 50, right: 20, top: 20, bottom: 20 }
         },
         plugins: {
             legend: {
@@ -215,13 +202,13 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                         // Actually, I can pass the full date strings in a parallel array to dataset, or just parse the label "Jan 29" -> "29 Jan" 
                         // The user asked for "29 janvier".
                         try {
-                            const label = context[0].label; // "Jan 29"
-                            const [month, day] = label.split(' ');
-                            const months: Record<string, string> = {
-                                "Jan": "janvier", "Feb": "février", "Mar": "mars", "Apr": "avril", "May": "mai", "Jun": "juin",
-                                "Jul": "juillet", "Aug": "août", "Sep": "septembre", "Oct": "octobre", "Nov": "novembre", "Dec": "décembre"
+                            const label = context[0].label; // "YYYY-MM-DD"
+                            const [y, m, d] = label.split('-').map(Number);
+                            const months: Record<number, string> = {
+                                1: "janvier", 2: "février", 3: "mars", 4: "avril", 5: "mai", 6: "juin",
+                                7: "juillet", 8: "août", 9: "septembre", 10: "octobre", 11: "novembre", 12: "décembre"
                             };
-                            return `${day} ${months[month] || month}`;
+                            return `${d} ${months[m] || label}`;
                         } catch (e) {
                             return context[0].label;
                         }
@@ -263,6 +250,7 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                 ticks: {
                     color: '#6B7280',
                     font: { family: 'Inter', size: 11 },
+                    padding: 10,
                     callback: (value: any) => `${value.toLocaleString()}€`
                 }
             }
@@ -276,8 +264,14 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Fetch from Supabase API Bridge
-                const response = await fetch('/api/live/data?t=' + Date.now());
+                // Fetch from Supabase API Bridge with NO-STORE to avoid cache issues
+                const response = await fetch('/api/live/data?t=' + Date.now(), {
+                    cache: 'no-store',
+                    headers: {
+                        'Cache-Control': 'no-cache',
+                        'Pragma': 'no-cache'
+                    }
+                });
                 const jsonData = await response.json();
 
                 // Only update if we have valid data
@@ -289,8 +283,9 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
             }
         };
 
-        // We already have initial data, so we don't strictly need to fetch immediately, 
-        // but interval is good to keep fresh.
+        // RUN IMMEDIATELY on mount to override any stale SSR data
+        fetchData();
+
         const interval = setInterval(fetchData, 3000); // 3s polling for real-time feel
         return () => clearInterval(interval);
     }, []);

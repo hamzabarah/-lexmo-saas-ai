@@ -1,11 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
 import DashboardClient from './DashboardClient';
+import { cookies } from 'next/headers';
 
-// Initialize Supabase Anon Client (Public Read is sufficient for this)
-const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 /**
  * Server Component to fetch initial data
@@ -13,18 +11,23 @@ const supabase = createClient(
  */
 async function getInitialData() {
     try {
-        const { data, error } = await supabase
-            .from('live_dashboard_state')
-            .select('data')
-            .eq('id', 1)
-            .single();
+        // Use native fetch with no-store + timestamp to BYPASS ALL CACHES
+        const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/live_dashboard_state?id=eq.1&select=data&t=${Date.now()}`;
+        const response = await fetch(url, {
+            cache: 'no-store',
+            headers: {
+                'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+                'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+            }
+        });
 
-        if (error) {
-            console.error("Supabase load error:", error);
-            return null; // DashboardClient defaults? Or pass empty
+        if (!response.ok) {
+            console.error("Fetch load error:", response.statusText);
+            return null;
         }
 
-        return data?.data || null;
+        const result = await response.json();
+        return result[0]?.data || null;
     } catch (error) {
         console.error("Server Fetch Error:", error);
         return null;
@@ -32,6 +35,9 @@ async function getInitialData() {
 }
 
 export default async function VentesLivePage() {
+    // Calling cookies() ensures the page is treated as dynamic and not cached
+    await cookies();
+
     const data = await getInitialData();
 
     // Default fallback if server fetch fails
