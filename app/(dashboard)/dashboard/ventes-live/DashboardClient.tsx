@@ -93,87 +93,64 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
     // Initialize with SERVER DATA to avoid flash of 0
     const [data, setData] = useState<VentesData>(initialData);
 
-    // Generate chart data: Priority to JSON real data, fallback to simulation if missing
-    const generateChartData = (totalTarget: number, graphiqueData?: GraphiquePoint[]) => {
+    // Generate chart data: Aggregating REAL SALES data from JSON
+    const generateChartData = (ventes: Vente[]) => {
         const labels: string[] = [];
         const cumulativeData: number[] = [];
-        const dailyGains: number[] = [];
+        const dailyGainsLocal: number[] = [];
+        const dailyCounts: number[] = [];
 
-        // 1. REAL DATA MODE (from JSON)
-        if (graphiqueData && Array.isArray(graphiqueData) && graphiqueData.length > 0) {
+        // 1. Group by Date
+        const salesByDate: Record<string, { gain: number, count: number }> = {};
 
-            // Sort data by date just in case it's out of order
-            const sortedData = [...graphiqueData].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
-            sortedData.forEach((point, index) => {
-                let displayDate = point.date; // Default fallback
-
-                try {
-                    const dateObj = new Date(point.date);
-                    if (!isNaN(dateObj.getTime())) {
-                        displayDate = dateObj.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
-                    }
-                } catch (e) {
-                    console.error("Date parse error:", e);
-                }
-
-                labels.push(displayDate);
-                cumulativeData.push(point.cumul);
-
-                // Calculate "Daily Gain" difference from previous
-                const previous = index > 0 ? sortedData[index - 1].cumul : 0;
-                dailyGains.push(point.cumul - previous);
-            });
-
-            return { labels, data: cumulativeData, dailyGains };
-        }
-
-        // 2. SIMULATION MODE (Fallback if no graph data in JSON but we have totals)
-        if (!graphiqueData || graphiqueData.length === 0) {
-            if (totalTarget === 0) {
-                // Flat line for zero
-                const days = 30;
-                for (let i = 0; i < days; i++) {
-                    const date = new Date();
-                    date.setDate(date.getDate() - (days - 1 - i));
-                    labels.push(date.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }));
-                    cumulativeData.push(0);
-                    dailyGains.push(0);
-                }
-                return { labels, data: cumulativeData, dailyGains };
+        ventes.forEach(v => {
+            // Ensure date consistency
+            const dateKey = v.date; // "YYYY-MM-DD"
+            if (!salesByDate[dateKey]) {
+                salesByDate[dateKey] = { gain: 0, count: 0 };
             }
-        }
+            salesByDate[dateKey].gain += v.gain;
+            salesByDate[dateKey].count += 1;
+        });
 
-        const days = 30;
-        let rawDailyGains = [];
-        let rawTotal = 0;
+        // 2. Sort Dates
+        const sortedDates = Object.keys(salesByDate).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
-        for (let i = 0; i < days; i++) {
-            let daily = Math.random() > 0.2 ? Math.random() * 800 + 50 : Math.random() * 100;
-            rawDailyGains.push(daily);
-            rawTotal += daily;
-        }
-
-        const adjustmentFactor = totalTarget / rawTotal;
+        // 3. Build Arrays
         let runningTotal = 0;
 
-        for (let i = 0; i < days; i++) {
-            const date = new Date();
-            date.setDate(date.getDate() - (days - 1 - i));
-            labels.push(date.toLocaleDateString('en-US', { day: 'numeric', month: 'short' }));
-
-            let adjustedDaily = Math.round(rawDailyGains[i] * adjustmentFactor);
-            if (i === days - 1) adjustedDaily = totalTarget - runningTotal;
-
-            dailyGains.push(adjustedDaily);
-            runningTotal += adjustedDaily;
-            cumulativeData.push(runningTotal);
+        // If no sales, show at least today empty
+        if (sortedDates.length === 0) {
+            const today = new Date().toISOString().split('T')[0];
+            sortedDates.push(today);
+            salesByDate[today] = { gain: 0, count: 0 };
         }
 
-        return { labels, data: cumulativeData, dailyGains };
+        sortedDates.forEach(dateStr => {
+            // Format Label: "29 Jan" (using French locale as requested implicitly by "29 janvier" desire, but keeping short for axis? 
+            // User asked "Jan 29" -> "Jan 29" basically fixes the offset. 
+            // User complaint: "Jan 30 au lieu de Jan 29". 
+            // Parsing "YYYY-MM-DD" directly avoids timezone issues.
+            const [y, m, d] = dateStr.split('-').map(Number);
+            const dateObj = new Date(y, m - 1, d); // Local time construction
+
+            // Format for Display: "Jan 29" to match style but correct date
+            const label = dateObj.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+
+            labels.push(label);
+
+            const dayStats = salesByDate[dateStr];
+            runningTotal += dayStats.gain;
+
+            cumulativeData.push(runningTotal);
+            dailyGainsLocal.push(dayStats.gain);
+            dailyCounts.push(dayStats.count);
+        });
+
+        return { labels, data: cumulativeData, dailyGains: dailyGainsLocal, dailyCounts };
     };
 
-    const chartData = generateChartData(data.stats.total_gains, data.graphique);
+    const chartData = generateChartData(data.ventes);
 
     const chartConfig = {
         labels: chartData.labels,
@@ -182,6 +159,7 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                 label: 'Gains Cumulés',
                 data: chartData.data,
                 dailyGains: chartData.dailyGains,
+                dailyCounts: chartData.dailyCounts,
                 borderColor: '#00FFA3',
                 backgroundColor: (context: any) => {
                     const ctx = context.chart.ctx;
@@ -221,14 +199,38 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                 padding: 12,
                 displayColors: false,
                 callbacks: {
-                    title: (context: any) => context[0].label,
+                    title: (context: any) => {
+                        // Custom Date Format for Title: "29 janvier"
+                        const index = context[0].dataIndex;
+                        // Retrieve original date string if needed, or re-parse from label?
+                        // The label is "Jan 29", we want "29 janvier".
+                        // Let's reconstruct from the sorted dates logic or just format the context label if it was "Jan 29"
+                        // EASIER: The generateChartData could return full date objects or strings.
+                        // But here, let's just use the current date from the logic.
+                        // Actually, I can pass the full date strings in a parallel array to dataset, or just parse the label "Jan 29" -> "29 Jan" 
+                        // The user asked for "29 janvier".
+                        try {
+                            const label = context[0].label; // "Jan 29"
+                            const [month, day] = label.split(' ');
+                            const months: Record<string, string> = {
+                                "Jan": "janvier", "Feb": "février", "Mar": "mars", "Apr": "avril", "May": "mai", "Jun": "juin",
+                                "Jul": "juillet", "Aug": "août", "Sep": "septembre", "Oct": "octobre", "Nov": "novembre", "Dec": "décembre"
+                            };
+                            return `${day} ${months[month] || month}`;
+                        } catch (e) {
+                            return context[0].label;
+                        }
+                    },
                     label: (context: any) => {
                         const index = context.dataIndex;
                         const dailyGain = context.dataset.dailyGains[index];
+                        const count = context.dataset.dailyCounts[index];
                         const total = context.parsed.y;
+
                         return [
-                            `الأرباح اليومية: +${dailyGain.toLocaleString()}€`,
-                            `الإجمالي: ${total.toLocaleString()}€`
+                            `Gains du jour : +${dailyGain.toLocaleString()}€`,
+                            `Total : ${total.toLocaleString()}€`,
+                            `${count} ventes`
                         ];
                     }
                 }
@@ -666,7 +668,9 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                                                 </td>
                                                 <td className="px-6 py-5 align-middle">
                                                     <div className="flex items-center gap-2 justify-end text-gray-400">
-                                                        <span className="font-mono text-xs opacity-50">Just now</span>
+                                                        <span className="font-mono text-xs opacity-70">
+                                                            {new Date(vente.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })} • {vente.heure}
+                                                        </span>
                                                         <Clock className="w-3 h-3 text-[#00FFA3]" />
                                                     </div>
                                                 </td>
