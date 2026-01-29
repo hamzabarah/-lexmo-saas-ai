@@ -600,21 +600,44 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                                         // The user's Windows machine doesn't render Emojis correctly despite fonts.
                                         // We will map any input (AE, 🇦🇪, etc.) to a 2-letter code for the CSS library.
 
+                                        // 💡 ABSOLUTE FINAL FIX: HANDLE EMOJI INPUTS
+                                        // Problem: Input is likely "🇦🇪" (Emoji). Windows displays this as "AE" letters.
+                                        // My previous regex rejected "🇦🇪" (len 4). So it showed fallback "🇦🇪" -> "AE".
+                                        // Solution: Convert "🇦🇪" -> "ae" to use the Image CSS.
+
                                         const getTvFlagClass = (pays: string | undefined) => {
                                             if (!pays) return null;
 
-                                            // 1. Clean input
-                                            let code = pays.trim().toLowerCase();
+                                            const str = pays.trim();
 
-                                            // 2. Map known Emojis/Names or allow 2-letter codes directly
-                                            // If it's already 2 letters (ae, es, it), we use it.
-                                            if (code.length === 2 && /^[a-z]+$/.test(code)) {
-                                                return code;
+                                            // 1. Try ASCII direct (e.g. "AE", "fr")
+                                            if (str.length === 2 && /^[a-zA-Z]+$/.test(str)) {
+                                                return str.toLowerCase();
                                             }
 
-                                            // 3. Optional Maps if data is like "France" or "🇦🇪" (emoji length is variable in bytes but usually not 2 ascii chars)
-                                            // Simple map for common unicode flags to codes if needed, or assume data is "AE" keys.
-                                            // Based on user report, data is "AE", "ES", "IT".
+                                            // 2. Try Emoji Map (Manual for common ones)
+                                            // 🇦🇪 is typically \uD83C\uDDE6\uD83C\uDDEA in JS
+                                            const emojiMap: Record<string, string> = {
+                                                '🇦🇪': 'ae', '🇪🇸': 'es', '🇮🇹': 'it', '🇫🇷': 'fr', '🇺🇸': 'us',
+                                                '🇩🇪': 'de', '🇳🇱': 'nl', '🇸🇪': 'se', '🇬🇧': 'gb', '🇨🇦': 'ca',
+                                                '🇧🇪': 'be', '🇨🇭': 'ch', '🇲🇦': 'ma', '🇩🇿': 'dz', '🇹🇳': 'tn'
+                                            };
+                                            if (emojiMap[str]) return emojiMap[str];
+
+                                            // 3. Smart Emoji-to-Code Converter (General Case)
+                                            // Helper to convert Regional Indicator Sybmols to ASCII
+                                            // 🇦 (0x1F1E6) - 127397 = 'a'
+                                            if (Array.from(str).length === 2) { // 2 symbols (4 bytes)
+                                                try {
+                                                    const codePoints = Array.from(str).map(c => c.codePointAt(0)!);
+                                                    if (codePoints.every(cp => cp >= 0x1F1E6 && cp <= 0x1F1FF)) {
+                                                        const iso = String.fromCharCode(codePoints[0] - 127397) +
+                                                            String.fromCharCode(codePoints[1] - 127397);
+                                                        return iso.toLowerCase();
+                                                    }
+                                                } catch (e) { return null; }
+                                            }
+
                                             return null;
                                         };
 
