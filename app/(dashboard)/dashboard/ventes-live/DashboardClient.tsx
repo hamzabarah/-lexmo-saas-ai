@@ -32,6 +32,34 @@ ChartJS.register(
     BarController
 );
 
+const TIMER_ANIMATIONS = `
+@keyframes timer-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.02); opacity: 0.95; }
+}
+@keyframes timer-pulse-fast {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+@keyframes timer-urgent-blink {
+  0%, 50%, 100% { opacity: 1; background: rgba(239, 68, 68, 0.1); }
+  25%, 75% { opacity: 0.8; background: rgba(239, 68, 68, 0.2); }
+}
+@keyframes timer-shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+  20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+@keyframes timer-blink-dots {
+  0%, 49%, 100% { opacity: 1; }
+  50%, 99% { opacity: 0; }
+}
+@keyframes timer-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+`;
+
 export interface Vente {
     date: string;
     heure: string;
@@ -367,34 +395,85 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
 
             // Set New Urgency Level based on User Request
             const totalMinutes = hours * 60 + minutes;
-            if (totalMinutes < 10) {
-                setUrgencyLevel('extreme'); // Red (Blink)
+            if (totalMinutes < 5) {
+                setUrgencyLevel('extreme'); // Red (Blink + Shake)
+            } else if (totalMinutes < 10) {
+                setUrgencyLevel('critical'); // Red (Blink)
             } else if (totalMinutes < 30) {
-                setUrgencyLevel('critical'); // Orange
+                setUrgencyLevel('warning'); // Orange (Fast Pulse)
             } else if (totalMinutes < 60) {
-                setUrgencyLevel('warning'); // Yellow
+                setUrgencyLevel('normal'); // Yellow (Pulse)
             } else {
-                setUrgencyLevel('normal'); // Green
+                setUrgencyLevel('normal'); // Green (Static)
             }
         }, 1000);
 
         return () => clearInterval(interval);
     }, [data.live_actuel?.heure_fin]);
 
-    // Dynamic styles for countdown (Color Coding)
-    const getCountdownStyle = () => {
-        switch (urgencyLevel) {
-            case 'extreme': return "text-red-500 animate-pulse drop-shadow-[0_0_15px_rgba(220,38,38,0.5)]";
-            case 'critical': return "text-orange-500 drop-shadow-[0_0_10px_rgba(249,115,22,0.3)]";
-            case 'warning': return "text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.2)]";
-            default: return "text-green-400 drop-shadow-[0_0_10px_rgba(34,197,94,0.2)]";
+    // Dynamic styles for massive countdown
+    const massiveStyle = (() => {
+        const diff = data.live_actuel?.heure_fin ? (new Date(data.live_actuel.heure_fin).getTime() - new Date().getTime()) : 0;
+        const totalMinutes = Math.floor(diff / (1000 * 60));
+
+        if (totalMinutes < 5) {
+            return {
+                container: "border-[#ef4444] shadow-[0_0_60px_rgba(239,68,68,0.3)] bg-red-500/10",
+                text: "text-red-500 drop-shadow-[0_0_30px_rgba(239,68,68,0.8)]",
+                animate: "animate-[timer-shake_0.5s_infinite,timer-urgent-blink_0.3s_infinite]",
+                box: "bg-black/60 border-red-500/50",
+                message: "🚨 آخر فرصة! الآن أو أبداً ! 🚨"
+            };
+        }
+        if (totalMinutes < 10) {
+            return {
+                container: "border-[#ef4444] shadow-[0_0_40px_rgba(239,68,68,0.2)] bg-red-500/5",
+                text: "text-red-500 drop-shadow-[0_0_20px_rgba(239,68,68,0.6)]",
+                animate: "animate-[timer-urgent-blink_0.5s_infinite]",
+                box: "bg-black/40 border-red-500/30",
+                message: "🚨 آخر فرصة! الآن أو أبداً ! 🚨"
+            };
+        }
+        if (totalMinutes < 30) {
+            return {
+                container: "border-[#f97316] shadow-[0_0_30px_rgba(249,115,22,0.15)] bg-orange-500/5",
+                text: "text-orange-500 drop-shadow-[0_0_15px_rgba(249,115,22,0.5)]",
+                animate: "animate-[timer-pulse-fast_1s_infinite]",
+                box: "bg-black/30 border-orange-500/30",
+                message: "🔥 أسرع ! الوقت ينفذ ! 🔥"
+            };
+        }
+        if (totalMinutes < 60) {
+            return {
+                container: "border-[#eab308] shadow-[0_0_20px_rgba(234,179,8,0.1)] bg-yellow-500/5",
+                text: "text-yellow-400 drop-shadow-[0_0_10px_rgba(234,179,8,0.4)]",
+                animate: "animate-[timer-pulse_2s_infinite]",
+                box: "bg-black/20 border-yellow-500/20",
+                message: "⚠️ الوقت يمر بسرعة !"
+            };
+        }
+        return {
+            container: "border-[#22c55e]/30 bg-green-500/5",
+            text: "text-green-400 drop-shadow-[0_0_10px_rgba(34,197,94,0.3)]",
+            animate: "",
+            box: "bg-black/20 border-green-500/20",
+            message: "لازال هناك وقت كافٍ"
+        };
+    })();
+
+    const massiveLevelAnim = (level: string) => {
+        switch (level) {
+            case 'extreme': return "animate-[timer-shake_0.5s_infinite]";
+            case 'critical': return "animate-pulse";
+            default: return "";
         }
     };
 
+    const [h, m, s] = timeLeft?.split(':') || ['00', '00', '00'];
+
     return (
         <div className="min-h-screen bg-[#050A14] text-white font-cairo p-6 lg:p-10 relative overflow-x-hidden">
-
-
+            <style>{TIMER_ANIMATIONS}</style>
 
             <div className="max-w-[1600px] mx-auto space-y-8 pt-10">
 
@@ -408,75 +487,90 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                     </div>
                 </div>
 
-                {/* CENTRAL GIANT CLOCK (IF EXTREME URGENCY < 10 MIN) */}
-                {timeLeft && urgencyLevel === 'extreme' && (
-                    <div className="w-full flex justify-center py-6">
-                        <div className="text-center animate-bounce duration-[2000ms]">
-                            <p className="text-red-500 font-bold mb-2 uppercase text-sm">⚠️ آخر فرصة</p>
-                            <div className="text-6xl md:text-8xl font-black font-mono text-transparent bg-clip-text bg-gradient-to-b from-red-500 to-red-900 drop-shadow-[0_0_25px_rgba(220,38,38,0.5)] px-4">
-                                {timeLeft}
-                            </div>
-                            <p className="text-red-400 font-bold mt-2 animate-pulse">
-                                ينتهي قريباً ! أسرع بالحجز
-                            </p>
+                {/* MASSIVE AGGRESSIVE COUNTDOWN CONTAINER */}
+                {timeLeft && (
+                    <div className={`w-full rounded-[40px] border-4 p-8 lg:p-16 transition-all duration-500 relative overflow-hidden flex flex-col items-center ${massiveStyle.container} ${massiveStyle.animate}`}>
+                        {/* Background Effects */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
+
+                        {/* Top Badge */}
+                        <div className="flex flex-col items-center mb-10 text-center relative z-10">
+                            <h2 className={`text-2xl lg:text-4xl font-black mb-2 flex items-center gap-3 ${massiveStyle.text}`}>
+                                <span className="animate-bounce">🔥</span>
+                                أماكن محدودة اليوم
+                                <span className="animate-bounce">🔥</span>
+                            </h2>
+                            <p className="text-white/40 font-mono text-sm tracking-[0.3em] uppercase">Live Session #30295</p>
                         </div>
-                    </div>
-                )}
 
-                {/* URGENCY BANNER */}
-                {live && live.places_disponibles > 0 && (
-                    <div
-                        className={`w-full rounded-3xl p-8 border-2 transition-all duration-300 relative overflow-hidden ${urgenceStyle.bg} ${urgenceStyle.border} ${urgenceStyle.animate ? 'banner-urgent shadow-[0_0_40px_rgba(239,68,68,0.2)]' : ''}`}
-                        dir="rtl"
-                    >
-                        {/* Header with Title */}
-                        <div className="flex flex-wrap justify-between items-center mb-6 gap-4">
-                            <div className="flex items-center gap-4">
-                                <span className="text-4xl animate-bounce">🔥</span>
-                                <div>
-                                    <h2 className={`text-2xl lg:text-4xl font-black font-cairo ${urgenceStyle.text}`}>
-                                        {live.places_restantes < 5 ? "أماكن نفذت تقريبا !" : "أماكن محدودة اليوم"}
-                                    </h2>
-                                    <p className="text-white/60 text-sm mt-1 font-bold">
-                                        Live Session #{new Date().getDate()}295
-                                    </p>
-                                </div>
-                            </div>
+                        {/* Main Timer Display */}
+                        <div className="flex flex-col items-center w-full relative z-10">
+                            <h3 className="text-white/60 text-lg lg:text-3xl font-bold uppercase tracking-[0.2em] mb-12 flex items-center gap-4">
+                                <Clock className={massiveStyle.text} size={32} />
+                                الوقت المتبقي للايڤ
+                                <Clock className={massiveStyle.text} size={32} />
+                            </h3>
 
-                            {/* ALWAYS VISIBLE COUNTDOWN TIMER */}
-                            {timeLeft && (
-                                <div className="bg-black/30 backdrop-blur px-6 py-3 rounded-2xl border border-white/10 flex items-center gap-4 shadow-xl">
-                                    <div className="flex flex-col items-start leading-none">
-                                        <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">الوقت المتبقي</span>
-                                        <div className={`text-3xl md:text-4xl font-black font-mono tracking-tighter ${getCountdownStyle()}`}>
-                                            {timeLeft}
-                                        </div>
+                            <div className="flex items-center justify-center gap-4 md:gap-10 lg:gap-16 w-full max-w-6xl">
+                                {/* Hours */}
+                                <div className="flex flex-col items-center flex-1 max-w-[280px]">
+                                    <div className={`w-full aspect-square md:aspect-[4/3] flex items-center justify-center rounded-3xl md:rounded-[40px] border-2 md:border-4 backdrop-blur-xl transition-all duration-300 ${massiveStyle.box}`}>
+                                        <span className={`text-6xl md:text-8xl lg:text-[140px] font-black font-mono leading-none tracking-tighter ${massiveStyle.text}`}>
+                                            {h}
+                                        </span>
                                     </div>
-                                    <Clock className={`w-8 h-8 ${getCountdownStyle()}`} />
+                                    <span className="text-gray-400 text-sm md:text-2xl font-bold mt-4 uppercase tracking-wider font-cairo">ساعة</span>
                                 </div>
-                            )}
+
+                                <span className={`text-4xl md:text-7xl lg:text-[120px] font-black opacity-40 mb-10 animate-[timer-blink-dots_1s_infinite] ${massiveStyle.text}`}>:</span>
+
+                                {/* Minutes */}
+                                <div className="flex flex-col items-center flex-1 max-w-[280px]">
+                                    <div className={`w-full aspect-square md:aspect-[4/3] flex items-center justify-center rounded-3xl md:rounded-[40px] border-2 md:border-4 backdrop-blur-xl transition-all duration-300 ${massiveStyle.box}`}>
+                                        <span className={`text-6xl md:text-8xl lg:text-[140px] font-black font-mono leading-none tracking-tighter ${massiveStyle.text}`}>
+                                            {m}
+                                        </span>
+                                    </div>
+                                    <span className="text-gray-400 text-sm md:text-2xl font-bold mt-4 uppercase tracking-wider font-cairo">دقيقة</span>
+                                </div>
+
+                                <span className={`text-4xl md:text-7xl lg:text-[120px] font-black opacity-40 mb-10 animate-[timer-blink-dots_1s_infinite] ${massiveStyle.text}`}>:</span>
+
+                                {/* Seconds */}
+                                <div className="flex flex-col items-center flex-1 max-w-[280px]">
+                                    <div className={`w-full aspect-square md:aspect-[4/3] flex items-center justify-center rounded-3xl md:rounded-[40px] border-2 md:border-4 backdrop-blur-xl transition-all duration-300 ${massiveStyle.box}`}>
+                                        <span className={`text-6xl md:text-8xl lg:text-[140px] font-black font-mono leading-none tracking-tighter ${massiveStyle.text}`}>
+                                            {s}
+                                        </span>
+                                    </div>
+                                    <span className="text-gray-400 text-sm md:text-2xl font-bold mt-4 uppercase tracking-wider font-cairo">ثانية</span>
+                                </div>
+                            </div>
                         </div>
 
-                        {/* Progress Bar */}
-                        <div className="relative w-full h-8 bg-black/40 rounded-full overflow-hidden mb-6 shadow-inner border border-white/5">
-                            <div
-                                className={`h-full transition-all duration-1000 ease-out ${urgenceStyle.progressColor} relative overflow-hidden`}
-                                style={{ width: `${progressPercent}%` }}
-                            >
-                                <div className="absolute inset-0 bg-white/20 animate-[shimmer_2s_infinite]"></div>
+                        {/* Bottom Warning and Progress */}
+                        <div className="mt-16 w-full max-w-4xl flex flex-col items-center relative z-10">
+                            <h4 className={`text-xl lg:text-4xl font-black mb-8 animate-pulse text-center ${massiveStyle.text}`}>
+                                ⚠️ {massiveStyle.message} ⚠️
+                            </h4>
+
+                            {/* Progress Bar (Places) */}
+                            <div className="w-full h-4 bg-black/40 rounded-full border border-white/10 overflow-hidden relative shadow-inner mb-2">
+                                <div
+                                    className={`h-full transition-all duration-1000 ease-out absolute left-0 top-0 overflow-hidden ${urgenceStyle.progressColor}`}
+                                    style={{ width: `${progressPercent}%` }}
+                                >
+                                    <div className="absolute inset-0 bg-white/20 animate-[timer-shimmer_2s_infinite]"></div>
+                                </div>
                             </div>
-                            <div className="absolute inset-0 flex items-center justify-center z-10">
-                                <span className="text-sm font-black text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] tracking-wider">
-                                    🔴 {live.places_prises} / {live.places_disponibles} PARTICIPANTS
-                                </span>
+                            <div className="flex justify-between w-full text-xs lg:text-lg font-black mt-2" dir="rtl">
+                                <span className={massiveStyle.text}>{live.places_restantes} أماكن متبقية</span>
+                                <span className="text-white/60">{progressPercent.toFixed(0)}% مكتمل</span>
                             </div>
                         </div>
 
-                        {/* Message */}
-                        <div className={`flex items-center justify-center gap-3 font-bold text-xl lg:text-2xl bg-black/20 p-4 rounded-xl border border-white/5 ${urgenceStyle.text}`}>
-                            {urgenceStyle.icon}
-                            <span>{urgenceStyle.message}</span>
-                        </div>
+                        {/* Shimmer Overlay */}
+                        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-tr from-white/5 via-transparent to-transparent pointer-events-none"></div>
                     </div>
                 )}
 
@@ -551,10 +645,10 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                             {timeLeft && (
                                 <div className="w-full pt-4 border-t border-white/5 flex flex-col items-center">
                                     <div className="flex items-center gap-2 text-gray-400 text-xs font-bold mb-1 uppercase tracking-tighter">
-                                        <Clock size={12} />
+                                        <Clock size={12} className={massiveStyle.text} />
                                         <span>ينتهي في :</span>
                                     </div>
-                                    <div className={`text-2xl font-black font-mono tracking-tighter ${getCountdownStyle()}`}>
+                                    <div className={`text-2xl font-black font-mono tracking-tighter ${massiveStyle.text} ${massiveLevelAnim(urgencyLevel)}`}>
                                         {timeLeft}
                                     </div>
                                 </div>
