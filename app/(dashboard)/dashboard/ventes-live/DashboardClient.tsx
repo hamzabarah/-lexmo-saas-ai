@@ -467,47 +467,24 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
             <div className="max-w-[1600px] mx-auto space-y-8 pt-4 lg:pt-10">
 
                 {/* COMPACT DASHBOARD HEADER */}
-                <div className="flex flex-col md:flex-row justify-between items-center gap-6 border-b border-white/10 pb-8 mb-4">
-                    <div className="flex items-center gap-8">
-                        <h1 className="text-3xl font-black tracking-wider font-orbitron text-white">
+                <div className="flex justify-between items-center border-b border-white/10 pb-8 mb-4">
+                    <div className="flex items-center">
+                        <h1 className="text-2xl md:text-3xl font-black tracking-wider font-orbitron text-white">
                             LEXMO<span className="text-[#00FFA3]">.AI</span>
                         </h1>
-
-                        {/* DESKTOP COMPACT TIMER */}
-                        {timeLeft && (
-                            <div className={`hidden md:flex items-center gap-4 px-6 py-3 rounded-2xl bg-white/5 border border-white/10 shadow-xl backdrop-blur-md ${headerTimerStyle.color}`}>
-                                <Clock className="w-6 h-6" />
-                                <span className={`text-2xl font-black font-orbitron tracking-widest ${headerTimerStyle.animate}`}>
-                                    {timeLeft}
-                                </span>
-                                <span className="text-xl animate-bounce">{headerTimerStyle.status}</span>
-                            </div>
-                        )}
                     </div>
 
-                    <div className="flex items-center gap-6">
-                        {/* MOBILE COMPACT TIMER */}
+                    <div className="flex items-center">
+                        {/* UNIFIED HEADER TIMER */}
                         {timeLeft && (
-                            <div className={`md:hidden flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 border border-white/10 ${headerTimerStyle.color}`}>
-                                <Clock className="w-5 h-5" />
-                                <span className={`text-lg font-black font-orbitron ${headerTimerStyle.animate}`}>
+                            <div className={`flex items-center gap-3 md:gap-4 px-4 md:px-6 py-2 md:py-3 rounded-2xl bg-white/5 border border-white/10 shadow-xl backdrop-blur-md ${headerTimerStyle.color}`}>
+                                <Clock className="w-5 h-5 md:w-6 md:h-6" />
+                                <span className={`text-lg md:text-2xl font-black font-orbitron tracking-tighter md:tracking-widest ${headerTimerStyle.animate}`}>
                                     {timeLeft}
                                 </span>
-                                <span className="">{headerTimerStyle.status}</span>
+                                <span className="text-sm md:text-xl animate-bounce">{headerTimerStyle.status}</span>
                             </div>
                         )}
-
-                        <div className="flex items-center gap-3 bg-white/5 px-4 py-2 rounded-full border border-white/10">
-                            <div className="text-right hidden sm:block">
-                                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Active Member</p>
-                                <p className="text-xs font-black text-white">ME</p>
-                            </div>
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#00FFA3] to-cyan-500 p-[2px]">
-                                <div className="w-full h-full rounded-full bg-[#050A14] flex items-center justify-center font-black text-xs">
-                                    ME
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
