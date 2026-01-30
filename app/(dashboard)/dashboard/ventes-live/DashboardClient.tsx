@@ -407,44 +407,36 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
         return () => clearInterval(interval);
     }, [data.live_actuel?.heure_fin]);
 
-    // Dynamic styles for sidebar countdown
-    const sidebarStyle = (() => {
+    // Dynamic styles for compact header countdown
+    const headerTimerStyle = (() => {
         const diff = data.live_actuel?.heure_fin ? (new Date(data.live_actuel.heure_fin).getTime() - new Date().getTime()) : 0;
         const totalMinutes = Math.floor(diff / (1000 * 60));
 
         if (totalMinutes < 10) {
             return {
                 color: "text-red-500",
-                border: "border-red-500",
-                shadow: "shadow-[0_8px_32px_rgba(239,68,68,0.2)]",
-                animate: "animate-[timer-pulse-fast_1s_infinite]",
-                status: "🔴 حرج جداً - الآن!"
+                status: "🔴",
+                animate: "animate-pulse"
             };
         }
         if (totalMinutes < 30) {
             return {
                 color: "text-orange-500",
-                border: "border-orange-500",
-                shadow: "shadow-[0_8px_32px_rgba(249,115,22,0.15)]",
-                animate: "animate-[timer-pulse-fast_1s_infinite]",
-                status: "🔥 أسرع ! الوقت ينفذ !"
+                status: "🟠",
+                animate: "animate-pulse"
             };
         }
         if (totalMinutes < 60) {
             return {
                 color: "text-yellow-400",
-                border: "border-yellow-400",
-                shadow: "shadow-[0_8px_32px_rgba(234,179,8,0.1)]",
-                animate: "animate-[timer-pulse_2s_infinite]",
-                status: "🟡 يمر بسرعة"
+                status: "🟡",
+                animate: ""
             };
         }
         return {
             color: "text-green-400",
-            border: "border-green-400/30",
-            shadow: "shadow-2xl",
-            animate: "",
-            status: "🟢 وقت كافٍ"
+            status: "🟢",
+            animate: ""
         };
     })();
 
@@ -472,15 +464,50 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
         <div className="min-h-screen bg-[#050A14] text-white font-cairo p-6 lg:p-10 relative overflow-x-auto">
             <style>{TIMER_ANIMATIONS}</style>
 
-            <div className="max-w-[1600px] mx-auto space-y-8 pt-10 lg:pl-[280px]">
+            <div className="max-w-[1600px] mx-auto space-y-8 pt-4 lg:pt-10">
 
-                {/* BRAND HEADER */}
-                <div className="flex justify-between items-center mb-0">
-                    <div></div>
-                    <div className="text-right">
-                        <h1 className="text-2xl font-black tracking-wider font-orbitron text-white">
+                {/* COMPACT DASHBOARD HEADER */}
+                <div className="flex flex-col md:flex-row justify-between items-center gap-6 border-b border-white/10 pb-8 mb-4">
+                    <div className="flex items-center gap-8">
+                        <h1 className="text-3xl font-black tracking-wider font-orbitron text-white">
                             LEXMO<span className="text-[#00FFA3]">.AI</span>
                         </h1>
+
+                        {/* DESKTOP COMPACT TIMER */}
+                        {timeLeft && (
+                            <div className={`hidden md:flex items-center gap-4 px-6 py-3 rounded-2xl bg-white/5 border border-white/10 shadow-xl backdrop-blur-md ${headerTimerStyle.color}`}>
+                                <Clock className="w-6 h-6" />
+                                <span className={`text-2xl font-black font-orbitron tracking-widest ${headerTimerStyle.animate}`}>
+                                    {timeLeft}
+                                </span>
+                                <span className="text-xl animate-bounce">{headerTimerStyle.status}</span>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="flex items-center gap-6">
+                        {/* MOBILE COMPACT TIMER */}
+                        {timeLeft && (
+                            <div className={`md:hidden flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 border border-white/10 ${headerTimerStyle.color}`}>
+                                <Clock className="w-5 h-5" />
+                                <span className={`text-lg font-black font-orbitron ${headerTimerStyle.animate}`}>
+                                    {timeLeft}
+                                </span>
+                                <span className="">{headerTimerStyle.status}</span>
+                            </div>
+                        )}
+
+                        <div className="flex items-center gap-3 bg-white/5 px-4 py-2 rounded-full border border-white/10">
+                            <div className="text-right hidden sm:block">
+                                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Active Member</p>
+                                <p className="text-xs font-black text-white">ME</p>
+                            </div>
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#00FFA3] to-cyan-500 p-[2px]">
+                                <div className="w-full h-full rounded-full bg-[#050A14] flex items-center justify-center font-black text-xs">
+                                    ME
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -529,37 +556,6 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                     </div>
                 )}
 
-                {/* SIDEBAR COUNTDOWN (DESKTOP) & TOP BANNER (MOBILE) */}
-                {timeLeft && (
-                    <div className={`
-                        lg:fixed lg:top-[120px] lg:left-[20px] lg:z-[100] lg:w-[220px]
-                        w-full rounded-2xl border-2 p-6 transition-all duration-500
-                        bg-black/60 backdrop-blur-xl
-                        ${sidebarStyle.border} ${sidebarStyle.shadow} ${sidebarStyle.animate}
-                    `}>
-                        <div className="flex items-center gap-3 mb-4">
-                            <Clock className={`w-5 h-5 ${sidebarStyle.color}`} />
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] opacity-70 text-white font-orbitron">ينتهي في:</span>
-                        </div>
-
-                        <div className={`text-4xl font-black font-orbitron text-center tracking-wider mb-4 ${sidebarStyle.color} drop-shadow-[0_0_15px_currentColor]`}>
-                            {timeLeft}
-                        </div>
-
-                        {/* Progress Bar */}
-                        <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden mb-5">
-                            <div
-                                className={`h-full transition-all duration-1000 ease-linear shadow-[0_0_10px_currentColor] bg-current ${sidebarStyle.color}`}
-                                style={{ width: `${100 - timeProgressPercent}%` }}
-                            ></div>
-                        </div>
-
-                        {/* Status Message */}
-                        <div className={`text-[10px] font-black text-center py-2.5 bg-white/5 rounded-lg uppercase tracking-widest border border-white/5 ${sidebarStyle.color}`}>
-                            {sidebarStyle.status}
-                        </div>
-                    </div>
-                )}
 
                 {/* MAIN GRID: 65% Graph / 35% Stats */}
                 <div className="grid grid-cols-1 lg:grid-cols-[65%_35%] gap-6">
@@ -632,10 +628,10 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                             {timeLeft && (
                                 <div className="w-full pt-4 border-t border-white/5 flex flex-col items-center">
                                     <div className="flex items-center gap-2 text-gray-400 text-xs font-bold mb-1 uppercase tracking-tighter">
-                                        <Clock size={12} className={sidebarStyle.color} />
+                                        <Clock size={12} className={headerTimerStyle.color} />
                                         <span>ينتهي في :</span>
                                     </div>
-                                    <div className={`text-2xl font-black font-mono tracking-tighter ${sidebarStyle.color} ${massiveLevelAnim(urgencyLevel)}`}>
+                                    <div className={`text-2xl font-black font-mono tracking-tighter ${headerTimerStyle.color} ${massiveLevelAnim(urgencyLevel)}`}>
                                         {timeLeft}
                                     </div>
                                 </div>
