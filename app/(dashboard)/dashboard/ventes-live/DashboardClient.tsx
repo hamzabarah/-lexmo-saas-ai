@@ -365,28 +365,29 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
             const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             setTimeLeft(formattedTime);
 
-            // Set Urgency Level
-            if (hours === 0 && minutes < 5) {
-                setUrgencyLevel('extreme');
-            } else if (hours === 0 && minutes < 10) {
-                setUrgencyLevel('critical');
-            } else if (hours === 0 && minutes < 30) {
-                setUrgencyLevel('warning');
+            // Set New Urgency Level based on User Request
+            const totalMinutes = hours * 60 + minutes;
+            if (totalMinutes < 10) {
+                setUrgencyLevel('extreme'); // Red (Blink)
+            } else if (totalMinutes < 30) {
+                setUrgencyLevel('critical'); // Orange
+            } else if (totalMinutes < 60) {
+                setUrgencyLevel('warning'); // Yellow
             } else {
-                setUrgencyLevel('normal');
+                setUrgencyLevel('normal'); // Green
             }
         }, 1000);
 
         return () => clearInterval(interval);
     }, [data.live_actuel?.heure_fin]);
 
-    // Dynamic styles for countdown
+    // Dynamic styles for countdown (Color Coding)
     const getCountdownStyle = () => {
         switch (urgencyLevel) {
-            case 'extreme': return "bg-red-600 animate-pulse animate-shake border-red-500 shadow-[0_0_50px_rgba(220,38,38,0.8)]";
-            case 'critical': return "bg-red-600/80 animate-pulse border-red-500 shadow-[0_0_30px_rgba(220,38,38,0.5)]";
-            case 'warning': return "bg-orange-600/80 animate-pulse border-orange-500";
-            default: return "bg-emerald-600/20 border-emerald-500/50";
+            case 'extreme': return "text-red-500 animate-pulse drop-shadow-[0_0_15px_rgba(220,38,38,0.5)]";
+            case 'critical': return "text-orange-500 drop-shadow-[0_0_10px_rgba(249,115,22,0.3)]";
+            case 'warning': return "text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.2)]";
+            default: return "text-green-400 drop-shadow-[0_0_10px_rgba(34,197,94,0.2)]";
         }
     };
 
@@ -407,16 +408,16 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                     </div>
                 </div>
 
-                {/* CENTRAL GIANT CLOCK (IF URGENT) */}
-                {timeLeft && (urgencyLevel === 'critical' || urgencyLevel === 'extreme') && (
+                {/* CENTRAL GIANT CLOCK (IF EXTREME URGENCY < 10 MIN) */}
+                {timeLeft && urgencyLevel === 'extreme' && (
                     <div className="w-full flex justify-center py-6">
                         <div className="text-center animate-bounce duration-[2000ms]">
-                            <p className="text-red-500 font-bold mb-2 uppercase text-sm">⚠️ عرض محدود</p>
+                            <p className="text-red-500 font-bold mb-2 uppercase text-sm">⚠️ آخر فرصة</p>
                             <div className="text-6xl md:text-8xl font-black font-mono text-transparent bg-clip-text bg-gradient-to-b from-red-500 to-red-900 drop-shadow-[0_0_25px_rgba(220,38,38,0.5)] px-4">
                                 {timeLeft}
                             </div>
                             <p className="text-red-400 font-bold mt-2 animate-pulse">
-                                {urgencyLevel === 'extreme' ? "الفرصة الأخيرة !!" : "ينتهي قريباً !"}
+                                ينتهي قريباً ! أسرع بالحجز
                             </p>
                         </div>
                     </div>
@@ -441,6 +442,19 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                                     </p>
                                 </div>
                             </div>
+
+                            {/* ALWAYS VISIBLE COUNTDOWN TIMER */}
+                            {timeLeft && (
+                                <div className="bg-black/30 backdrop-blur px-6 py-3 rounded-2xl border border-white/10 flex items-center gap-4 shadow-xl">
+                                    <div className="flex flex-col items-start leading-none">
+                                        <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">الوقت المتبقي</span>
+                                        <div className={`text-3xl md:text-4xl font-black font-mono tracking-tighter ${getCountdownStyle()}`}>
+                                            {timeLeft}
+                                        </div>
+                                    </div>
+                                    <Clock className={`w-8 h-8 ${getCountdownStyle()}`} />
+                                </div>
+                            )}
                         </div>
 
                         {/* Progress Bar */}
@@ -528,10 +542,23 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                                 />
                             </div>
 
-                            <div className="flex flex-col gap-1 items-center animate-pulse">
+                            <div className="flex flex-col gap-1 items-center animate-pulse mb-6">
                                 <span className="text-green-400 font-bold text-lg">+1,245€</span>
                                 <span className="text-gray-500 text-xs uppercase tracking-widest font-cairo">آخر عملية بيع</span>
                             </div>
+
+                            {/* MINI TIMER FOR STATS CARD */}
+                            {timeLeft && (
+                                <div className="w-full pt-4 border-t border-white/5 flex flex-col items-center">
+                                    <div className="flex items-center gap-2 text-gray-400 text-xs font-bold mb-1 uppercase tracking-tighter">
+                                        <Clock size={12} />
+                                        <span>ينتهي في :</span>
+                                    </div>
+                                    <div className={`text-2xl font-black font-mono tracking-tighter ${getCountdownStyle()}`}>
+                                        {timeLeft}
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         {/* BOTTOM CARD: Sales Count */}
