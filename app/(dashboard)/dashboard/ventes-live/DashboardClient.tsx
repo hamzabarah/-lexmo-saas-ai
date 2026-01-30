@@ -564,7 +564,7 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                                 </div>
                             </div>
                             <div className="flex justify-between w-full text-xs lg:text-lg font-black mt-2" dir="rtl">
-                                <span className={massiveStyle.text}>{live.places_restantes} أماكن متبقية</span>
+                                <span className={massiveStyle.text}>{live?.places_restantes ?? 0} أماكن متبقية</span>
                                 <span className="text-white/60">{progressPercent.toFixed(0)}% مكتمل</span>
                             </div>
                         </div>
