@@ -12,11 +12,11 @@ interface StatCardProps {
 
 export default function StatCard({ title, value, icon: Icon, trend, trendUp, color = "#00d2ff" }: StatCardProps) {
     return (
-        <Card className="hover:border-[#00d2ff]/30 transition-colors">
+        <Card className="hover:border-[#C9A84C]/30 transition-colors">
             <div className="flex items-start justify-between">
                 <div>
-                    <p className="text-gray-400 text-sm font-medium mb-1">{title}</p>
-                    <h3 className="text-2xl font-bold text-white font-orbitron">{value}</h3>
+                    <p className="text-[#64607A] text-sm font-medium mb-1">{title}</p>
+                    <h3 className="text-2xl font-bold text-[#1A1A2E] font-orbitron">{value}</h3>
                     {trend && (
                         <p className={`text-xs mt-2 ${trendUp ? 'text-green-500' : 'text-red-500'}`}>
                             {trend}
@@ -24,7 +24,7 @@ export default function StatCard({ title, value, icon: Icon, trend, trendUp, col
                     )}
                 </div>
                 <div
-                    className="p-3 rounded-xl bg-white/5 text-white"
+                    className="p-3 rounded-xl"
                     style={{ color: color, backgroundColor: `${color}15` }}
                 >
                     <Icon size={24} />

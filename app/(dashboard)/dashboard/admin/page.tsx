@@ -236,19 +236,19 @@ ${LOGIN_URL}
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#030712] flex items-center justify-center">
-                <div className="text-white text-xl">جاري التحميل...</div>
+            <div className="min-h-screen bg-[#F5F1EB] flex items-center justify-center">
+                <div className="text-[#1A1A2E] text-xl">جاري التحميل...</div>
             </div>
         );
     }
 
     if (unauthorized) {
         return (
-            <div className="min-h-screen bg-[#030712] flex items-center justify-center p-4">
-                <div className="bg-red-950/20 border border-red-500/30 rounded-2xl p-8 max-w-md text-center">
+            <div className="min-h-screen bg-[#F5F1EB] flex items-center justify-center p-4">
+                <div className="bg-red-50 border border-red-200 rounded-2xl p-8 max-w-md text-center">
                     <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-                    <h1 className="text-2xl font-bold text-white mb-2">غير مصرح</h1>
-                    <p className="text-gray-400 mb-6">ليس لديك صلاحية الوصول إلى هذه الصفحة</p>
+                    <h1 className="text-2xl font-bold text-[#1A1A2E] mb-2">غير مصرح</h1>
+                    <p className="text-[#64607A] mb-6">ليس لديك صلاحية الوصول إلى هذه الصفحة</p>
                     <button
                         onClick={() => router.push('/dashboard')}
                         className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition"
@@ -261,59 +261,59 @@ ${LOGIN_URL}
     }
 
     return (
-        <div className="min-h-screen bg-[#030712] p-4 md:p-8">
+        <div className="min-h-screen bg-[#F5F1EB] p-4 md:p-8">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
                     <div className="flex items-center gap-3 mb-2">
-                        <Shield className="w-8 h-8 text-blue-500" />
-                        <h1 className="text-3xl font-bold text-white">لوحة الإدارة</h1>
+                        <Shield className="w-8 h-8 text-[#C9A84C]" />
+                        <h1 className="text-3xl font-bold text-[#1A1A2E]">لوحة الإدارة</h1>
                     </div>
-                    <p className="text-gray-400">إدارة الطلاب والاشتراكات</p>
+                    <p className="text-[#64607A]">إدارة الطلاب والاشتراكات</p>
                 </div>
 
                 {/* Statistics */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                    <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
+                    <div className="bg-white border border-[#E8E0D4] rounded-xl p-6 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
                         <div className="flex items-center gap-3 mb-2">
                             <TrendingUp className="w-5 h-5 text-blue-400" />
-                            <div className="text-gray-400 text-sm">عدد الطلاب الكلي</div>
+                            <div className="text-[#64607A] text-sm">عدد الطلاب الكلي</div>
                         </div>
-                        <div className="text-3xl font-bold text-white">{totalStudents}</div>
+                        <div className="text-3xl font-bold text-[#C9A84C]">{totalStudents}</div>
                     </div>
-                    <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
+                    <div className="bg-white border border-[#E8E0D4] rounded-xl p-6 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
                         <div className="flex items-center gap-3 mb-2">
                             <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                            <div className="text-gray-400 text-sm">الطلاب النشطين</div>
+                            <div className="text-[#64607A] text-sm">الطلاب النشطين</div>
                         </div>
                         <div className="text-3xl font-bold text-green-500">{activeStudents}</div>
                     </div>
-                    <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
+                    <div className="bg-white border border-[#E8E0D4] rounded-xl p-6 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
                         <div className="flex items-center gap-3 mb-2">
                             <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-                            <div className="text-gray-400 text-sm">في انتظار التفعيل</div>
+                            <div className="text-[#64607A] text-sm">في انتظار التفعيل</div>
                         </div>
                         <div className="text-3xl font-bold text-orange-500">{pendingStudents}</div>
                     </div>
                 </div>
 
                 {/* Add New Student Section */}
-                <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6 mb-8">
+                <div className="bg-white border border-[#E8E0D4] rounded-xl p-6 mb-8 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
                     <div className="flex items-center gap-3 mb-6">
-                        <UserPlus className="w-6 h-6 text-blue-500" />
-                        <h2 className="text-2xl font-bold text-white">إضافة طالب جديد</h2>
+                        <UserPlus className="w-6 h-6 text-[#C9A84C]" />
+                        <h2 className="text-2xl font-bold text-[#1A1A2E]">إضافة طالب جديد</h2>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                         {/* Name Input */}
                         <div>
-                            <label className="block text-sm text-gray-400 mb-2">الاسم</label>
+                            <label className="block text-sm text-[#64607A] mb-2">الاسم</label>
                             <input
                                 type="text"
                                 value={newStudentName}
                                 onChange={(e) => setNewStudentName(e.target.value)}
                                 placeholder="الاسم الكامل"
-                                className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full bg-[#F5F1EB] border border-[#E8E0D4] text-[#1A1A2E] rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
                             />
                         </div>
 
@@ -325,7 +325,7 @@ ${LOGIN_URL}
                                 value={newStudentEmail}
                                 onChange={(e) => setNewStudentEmail(e.target.value)}
                                 placeholder="student@example.com"
-                                className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full bg-[#F5F1EB] border border-[#E8E0D4] text-[#1A1A2E] rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
                             />
                         </div>
 
@@ -335,7 +335,7 @@ ${LOGIN_URL}
                             <select
                                 value={newStudentPlan}
                                 onChange={(e) => setNewStudentPlan(e.target.value)}
-                                className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full bg-[#F5F1EB] border border-[#E8E0D4] text-[#1A1A2E] rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]"
                             >
                                 <option value="spark">🚀 Spark</option>
                                 <option value="emperor">👑 Emperor</option>
@@ -348,7 +348,7 @@ ${LOGIN_URL}
                             <button
                                 onClick={handleCreateStudent}
                                 disabled={creatingStudent}
-                                className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-bold px-6 py-3 rounded-lg transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full bg-gradient-to-r from-[#C9A84C] to-[#B8860B] hover:from-[#B8860B] hover:to-[#C9A84C] text-white font-bold px-6 py-3 rounded-lg transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {creatingStudent ? 'جاري الإنشاء...' : 'إنشاء الحساب وإرسال الدعوة'}
                             </button>
@@ -357,7 +357,7 @@ ${LOGIN_URL}
 
                     {/* Created Student Credentials Display */}
                     {createdStudent && (
-                        <div className="bg-green-900/20 border border-green-500/30 rounded-xl p-6 mt-6">
+                        <div className="bg-green-50 border border-green-200 rounded-xl p-6 mt-6">
                             <div className="flex items-center gap-2 mb-4">
                                 <Check className="w-6 h-6 text-green-500" />
                                 <h3 className="text-xl font-bold text-green-500">تم إنشاء الحساب بنجاح! ✅</h3>
@@ -365,21 +365,21 @@ ${LOGIN_URL}
 
                             <div className="space-y-3 mb-6">
                                 <div className="flex items-center gap-3">
-                                    <span className="text-gray-400 font-semibold min-w-[120px]">الاسم:</span>
-                                    <span className="text-white">{createdStudent.name}</span>
+                                    <span className="text-[#64607A] font-semibold min-w-[120px]">الاسم:</span>
+                                    <span className="text-[#1A1A2E]">{createdStudent.name}</span>
                                 </div>
                                 <div className="flex items-center gap-3">
-                                    <span className="text-gray-400 font-semibold min-w-[120px]">البريد الإلكتروني:</span>
-                                    <span className="text-white font-mono">{createdStudent.email}</span>
+                                    <span className="text-[#64607A] font-semibold min-w-[120px]">البريد الإلكتروني:</span>
+                                    <span className="text-[#1A1A2E] font-mono">{createdStudent.email}</span>
                                 </div>
                                 <div className="flex items-center gap-3">
-                                    <span className="text-gray-400 font-semibold min-w-[120px]">كود الدخول:</span>
-                                    <code className="bg-gray-800 px-3 py-1 rounded text-yellow-400 font-mono text-lg">
+                                    <span className="text-[#64607A] font-semibold min-w-[120px]">كود الدخول:</span>
+                                    <code className="bg-[#F5F1EB] px-3 py-1 rounded text-[#C9A84C] font-mono text-lg border border-[#E8E0D4]">
                                         {createdStudent.password}
                                     </code>
                                     <button
                                         onClick={copyPassword}
-                                        className="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded transition"
+                                        className="flex items-center gap-2 bg-[#F5F1EB] hover:bg-[#E8E0D4] border border-[#E8E0D4] px-3 py-1 rounded transition"
                                     >
                                         {passwordCopied ? (
                                             <>
@@ -388,15 +388,15 @@ ${LOGIN_URL}
                                             </>
                                         ) : (
                                             <>
-                                                <Copy className="w-4 h-4 text-gray-300" />
-                                                <span className="text-gray-300 text-sm">نسخ</span>
+                                                <Copy className="w-4 h-4 text-[#64607A]" />
+                                                <span className="text-[#64607A] text-sm">نسخ</span>
                                             </>
                                         )}
                                     </button>
                                 </div>
                                 <div className="flex items-center gap-3">
-                                    <span className="text-gray-400 font-semibold min-w-[120px]">الخطة:</span>
-                                    <span className="text-white">{createdStudent.plan === 'spark' ? '🚀 Spark' : createdStudent.plan === 'emperor' ? '👑 Emperor' : '💎 Legend'}</span>
+                                    <span className="text-[#64607A] font-semibold min-w-[120px]">الخطة:</span>
+                                    <span className="text-[#1A1A2E]">{createdStudent.plan === 'spark' ? '🚀 Spark' : createdStudent.plan === 'emperor' ? '👑 Emperor' : '💎 Legend'}</span>
                                 </div>
                             </div>
 
@@ -412,26 +412,26 @@ ${LOGIN_URL}
                 </div>
 
                 {/* Members Table */}
-                <div className="bg-gray-900/50 border border-gray-800 rounded-xl overflow-hidden">
-                    <div className="p-6 border-b border-gray-800">
-                        <h2 className="text-2xl font-bold text-white">جميع الأعضاء</h2>
+                <div className="bg-white border border-[#E8E0D4] rounded-xl overflow-hidden shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+                    <div className="p-6 border-b border-[#E8E0D4]">
+                        <h2 className="text-2xl font-bold text-[#1A1A2E]">جميع الأعضاء</h2>
                     </div>
 
                     <div className="overflow-x-auto">
                         <table className="w-full">
-                            <thead className="bg-gray-800/50 border-b border-gray-700">
+                            <thead className="bg-[#F5F1EB] border-b border-[#E8E0D4]">
                                 <tr>
-                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-300">البريد الإلكتروني</th>
-                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-300">الاسم</th>
-                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-300">الهاتف</th>
-                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-300">البلد</th>
-                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-300">الخطة</th>
-                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-300">الحالة</th>
-                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-300">تاريخ التسجيل</th>
-                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-300">الإجراءات</th>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-[#64607A]">البريد الإلكتروني</th>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-[#64607A]">الاسم</th>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-[#64607A]">الهاتف</th>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-[#64607A]">البلد</th>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-[#64607A]">الخطة</th>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-[#64607A]">الحالة</th>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-[#64607A]">تاريخ التسجيل</th>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-[#64607A]">الإجراءات</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-800">
+                            <tbody className="divide-y divide-[#E8E0D4]">
                                 {subscriptions.map((subscription) => {
                                     const userData = users.find(u => u.email === subscription.email);
 
@@ -450,17 +450,17 @@ ${LOGIN_URL}
                                     };
 
                                     return (
-                                        <tr key={subscription.id} className="hover:bg-gray-800/30 transition">
+                                        <tr key={subscription.id} className="hover:bg-[#F5F1EB] transition">
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-2">
-                                                    <Mail className="w-4 h-4 text-gray-500" />
-                                                    <span className="text-gray-300 text-sm">{subscription.email}</span>
+                                                    <Mail className="w-4 h-4 text-[#64607A]" />
+                                                    <span className="text-[#1A1A2E] text-sm">{subscription.email}</span>
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4 text-gray-300 text-sm">{userData?.name || '-'}</td>
-                                            <td className="px-6 py-4 text-gray-300 text-sm">{userData?.phone || '-'}</td>
-                                            <td className="px-6 py-4 text-gray-300 text-sm">{userData?.country || '-'}</td>
-                                            <td className="px-6 py-4 text-gray-300 text-sm">
+                                            <td className="px-6 py-4 text-[#1A1A2E] text-sm">{userData?.name || '-'}</td>
+                                            <td className="px-6 py-4 text-[#1A1A2E] text-sm">{userData?.phone || '-'}</td>
+                                            <td className="px-6 py-4 text-[#1A1A2E] text-sm">{userData?.country || '-'}</td>
+                                            <td className="px-6 py-4 text-[#64607A] text-sm">
                                                 {planIcons[subscription.plan as keyof typeof planIcons]} {subscription.plan.charAt(0).toUpperCase() + subscription.plan.slice(1)}
                                             </td>
                                             <td className="px-6 py-4">
@@ -468,7 +468,7 @@ ${LOGIN_URL}
                                                     {status.text}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 text-gray-400 text-sm">
+                                            <td className="px-6 py-4 text-[#64607A] text-sm">
                                                 {new Date(subscription.created_at).toLocaleDateString('ar-EG')}
                                             </td>
                                             <td className="px-6 py-4">

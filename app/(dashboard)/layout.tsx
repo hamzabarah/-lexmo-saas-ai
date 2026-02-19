@@ -6,7 +6,7 @@ export default function DashboardLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="flex min-h-screen bg-[#030712] text-white font-cairo" dir="rtl">
+        <div className="dashboard-light flex min-h-screen bg-[#F5F1EB] text-[#1A1A2E] font-cairo" dir="rtl">
             {/* Sidebar (Fixed Right) */}
             <Sidebar />
 

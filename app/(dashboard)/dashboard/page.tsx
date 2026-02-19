@@ -18,13 +18,13 @@ export default async function DashboardPage() {
         <>
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold text-white font-cairo mb-2">مرحباً، محمد! 👋</h1>
+                    <h1 className="text-3xl font-bold text-[#1A1A2E] font-cairo mb-2">مرحباً، محمد! 👋</h1>
                     <div className="flex items-center gap-2">
-                        <span className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-400 border border-green-500/30 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                        <span className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 text-green-600 border border-green-500/20 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
                             مستوى المبتدئ 🌱
                         </span>
-                        <span className="text-gray-500 text-sm">|</span>
-                        <span className="text-gray-400 text-sm">عضو منذ 3 أيام</span>
+                        <span className="text-[#E8E0D4] text-sm">|</span>
+                        <span className="text-[#64607A] text-sm">عضو منذ 3 أيام</span>
                     </div>
                 </div>
                 <div className="hidden md:block">
@@ -58,13 +58,13 @@ export default async function DashboardPage() {
                         title="الوحدات المكتملة"
                         value="18/150"
                         icon={BookOpen}
-                        color="#00d2ff"
+                        color="#C9A84C"
                     />
                     <StatCard
                         title="الترتيب الحالي"
                         value="#-"
                         icon={Trophy}
-                        color="#9d50bb"
+                        color="#C9A84C"
                     />
                     <StatCard
                         title="الهدف القادم"
@@ -117,28 +117,28 @@ export default async function DashboardPage() {
 
                 {/* Right Column: Affiliate Mini & Announcements */}
                 <div className="space-y-6">
-                    <Card className="bg-gradient-to-br from-[#9d50bb]/20 to-[#030712]">
+                    <Card className="bg-gradient-to-br from-[#C9A84C]/10 to-[#F5F1EB]">
                         <h3 className="text-lg font-bold mb-2">برنامج الشراكة 🚀</h3>
-                        <p className="text-gray-400 text-sm mb-4">شارك رابطك واربح 70% عمولة على كل مبيعة.</p>
-                        <div className="bg-[#030712]/50 p-3 rounded-lg flex items-center justify-between mb-4 border border-white/10">
-                            <span className="text-sm text-gray-300 truncate">lexmo.ai/ref/mohammed</span>
-                            <button className="text-xs text-[#00d2ff] font-bold">نسخ</button>
+                        <p className="text-[#64607A] text-sm mb-4">شارك رابطك واربح 70% عمولة على كل مبيعة.</p>
+                        <div className="bg-[#F5F1EB] p-3 rounded-lg flex items-center justify-between mb-4 border border-[#E8E0D4]">
+                            <span className="text-sm text-[#64607A] truncate">lexmo.ai/ref/mohammed</span>
+                            <button className="text-xs text-[#C9A84C] font-bold">نسخ</button>
                         </div>
-                        <button className="w-full bg-[#9d50bb] hover:bg-[#8e44ad] text-white py-2 rounded-lg font-bold transition-colors">
+                        <button className="w-full bg-gradient-to-r from-[#C9A84C] to-[#B8860B] hover:from-[#B8860B] hover:to-[#C9A84C] text-white py-2 rounded-lg font-bold transition-colors">
                             الذهاب لصفحة الأرباح
                         </button>
                     </Card>
 
                     <Card>
                         <h3 className="text-lg font-bold mb-2">تنبيهات 📢</h3>
-                        <ul className="space-y-3 text-sm text-gray-400">
+                        <ul className="space-y-3 text-sm text-[#64607A]">
                             <li className="flex gap-2">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#00d2ff] mt-2 shrink-0"></span>
-                                <span className="text-gray-300">تم تحديث المرحلة 3 (System Building) بمحتوى جديد.</span>
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#C9A84C] mt-2 shrink-0"></span>
+                                <span className="text-[#1A1A2E]">تم تحديث المرحلة 3 (System Building) بمحتوى جديد.</span>
                             </li>
                             <li className="flex gap-2">
-                                <span className="w-1.5 h-1.5 rounded-full bg-white/20 mt-2 shrink-0"></span>
-                                <span className="text-gray-300">لقاء Zoom مباشر يوم الخميس القادم.</span>
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#E8E0D4] mt-2 shrink-0"></span>
+                                <span className="text-[#1A1A2E]">لقاء Zoom مباشر يوم الخميس القادم.</span>
                             </li>
                         </ul>
                     </Card>
