@@ -59,7 +59,7 @@ export default function Sidebar() {
             {/* Mobile Menu Button */}
             <button
                 onClick={toggleMenu}
-                className="fixed top-4 right-4 z-50 p-2 bg-white/90 backdrop-blur-md border border-[#E8E0D4] rounded-lg lg:hidden text-[#1A1A2E] shadow-sm"
+                className="fixed top-4 right-4 z-50 p-2 bg-[#030712]/80 backdrop-blur-md border border-white/10 rounded-lg lg:hidden"
             >
                 {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -67,34 +67,34 @@ export default function Sidebar() {
             {/* Overlay */}
             {isOpen && (
                 <div
-                    className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden"
+                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
                     onClick={() => setIsOpen(false)}
                 />
             )}
 
             {/* Sidebar */}
             <aside className={clsx(
-                "fixed top-0 right-0 h-screen w-72 bg-white border-l border-[#E8E0D4] overflow-y-auto z-40 transition-transform duration-300 lg:translate-x-0 shadow-[2px_0_12px_rgba(0,0,0,0.04)]",
+                "fixed top-0 right-0 h-screen w-72 bg-[#030712] border-l border-white/10 overflow-y-auto z-40 transition-transform duration-300 lg:translate-x-0",
                 isOpen ? "translate-x-0" : "translate-x-full"
             )}>
                 <div className="p-6 flex flex-col h-full">
                     {/* Logo */}
                     <div className="mb-10 text-center">
                         <h1 className="text-2xl font-bold font-orbitron tracking-tighter">
-                            LEXMO<span className="text-[#C9A84C]">.AI</span>
+                            LEXMO<span className="text-[#00d2ff]">.AI</span>
                         </h1>
                     </div>
 
                     {/* User Profile Snippet */}
-                    <div className="mb-8 p-4 bg-[#F5F1EB] rounded-xl border border-[#E8E0D4] flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#C9A84C] to-[#B8860B] p-[2px]">
-                            <div className="w-full h-full rounded-full bg-white flex items-center justify-center text-xs font-bold text-[#1A1A2E]">
+                    <div className="mb-8 p-4 bg-white/5 rounded-xl border border-white/5 flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#00d2ff] to-[#9d50bb] p-[2px]">
+                            <div className="w-full h-full rounded-full bg-[#030712] flex items-center justify-center text-xs font-bold">
                                 {initials}
                             </div>
                         </div>
                         <div className="overflow-hidden">
                             <div className="font-bold text-sm truncate">{displayName}</div>
-                            <div className="text-xs text-[#64607A]">مستوى المبتدئ</div>
+                            <div className="text-xs text-gray-400">مستوى المبتدئ</div>
                         </div>
                     </div>
 
@@ -109,15 +109,15 @@ export default function Sidebar() {
                                     className={clsx(
                                         "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative overflow-hidden",
                                         isActive
-                                            ? "bg-[#F5F1EB] text-[#C9A84C] shadow-sm"
-                                            : "text-[#64607A] hover:text-[#1A1A2E] hover:bg-[#F5F1EB]"
+                                            ? "bg-white/10 text-white shadow-[0_0_15px_rgba(0,210,255,0.1)]"
+                                            : "text-gray-400 hover:text-white hover:bg-white/5"
                                     )}
                                     onClick={() => setIsOpen(false)}
                                 >
                                     {isActive && (
-                                        <div className="absolute top-0 bottom-0 right-0 w-1 bg-[#C9A84C] rounded-l" />
+                                        <div className="absolute top-0 bottom-0 right-0 w-1 bg-[#00d2ff] rounded-l shadow-[0_0_10px_#00d2ff]" />
                                     )}
-                                    <item.icon size={20} className={clsx(isActive ? "text-[#C9A84C]" : "group-hover:text-[#1A1A2E] transition-colors")} />
+                                    <item.icon size={20} className={clsx(isActive ? "text-[#00d2ff] drop-shadow-[0_0_5px_rgba(0,210,255,0.5)]" : "group-hover:text-white transition-colors")} />
                                     <span className="font-bold">{item.label}</span>
                                 </Link>
                             );
@@ -131,20 +131,20 @@ export default function Sidebar() {
                                     className={clsx(
                                         "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative overflow-hidden",
                                         pathname === '/dashboard/admin'
-                                            ? "bg-[#F5F1EB] text-[#C9A84C] shadow-sm"
-                                            : "text-[#64607A] hover:text-[#1A1A2E] hover:bg-[#F5F1EB]"
+                                            ? "bg-white/10 text-white shadow-[0_0_15px_rgba(0,210,255,0.1)]"
+                                            : "text-gray-400 hover:text-white hover:bg-white/5"
                                     )}
                                     onClick={() => setIsOpen(false)}
                                 >
                                     {pathname === '/dashboard/admin' && (
-                                        <div className="absolute top-0 bottom-0 right-0 w-1 bg-[#C9A84C] rounded-l" />
+                                        <div className="absolute top-0 bottom-0 right-0 w-1 bg-[#00d2ff] rounded-l shadow-[0_0_10px_#00d2ff]" />
                                     )}
                                     <Shield
                                         size={20}
                                         className={clsx(
                                             pathname === '/dashboard/admin'
-                                                ? "text-[#C9A84C]"
-                                                : "group-hover:text-[#1A1A2E] transition-colors"
+                                                ? "text-[#00d2ff] drop-shadow-[0_0_5px_rgba(0,210,255,0.5)]"
+                                                : "group-hover:text-white transition-colors"
                                         )}
                                     />
                                     <span className="font-bold">لوحة الإدارة</span>
@@ -155,20 +155,20 @@ export default function Sidebar() {
                                     className={clsx(
                                         "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative overflow-hidden",
                                         pathname === '/dashboard/ventes-live'
-                                            ? "bg-[#F5F1EB] text-[#C9A84C] shadow-sm"
-                                            : "text-[#64607A] hover:text-[#1A1A2E] hover:bg-[#F5F1EB]"
+                                            ? "bg-white/10 text-white shadow-[0_0_15px_rgba(0,210,255,0.1)]"
+                                            : "text-gray-400 hover:text-white hover:bg-white/5"
                                     )}
                                     onClick={() => setIsOpen(false)}
                                 >
                                     {pathname === '/dashboard/ventes-live' && (
-                                        <div className="absolute top-0 bottom-0 right-0 w-1 bg-[#C9A84C] rounded-l" />
+                                        <div className="absolute top-0 bottom-0 right-0 w-1 bg-[#00d2ff] rounded-l shadow-[0_0_10px_#00d2ff]" />
                                     )}
                                     <DollarSign
                                         size={20}
                                         className={clsx(
                                             pathname === '/dashboard/ventes-live'
-                                                ? "text-[#C9A84C]"
-                                                : "group-hover:text-[#1A1A2E] transition-colors"
+                                                ? "text-[#00d2ff] drop-shadow-[0_0_5px_rgba(0,210,255,0.5)]"
+                                                : "group-hover:text-white transition-colors"
                                         )}
                                     />
                                     <span className="font-bold">المبيعات المباشرة</span>
