@@ -20,19 +20,19 @@ export default function PracticalExample({
             gradient: 'from-green-500/10 to-green-600/5',
             border: 'border-green-500/30',
             icon: 'text-green-400',
-            bg: 'bg-green-100'
+            bg: 'bg-green-500/20'
         },
         warning: {
             gradient: 'from-yellow-500/10 to-orange-500/5',
             border: 'border-yellow-500/30',
             icon: 'text-yellow-400',
-            bg: 'bg-yellow-100'
+            bg: 'bg-yellow-500/20'
         },
         info: {
-            gradient: 'from-[#C9A84C]/10 to-[#B8860B]/5',
-            border: 'border-[#C9A84C]/30',
-            icon: 'text-[#C9A84C]',
-            bg: 'bg-[#C9A84C]/20'
+            gradient: 'from-neo-cyan/10 to-neo-violet/5',
+            border: 'border-neo-cyan/30',
+            icon: 'text-neo-cyan',
+            bg: 'bg-neo-cyan/20'
         }
     };
 
@@ -60,7 +60,7 @@ export default function PracticalExample({
                     </h4>
 
                     {/* Text */}
-                    <p className="text-[#1A1A2E] text-lg leading-relaxed font-ar pr-16">
+                    <p className="text-white/90 text-lg leading-relaxed font-ar pr-16">
                         {content}
                     </p>
                 </div>

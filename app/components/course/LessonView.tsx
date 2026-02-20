@@ -92,29 +92,29 @@ export default function LessonView({
                     transition={{ duration: 0.5 }}
                     className="my-12"
                 >
-                    <div className="bg-gradient-to-br from-[#C9A84C]/10 to-[#B8860B]/5 border-2 border-[#C9A84C]/30 rounded-2xl p-6 md:p-8 relative overflow-hidden">
+                    <div className="bg-gradient-to-br from-neo-cyan/10 to-neo-violet/5 border-2 border-neo-cyan/30 rounded-2xl p-6 md:p-8 relative overflow-hidden">
                         {/* Header */}
                         <div className="flex items-center justify-between mb-6">
-                            <h3 className="text-2xl font-bold text-[#1A1A2E] flex items-center gap-3">
-                                <CheckCircle2 className="text-[#C9A84C]" size={28} />
-                                <span className="bg-gradient-to-r from-[#C9A84C] to-[#B8860B] bg-clip-text text-transparent">
+                            <h3 className="text-2xl font-bold text-white flex items-center gap-3">
+                                <CheckCircle2 className="text-neo-cyan" size={28} />
+                                <span className="bg-gradient-neo bg-clip-text text-transparent">
                                     مهام الدرس
                                 </span>
                             </h3>
 
-                            <div className="bg-white px-4 py-2 rounded-full text-[#C9A84C] font-mono text-sm border border-[#E8E0D4]">
+                            <div className="bg-neo-black/50 px-4 py-2 rounded-full text-neo-cyan font-mono text-sm">
                                 {completedTasks}/{totalTasks}
                             </div>
                         </div>
 
                         {/* Progress Bar */}
                         <div className="mb-6">
-                            <div className="h-2 bg-[#E8E0D4] rounded-full overflow-hidden">
+                            <div className="h-2 bg-neo-gray-800 rounded-full overflow-hidden">
                                 <motion.div
                                     initial={{ width: 0 }}
                                     animate={{ width: `${progress}%` }}
                                     transition={{ duration: 0.5 }}
-                                    className="h-full bg-gradient-to-r from-[#C9A84C] to-[#B8860B]"
+                                    className="h-full bg-gradient-neo"
                                 />
                             </div>
                         </div>
@@ -129,14 +129,14 @@ export default function LessonView({
                                     transition={{ delay: index * 0.05 }}
                                     onClick={() => handleToggleTask(task.id, task.is_completed)}
                                     className={`flex items-start gap-4 p-4 rounded-xl cursor-pointer transition-all duration-300 border ${task.is_completed
-                                        ? "bg-green-50 border-green-200"
-                                        : "bg-white border-[#E8E0D4] hover:border-[#C9A84C]/30 hover:bg-[#F5F1EB]"
+                                        ? "bg-green-500/10 border-green-500/30"
+                                        : "bg-neo-gray-900/50 border-neo-gray-800 hover:border-neo-cyan/30 hover:bg-neo-gray-900"
                                         }`}
                                 >
                                     <div
                                         className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 border-2 transition-all mt-0.5 ${task.is_completed
                                             ? "bg-green-500 border-green-500 scale-110"
-                                            : "border-[#C9A84C] bg-white hover:bg-[#C9A84C]/10"
+                                            : "border-neo-cyan bg-neo-black hover:bg-neo-cyan/10"
                                             }`}
                                     >
                                         {task.is_completed && (
@@ -152,8 +152,8 @@ export default function LessonView({
 
                                     <span
                                         className={`flex-1 text-lg transition-all ${task.is_completed
-                                            ? "text-[#64607A] line-through"
-                                            : "text-[#1A1A2E] hover:text-[#C9A84C]"
+                                            ? "text-gray-400 line-through"
+                                            : "text-white hover:text-neo-cyan"
                                             }`}
                                     >
                                         {task.task_text_ar}
@@ -168,17 +168,17 @@ export default function LessonView({
                                 initial={{ scale: 0, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
                                 transition={{ delay: 0.3 }}
-                                className="mt-6 p-4 bg-green-50 border-2 border-green-200 rounded-xl text-center"
+                                className="mt-6 p-4 bg-green-500/20 border-2 border-green-500/50 rounded-xl text-center"
                             >
-                                <p className="text-green-600 font-bold text-lg">
+                                <p className="text-green-400 font-bold text-lg">
                                     🎉 أحسنت! لقد أكملت جميع المهام!
                                 </p>
                             </motion.div>
                         )}
 
                         {/* Decorative */}
-                        <div className="absolute -top-20 -right-20 w-60 h-60 bg-[#C9A84C]/10 rounded-full blur-3xl pointer-events-none" />
-                        <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-[#B8860B]/10 rounded-full blur-3xl pointer-events-none" />
+                        <div className="absolute -top-20 -right-20 w-60 h-60 bg-neo-cyan/10 rounded-full blur-3xl pointer-events-none" />
+                        <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-neo-violet/10 rounded-full blur-3xl pointer-events-none" />
                     </div>
                 </motion.div>
             )}

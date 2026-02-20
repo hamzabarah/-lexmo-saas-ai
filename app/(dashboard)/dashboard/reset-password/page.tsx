@@ -39,10 +39,10 @@ export default function ResetPasswordPage() {
     if (success) {
         return (
             <div className="max-w-md mx-auto pt-20 px-4">
-                <div className="text-center bg-green-50 border border-green-200 rounded-xl p-8">
+                <div className="text-center bg-green-500/10 border border-green-500/20 rounded-xl p-8">
                     <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-                    <h3 className="text-2xl font-bold text-green-600 mb-2">تم تغيير كلمة المرور بنجاح!</h3>
-                    <p className="text-[#64607A]">
+                    <h3 className="text-2xl font-bold text-green-400 mb-2">تم تغيير كلمة المرور بنجاح!</h3>
+                    <p className="text-gray-300">
                         تم تحديث كلمة المرور الخاصة بك.<br />
                         جاري تحويلك إلى لوحة التحكم...
                     </p>
@@ -53,13 +53,13 @@ export default function ResetPasswordPage() {
 
     return (
         <div className="max-w-md mx-auto pt-20 px-4">
-            <h1 className="text-3xl font-bold text-[#1A1A2E] mb-2 font-orbitron text-right">كلمة مرور جديدة</h1>
-            <p className="text-[#64607A] mb-8 text-right">اختر كلمة مرور جديدة وآمنة لحسابك.</p>
+            <h1 className="text-3xl font-bold text-white mb-2 font-orbitron text-right">كلمة مرور جديدة</h1>
+            <p className="text-gray-400 mb-8 text-right">اختر كلمة مرور جديدة وآمنة لحسابك.</p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-4">
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-[#64607A] block text-right">كلمة المرور الجديدة</label>
+                        <label className="text-sm font-medium text-gray-300 block text-right">كلمة المرور الجديدة</label>
                         <div className="relative">
                             <input
                                 name="password"
@@ -67,15 +67,15 @@ export default function ResetPasswordPage() {
                                 required
                                 minLength={6}
                                 placeholder="••••••••"
-                                className="w-full bg-[#F5F1EB] border border-[#E8E0D4] rounded-xl px-4 py-3 pl-10 text-right focus:outline-none focus:border-[#C9A84C] transition-colors text-[#1A1A2E]"
+                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 pl-10 text-right focus:outline-none focus:border-[#00d2ff] transition-colors text-white"
                                 dir="rtl"
                             />
-                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-[#64607A]" size={18} />
+                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                         </div>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-[#64607A] block text-right">تأكيد كلمة المرور</label>
+                        <label className="text-sm font-medium text-gray-300 block text-right">تأكيد كلمة المرور</label>
                         <div className="relative">
                             <input
                                 name="confirmPassword"
@@ -83,10 +83,10 @@ export default function ResetPasswordPage() {
                                 required
                                 minLength={6}
                                 placeholder="••••••••"
-                                className="w-full bg-[#F5F1EB] border border-[#E8E0D4] rounded-xl px-4 py-3 pl-10 text-right focus:outline-none focus:border-[#C9A84C] transition-colors text-[#1A1A2E]"
+                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 pl-10 text-right focus:outline-none focus:border-[#00d2ff] transition-colors text-white"
                                 dir="rtl"
                             />
-                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-[#64607A]" size={18} />
+                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                         </div>
                     </div>
                 </div>
@@ -100,7 +100,7 @@ export default function ResetPasswordPage() {
                 <button
                     type="submit"
                     disabled={isPending}
-                    className="w-full bg-gradient-to-r from-[#C9A84C] to-[#B8860B] hover:from-[#B8860B] hover:to-[#C9A84C] text-white font-bold py-3 rounded-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
+                    className="w-full bg-[#00d2ff] hover:bg-[#00c2ee] text-black font-bold py-3 rounded-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
                 >
                     {isPending ? <Loader2 className="animate-spin" /> : "حفظ كلمة المرور"}
                 </button>

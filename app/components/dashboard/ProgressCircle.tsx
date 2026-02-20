@@ -32,7 +32,7 @@ export default function ProgressCircle({
                         cx={size / 2}
                         cy={size / 2}
                         r={radius}
-                        stroke="#E8E0D4"
+                        stroke="rgba(255, 255, 255, 0.1)"
                         strokeWidth={strokeWidth}
                         fill="transparent"
                     />
@@ -55,23 +55,23 @@ export default function ProgressCircle({
                     />
                     <defs>
                         <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stopColor="#C9A84C" />
-                            <stop offset="100%" stopColor="#B8860B" />
+                            <stop offset="0%" stopColor="#00d2ff" />
+                            <stop offset="100%" stopColor="#9d50bb" />
                         </linearGradient>
                     </defs>
                 </svg>
 
                 {/* Center Text */}
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                    <span className="text-4xl font-bold font-orbitron text-[#1A1A2E] block mb-1">
+                    <span className="text-4xl font-bold font-orbitron text-white block mb-1">
                         {percentage}%
                     </span>
-                    <span className="text-xs text-[#64607A] font-cairo">مكتمل</span>
+                    <span className="text-xs text-gray-400 font-cairo">مكتمل</span>
                 </div>
             </div>
 
-            <p className="mt-4 text-[#64607A] font-bold">
-                أكملت <span className="text-[#C9A84C]">{completed}</span> من <span className="text-[#64607A]">{total}</span> وحدة
+            <p className="mt-4 text-gray-300 font-bold">
+                أكملت <span className="text-[#00d2ff]">{completed}</span> من <span className="text-gray-400">{total}</span> وحدة
             </p>
         </div>
     );

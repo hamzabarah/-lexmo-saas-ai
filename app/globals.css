@@ -5,12 +5,6 @@
   --color-magenta: #9d50bb;
   --color-gold: #ffd700;
   --color-dark: #030712;
-  --color-cream: #F5F1EB;
-  --color-accent-gold: #C9A84C;
-  --color-accent-gold-dark: #B8860B;
-  --color-warm-border: #E8E0D4;
-  --color-text-heading: #1A1A2E;
-  --color-text-secondary: #64607A;
 
   --font-orbitron: var(--font-orbitron);
   --font-cairo: var(--font-cairo);
@@ -46,7 +40,7 @@ html {
   box-shadow: 0 0 20px -5px rgba(255, 215, 0, 0.3);
 }
 
-/* Custom Scrollbar - Landing page (dark) */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -62,20 +56,6 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #374151;
-}
-
-/* Dashboard light scrollbar override */
-.dashboard-light ::-webkit-scrollbar-track {
-  background: #F5F1EB;
-}
-
-.dashboard-light ::-webkit-scrollbar-thumb {
-  background: #D4CFC7;
-  border-radius: 5px;
-}
-
-.dashboard-light ::-webkit-scrollbar-thumb:hover {
-  background: #C0B9AE;
 }
 
 body {

@@ -26,13 +26,6 @@ const config: Config = {
                     800: '#111827',
                     900: '#0A0A0F',
                 },
-                // Premium light dashboard theme
-                'cream': '#F5F1EB',
-                'warm-border': '#E8E0D4',
-                'accent-gold': '#C9A84C',
-                'accent-gold-dark': '#B8860B',
-                'text-heading': '#1A1A2E',
-                'text-secondary': '#64607A',
             },
             fontFamily: {
                 display: ['Inter', 'system-ui', 'sans-serif'],
