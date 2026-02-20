@@ -477,7 +477,7 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                     <div className="flex items-center">
                         {/* UNIFIED HEADER TIMER */}
                         {timeLeft && (
-                            <div className={`flex items-center gap-3 md:gap-4 px-4 md:px-6 py-2 md:py-3 rounded-2xl bg-white border border-[#E8E0D4] shadow-md backdrop-blur-md ${headerTimerStyle.color}`}>
+                            <div className={`hidden flex items-center gap-3 md:gap-4 px-4 md:px-6 py-2 md:py-3 rounded-2xl bg-white border border-[#E8E0D4] shadow-md backdrop-blur-md ${headerTimerStyle.color}`}>
                                 <Clock className="w-5 h-5 md:w-6 md:h-6" />
                                 <span className={`text-lg md:text-2xl font-black font-orbitron tracking-tighter md:tracking-widest ${headerTimerStyle.animate}`}>
                                     {timeLeft}
@@ -603,7 +603,7 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
 
                             {/* MINI TIMER FOR STATS CARD */}
                             {timeLeft && (
-                                <div className="w-full pt-4 border-t border-[#E8E0D4] flex flex-col items-center">
+                                <div className="hidden w-full pt-4 border-t border-[#E8E0D4] flex flex-col items-center">
                                     <div className="flex items-center gap-2 text-[#64607A] text-xs font-bold mb-1 uppercase tracking-tighter">
                                         <Clock size={12} className={headerTimerStyle.color} />
                                         <span>ينتهي في :</span>
