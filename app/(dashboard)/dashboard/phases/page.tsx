@@ -1,14 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import PhaseCard from "@/app/components/dashboard/PhaseCard";
-import { getPhases } from "@/app/actions/course";
+import StepCard from "@/app/components/dashboard/StepCard";
 import { checkUserSubscription, SubscriptionCheckResult } from "@/lib/check-subscription";
 import { Lock, Mail } from 'lucide-react';
 
 export default function PhasesPage() {
     const [subscriptionCheck, setSubscriptionCheck] = useState<SubscriptionCheckResult | null>(null);
-    const [phases, setPhases] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     const ADMIN_EMAIL = 'academyfrance75@gmail.com';
@@ -18,9 +16,6 @@ export default function PhasesPage() {
             try {
                 const result = await checkUserSubscription();
                 setSubscriptionCheck(result);
-
-                const phasesData = await getPhases();
-                setPhases(phasesData);
             } catch (error) {
                 console.error('Error checking access:', error);
             } finally {
@@ -99,31 +94,15 @@ export default function PhasesPage() {
         );
     }
 
-    // User has access - show phases normally
+    // User has access - show steps
     return (
-        <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {phases.map((phase) => {
-                    const isLocked = phase.is_locked;
-                    // TODO: Calculate real progress
-                    const progress = phase.phase_number === 1 ? 65 : 0;
-                    const completed = phase.phase_number === 1 ? 8 : 0;
-
-                    return (
-                        <PhaseCard
-                            key={phase.id}
-                            id={phase.phase_number}
-                            title={phase.title_en} // Badge/English Title
-                            subtitle={phase.title_ar} // Main Arabic Title
-                            progress={progress}
-                            totalModules={phase.total_modules}
-                            completedModules={completed}
-                            isLocked={isLocked}
-                            color={phase.color || "#00d2ff"}
-                        />
-                    );
-                })}
-            </div>
-        </>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <StepCard
+                stepNumber={1}
+                title="الأساسيات"
+                description="تعرّف على أساسيات التجارة الإلكترونية والدروبشيبينغ. ستفهم كيف يعمل هذا المجال، كم تحتاج من المال للبدء، والأخطاء التي يقع فيها المبتدئون."
+                progress={0}
+            />
+        </div>
     );
 }
