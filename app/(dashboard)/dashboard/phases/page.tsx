@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import DashboardHeader from "@/app/components/dashboard/DashboardHeader";
 import PhaseCard from "@/app/components/dashboard/PhaseCard";
 import { getPhases } from "@/app/actions/course";
 import { checkUserSubscription, SubscriptionCheckResult } from "@/lib/check-subscription";
@@ -44,8 +43,6 @@ export default function PhasesPage() {
     if (!subscriptionCheck?.hasAccess) {
         return (
             <>
-                <DashboardHeader title="مسار التعلم (11 مرحلة) 🎓" subtitle="أكمل المراحل بالترتيب للوصول إلى هدفك" />
-
                 <div className="flex items-center justify-center min-h-[60vh]">
                     <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-12 max-w-2xl text-center">
                         {/* Lock Icon */}
@@ -105,8 +102,6 @@ export default function PhasesPage() {
     // User has access - show phases normally
     return (
         <>
-            <DashboardHeader title="مسار التعلم (11 مرحلة) 🎓" subtitle="أكمل المراحل بالترتيب للوصول إلى هدفك" />
-
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {phases.map((phase) => {
                     const isLocked = phase.is_locked;

@@ -19,7 +19,7 @@ import { createClient } from "@/utils/supabase/client";
 
 const MENU_ITEMS = [
     { icon: LayoutDashboard, label: "لوحة التحكم", href: "/dashboard" },
-    { icon: BookOpen, label: "المراحل", href: "/dashboard/phases" },
+    { icon: BookOpen, label: "الدروس", href: "/dashboard/phases" },
     { icon: Settings, label: "الإعدادات", href: "/dashboard/settings" },
 ];
 

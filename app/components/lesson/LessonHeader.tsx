@@ -37,7 +37,7 @@ export default function LessonHeader({
             <div className="relative bg-gradient-to-br from-neo-dark to-neo-black border border-white/5 rounded-2xl p-8 md:p-12">
                 {/* Breadcrumb */}
                 <div className="flex items-center gap-2 text-sm text-neo-gray-400 mb-6">
-                    <span className="hover:text-neo-cyan transition-colors cursor-pointer">المراحل</span>
+                    <span className="hover:text-neo-cyan transition-colors cursor-pointer">الدروس</span>
                     <ArrowRight size={14} className="rotate-180" />
                     <span className="hover:text-neo-cyan transition-colors cursor-pointer">الوحدة {module_number}</span>
                     <ArrowRight size={14} className="rotate-180" />
