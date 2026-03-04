@@ -36,7 +36,7 @@ export default function Footer() {
                 {/* Copyright */}
                 <div className="text-center">
                     <p className="text-gray-500 text-sm font-cairo" dir="rtl">
-                        © 2026 LEXMO.AI - جميع الحقوق محفوظة
+                        © 2026 ECOMY - جميع الحقوق محفوظة
                     </p>
                     <p className="text-gray-600 text-xs mt-2 font-cairo" dir="rtl">
                         من الصفر إلى €10,000 شهرياً | بدون إظهار وجهك

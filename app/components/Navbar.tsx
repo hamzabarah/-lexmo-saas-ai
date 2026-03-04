@@ -12,8 +12,7 @@ export default function Navbar() {
             <div className="container mx-auto px-4 h-full flex items-center justify-between">
                 {/* Logo */}
                 <Link href="/" className="text-2xl font-bold font-orbitron tracking-wider">
-                    <span className="text-[#00d2ff]">LEXMO</span>
-                    <span className="text-[#9d50bb]">.AI</span>
+                    <span className="text-[#00d2ff]">ECOMY</span>
                 </Link>
 
                 {/* Desktop Menu */}

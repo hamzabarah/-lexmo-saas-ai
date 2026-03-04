@@ -10,7 +10,7 @@ export default function PrivacyPage() {
                     <section>
                         <h2 className="text-2xl font-bold text-white mb-4">1. مقدمة</h2>
                         <p>
-                            نحن في LEXMO.AI نلتزم بحماية خصوصيتك وبياناتك الشخصية. توضح سياسة الخصوصية هذه كيفية جمعنا واستخدامنا وحماية معلوماتك الشخصية.
+                            نحن في ECOMY نلتزم بحماية خصوصيتك وبياناتك الشخصية. توضح سياسة الخصوصية هذه كيفية جمعنا واستخدامنا وحماية معلوماتك الشخصية.
                         </p>
                         <p className="font-bold mt-4">البريد الإلكتروني: acadmyfrance75@gmail.com</p>
                     </section>

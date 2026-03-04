@@ -12,9 +12,9 @@ export default function LegalPage() {
 
                         <h3 className="text-xl font-bold text-white mb-2">1.1 الناشر</h3>
                         <div className="bg-white/5 p-4 rounded-lg space-y-2">
-                            <p><strong>اسم المنصة:</strong> LEXMO.AI</p>
+                            <p><strong>اسم المنصة:</strong> ECOMY</p>
                             <p><strong>البريد الإلكتروني:</strong> acadmyfrance75@gmail.com</p>
-                            <p><strong>الموقع:</strong> https://lexmo-saas-ai.vercel.app</p>
+                            <p><strong>الموقع:</strong> https://ecomy.vercel.app</p>
                         </div>
 
                         <h3 className="text-xl font-bold text-white mb-2 mt-4">1.2 الاستضافة</h3>
@@ -28,7 +28,7 @@ export default function LegalPage() {
                     <section>
                         <h2 className="text-2xl font-bold text-white mb-4">المادة 2. الهدف والقبول</h2>
                         <p>
-                            تحدد هذه الشروط العامة كيفية استخدام منصة LEXMO.AI وشراء الخدمات المقدمة.
+                            تحدد هذه الشروط العامة كيفية استخدام منصة ECOMY وشراء الخدمات المقدمة.
                         </p>
                         <p className="mt-4">
                             <strong>بإتمام عملية الشراء، فإنك توافق دون تحفظ على هذه الشروط العامة.</strong>
@@ -38,7 +38,7 @@ export default function LegalPage() {
                     <section>
                         <h2 className="text-2xl font-bold text-white mb-4">المادة 3. وصف الخدمات</h2>
                         <p>
-                            تقدم LEXMO.AI برامج تدريبية عبر الإنترنت في مجال التجارة الإلكترونية والتسويق بالعمولة،
+                            تقدم ECOMY برامج تدريبية عبر الإنترنت في مجال التجارة الإلكترونية والتسويق بالعمولة،
                             منظمة في 11 مرحلة و40 وحدة تدريبية.
                         </p>
 
@@ -163,7 +163,7 @@ export default function LegalPage() {
                         <h2 className="text-2xl font-bold text-white mb-4">المادة 8. الملكية الفكرية</h2>
                         <p>
                             جميع محتويات المنصة (دروس، فيديوهات، مستندات، قوالب) محمية بحقوق الملكية الفكرية
-                            وتبقى ملكية حصرية لـ LEXMO.AI.
+                            وتبقى ملكية حصرية لـ ECOMY.
                         </p>
 
                         <h3 className="text-xl font-bold text-white mb-2 mt-4">8.1 الاستخدام المصرح به</h3>
@@ -201,7 +201,7 @@ export default function LegalPage() {
                         <ul className="list-disc list-inside space-y-1">
                             <li>الترويج بطريقة أخلاقية ونزيهة</li>
                             <li>عدم تقديم وعود كاذبة</li>
-                            <li>احترام صورة العلامة التجارية LEXMO.AI</li>
+                            <li>احترام صورة العلامة التجارية ECOMY</li>
                             <li>الامتثال لقوانين الإعلان والتسويق</li>
                         </ul>
                     </section>
@@ -211,12 +211,12 @@ export default function LegalPage() {
 
                         <h3 className="text-xl font-bold text-white mb-2">10.1 التزام الوسائل</h3>
                         <p>
-                            LEXMO.AI ملتزمة ببذل أقصى الجهود لتوفير محتوى عالي الجودة.
+                            ECOMY ملتزمة ببذل أقصى الجهود لتوفير محتوى عالي الجودة.
                             ومع ذلك، <strong>لا يمكننا ضمان نتائج محددة</strong> حيث تعتمد النتائج على تطبيقك للبرنامج.
                         </p>
 
                         <h3 className="text-xl font-bold text-white mb-2 mt-4">10.2 إخلاء المسؤولية</h3>
-                        <p>LEXMO.AI ليست مسؤولة عن:</p>
+                        <p>ECOMY ليست مسؤولة عن:</p>
                         <ul className="list-disc list-inside space-y-1">
                             <li>الوصول المؤقت غير المتاح للمنصة</li>
                             <li>فقدان البيانات بسبب مشكلة تقنية</li>
@@ -228,7 +228,7 @@ export default function LegalPage() {
                     <section>
                         <h2 className="text-2xl font-bold text-white mb-4">المادة 11. القوة القاهرة</h2>
                         <p>
-                            لا يمكن تحميل LEXMO.AI المسؤولية في حالة القوة القاهرة، بما في ذلك على سبيل المثال لا الحصر:
+                            لا يمكن تحميل ECOMY المسؤولية في حالة القوة القاهرة، بما في ذلك على سبيل المثال لا الحصر:
                         </p>
                         <ul className="list-disc list-inside space-y-1">
                             <li>الكوارث الطبيعية</li>
@@ -252,7 +252,7 @@ export default function LegalPage() {
                     <section>
                         <h2 className="text-2xl font-bold text-white mb-4">المادة 13. تعديل الشروط</h2>
                         <p>
-                            تحتفظ LEXMO.AI بالحق في تعديل هذه الشروط العامة في أي وقت.
+                            تحتفظ ECOMY بالحق في تعديل هذه الشروط العامة في أي وقت.
                         </p>
                         <p className="mt-2">
                             الشروط المعمول بها هي تلك السارية في تاريخ الطلب.

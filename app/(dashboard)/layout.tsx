@@ -6,14 +6,13 @@ export default function DashboardLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="flex min-h-screen bg-[#030712] text-white font-cairo" dir="rtl">
-            {/* Sidebar (Fixed Right) */}
+        <div className="min-h-screen bg-[#030712] text-white font-cairo" dir="rtl">
+            {/* Top Navbar */}
             <Sidebar />
 
             {/* Main Content Area */}
-            {/* lg:mr-72 pushes content to the left of the fixed sidebar on desktop */}
-            <main className="flex-1 lg:mr-72 min-h-screen p-4 lg:p-8 overflow-x-hidden">
-                <div className="max-w-6xl mx-auto space-y-8 mt-12 lg:mt-0">
+            <main className="min-h-screen p-4 lg:p-8 pt-20 overflow-x-hidden">
+                <div className="max-w-6xl mx-auto space-y-8">
                     {children}
                 </div>
             </main>

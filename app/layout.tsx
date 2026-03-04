@@ -15,7 +15,7 @@ const orbitron = Orbitron({
 });
 
 export const metadata: Metadata = {
-  title: "LEXMO.AI",
+  title: "ECOMY",
   description: "Next Generation E-commerce Training",
 };
 

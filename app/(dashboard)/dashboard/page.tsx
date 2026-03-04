@@ -121,7 +121,7 @@ export default async function DashboardPage() {
                         <h3 className="text-lg font-bold mb-2">برنامج الشراكة 🚀</h3>
                         <p className="text-gray-400 text-sm mb-4">شارك رابطك واربح 70% عمولة على كل مبيعة.</p>
                         <div className="bg-[#030712]/50 p-3 rounded-lg flex items-center justify-between mb-4 border border-white/10">
-                            <span className="text-sm text-gray-300 truncate">lexmo.ai/ref/mohammed</span>
+                            <span className="text-sm text-gray-300 truncate">ecomy.ai/ref/mohammed</span>
                             <button className="text-xs text-[#00d2ff] font-bold">نسخ</button>
                         </div>
                         <button className="w-full bg-[#9d50bb] hover:bg-[#8e44ad] text-white py-2 rounded-lg font-bold transition-colors">

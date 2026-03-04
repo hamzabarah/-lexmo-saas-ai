@@ -470,7 +470,7 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                 <div className="flex justify-between items-center border-b border-white/10 pb-8 mb-4">
                     <div className="flex items-center">
                         <h1 className="text-2xl md:text-3xl font-black tracking-wider font-orbitron text-white">
-                            LEXMO<span className="text-[#00FFA3]">.AI</span>
+                            ECOMY
                         </h1>
                     </div>
 

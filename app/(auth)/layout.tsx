@@ -2,7 +2,7 @@ import Link from "next/link";
 import "../globals.css";
 
 export const metadata = {
-    title: "تسجيل الدخول - LEXMO.AI",
+    title: "تسجيل الدخول - ECOMY",
 };
 
 export default function AuthLayout({
@@ -22,7 +22,7 @@ export default function AuthLayout({
                 {/* Logo */}
                 <Link href="/" className="mb-8 group">
                     <h1 className="text-4xl font-bold font-orbitron tracking-tighter text-white group-hover:scale-105 transition-transform">
-                        LEXMO<span className="text-[#00d2ff]">.AI</span>
+                        ECOMY
                     </h1>
                 </Link>
 

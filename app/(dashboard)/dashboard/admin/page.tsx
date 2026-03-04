@@ -53,7 +53,7 @@ export default function AdminPage() {
     const router = useRouter();
 
     const ADMIN_EMAIL = 'academyfrance75@gmail.com';
-    const LOGIN_URL = 'https://lexmo-saas-ai.vercel.app/#login';
+    const LOGIN_URL = 'https://ecomy.vercel.app/#login';
 
     useEffect(() => {
         checkUser();
@@ -168,12 +168,12 @@ export default function AdminPage() {
     const sendEmail = () => {
         if (!createdStudent) return;
 
-        const subject = '🎉 مرحباً بك في LEXMO.AI - بيانات الدخول الخاصة بك';
+        const subject = '🎉 مرحباً بك في ECOMY - بيانات الدخول الخاصة بك';
         const body = `مرحباً ${createdStudent.name}،
 
 تهانينا! 🎉
 
-لقد أصبح بإمكانك الآن الوصول إلى LEXMO.AI - أفضل تدريب في التجارة الإلكترونية.
+لقد أصبح بإمكانك الآن الوصول إلى ECOMY - أفضل تدريب في التجارة الإلكترونية.
 
 بيانات تسجيل الدخول الخاصة بك:
 
@@ -187,7 +187,7 @@ ${LOGIN_URL}
 
 نراك قريباً في التدريب!
 
-فريق LEXMO.AI`;
+فريق ECOMY`;
 
         window.location.href = `mailto:${createdStudent.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     };

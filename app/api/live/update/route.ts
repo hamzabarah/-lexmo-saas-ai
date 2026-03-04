@@ -7,7 +7,7 @@ const supabaseAdmin = createClient(
     process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-const API_SECRET = process.env.API_SECRET_LIVE_UPDATE || 'lexmo-live-secret-2026';
+const API_SECRET = process.env.API_SECRET_LIVE_UPDATE || 'ecomy-live-secret-2026';
 
 export async function POST(req: NextRequest) {
     try {

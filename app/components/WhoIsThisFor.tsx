@@ -35,7 +35,7 @@ export default function WhoIsThisFor() {
             <div className="container mx-auto px-4 max-w-6xl relative z-10">
                 <FadeIn className="text-center mb-16">
                     <h2 className="text-4xl lg:text-5xl font-bold font-cairo mb-4 text-red-500">
-                        ⛔ LEXMO ليس للجميع
+                        ⛔ ECOMY ليس للجميع
                     </h2>
                     <p className="text-xl text-gray-400">هذا البرنامج ليس مناسباً لك إذا...</p>
                 </FadeIn>
@@ -66,7 +66,7 @@ export default function WhoIsThisFor() {
                         <div className="absolute -inset-1 bg-gradient-to-b from-green-500/20 to-transparent rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-500" />
                         <div className="relative bg-[#0f172a]/50 border border-green-500/10 rounded-2xl p-8 h-full backdrop-blur-sm">
                             <h3 className="text-2xl font-bold mb-8 text-green-500 font-cairo border-b border-green-500/10 pb-4">
-                                ✅ LEXMO مصمم لك إذا...
+                                ✅ ECOMY مصمم لك إذا...
                             </h3>
                             <div className="space-y-4">
                                 {FOR_YOU.map((item, i) => (
@@ -84,7 +84,7 @@ export default function WhoIsThisFor() {
 
                 <FadeIn delay={0.6} className="text-center mt-12 bg-white/5 border border-white/5 rounded-xl p-6 lg:w-fit mx-auto backdrop-blur-md">
                     <p className="text-xl lg:text-2xl font-bold text-white font-cairo">
-                        إذا كنت من النوع الثاني، فمرحباً بك في عائلة <span className="text-[#00d2ff]">LEXMO</span> 🚀
+                        إذا كنت من النوع الثاني، فمرحباً بك في عائلة <span className="text-[#00d2ff]">ECOMY</span> 🚀
                     </p>
                 </FadeIn>
             </div>

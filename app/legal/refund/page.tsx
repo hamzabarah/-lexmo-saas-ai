@@ -10,7 +10,7 @@ export default function RefundPage() {
                     <section>
                         <h2 className="text-2xl font-bold text-white mb-4">1. ضمان الرضا - 30 يوماً</h2>
                         <p className="text-lg">
-                            نحن واثقون تماماً من جودة برنامج LEXMO.AI. لذلك نقدم لك <strong className="text-[#00d2ff]">ضمان استرداد كامل لمدة 30 يوماً</strong>.
+                            نحن واثقون تماماً من جودة برنامج ECOMY. لذلك نقدم لك <strong className="text-[#00d2ff]">ضمان استرداد كامل لمدة 30 يوماً</strong>.
                         </p>
                         <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-6 mt-4">
                             <p className="text-green-400 font-bold text-center text-xl">
@@ -206,7 +206,7 @@ export default function RefundPage() {
                             💯 التزامنا تجاهك
                         </p>
                         <p className="text-center text-gray-300">
-                            نحن واثقون من أن LEXMO.AI سيغير حياتك. لكن إذا لم تكن راضياً لأي سبب،
+                            نحن واثقون من أن ECOMY سيغير حياتك. لكن إذا لم تكن راضياً لأي سبب،
                             سنعيد لك أموالك بالكامل خلال 30 يوماً. لا أسئلة معقدة، لا تعقيدات.
                         </p>
                         <p className="text-center text-[#00d2ff] font-bold mt-4">
