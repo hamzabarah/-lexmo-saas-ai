@@ -123,19 +123,23 @@ export default function StepDetailPage() {
                                 onContextMenu={(e) => e.preventDefault()}
                             >
                                 <iframe
-                                    src={`${activeLesson.videoUrl}?rel=0&modestbranding=1&iv_load_policy=3&showinfo=0&controls=1`}
+                                    src={`${activeLesson.videoUrl}?rel=0&modestbranding=1&iv_load_policy=3&showinfo=0&controls=1&enablejsapi=1`}
                                     className="absolute inset-0 w-full h-full"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowFullScreen
                                     title={activeLesson.title}
+                                    id="yt-player"
                                 />
-                                {/* Overlay to block direct YouTube access */}
+                                {/* Top overlay — hides video title, channel name, share button on hover */}
                                 <div
-                                    className="absolute top-0 left-0 right-0 h-14 z-10"
+                                    className="absolute top-0 left-0 right-0 z-10 bg-gradient-to-b from-[#0f1120] to-transparent"
+                                    style={{ height: '72px' }}
                                     onContextMenu={(e) => e.preventDefault()}
                                 />
+                                {/* Bottom-right overlay — hides YouTube logo watermark */}
                                 <div
-                                    className="absolute bottom-0 left-0 right-0 h-10 z-10"
+                                    className="absolute bottom-[42px] right-0 z-10"
+                                    style={{ width: '160px', height: '40px' }}
                                     onContextMenu={(e) => e.preventDefault()}
                                 />
                             </div>
