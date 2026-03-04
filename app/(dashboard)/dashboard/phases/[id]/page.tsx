@@ -130,8 +130,10 @@ export default function StepDetailPage() {
                                     title={activeLesson.title}
                                 />
                                 {/* Transparent overlays — block clicks on YouTube links without hiding anything */}
+                                {/* Top: blocks title, channel, share, copy link */}
                                 <div className="absolute top-0 left-0 right-0 h-[52px] z-10 cursor-default" onContextMenu={(e) => e.preventDefault()} />
-                                <div className="absolute bottom-0 left-0 z-10 cursor-default" style={{ width: '180px', height: '42px' }} onContextMenu={(e) => e.preventDefault()} />
+                                {/* Bottom full width: blocks "Watch on YouTube", subtitles, settings, YouTube logo */}
+                                <div className="absolute bottom-0 left-0 right-0 h-[42px] z-10 cursor-default" onContextMenu={(e) => e.preventDefault()} />
                             </div>
                         ) : (
                             <div className="flex flex-col items-center justify-center py-20 text-center">
