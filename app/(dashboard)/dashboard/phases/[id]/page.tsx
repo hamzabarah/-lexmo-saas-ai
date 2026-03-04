@@ -115,49 +115,23 @@ export default function StepDetailPage() {
                 {/* Video Area (right in RTL = main content) */}
                 <div className="flex-1 space-y-4">
                     {/* Video Player / Content */}
-                    <div className="bg-[#0f1120] border border-white/5 rounded-2xl overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+                    <div className="bg-[#0f1120] border border-white/[0.08] rounded-2xl overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
                         {activeLesson?.type === 'video' && activeLesson.videoUrl ? (
                             <div
-                                className="relative w-full rounded-2xl overflow-hidden"
+                                className="relative w-full"
                                 style={{ paddingBottom: '56.25%' }}
                                 onContextMenu={(e) => e.preventDefault()}
                             >
                                 <iframe
-                                    src={`${activeLesson.videoUrl}?rel=0&modestbranding=1&iv_load_policy=3&showinfo=0&controls=1&enablejsapi=1`}
+                                    src={`${activeLesson.videoUrl}?rel=0&modestbranding=1&iv_load_policy=3&showinfo=0&controls=1`}
                                     className="absolute inset-0 w-full h-full"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowFullScreen
                                     title={activeLesson.title}
                                 />
-                                {/* TOP-LEFT: hides channel logo + name on hover */}
-                                <div
-                                    className="absolute top-0 left-0 z-10"
-                                    style={{ width: '70%', height: '60px', background: 'linear-gradient(to bottom, #181818 60%, transparent)' }}
-                                    onContextMenu={(e) => e.preventDefault()}
-                                />
-                                {/* TOP-RIGHT: hides share/more buttons on hover */}
-                                <div
-                                    className="absolute top-0 right-0 z-10"
-                                    style={{ width: '35%', height: '60px', background: 'linear-gradient(to bottom, #181818 60%, transparent)' }}
-                                    onContextMenu={(e) => e.preventDefault()}
-                                />
-                                {/* BOTTOM-LEFT: hides "Watch on YouTube" button */}
-                                <div
-                                    className="absolute bottom-0 left-0 z-10"
-                                    style={{ width: '240px', height: '46px', backgroundColor: '#181818' }}
-                                    onContextMenu={(e) => e.preventDefault()}
-                                />
-                                {/* BOTTOM-RIGHT: hides YouTube logo watermark + settings */}
-                                <div
-                                    className="absolute bottom-0 right-0 z-10"
-                                    style={{ width: '200px', height: '46px', backgroundColor: '#181818' }}
-                                    onContextMenu={(e) => e.preventDefault()}
-                                />
-                                {/* CENTER: hides red YouTube play button when paused */}
-                                <div
-                                    className="absolute z-10 pointer-events-none"
-                                    style={{ top: '35%', left: '30%', width: '40%', height: '30%', background: 'radial-gradient(ellipse, rgba(24,24,24,0.85) 0%, transparent 70%)' }}
-                                />
+                                {/* Transparent overlays — block clicks on YouTube links without hiding anything */}
+                                <div className="absolute top-0 left-0 right-0 h-[52px] z-10 cursor-default" onContextMenu={(e) => e.preventDefault()} />
+                                <div className="absolute bottom-0 left-0 z-10 cursor-default" style={{ width: '180px', height: '42px' }} onContextMenu={(e) => e.preventDefault()} />
                             </div>
                         ) : (
                             <div className="flex flex-col items-center justify-center py-20 text-center">
