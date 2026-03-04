@@ -101,7 +101,7 @@ export default function PhasesPage() {
                 stepNumber={1}
                 title="الأساسيات"
                 description="تعرّف على أساسيات التجارة الإلكترونية والدروبشيبينغ. ستفهم كيف يعمل هذا المجال، كم تحتاج من المال للبدء، والأخطاء التي يقع فيها المبتدئون."
-                imageUrl="/images/etapes/1.png"
+                imageUrl="/etapes/1.png"
                 progress={0}
             />
         </div>
