@@ -11,7 +11,7 @@ export default function DashboardLayout({
             <Sidebar />
 
             {/* Main Content Area */}
-            <main className="min-h-screen p-4 lg:p-8 pt-20 overflow-x-hidden">
+            <main className="min-h-screen pt-24 px-4 pb-4 lg:px-8 lg:pb-8 overflow-x-hidden">
                 <div className="max-w-6xl mx-auto space-y-8">
                     {children}
                 </div>
