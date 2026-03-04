@@ -96,7 +96,7 @@ export default function PhasesPage() {
 
     // User has access - show steps
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
             <StepCard
                 stepNumber={1}
                 title="الأساسيات"

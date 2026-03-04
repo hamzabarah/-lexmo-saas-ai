@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { Lock } from "lucide-react";
+import { useState } from "react";
 
 interface StepCardProps {
     stepNumber: number;
@@ -18,22 +21,26 @@ export default function StepCard({
     progress = 0,
     isLocked = false,
 }: StepCardProps) {
+    const [imgError, setImgError] = useState(false);
+    const showImage = imageUrl && !imgError;
+
     const content = (
         <div className="group bg-[#0f1120] border border-white/5 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-white/10 hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)]">
             {/* Image / Placeholder */}
-            <div className="relative w-full aspect-[16/9] bg-[#1a1a2e] flex items-center justify-center overflow-hidden">
-                {imageUrl ? (
+            <div className="relative w-full h-48 bg-[#1a1a2e] overflow-hidden">
+                {showImage ? (
                     <img
                         src={imageUrl}
                         alt={title}
                         className="w-full h-full object-cover"
+                        onError={() => setImgError(true)}
                     />
                 ) : (
-                    <div className="flex flex-col items-center gap-2">
-                        <span className="text-4xl font-bold font-orbitron text-white/10">
+                    <div className="w-full h-full flex flex-col items-center justify-center">
+                        <span className="text-5xl font-bold font-orbitron text-white/10">
                             {stepNumber}
                         </span>
-                        <span className="text-sm text-white/20 font-cairo">
+                        <span className="text-sm text-white/20 font-cairo mt-1">
                             المرحلة {stepNumber}
                         </span>
                     </div>
