@@ -19,7 +19,7 @@ export type StepContent = {
 
 function youtubeEmbed(watchUrl: string): string {
     const id = watchUrl.split('v=')[1]?.split('&')[0];
-    return `https://www.youtube.com/embed/${id}`;
+    return `https://www.youtube-nocookie.com/embed/${id}`;
 }
 
 export const stepsContent: StepContent[] = [

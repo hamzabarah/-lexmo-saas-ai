@@ -115,15 +115,28 @@ export default function StepDetailPage() {
                 {/* Video Area (right in RTL = main content) */}
                 <div className="flex-1 space-y-4">
                     {/* Video Player / Content */}
-                    <div className="bg-[#0f1120] border border-white/5 rounded-2xl overflow-hidden">
+                    <div className="bg-[#0f1120] border border-white/5 rounded-2xl overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
                         {activeLesson?.type === 'video' && activeLesson.videoUrl ? (
-                            <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                            <div
+                                className="relative w-full rounded-2xl overflow-hidden"
+                                style={{ paddingBottom: '56.25%' }}
+                                onContextMenu={(e) => e.preventDefault()}
+                            >
                                 <iframe
-                                    src={activeLesson.videoUrl}
+                                    src={`${activeLesson.videoUrl}?rel=0&modestbranding=1&iv_load_policy=3&showinfo=0&controls=1`}
                                     className="absolute inset-0 w-full h-full"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowFullScreen
                                     title={activeLesson.title}
+                                />
+                                {/* Overlay to block direct YouTube access */}
+                                <div
+                                    className="absolute top-0 left-0 right-0 h-14 z-10"
+                                    onContextMenu={(e) => e.preventDefault()}
+                                />
+                                <div
+                                    className="absolute bottom-0 left-0 right-0 h-10 z-10"
+                                    onContextMenu={(e) => e.preventDefault()}
                                 />
                             </div>
                         ) : (
