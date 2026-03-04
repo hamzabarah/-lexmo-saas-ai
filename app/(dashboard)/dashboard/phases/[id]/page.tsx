@@ -128,19 +128,35 @@ export default function StepDetailPage() {
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowFullScreen
                                     title={activeLesson.title}
-                                    id="yt-player"
                                 />
-                                {/* Top overlay — hides video title, channel name, share button on hover */}
+                                {/* TOP-LEFT: hides channel logo + name on hover */}
                                 <div
-                                    className="absolute top-0 left-0 right-0 z-10 bg-gradient-to-b from-[#0f1120] to-transparent"
-                                    style={{ height: '72px' }}
+                                    className="absolute top-0 left-0 z-10"
+                                    style={{ width: '70%', height: '60px', background: 'linear-gradient(to bottom, #181818 60%, transparent)' }}
                                     onContextMenu={(e) => e.preventDefault()}
                                 />
-                                {/* Bottom-right overlay — hides YouTube logo watermark */}
+                                {/* TOP-RIGHT: hides share/more buttons on hover */}
                                 <div
-                                    className="absolute bottom-[42px] right-0 z-10"
-                                    style={{ width: '160px', height: '40px' }}
+                                    className="absolute top-0 right-0 z-10"
+                                    style={{ width: '35%', height: '60px', background: 'linear-gradient(to bottom, #181818 60%, transparent)' }}
                                     onContextMenu={(e) => e.preventDefault()}
+                                />
+                                {/* BOTTOM-LEFT: hides "Watch on YouTube" button */}
+                                <div
+                                    className="absolute bottom-0 left-0 z-10"
+                                    style={{ width: '240px', height: '46px', backgroundColor: '#181818' }}
+                                    onContextMenu={(e) => e.preventDefault()}
+                                />
+                                {/* BOTTOM-RIGHT: hides YouTube logo watermark + settings */}
+                                <div
+                                    className="absolute bottom-0 right-0 z-10"
+                                    style={{ width: '200px', height: '46px', backgroundColor: '#181818' }}
+                                    onContextMenu={(e) => e.preventDefault()}
+                                />
+                                {/* CENTER: hides red YouTube play button when paused */}
+                                <div
+                                    className="absolute z-10 pointer-events-none"
+                                    style={{ top: '35%', left: '30%', width: '40%', height: '30%', background: 'radial-gradient(ellipse, rgba(24,24,24,0.85) 0%, transparent 70%)' }}
                                 />
                             </div>
                         ) : (
