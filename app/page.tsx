@@ -92,6 +92,32 @@ export default function Home() {
               </p>
             </div>
 
+            {/* === FAQ === */}
+            <div className="space-y-4">
+              <h2 className="text-[#1A1A1A] text-xl font-bold">الأسئلة الشائعة</h2>
+              <div className="space-y-2">
+                {faqData.map((item, i) => (
+                  <div key={i} className="border border-gray-200 rounded-xl overflow-hidden">
+                    <button
+                      onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                      className="w-full flex items-center justify-between px-5 py-4 text-right hover:bg-gray-50 transition"
+                    >
+                      <span className="text-[#1A1A1A] font-semibold text-[15px]">{item.q}</span>
+                      <ChevronDown
+                        size={18}
+                        className={`text-gray-400 shrink-0 transition-transform duration-200 ${openFaq === i ? 'rotate-180' : ''}`}
+                      />
+                    </button>
+                    {openFaq === i && (
+                      <div className="px-5 pb-4 text-[#4B5563] text-sm leading-relaxed">
+                        {item.a}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
             {/* === Reviews — Amazon style === */}
             <div className="space-y-6">
               <h2 className="text-[#1A1A1A] text-xl font-bold">تقييمات العملاء</h2>
@@ -146,32 +172,6 @@ export default function Home() {
                 <p className="text-[#4B5563] text-sm leading-relaxed">
                   كورس ممتاز والله! بديت من الصفر وخلال 3 أسابيع حققت أول مبيعة. الشرح واضح وعملي، وكل مرحلة مبنية على اللي قبلها. أنصح فيه بشدة لأي شخص يبغى يدخل عالم التجارة الإلكترونية.
                 </p>
-              </div>
-            </div>
-
-            {/* === FAQ === */}
-            <div className="space-y-4">
-              <h2 className="text-[#1A1A1A] text-xl font-bold">الأسئلة الشائعة</h2>
-              <div className="space-y-2">
-                {faqData.map((item, i) => (
-                  <div key={i} className="border border-gray-200 rounded-xl overflow-hidden">
-                    <button
-                      onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                      className="w-full flex items-center justify-between px-5 py-4 text-right hover:bg-gray-50 transition"
-                    >
-                      <span className="text-[#1A1A1A] font-semibold text-[15px]">{item.q}</span>
-                      <ChevronDown
-                        size={18}
-                        className={`text-gray-400 shrink-0 transition-transform duration-200 ${openFaq === i ? 'rotate-180' : ''}`}
-                      />
-                    </button>
-                    {openFaq === i && (
-                      <div className="px-5 pb-4 text-[#4B5563] text-sm leading-relaxed">
-                        {item.a}
-                      </div>
-                    )}
-                  </div>
-                ))}
               </div>
             </div>
           </div>
