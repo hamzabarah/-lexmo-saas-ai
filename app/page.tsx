@@ -103,36 +103,44 @@ export default function Home() {
     return () => clearInterval(timer);
   }, [carouselImages.length]);
 
+  const maxSlide = carouselImages.length - 1;
+
   // Shared components
   const Carousel = (
-    <div className="relative rounded-xl overflow-hidden bg-gray-100 h-[250px] lg:h-[400px]">
+    <div className="relative rounded-xl overflow-hidden bg-[#1a1a1a] h-[400px]">
       <div
         className="flex transition-transform duration-500 ease-in-out h-full"
+        style={{ transform: `translateX(${currentSlide * (100 / 3)}%)` }}
+      >
+        {carouselImages.map((src, i) => (
+          <div key={i} className="h-full shrink-0 px-1.5 hidden lg:block" style={{ width: `${100 / 3}%` }}>
+            <img src={src} alt={`Screenshot ${i + 1}`} className="w-full h-full object-contain" />
+          </div>
+        ))}
+      </div>
+      {/* Mobile: single image */}
+      <div className="lg:hidden absolute inset-0 flex transition-transform duration-500 ease-in-out"
         style={{ transform: `translateX(${currentSlide * 100}%)` }}
       >
         {carouselImages.map((src, i) => (
-          <img
-            key={i}
-            src={src}
-            alt={`Screenshot ${i + 1}`}
-            className="w-full h-full shrink-0 object-cover"
-          />
+          <div key={i} className="w-full h-full shrink-0 px-2">
+            <img src={src} alt={`Screenshot ${i + 1}`} className="w-full h-full object-contain" />
+          </div>
         ))}
       </div>
       <button
-        onClick={() => setCurrentSlide((p) => (p > 0 ? p - 1 : carouselImages.length - 1))}
-        className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow transition"
+        onClick={() => setCurrentSlide((p) => (p > 0 ? p - 1 : maxSlide))}
+        className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow transition z-10"
       >
         <ChevronLeft size={18} className="text-gray-700" />
       </button>
       <button
-        onClick={() => setCurrentSlide((p) => (p < carouselImages.length - 1 ? p + 1 : 0))}
-        className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow transition"
+        onClick={() => setCurrentSlide((p) => (p < maxSlide ? p + 1 : 0))}
+        className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow transition z-10"
       >
         <ChevronRight size={18} className="text-gray-700" />
       </button>
-      {/* Slide counter */}
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs px-3 py-1 rounded-full" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs px-3 py-1 rounded-full z-10" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
         {currentSlide + 1} / {carouselImages.length}
       </div>
     </div>
