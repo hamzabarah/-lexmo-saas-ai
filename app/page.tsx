@@ -148,8 +148,43 @@ export default function Home() {
   );
 
   const Reviews = (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <h2 className="text-[#1A1A1A] text-xl font-bold">تقييمات العملاء</h2>
+
+      {/* Overall rating — Amazon style */}
+      <div className="flex flex-col sm:flex-row gap-6">
+        <div className="flex flex-col items-center gap-1 shrink-0">
+          <span className="text-5xl font-black text-[#1A1A1A]" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>5.0</span>
+          <div className="flex gap-0.5">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} size={18} className="text-[#FFD700] fill-[#FFD700]" />
+            ))}
+          </div>
+          <span className="text-[#6B7280] text-sm">1 تقييم</span>
+        </div>
+        <div className="flex-1 space-y-1.5">
+          {[5, 4, 3, 2, 1].map((stars) => (
+            <div key={stars} className="flex items-center gap-3">
+              <span className="text-sm text-[#6B7280] w-4 text-center" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{stars}</span>
+              <Star size={12} className="text-[#FFD700] fill-[#FFD700] shrink-0" />
+              <div className="flex-1 h-2.5 bg-[#e5e5e5] rounded-full overflow-hidden">
+                <div className="h-full bg-[#FFD700] rounded-full" style={{ width: stars === 5 ? '100%' : '0%' }} />
+              </div>
+              <span className="text-sm text-[#6B7280] w-4 text-center" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{stars === 5 ? 1 : 0}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Separator */}
+      <div className="border-t border-gray-200" />
+
+      {/* Sub-header */}
+      <div className="flex items-center justify-between">
+        <h3 className="text-[#1A1A1A] font-bold text-base">أفضل التقييمات</h3>
+        <a href="#" className="text-[#d97706] text-sm font-semibold hover:underline">عرض كل التقييمات</a>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {[
           { flag: "\uD83C\uDDF2\uD83C\uDDE6", name: "يوسف", date: "منذ يومين", text: "والله ما كنتش كنصدق أنني غادي نبيع أونلاين، ودابا كاين نهار ما مشا بلا طلبيات. الشرح بسيط وواضح وكل مرحلة مبنية على اللي قبلها. شكرا على هاد البرنامج الرائع!" },
