@@ -129,20 +129,20 @@ export default function Home() {
                   { flag: "🇹🇳", name: "سامي", date: "منذ أسبوعين", text: "برنامج ممتاز بصح! كنت خايف نبدأ لأني ما عندي خبرة، بس الدورة شرحت كل شي من الصفر. ودابا عندي متجر كيبيع كل يوم 🔥" },
                   { flag: "🇪🇬", name: "محمد", date: "منذ 3 أسابيع", text: "ربنا يجزيك خير، الدورة دي غيرت حياتي. من أول أسبوع بدأت أشوف نتايج حقيقية. الشرح عملي ومباشر ومفيش كلام فاضي. أنصح بيها أي حد عايز يبدأ في التجارة الإلكترونية" },
                 ].map((review, i) => (
-                  <div key={i} className="bg-[#1a1a1a] border border-white/5 rounded-2xl p-5 space-y-3" dir="rtl">
+                  <div key={i} className="bg-[#f9f9f9] border border-[#e5e5e5] rounded-2xl p-5 space-y-3" dir="rtl">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className="text-[32px] leading-none">{review.flag}</span>
-                        <span className="text-white font-bold text-sm">{review.name}</span>
+                        <span className="text-2xl leading-none">{review.flag}</span>
+                        <span className="text-[#111111] font-bold text-sm">{review.name}</span>
                       </div>
-                      <span className="text-gray-500 text-xs">{review.date}</span>
+                      <span className="text-[#888888] text-xs">{review.date}</span>
                     </div>
                     <div className="flex gap-0.5">
                       {[...Array(5)].map((_, j) => (
                         <Star key={j} size={14} className="text-[#FFD700] fill-[#FFD700]" />
                       ))}
                     </div>
-                    <p className="text-gray-300 text-sm leading-relaxed">{review.text}</p>
+                    <p className="text-[#333333] text-sm leading-relaxed">{review.text}</p>
                   </div>
                 ))}
               </div>
