@@ -80,6 +80,24 @@ export default function Home() {
               </div>
             </div>
 
+            {/* === Badge bar under carousel === */}
+            <div className="flex items-center bg-[#1a1a1a] border border-white/5 rounded-b-2xl -mt-8 py-3 px-5">
+              {/* Price */}
+              <div className="flex items-center gap-2">
+                <span className="text-base">🏷️</span>
+                <span className="text-white text-sm font-bold" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>197 €</span>
+              </div>
+              {/* Divider */}
+              <div className="w-px h-5 bg-white/10 mx-4" />
+              {/* By ECOMY */}
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-full bg-[#10B981] flex items-center justify-center overflow-hidden">
+                  <span className="text-white text-[10px] font-bold" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>E</span>
+                </div>
+                <span className="text-white text-sm" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>By <span className="font-semibold">ECOMY</span></span>
+              </div>
+            </div>
+
             {/* === Title === */}
             <h1 className="text-[#1A1A1A] text-2xl lg:text-3xl font-bold leading-relaxed">
               من صفر إلى €10,000 شهرياً | 27 مرحلة عملية خطوة بخطوة | ابدأ اليوم
