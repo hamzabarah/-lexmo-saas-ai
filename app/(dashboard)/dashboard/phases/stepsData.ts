@@ -236,6 +236,267 @@ export const stepsContent: StepContent[] = [
             },
         ],
     },
+    {
+        stepNumber: 12,
+        title: "🛒 استيراد المنتج",
+        chapters: [
+            {
+                title: "الدروس",
+                lessons: [
+                    { id: 1, title: "من علي إكسبريس إلى متجرك", type: "pdf" },
+                ],
+            },
+            {
+                title: "اختبار المرحلة 12",
+                lessons: [
+                    { id: 2, title: "اختبر معلوماتك", type: "quiz" },
+                ],
+            },
+        ],
+    },
+    {
+        stepNumber: 13,
+        title: "🎨 تعديل المتجر",
+        chapters: [
+            {
+                title: "الدروس",
+                lessons: [
+                    { id: 1, title: "الدليل الكامل — تعديل المتجر وتصميم الصور", type: "pdf" },
+                ],
+            },
+            {
+                title: "اختبار المرحلة 13",
+                lessons: [
+                    { id: 2, title: "اختبر معلوماتك", type: "quiz" },
+                ],
+            },
+        ],
+    },
+    {
+        stepNumber: 14,
+        title: "🔌 التطبيقات الأساسية",
+        chapters: [
+            {
+                title: "الدروس",
+                lessons: [
+                    { id: 1, title: "التطبيقات الأساسية", type: "pdf" },
+                ],
+            },
+            {
+                title: "اختبار المرحلة 14",
+                lessons: [
+                    { id: 2, title: "اختبر معلوماتك", type: "quiz" },
+                ],
+            },
+        ],
+    },
+    {
+        stepNumber: 15,
+        title: "📘 مقدمة فيسبوك أدس",
+        chapters: [
+            {
+                title: "الدروس",
+                lessons: [
+                    { id: 1, title: "مقدمة عن إعلانات فيسبوك", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=s0Hlrw1GCeg") },
+                    { id: 2, title: "ما هو مدير الأعمال", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=qgMbMV93KVg") },
+                    { id: 3, title: "الفرق بين الحملة والمجموعة والإعلان", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=N1NC1ZkxYMw") },
+                    { id: 4, title: "الفرق بين الحساب الشخصي والصفحات", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=cwYsvWHQcIg") },
+                ],
+            },
+            {
+                title: "اختبار المرحلة 15",
+                lessons: [
+                    { id: 5, title: "اختبر معلوماتك", type: "quiz" },
+                ],
+            },
+        ],
+    },
+    {
+        stepNumber: 16,
+        title: "🔧 إنشاء الحسابات",
+        chapters: [
+            {
+                title: "الدروس",
+                lessons: [
+                    { id: 1, title: "إنشاء حساب فيسبوك في دقيقتين", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=sER34ms5sZ0") },
+                    { id: 2, title: "إنشاء صفحة فيسبوك احترافية", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=pzpRCHw5EN0") },
+                    { id: 3, title: "إنشاء مدير الأعمال", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=WulvNBhzj_o") },
+                    { id: 4, title: "فتح حساب إعلاني", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=b8YWV2NpOZk") },
+                    { id: 5, title: "شرح نظري لحساب الإعلانات", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=9SNq-H-o8Xs") },
+                ],
+            },
+            {
+                title: "اختبار المرحلة 16",
+                lessons: [
+                    { id: 6, title: "اختبر معلوماتك", type: "quiz" },
+                ],
+            },
+        ],
+    },
+    {
+        stepNumber: 17,
+        title: "🎯 أهداف الحملات",
+        chapters: [
+            {
+                title: "الدروس",
+                lessons: [
+                    { id: 1, title: "ما هو هدف التوعية", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=NmnXLM5QkRg") },
+                    { id: 2, title: "ما هو هدف الزيارات", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=M4WW2KiE8Ok") },
+                    { id: 3, title: "ما هو هدف التفاعل", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=O2HB5XtTwRc") },
+                    { id: 4, title: "ما هو هدف العملاء المحتملين", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=qoCyjLzgJFE") },
+                    { id: 5, title: "ما هو هدف المبيعات", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=I4xrCsdqOnM") },
+                    { id: 6, title: "ما هو هدف ترويج التطبيقات", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=kcHLo8TnQtk") },
+                    { id: 7, title: "الوجهة وكيفية اختيارها", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=YY0fI1hWMxA") },
+                    { id: 8, title: "نوع الشراء وكيف يعمل", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=6tFcxnLj9_A") },
+                    { id: 9, title: "نظام المزاد", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=2Ka_aNwe0Ps") },
+                ],
+            },
+            {
+                title: "اختبار المرحلة 17",
+                lessons: [
+                    { id: 10, title: "اختبر معلوماتك", type: "quiz" },
+                ],
+            },
+        ],
+    },
+    {
+        stepNumber: 18,
+        title: "👥 استهداف الجمهور",
+        chapters: [
+            {
+                title: "الدروس",
+                lessons: [
+                    { id: 1, title: "استهداف الجمهور حسب الجنس", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=POycDeC8hcI") },
+                    { id: 2, title: "اختيار الفئة العمرية المناسبة", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=lzUR65ebsPk") },
+                    { id: 3, title: "تحديد الموقع الجغرافي", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=m18N05fGVxU") },
+                    { id: 4, title: "استهداف اللغة", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=prqLNanKF9Q") },
+                    { id: 5, title: "الاستهداف بالاهتمامات", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=mIDaRRBMNLo") },
+                    { id: 6, title: "استهداف العملاء حسب السلوك", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=kNIGx7YM33k") },
+                    { id: 7, title: "الاستهداف بالتركيبة السكانية", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=yRgrsIACeZA") },
+                    { id: 8, title: "تصنيفات الإعلانات الخاصة", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=9_4ryRSBz38") },
+                ],
+            },
+            {
+                title: "اختبار المرحلة 18",
+                lessons: [
+                    { id: 9, title: "اختبر معلوماتك", type: "quiz" },
+                ],
+            },
+        ],
+    },
+    {
+        stepNumber: 19,
+        title: "⚙️ إعدادات الحملة",
+        chapters: [
+            {
+                title: "الدروس",
+                lessons: [
+                    { id: 1, title: "اختيار تنسيق الإعلان", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=-3uUWzgrRnc") },
+                    { id: 2, title: "أفضل أماكن عرض الإعلانات", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=QlTr2JnsIqE") },
+                    { id: 3, title: "إعداد اللغات والترجمة", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=kSWaSB3mtvs") },
+                    { id: 4, title: "طريقة الدفع", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=fT5xtCzQyj8") },
+                    { id: 5, title: "حماية العلامة التجارية", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=0e300Z42g2I") },
+                    { id: 6, title: "الميزانية وجدولة الإعلانات", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=P39PbIfyGqg") },
+                    { id: 7, title: "تتبع الأحداث", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=V4j_z6Y6kSo") },
+                ],
+            },
+            {
+                title: "اختبار المرحلة 19",
+                lessons: [
+                    { id: 8, title: "اختبر معلوماتك", type: "quiz" },
+                ],
+            },
+        ],
+    },
+    {
+        stepNumber: 20,
+        title: "🎨 إنشاء الإعلان",
+        chapters: [
+            {
+                title: "الدروس",
+                lessons: [
+                    { id: 1, title: "صناعة إعلان ناجح", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=rb1X_95orYc") },
+                    { id: 2, title: "كتابة إعلان جذاب", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=jIplBnTwtAo") },
+                    { id: 3, title: "إنشاء وتحرير الإعلانات", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=EH5_mQpXMko") },
+                ],
+            },
+            {
+                title: "اختبار المرحلة 20",
+                lessons: [
+                    { id: 4, title: "اختبر معلوماتك", type: "quiz" },
+                ],
+            },
+        ],
+    },
+    {
+        stepNumber: 21,
+        title: "📊 التحسين والتحليل",
+        chapters: [
+            {
+                title: "الدروس",
+                lessons: [
+                    { id: 1, title: "اختيار مكان التحويل الجزء 1", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=kHkmK82vbgY") },
+                    { id: 2, title: "اختيار مكان التحويل الجزء 2", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=-40nXLx26h4") },
+                    { id: 3, title: "اختيار مكان التحويل الجزء 3", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=EnSqxyiXS84") },
+                    { id: 4, title: "اختيار مكان التحويل الجزء 4", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=fxQmctfq9WU") },
+                    { id: 5, title: "اختبار الإعلانات", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=HDhscS8QHIE") },
+                ],
+            },
+            {
+                title: "اختبار المرحلة 21",
+                lessons: [
+                    { id: 6, title: "اختبر معلوماتك", type: "quiz" },
+                ],
+            },
+        ],
+    },
+    {
+        stepNumber: 22,
+        title: "🚀 إنشاء حملة إعلانية",
+        chapters: [
+            {
+                title: "الدروس",
+                lessons: [
+                    { id: 1, title: "إنشاء حملة إعلانية", type: "pdf" },
+                ],
+            },
+            {
+                title: "اختبار المرحلة 22",
+                lessons: [
+                    { id: 2, title: "اختبر معلوماتك", type: "quiz" },
+                ],
+            },
+        ],
+    },
+    {
+        stepNumber: 23,
+        title: "📊 تحليل الإعلانات",
+        chapters: [
+            {
+                title: "الدروس",
+                lessons: [
+                    { id: 1, title: "الأرقام الأساسية", type: "pdf" },
+                    { id: 2, title: "كيفاش تقرا لوحة التحكم", type: "pdf" },
+                    { id: 3, title: "تخصيص الأعمدة Customize Columns", type: "pdf" },
+                    { id: 4, title: "مؤشرات النجاح والفشل", type: "pdf" },
+                    { id: 5, title: "متى تزيد الميزانية Scaling", type: "pdf" },
+                    { id: 6, title: "متى توقف الحملة", type: "pdf" },
+                    { id: 7, title: "متى تعدل الحملة", type: "pdf" },
+                    { id: 8, title: "تحليل مسار العميل Funnel Analysis", type: "pdf" },
+                    { id: 9, title: "حساب الربحية الحقيقية", type: "pdf" },
+                    { id: 10, title: "أخطاء التحليل الشائعة", type: "pdf" },
+                    { id: 11, title: "مثال تطبيقي كامل", type: "pdf" },
+                    { id: 12, title: "Checklist التحليل اليومي", type: "pdf" },
+                ],
+            },
+            {
+                title: "اختبار المرحلة 23",
+                lessons: [
+                    { id: 13, title: "اختبر معلوماتك", type: "quiz" },
+                ],
+            },
+        ],
+    },
 ];
 
 export function getStepContent(stepNumber: number): StepContent | undefined {
