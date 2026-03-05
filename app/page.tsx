@@ -33,7 +33,58 @@ export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showStickyBar, setShowStickyBar] = useState(false);
   const ctaRef = useRef<HTMLAnchorElement>(null);
-  const slides = [0, 1, 2];
+  const carouselImages = [
+    "/images/avis/368k$-30d.jpg",
+    "/images/avis/500k$-30d.jpg",
+    "/images/avis/186k$-40d.jpg",
+    "/images/avis/105k$-30d.jpg",
+    "/images/avis/100k$-30d.jpg",
+    "/images/avis/100k€-7d.jpg",
+    "/images/avis/63k€-30d.jpg",
+    "/images/avis/56k$-20d.jpg",
+    "/images/avis/51k$-25d.jpg",
+    "/images/avis/50k€-30d.jpg",
+    "/images/avis/50k€-20d.jpg",
+    "/images/avis/50k$-12h.jpg",
+    "/images/avis/44k$-30d.jpg",
+    "/images/avis/44k$-24h.jpg",
+    "/images/avis/43k€-30d.jpg",
+    "/images/avis/43k$-30d.jpg",
+    "/images/avis/42k$-12h.jpg",
+    "/images/avis/41k$-30d.jpg",
+    "/images/avis/40k$-30d.jpg",
+    "/images/avis/35k$-14d.jpg",
+    "/images/avis/33k€-12h.jpg",
+    "/images/avis/33k£-7d.jpg",
+    "/images/avis/31k$-12h.jpg",
+    "/images/avis/30k$-24h.jpg",
+    "/images/avis/30k$-12h.jpg",
+    "/images/avis/27k$-30d.jpg",
+    "/images/avis/26k$-12d.jpg",
+    "/images/avis/25k$-12d.jpg",
+    "/images/avis/16k£-12h.jpg",
+    "/images/avis/16k$-4d.jpg",
+    "/images/avis/15k$-20d.jpg",
+    "/images/avis/14k$-7d.jpg",
+    "/images/avis/14k$-4d.jpg",
+    "/images/avis/10k€-24h.jpg",
+    "/images/avis/9k$-15d.jpg",
+    "/images/avis/9k$-12h.jpg",
+    "/images/avis/9k$-9d.jpg",
+    "/images/avis/9k-15h.jpg",
+    "/images/avis/7,3k$-24h.jpg",
+    "/images/avis/7k€-1d.jpg",
+    "/images/avis/6k$-12h.jpg",
+    "/images/avis/5k$-24h.jpg",
+    "/images/avis/3k€-24h.jpg",
+    "/images/avis/2,4k$-3h.jpg",
+    "/images/avis/2k$-24h.jpg",
+    "/images/avis/1,6k$-1d.jpg",
+    "/images/avis/1,2k$-1d.jpg",
+    "/images/avis/1k€-1h.jpg",
+    "/images/avis/243€-3h.jpg",
+    "/images/avis/51k$-7d.jpg",
+  ];
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -44,43 +95,45 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
+  // Auto-slide every 3 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((p) => (p < carouselImages.length - 1 ? p + 1 : 0));
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [carouselImages.length]);
+
   // Shared components
   const Carousel = (
-    <div className="relative rounded-xl overflow-hidden bg-gray-100 aspect-[16/9]">
+    <div className="relative rounded-xl overflow-hidden bg-gray-100 h-[250px] lg:h-[400px]">
       <div
-        className="flex transition-transform duration-300 h-full"
+        className="flex transition-transform duration-500 ease-in-out h-full"
         style={{ transform: `translateX(${currentSlide * 100}%)` }}
       >
-        {slides.map((s) => (
-          <div
-            key={s}
-            className="w-full h-full shrink-0 flex items-center justify-center"
-            style={{ background: `linear-gradient(135deg, ${s === 0 ? '#1a1a2e, #16213e' : s === 1 ? '#0f3460, #16213e' : '#1a1a2e, #0f3460'})` }}
-          >
-            <p className="text-white/30 text-lg">{"صورة"} {s + 1}</p>
-          </div>
+        {carouselImages.map((src, i) => (
+          <img
+            key={i}
+            src={src}
+            alt={`Screenshot ${i + 1}`}
+            className="w-full h-full shrink-0 object-cover"
+          />
         ))}
       </div>
       <button
-        onClick={() => setCurrentSlide((p) => (p > 0 ? p - 1 : slides.length - 1))}
+        onClick={() => setCurrentSlide((p) => (p > 0 ? p - 1 : carouselImages.length - 1))}
         className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow transition"
       >
         <ChevronLeft size={18} className="text-gray-700" />
       </button>
       <button
-        onClick={() => setCurrentSlide((p) => (p < slides.length - 1 ? p + 1 : 0))}
+        onClick={() => setCurrentSlide((p) => (p < carouselImages.length - 1 ? p + 1 : 0))}
         className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow transition"
       >
         <ChevronRight size={18} className="text-gray-700" />
       </button>
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
-        {slides.map((s) => (
-          <button
-            key={s}
-            onClick={() => setCurrentSlide(s)}
-            className={`w-2.5 h-2.5 rounded-full transition ${currentSlide === s ? 'bg-white' : 'bg-white/40'}`}
-          />
-        ))}
+      {/* Slide counter */}
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs px-3 py-1 rounded-full" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+        {currentSlide + 1} / {carouselImages.length}
       </div>
     </div>
   );
