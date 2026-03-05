@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -rn \"CREATE TABLE.*task\\\\|from.*task\" supabase/*.sql app/actions/*.ts)"
+    ]
+  }
+}
