@@ -497,6 +497,72 @@ export const stepsContent: StepContent[] = [
             },
         ],
     },
+    {
+        stepNumber: 24,
+        title: "🎵 منصة إعلانية جديدة",
+        chapters: [
+            {
+                title: "الدروس",
+                lessons: [
+                    { id: 1, title: "اكتشف المنصة اللي كيتجاهلها الجميع", type: "video" },
+                    { id: 2, title: "الأهداف المتوفرة وأي واحد تختار", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=dROBANpg7ow") },
+                    { id: 3, title: "افتح حسابك الإعلاني في 5 دقائق", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=XQ5IsE5Weo8") },
+                ],
+            },
+            {
+                title: "اختبار المرحلة 24",
+                lessons: [
+                    { id: 4, title: "اختبر معلوماتك", type: "quiz" },
+                ],
+            },
+        ],
+    },
+    {
+        stepNumber: 25,
+        title: "🎬 أول حملة من الصفر",
+        chapters: [
+            {
+                title: "الدروس",
+                lessons: [
+                    { id: 1, title: "إنشاء حملة إعلانية — المرحلة 1", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=A1GZUJO-1Wg") },
+                    { id: 2, title: "إنشاء حملة إعلانية — المرحلة 2", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=mn7rfIssdpc") },
+                    { id: 3, title: "إنشاء حملة إعلانية — المرحلة 3", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=PJjqGYmRg58") },
+                    { id: 4, title: "إنشاء حملة إعلانية — المرحلة 4", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=p5Cx_07Kw9Y") },
+                    { id: 5, title: "صناعة فيديو إعلاني يوقف السكرول", type: "pdf" },
+                    { id: 6, title: "جرب قبل ما تصرف — استراتيجيات ذكية", type: "pdf" },
+                ],
+            },
+            {
+                title: "اختبار المرحلة 25",
+                lessons: [
+                    { id: 7, title: "اختبر معلوماتك", type: "quiz" },
+                ],
+            },
+        ],
+    },
+    {
+        stepNumber: 26,
+        title: "🔎 اربح أكثر",
+        chapters: [
+            {
+                title: "الدروس",
+                lessons: [
+                    { id: 1, title: "شنو هي الأرقام اللي خاصك تراقبها", type: "pdf" },
+                    { id: 2, title: "كيفاش تعرف واش رابح ولا خاسر", type: "pdf" },
+                    { id: 3, title: "الحملة ناجحة — دابا كبرها", type: "pdf" },
+                    { id: 4, title: "الحملة فاشلة — شنو كتدير", type: "pdf" },
+                    { id: 5, title: "احسب أرباحك الحقيقية", type: "pdf" },
+                    { id: 6, title: "تطبيق عملي — 5 أيام يوم بيوم", type: "pdf" },
+                ],
+            },
+            {
+                title: "اختبار المرحلة 26",
+                lessons: [
+                    { id: 7, title: "اختبر معلوماتك", type: "quiz" },
+                ],
+            },
+        ],
+    },
 ];
 
 export function getStepContent(stepNumber: number): StepContent | undefined {
