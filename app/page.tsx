@@ -38,7 +38,7 @@ export default function Home() {
                   <div className="flex items-center gap-1.5">
                     <div className="flex gap-0.5">
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} size={14} className="text-[#F59E0B] fill-[#F59E0B]" />
+                        <Star key={i} size={14} className="text-[#FFD700] fill-[#FFD700]" />
                       ))}
                     </div>
                     <span className="text-[#6B7280] text-sm" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>5.0 (1)</span>
@@ -52,9 +52,9 @@ export default function Home() {
                   {/* Price — single line */}
                   <div className="flex items-center gap-3 flex-wrap">
                     <span className="text-[#1A1A1A] text-2xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>197 €</span>
-                    <span className="text-[#9CA3AF] text-sm line-through" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>1970 €</span>
+                    <span className="text-gray-500 text-2xl font-black line-through" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>1970 €</span>
                     <span className="inline-block bg-[#D1FAE5] text-[#065F46] text-[11px] font-bold px-2.5 py-0.5 rounded-full">
-                      -90%
+                      تخفيض %90
                     </span>
                   </div>
 
