@@ -92,7 +92,7 @@ export default function Home() {
           <Star key={i} size={14} className="text-[#FFD700] fill-[#FFD700]" />
         ))}
       </div>
-      <span className="text-[#6B7280] text-sm" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>5.0 (5)</span>
+      <span className="text-[#6B7280] text-sm" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>5.0 (453)</span>
     </div>
   );
 
@@ -160,7 +160,7 @@ export default function Home() {
               <Star key={i} size={18} className="text-[#FFD700] fill-[#FFD700]" />
             ))}
           </div>
-          <span className="text-[#6B7280] text-sm">1 تقييم</span>
+          <span className="text-[#6B7280] text-sm">453 تقييم</span>
         </div>
         <div className="flex-1 space-y-1.5">
           {[5, 4, 3, 2, 1].map((stars) => (
@@ -170,7 +170,7 @@ export default function Home() {
               <div className="flex-1 h-2.5 bg-[#e5e5e5] rounded-full overflow-hidden">
                 <div className="h-full bg-[#FFD700] rounded-full" style={{ width: stars === 5 ? '100%' : '0%' }} />
               </div>
-              <span className="text-sm text-[#6B7280] w-4 text-center" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{stars === 5 ? 1 : 0}</span>
+              <span className="text-sm text-[#6B7280] w-8 text-center" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{stars === 5 ? 453 : 0}</span>
             </div>
           ))}
         </div>
