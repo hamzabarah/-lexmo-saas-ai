@@ -107,23 +107,25 @@ export default function Home() {
 
   // Shared components
   const Carousel = (
-    <div className="relative rounded-xl overflow-hidden bg-[#1a1a1a] h-[400px]">
+    <div className="relative overflow-hidden h-[400px]">
+      {/* Desktop: 3 images */}
       <div
-        className="flex transition-transform duration-500 ease-in-out h-full"
+        className="hidden lg:flex transition-transform duration-500 ease-in-out h-full"
         style={{ transform: `translateX(${currentSlide * (100 / 3)}%)` }}
       >
         {carouselImages.map((src, i) => (
-          <div key={i} className="h-full shrink-0 px-1.5 hidden lg:block" style={{ width: `${100 / 3}%` }}>
+          <div key={i} className="h-full shrink-0 px-1" style={{ width: `${100 / 3}%` }}>
             <img src={src} alt={`Screenshot ${i + 1}`} className="w-full h-full object-contain" />
           </div>
         ))}
       </div>
-      {/* Mobile: single image */}
-      <div className="lg:hidden absolute inset-0 flex transition-transform duration-500 ease-in-out"
+      {/* Mobile: 1 image */}
+      <div
+        className="lg:hidden flex transition-transform duration-500 ease-in-out h-full"
         style={{ transform: `translateX(${currentSlide * 100}%)` }}
       >
         {carouselImages.map((src, i) => (
-          <div key={i} className="w-full h-full shrink-0 px-2">
+          <div key={i} className="w-full h-full shrink-0">
             <img src={src} alt={`Screenshot ${i + 1}`} className="w-full h-full object-contain" />
           </div>
         ))}
