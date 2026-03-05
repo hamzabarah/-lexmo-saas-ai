@@ -33,7 +33,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-white font-cairo" dir="rtl">
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="mx-auto py-8" style={{ maxWidth: '1100px', padding: '32px 24px' }}>
         <div className="flex flex-col lg:flex-row gap-8">
 
           {/* ===== LEFT COLUMN — Main Content ===== */}
