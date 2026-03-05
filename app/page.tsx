@@ -203,6 +203,7 @@ export default function Home() {
             {/* Mobile only: Rating + Price + CTA before title */}
             <div className="lg:hidden space-y-4">
               {RatingLine}
+              <p className="text-white text-lg font-bold text-center">اربح من الإنترنت | التجارة الإلكترونية</p>
               {PriceLine}
               {CTAButton}
             </div>
