@@ -10,9 +10,9 @@ interface StatCardProps {
     color?: string; // hex color for icon bg
 }
 
-export default function StatCard({ title, value, icon: Icon, trend, trendUp, color = "#008060" }: StatCardProps) {
+export default function StatCard({ title, value, icon: Icon, trend, trendUp, color = "#1E3A8A" }: StatCardProps) {
     return (
-        <Card className="hover:border-[#008060]/30 transition-colors">
+        <Card className="hover:border-[#1E3A8A]/30 transition-colors">
             <div className="flex items-start justify-between">
                 <div>
                     <p className="text-gray-500 text-sm font-medium mb-1">{title}</p>

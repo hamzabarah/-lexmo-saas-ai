@@ -64,7 +64,7 @@ export default function ForgotPasswordPage() {
                                 type="email"
                                 required
                                 placeholder="name@example.com"
-                                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#008060] transition-colors"
+                                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#1E3A8A] transition-colors"
                             />
                             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                         </div>
@@ -79,7 +79,7 @@ export default function ForgotPasswordPage() {
                     <button
                         type="submit"
                         disabled={isPending}
-                        className="w-full bg-[#008060] hover:bg-[#006e52] text-black font-bold py-3 rounded-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
+                        className="w-full bg-[#1E3A8A] hover:bg-[#1E40AF] text-black font-bold py-3 rounded-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
                     >
                         {isPending ? <Loader2 className="animate-spin" /> : "إرسال رابط الاستعادة"}
                     </button>

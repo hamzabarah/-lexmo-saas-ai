@@ -84,7 +84,7 @@ export default function WhoIsThisFor() {
 
                 <FadeIn delay={0.6} className="text-center mt-12 bg-gray-50 border border-gray-200 rounded-xl p-6 lg:w-fit mx-auto backdrop-blur-md">
                     <p className="text-xl lg:text-2xl font-bold text-gray-900 font-cairo">
-                        إذا كنت من النوع الثاني، فمرحباً بك في عائلة <span className="text-[#008060]">ECOMY</span> 🚀
+                        إذا كنت من النوع الثاني، فمرحباً بك في عائلة <span className="text-[#1E3A8A]">ECOMY</span> 🚀
                     </p>
                 </FadeIn>
             </div>

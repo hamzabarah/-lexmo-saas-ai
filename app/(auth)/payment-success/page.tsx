@@ -36,7 +36,7 @@ export default function PaymentSuccessPage() {
                     {/* Email Display - Large and Prominent */}
                     <a
                         href={`mailto:${adminEmail}`}
-                        className="inline-block text-3xl md:text-4xl font-bold text-[#008060] hover:text-[#006e52] font-mono mb-8 transition-colors underline decoration-2 underline-offset-8"
+                        className="inline-block text-3xl md:text-4xl font-bold text-[#1E3A8A] hover:text-[#1E40AF] font-mono mb-8 transition-colors underline decoration-2 underline-offset-8"
                     >
                         {adminEmail}
                     </a>
@@ -45,7 +45,7 @@ export default function PaymentSuccessPage() {
                     <div className="mb-8">
                         <a
                             href={`mailto:${adminEmail}?subject=${encodeURIComponent(emailSubject)}`}
-                            className="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-[#008060] to-[#006e52] hover:from-[#006e52] hover:to-[#8d40ab] text-white font-bold px-10 py-5 rounded-xl transition-all duration-200 shadow-lg shadow-emerald-600/25 hover:shadow-emerald-600/40 hover:scale-105 text-lg"
+                            className="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-[#1E3A8A] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#8d40ab] text-white font-bold px-10 py-5 rounded-xl transition-all duration-200 shadow-lg shadow-blue-900/25 hover:shadow-blue-900/40 hover:scale-105 text-lg"
                         >
                             <Mail className="w-6 h-6" />
                             <span>إرسال الفاتورة عبر البريد</span>

@@ -58,13 +58,13 @@ export default async function DashboardPage() {
                         title="الوحدات المكتملة"
                         value="18/150"
                         icon={BookOpen}
-                        color="#008060"
+                        color="#1E3A8A"
                     />
                     <StatCard
                         title="الترتيب الحالي"
                         value="#-"
                         icon={Trophy}
-                        color="#006e52"
+                        color="#1E40AF"
                     />
                     <StatCard
                         title="الهدف القادم"
@@ -117,14 +117,14 @@ export default async function DashboardPage() {
 
                 {/* Right Column: Affiliate Mini & Announcements */}
                 <div className="space-y-6">
-                    <Card className="bg-gradient-to-br from-[#006e52]/20 to-[#030712]">
+                    <Card className="bg-gradient-to-br from-[#1E40AF]/20 to-[#030712]">
                         <h3 className="text-lg font-bold mb-2">برنامج الشراكة 🚀</h3>
                         <p className="text-gray-500 text-sm mb-4">شارك رابطك واربح 70% عمولة على كل مبيعة.</p>
                         <div className="bg-gray-500 p-3 rounded-lg flex items-center justify-between mb-4 border border-gray-200">
                             <span className="text-sm text-gray-600 truncate">ecomy.ai/ref/mohammed</span>
-                            <button className="text-xs text-[#008060] font-bold">نسخ</button>
+                            <button className="text-xs text-[#1E3A8A] font-bold">نسخ</button>
                         </div>
-                        <button className="w-full bg-[#006e52] hover:bg-[#8e44ad] text-white py-2 rounded-lg font-bold transition-colors">
+                        <button className="w-full bg-[#1E40AF] hover:bg-[#8e44ad] text-white py-2 rounded-lg font-bold transition-colors">
                             الذهاب لصفحة الأرباح
                         </button>
                     </Card>
@@ -133,7 +133,7 @@ export default async function DashboardPage() {
                         <h3 className="text-lg font-bold mb-2">تنبيهات 📢</h3>
                         <ul className="space-y-3 text-sm text-gray-500">
                             <li className="flex gap-2">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#008060] mt-2 shrink-0"></span>
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#1E3A8A] mt-2 shrink-0"></span>
                                 <span className="text-gray-600">تم تحديث المرحلة 3 (System Building) بمحتوى جديد.</span>
                             </li>
                             <li className="flex gap-2">

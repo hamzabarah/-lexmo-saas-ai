@@ -8,8 +8,8 @@ export default function Hero() {
     return (
         <section className="relative min-h-[90vh] flex flex-col justify-center pt-20 overflow-hidden">
             {/* Background Glows */}
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#008060]/10 rounded-full blur-[120px] -z-10 animate-pulse" />
-            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#006e52]/10 rounded-full blur-[120px] -z-10 animate-pulse delay-1000" />
+            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#1E3A8A]/10 rounded-full blur-[120px] -z-10 animate-pulse" />
+            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#1E40AF]/10 rounded-full blur-[120px] -z-10 animate-pulse delay-1000" />
 
             <div className="container mx-auto px-4 text-center space-y-8 mb-12">
                 {/* Text Content */}
@@ -41,7 +41,7 @@ export default function Hero() {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.6 }}
-                            className="block text-[#008060] text-glow"
+                            className="block text-[#1E3A8A] text-glow"
                         >
                             التجارة الإلكترونية
                         </motion.span>
@@ -65,7 +65,7 @@ export default function Hero() {
                         <div className="flex flex-col items-center gap-2">
                             <a
                                 href="#pricing"
-                                className="bg-gradient-to-r from-[#008060] to-[#006e52] text-white px-8 py-4 rounded-full font-bold text-lg hover:shadow-[0_0_40px_rgba(0,210,255,0.6)] transition-all transform hover:scale-105 active:scale-95 duration-300"
+                                className="bg-gradient-to-r from-[#1E3A8A] to-[#1E40AF] text-white px-8 py-4 rounded-full font-bold text-lg hover:shadow-[0_0_40px_rgba(0,210,255,0.6)] transition-all transform hover:scale-105 active:scale-95 duration-300"
                             >
                                 ابدأ الآن
                             </a>

@@ -14,8 +14,8 @@ export default function AuthLayout({
         <div className="min-h-screen w-full bg-white flex items-center justify-center p-4 relative overflow-hidden font-cairo">
             {/* Background Elements */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#008060]/5 blur-[100px] rounded-full" />
-                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#006e52]/5 blur-[100px] rounded-full" />
+                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#1E3A8A]/5 blur-[100px] rounded-full" />
+                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#1E40AF]/5 blur-[100px] rounded-full" />
             </div>
 
             <div className="w-full max-w-md relative z-10 flex flex-col items-center">

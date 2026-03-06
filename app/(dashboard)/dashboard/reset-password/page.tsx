@@ -67,7 +67,7 @@ export default function ResetPasswordPage() {
                                 required
                                 minLength={6}
                                 placeholder="••••••••"
-                                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 pl-10 text-right focus:outline-none focus:border-[#008060] transition-colors text-gray-900"
+                                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 pl-10 text-right focus:outline-none focus:border-[#1E3A8A] transition-colors text-gray-900"
                                 dir="rtl"
                             />
                             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
@@ -83,7 +83,7 @@ export default function ResetPasswordPage() {
                                 required
                                 minLength={6}
                                 placeholder="••••••••"
-                                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 pl-10 text-right focus:outline-none focus:border-[#008060] transition-colors text-gray-900"
+                                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 pl-10 text-right focus:outline-none focus:border-[#1E3A8A] transition-colors text-gray-900"
                                 dir="rtl"
                             />
                             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
@@ -100,7 +100,7 @@ export default function ResetPasswordPage() {
                 <button
                     type="submit"
                     disabled={isPending}
-                    className="w-full bg-[#008060] hover:bg-[#006e52] text-black font-bold py-3 rounded-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
+                    className="w-full bg-[#1E3A8A] hover:bg-[#1E40AF] text-black font-bold py-3 rounded-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
                 >
                     {isPending ? <Loader2 className="animate-spin" /> : "حفظ كلمة المرور"}
                 </button>

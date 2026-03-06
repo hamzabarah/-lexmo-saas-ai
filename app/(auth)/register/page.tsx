@@ -42,7 +42,7 @@ export default function RegisterPage() {
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-600">الاسم الكامل</label>
                     <div className="relative">
-                        <input name="name" type="text" required className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#008060] transition-colors" />
+                        <input name="name" type="text" required className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#1E3A8A] transition-colors" />
                         <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                     </div>
                 </div>
@@ -51,7 +51,7 @@ export default function RegisterPage() {
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-600">البريد الإلكتروني</label>
                     <div className="relative">
-                        <input name="email" type="email" required className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#008060] transition-colors" />
+                        <input name="email" type="email" required className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#1E3A8A] transition-colors" />
                         <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                     </div>
                 </div>
@@ -61,7 +61,7 @@ export default function RegisterPage() {
                     <div className="space-y-2">
                         <label className="text-sm font-medium text-gray-600">رقم الهاتف</label>
                         <div className="relative">
-                            <input name="phone" type="tel" className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#008060] transition-colors" />
+                            <input name="phone" type="tel" className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#1E3A8A] transition-colors" />
                             <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                         </div>
                     </div>
@@ -69,7 +69,7 @@ export default function RegisterPage() {
                     <div className="space-y-2">
                         <label className="text-sm font-medium text-gray-600">البلد</label>
                         <div className="relative">
-                            <select name="country" className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#008060] transition-colors appearance-none text-gray-500">
+                            <select name="country" className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#1E3A8A] transition-colors appearance-none text-gray-500">
                                 <option value="SA">السعودية</option>
                                 <option value="AE">الإمارات</option>
                                 <option value="KW">الكويت</option>
@@ -90,7 +90,7 @@ export default function RegisterPage() {
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-600">كلمة المرور</label>
                     <div className="relative">
-                        <input name="password" type="password" required className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#008060] transition-colors" />
+                        <input name="password" type="password" required className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#1E3A8A] transition-colors" />
                         <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                     </div>
                 </div>
@@ -99,7 +99,7 @@ export default function RegisterPage() {
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-600">تأكيد كلمة المرور</label>
                     <div className="relative">
-                        <input name="confirmPassword" type="password" required className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#008060] transition-colors" />
+                        <input name="confirmPassword" type="password" required className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#1E3A8A] transition-colors" />
                         <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                     </div>
                 </div>
@@ -113,7 +113,7 @@ export default function RegisterPage() {
                 <button
                     type="submit"
                     disabled={isPending}
-                    className="w-full bg-[#008060] hover:bg-[#006e52] text-black font-bold py-3 rounded-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
+                    className="w-full bg-[#1E3A8A] hover:bg-[#1E40AF] text-black font-bold py-3 rounded-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
                 >
                     {isPending ? <Loader2 className="animate-spin" /> : "إنشاء حساب"}
                 </button>
@@ -121,7 +121,7 @@ export default function RegisterPage() {
 
             <div className="mt-6 text-center text-sm text-gray-500">
                 لديك حساب بالفعل؟{" "}
-                <Link href="/#login" className="text-[#008060] font-bold hover:underline">
+                <Link href="/#login" className="text-[#1E3A8A] font-bold hover:underline">
                     سجل دخولك
                 </Link>
             </div>

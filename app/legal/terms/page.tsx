@@ -6,7 +6,7 @@ export default function TermsPage() {
       <div className="mx-auto" style={{ maxWidth: '800px' }}>
 
         {/* Back link */}
-        <Link href="/" className="inline-block text-[#008060] text-sm font-semibold hover:underline mb-8">
+        <Link href="/" className="inline-block text-[#1E3A8A] text-sm font-semibold hover:underline mb-8">
           &larr; Back to Home
         </Link>
 
@@ -20,7 +20,7 @@ export default function TermsPage() {
 
           {/* Article 1 */}
           <section>
-            <h2 className="text-xl font-bold text-[#008060] mb-3">Article 1 — Seller Identification and Scope</h2>
+            <h2 className="text-xl font-bold text-[#1E3A8A] mb-3">Article 1 — Seller Identification and Scope</h2>
             <p>These Terms and Conditions of Sale and Use (hereinafter &quot;T&amp;C&quot;) govern all contractual relationships between HAMZA SHOP (hereinafter &quot;the Seller&quot; or &quot;ECOMY&quot;) and any individual or legal entity purchasing a digital product or service through the platform accessible at lexmo.ai (hereinafter &quot;the Platform&quot;).</p>
             <p className="mt-3">By completing any purchase on the Platform, the Customer fully, unconditionally and unreservedly accepts these T&amp;C in their entirety. The Customer declares having read these T&amp;C prior to any purchase. If the Customer disagrees with any provision herein, they are advised not to proceed with the purchase.</p>
             <p className="mt-3">These T&amp;C supersede all other documents, including any Customer purchase terms. The Seller reserves the right to modify these T&amp;C at any time. The applicable T&amp;C are those in force at the time of purchase.</p>
@@ -29,7 +29,7 @@ export default function TermsPage() {
 
           {/* Article 2 */}
           <section>
-            <h2 className="text-xl font-bold text-[#008060] mb-3">Article 2 — Description of the Digital Product</h2>
+            <h2 className="text-xl font-bold text-[#1E3A8A] mb-3">Article 2 — Description of the Digital Product</h2>
             <p>ECOMY markets an online training course on e-commerce, consisting of:</p>
             <ul className="list-disc list-inside mt-2 space-y-1 text-gray-500">
               <li>Twenty-seven (27) progressive learning modules</li>
@@ -44,7 +44,7 @@ export default function TermsPage() {
 
           {/* Article 3 */}
           <section>
-            <h2 className="text-xl font-bold text-[#008060] mb-3">Article 3 — Order Process and Contract Formation</h2>
+            <h2 className="text-xl font-bold text-[#1E3A8A] mb-3">Article 3 — Order Process and Contract Formation</h2>
             <p>The contract is formed when the Customer definitively validates their order on the payment platform. Prior to this validation, the Customer:</p>
             <ul className="list-disc list-inside mt-2 space-y-1 text-gray-500">
               <li>Has read and expressly accepted these T&amp;C by checking the box provided for this purpose</li>
@@ -57,7 +57,7 @@ export default function TermsPage() {
 
           {/* Article 4 */}
           <section>
-            <h2 className="text-xl font-bold text-[#008060] mb-3">Article 4 — Pricing, Payment and Transaction Security</h2>
+            <h2 className="text-xl font-bold text-[#1E3A8A] mb-3">Article 4 — Pricing, Payment and Transaction Security</h2>
             <p>The price displayed on the Platform is expressed in euros including all taxes. The Seller reserves the right to modify prices at any time, it being understood that the applicable price is that in force at the time the order is validated.</p>
             <p className="mt-3">Payment is made exclusively by credit card via the secure Stripe, Inc. platform. The Seller does not retain any banking data from the Customer. The transaction is secured by SSL protocol and PCI-DSS standards. Any attempt at fraud or misuse will be subject to legal proceedings.</p>
             <p className="mt-3">In the event of non-payment or bank rejection, the Seller reserves the right to immediately suspend access to the training and to initiate any necessary recovery procedure, including legal action.</p>
@@ -65,7 +65,7 @@ export default function TermsPage() {
 
           {/* Article 5 */}
           <section>
-            <h2 className="text-xl font-bold text-[#008060] mb-3">Article 5 — No-Refund Policy and Right of Withdrawal</h2>
+            <h2 className="text-xl font-bold text-[#1E3A8A] mb-3">Article 5 — No-Refund Policy and Right of Withdrawal</h2>
 
             <h3 className="text-base font-bold text-white mt-4 mb-2">5.1 — Legal Basis</h3>
             <p>In accordance with Article L.221-28, 13° of the French Consumer Code and Article 16(m) of European Directive 2011/83/EU on consumer rights, the right of withdrawal does not apply to contracts for the supply of digital content not supplied on a tangible medium, the performance of which has begun with the consumer&apos;s prior express agreement and acknowledgment that they will thereby lose their right of withdrawal.</p>
@@ -103,7 +103,7 @@ export default function TermsPage() {
 
           {/* Article 6 */}
           <section>
-            <h2 className="text-xl font-bold text-[#008060] mb-3">Article 6 — Bank Dispute Procedure (Chargeback)</h2>
+            <h2 className="text-xl font-bold text-[#1E3A8A] mb-3">Article 6 — Bank Dispute Procedure (Chargeback)</h2>
             <p>The Seller expressly draws the Customer&apos;s attention to the serious consequences of an unjustified bank dispute (chargeback) procedure.</p>
             <p className="mt-3">In the event of a chargeback initiated by the Customer after activation of access to the digital content, the Seller will:</p>
             <ul className="list-disc list-inside mt-2 space-y-1 text-gray-500">
@@ -118,7 +118,7 @@ export default function TermsPage() {
 
           {/* Article 7 */}
           <section>
-            <h2 className="text-xl font-bold text-[#008060] mb-3">Article 7 — Intellectual Property and License of Use</h2>
+            <h2 className="text-xl font-bold text-[#1E3A8A] mb-3">Article 7 — Intellectual Property and License of Use</h2>
             <p>All content comprising the training (videos, texts, images, PDFs, logos, trademarks, trade names, interfaces) is the exclusive property of the Seller and is protected by intellectual property law, including copyright, trademark law and sui generis database rights.</p>
             <p className="mt-3">The Seller grants the Customer a personal, non-exclusive, non-transferable, non-sublicensable and revocable limited license to access and use the training content, solely for personal and private learning purposes, for the duration provided in Article 8 herein.</p>
             <p className="mt-3">The following are strictly prohibited for the Customer, under penalty of immediate termination of access without refund and legal proceedings:</p>
@@ -135,7 +135,7 @@ export default function TermsPage() {
 
           {/* Article 8 */}
           <section>
-            <h2 className="text-xl font-bold text-[#008060] mb-3">Article 8 — Duration of Access and Termination Conditions</h2>
+            <h2 className="text-xl font-bold text-[#1E3A8A] mb-3">Article 8 — Duration of Access and Termination Conditions</h2>
             <p>Access to the training is granted for a fixed period of six (6) months from the activation date. Upon expiry, the Seller reserves the right to delete access without notice or compensation. The Customer may renew their access by purchasing the training again at the then-current prices.</p>
             <p className="mt-3">The Seller reserves the right to immediately terminate access without notice in case of:</p>
             <ul className="list-disc list-inside mt-2 space-y-1 text-gray-500">
@@ -150,7 +150,7 @@ export default function TermsPage() {
 
           {/* Article 9 */}
           <section>
-            <h2 className="text-xl font-bold text-[#008060] mb-3">Article 9 — Limitation of Liability and Results Disclaimer</h2>
+            <h2 className="text-xl font-bold text-[#1E3A8A] mb-3">Article 9 — Limitation of Liability and Results Disclaimer</h2>
             <p>The training content is provided for purely educational and informational purposes. The Seller does not guarantee the achievement of specific financial, commercial or professional results following the training.</p>
             <p className="mt-3">The Customer expressly acknowledges and accepts that:</p>
             <ul className="list-disc list-inside mt-2 space-y-1 text-gray-500">
@@ -165,7 +165,7 @@ export default function TermsPage() {
 
           {/* Article 10 */}
           <section>
-            <h2 className="text-xl font-bold text-[#008060] mb-3">Article 10 — Personal Data Protection</h2>
+            <h2 className="text-xl font-bold text-[#1E3A8A] mb-3">Article 10 — Personal Data Protection</h2>
             <p>In the context of the performance hereof, the Seller collects and processes the Customer&apos;s personal data in accordance with the General Data Protection Regulation (GDPR — EU Regulation 2016/679) and the French Data Protection Act.</p>
             <p className="mt-3">Data collected (name, email address, country of residence, IP address, connection and payment data) is used exclusively for contract performance, access management, and compliance with the Seller&apos;s legal obligations.</p>
             <p className="mt-3">The Customer has the right to access, rectify, erase and port their data, as well as the right to object to its processing. These rights may be exercised by sending a written request to the address indicated in the Platform&apos;s Legal Notice.</p>
@@ -174,13 +174,13 @@ export default function TermsPage() {
 
           {/* Article 11 */}
           <section>
-            <h2 className="text-xl font-bold text-[#008060] mb-3">Article 11 — Force Majeure</h2>
+            <h2 className="text-xl font-bold text-[#1E3A8A] mb-3">Article 11 — Force Majeure</h2>
             <p>The Seller shall not be held liable for non-performance or delay in performance of its obligations in the event of a force majeure event as defined by Article 1218 of the French Civil Code, including natural disasters, war, pandemic, digital infrastructure failure, cyberattack or any other unforeseeable and insurmountable event.</p>
           </section>
 
           {/* Article 12 */}
           <section>
-            <h2 className="text-xl font-bold text-[#008060] mb-3">Article 12 — Governing Law, Jurisdiction and Mediation</h2>
+            <h2 className="text-xl font-bold text-[#1E3A8A] mb-3">Article 12 — Governing Law, Jurisdiction and Mediation</h2>
             <p>These T&amp;C are governed by French law. In the event of a dispute relating to the interpretation, validity or performance hereof, the parties undertake to seek an amicable solution prior to any legal action.</p>
             <p className="mt-3">Failing amicable agreement within thirty (30) days of notification of the dispute, any disagreement shall be submitted to the exclusive jurisdiction of the courts of the Seller&apos;s registered office, even in the case of multiple defendants or warranty claims, notwithstanding any contrary clause.</p>
             <p className="mt-3">In accordance with the Consumer Code provisions on amicable dispute resolution, the Customer may resort free of charge to the mediation service whose contact details are available on the Platform.</p>
@@ -188,7 +188,7 @@ export default function TermsPage() {
 
           {/* Article 13 */}
           <section>
-            <h2 className="text-xl font-bold text-[#008060] mb-3">Article 13 — Miscellaneous Provisions</h2>
+            <h2 className="text-xl font-bold text-[#1E3A8A] mb-3">Article 13 — Miscellaneous Provisions</h2>
             <p>If any provision of these T&amp;C is declared null or unenforceable by a competent court, the remaining provisions shall remain in full force. Partial nullity shall not entail nullity of these T&amp;C as a whole.</p>
             <p className="mt-3">The Seller&apos;s failure to invoke any clause of these T&amp;C at any given time shall not be construed as a waiver of the right to invoke said clause subsequently.</p>
             <p className="mt-3">These T&amp;C constitute the entire agreement between the parties regarding their subject matter and supersede all prior agreements, written or oral, on the same subject.</p>

@@ -27,7 +27,7 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
                     <span>العودة للوحدات</span>
                 </Link>
                 <div className="flex items-center gap-2">
-                    <span className="bg-[#008060]/10 text-[#008060] px-3 py-1 rounded-full text-xs font-mono border border-[#008060]/20">
+                    <span className="bg-[#1E3A8A]/10 text-[#1E3A8A] px-3 py-1 rounded-full text-xs font-mono border border-[#1E3A8A]/20">
                         {unit.badge}
                     </span>
                 </div>
@@ -41,8 +41,8 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
             {/* Profit Scenario / Objective Card if exists */}
             {(unit.objective_ar || unit.expected_result_ar) && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-[#008060]/5 border border-[#008060]/10 p-4 rounded-xl">
-                        <h4 className="text-[#008060] font-bold text-sm mb-2 flex items-center gap-2">
+                    <div className="bg-[#1E3A8A]/5 border border-[#1E3A8A]/10 p-4 rounded-xl">
+                        <h4 className="text-[#1E3A8A] font-bold text-sm mb-2 flex items-center gap-2">
                             <BookOpen size={16} /> سيناريو الربح
                         </h4>
                         <p className="text-gray-600 text-sm leading-relaxed">
@@ -62,7 +62,7 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
 
             <div className="mt-8">
                 <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                    <span className="text-[#008060]">📚</span> الدروس ({unit.lessons.length})
+                    <span className="text-[#1E3A8A]">📚</span> الدروس ({unit.lessons.length})
                 </h3>
 
                 <div className="grid gap-3">
@@ -81,14 +81,14 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
                                 <div className={`
                                     flex items-center justify-between p-4 rounded-xl border transition-all duration-300
                                     ${isAvailable
-                                        ? "bg-[#f4f6f8] border-gray-200 hover:border-[#008060]/30 hover:bg-[#008060]/5 cursor-pointer"
+                                        ? "bg-[#f4f6f8] border-gray-200 hover:border-[#1E3A8A]/30 hover:bg-[#1E3A8A]/5 cursor-pointer"
                                         : "bg-[#f4f6f8]/50 border-gray-200 opacity-50 grayscale"
                                     }
                                 `}>
                                     <div className="flex items-center gap-4">
                                         <div className={`
                                             w-10 h-10 rounded-full flex items-center justify-center shrink-0
-                                            ${isAvailable ? "bg-[#008060]/10 text-[#008060]" : "bg-gray-100 text-gray-600"}
+                                            ${isAvailable ? "bg-[#1E3A8A]/10 text-[#1E3A8A]" : "bg-gray-100 text-gray-600"}
                                         `}>
                                             {isAvailable ? <PlayCircle size={20} /> : <Lock size={20} />}
                                         </div>

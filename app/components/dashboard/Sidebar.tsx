@@ -74,7 +74,7 @@ export default function Sidebar() {
                                                 : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
                                         )}
                                     >
-                                        <item.icon size={18} className={clsx(isActive && "text-[#008060] drop-shadow-[0_0_5px_rgba(0,210,255,0.5)]")} />
+                                        <item.icon size={18} className={clsx(isActive && "text-[#1E3A8A] drop-shadow-[0_0_5px_rgba(0,210,255,0.5)]")} />
                                         <span>{item.label}</span>
                                     </Link>
                                 );
@@ -117,7 +117,7 @@ export default function Sidebar() {
                                         )}
                                         onClick={() => setIsOpen(false)}
                                     >
-                                        <item.icon size={20} className={clsx(isActive && "text-[#008060]")} />
+                                        <item.icon size={20} className={clsx(isActive && "text-[#1E3A8A]")} />
                                         <span>{item.label}</span>
                                     </Link>
                                 );

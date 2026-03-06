@@ -76,7 +76,7 @@ export default function StepCard({
                     </div>
                     <div className="h-1.5 bg-gray-50 rounded-full overflow-hidden">
                         <div
-                            className="h-full bg-gradient-to-l from-[#008060] to-[#0ea5e9] rounded-full transition-all duration-500"
+                            className="h-full bg-gradient-to-l from-[#1E3A8A] to-[#0ea5e9] rounded-full transition-all duration-500"
                             style={{ width: `${progress}%` }}
                         />
                     </div>

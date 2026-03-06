@@ -29,7 +29,7 @@ export default function Footer() {
                 {/* Contact */}
                 <div className="text-center mb-6">
                     <p className="text-gray-500 text-sm font-cairo" dir="rtl">
-                        للاتصال: <a href="mailto:acadmyfrance75@gmail.com" className="text-[#008060] hover:underline">acadmyfrance75@gmail.com</a>
+                        للاتصال: <a href="mailto:acadmyfrance75@gmail.com" className="text-[#1E3A8A] hover:underline">acadmyfrance75@gmail.com</a>
                     </p>
                 </div>
 

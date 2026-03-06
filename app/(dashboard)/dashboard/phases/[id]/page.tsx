@@ -37,8 +37,8 @@ export default function StepDetailPage() {
                     </Link>
                 </div>
                 <div className="flex flex-col items-center justify-center min-h-[50vh] text-center">
-                    <div className="w-20 h-20 bg-[#008060]/10 rounded-full flex items-center justify-center mb-6">
-                        <BookOpen className="w-10 h-10 text-[#008060]" />
+                    <div className="w-20 h-20 bg-[#1E3A8A]/10 rounded-full flex items-center justify-center mb-6">
+                        <BookOpen className="w-10 h-10 text-[#1E3A8A]" />
                     </div>
                     <h1 className="text-2xl font-bold text-gray-900 mb-3">المرحلة {stepNumber}</h1>
                     <p className="text-gray-500 text-lg">المحتوى قيد الإعداد... قريباً</p>
@@ -78,9 +78,9 @@ export default function StepDetailPage() {
     };
 
     const getLessonIcon = (type: string, isActive: boolean) => {
-        if (type === 'quiz') return <HelpCircle size={18} className={isActive ? "text-[#008060]" : "text-gray-500"} />;
-        if (type === 'pdf') return <FileText size={18} className={isActive ? "text-[#008060]" : "text-gray-500"} />;
-        return <Play size={18} className={isActive ? "text-[#008060]" : "text-gray-500"} />;
+        if (type === 'quiz') return <HelpCircle size={18} className={isActive ? "text-[#1E3A8A]" : "text-gray-500"} />;
+        if (type === 'pdf') return <FileText size={18} className={isActive ? "text-[#1E3A8A]" : "text-gray-500"} />;
+        return <Play size={18} className={isActive ? "text-[#1E3A8A]" : "text-gray-500"} />;
     };
 
     // Track global lesson index for sidebar
@@ -102,7 +102,7 @@ export default function StepDetailPage() {
                 <div className="flex items-center gap-4">
                     <div className="flex-1 h-2 bg-gray-50 rounded-full overflow-hidden">
                         <div
-                            className="h-full bg-gradient-to-l from-[#008060] to-[#0ea5e9] rounded-full transition-all duration-500"
+                            className="h-full bg-gradient-to-l from-[#1E3A8A] to-[#0ea5e9] rounded-full transition-all duration-500"
                             style={{ width: `${progressPercent}%` }}
                         />
                     </div>
@@ -138,9 +138,9 @@ export default function StepDetailPage() {
                         ) : (
                             <div className="flex flex-col items-center justify-center py-20 text-center">
                                 {activeLesson?.type === 'quiz' ? (
-                                    <HelpCircle className="w-16 h-16 text-[#008060]/30 mb-4" />
+                                    <HelpCircle className="w-16 h-16 text-[#1E3A8A]/30 mb-4" />
                                 ) : (
-                                    <FileText className="w-16 h-16 text-[#008060]/30 mb-4" />
+                                    <FileText className="w-16 h-16 text-[#1E3A8A]/30 mb-4" />
                                 )}
                                 <p className="text-xl text-gray-500">قريباً — سيتم الإضافة قريباً</p>
                             </div>
@@ -175,7 +175,7 @@ export default function StepDetailPage() {
                                 className={`flex items-center gap-2 px-5 py-2.5 rounded-xl transition-colors ${
                                     completedLessons.has(lessonKey(activeLesson!, activeItem!.chapterTitle))
                                         ? "bg-green-500/20 text-green-400 border border-green-500/30"
-                                        : "bg-[#008060]/10 text-[#008060] border border-[#008060]/20 hover:bg-[#008060]/20"
+                                        : "bg-[#1E3A8A]/10 text-[#1E3A8A] border border-[#1E3A8A]/20 hover:bg-[#1E3A8A]/20"
                                 }`}
                             >
                                 <CheckCircle2 size={16} />
@@ -225,7 +225,7 @@ export default function StepDetailPage() {
                                                 onClick={() => setActiveLessonIndex(currentGlobalIndex)}
                                                 className={`w-full flex items-center gap-3 px-4 py-3 text-right transition-colors border-b border-gray-200 last:border-b-0 ${
                                                     isActive
-                                                        ? "bg-[#008060]/10 border-r-2 border-r-[#008060]"
+                                                        ? "bg-[#1E3A8A]/10 border-r-2 border-r-[#1E3A8A]"
                                                         : "hover:bg-gray-50"
                                                 }`}
                                             >

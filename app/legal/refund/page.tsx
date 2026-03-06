@@ -10,7 +10,7 @@ export default function RefundPage() {
                     <section>
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">1. ضمان الرضا - 30 يوماً</h2>
                         <p className="text-lg">
-                            نحن واثقون تماماً من جودة برنامج ECOMY. لذلك نقدم لك <strong className="text-[#008060]">ضمان استرداد كامل لمدة 30 يوماً</strong>.
+                            نحن واثقون تماماً من جودة برنامج ECOMY. لذلك نقدم لك <strong className="text-[#1E3A8A]">ضمان استرداد كامل لمدة 30 يوماً</strong>.
                         </p>
                         <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-6 mt-4">
                             <p className="text-green-400 font-bold text-center text-xl">
@@ -51,7 +51,7 @@ export default function RefundPage() {
                             <h3 className="text-xl font-bold text-gray-900 mb-4">الخطوات البسيطة:</h3>
                             <ol className="list-decimal list-inside space-y-3">
                                 <li>
-                                    <strong>أرسل بريد إلكتروني</strong> إلى: <span className="text-[#008060]">acadmyfrance75@gmail.com</span>
+                                    <strong>أرسل بريد إلكتروني</strong> إلى: <span className="text-[#1E3A8A]">acadmyfrance75@gmail.com</span>
                                 </li>
                                 <li>
                                     <strong>الموضوع:</strong> "طلب استرداد الأموال"
@@ -191,7 +191,7 @@ export default function RefundPage() {
 
                     <section>
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">11. للاتصال</h2>
-                        <div className="bg-[#008060]/10 border border-[#008060]/20 rounded-xl p-6">
+                        <div className="bg-[#1E3A8A]/10 border border-[#1E3A8A]/20 rounded-xl p-6">
                             <p className="text-lg mb-4">لأي أسئلة حول سياسة الاسترداد:</p>
                             <ul className="list-none space-y-2">
                                 <li><strong>البريد الإلكتروني:</strong> acadmyfrance75@gmail.com</li>
@@ -209,7 +209,7 @@ export default function RefundPage() {
                             نحن واثقون من أن ECOMY سيغير حياتك. لكن إذا لم تكن راضياً لأي سبب،
                             سنعيد لك أموالك بالكامل خلال 30 يوماً. لا أسئلة معقدة، لا تعقيدات.
                         </p>
-                        <p className="text-center text-[#008060] font-bold mt-4">
+                        <p className="text-center text-[#1E3A8A] font-bold mt-4">
                             وعدنا لك: رضاك التام أو استرداد أموالك!
                         </p>
                     </section>

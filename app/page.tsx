@@ -61,7 +61,7 @@ export default function Home() {
     <div className="flex items-center gap-1.5">
       <div className="flex gap-0.5">
         {[...Array(5)].map((_, i) => (
-          <Star key={i} size={14} className="text-[#FFD700] fill-[#FFD700]" />
+          <Star key={i} size={14} className="text-[#D4A843] fill-[#D4A843]" />
         ))}
       </div>
       <span className="text-[#6B7280] text-sm" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>5.0 (453)</span>
@@ -72,7 +72,7 @@ export default function Home() {
     <div className="flex items-center gap-3 flex-wrap">
       <span className="text-gray-500 text-2xl font-black line-through" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{"1970 €"}</span>
       <span className="text-[#1A1A1A] text-2xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{"197 €"}</span>
-      <span className="inline-block bg-[#D1FAE5] text-[#065F46] text-[11px] font-bold px-2.5 py-0.5 rounded-full">
+      <span className="inline-block bg-[#1E3A8A]/10 text-[#1E3A8A] text-[11px] font-bold px-2.5 py-0.5 rounded-full">
         {"تخفيض %90"}
       </span>
     </div>
@@ -129,7 +129,7 @@ export default function Home() {
           <span className="text-5xl font-black text-[#1A1A1A]" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>5.0</span>
           <div className="flex gap-0.5">
             {[...Array(5)].map((_, i) => (
-              <Star key={i} size={18} className="text-[#FFD700] fill-[#FFD700]" />
+              <Star key={i} size={18} className="text-[#D4A843] fill-[#D4A843]" />
             ))}
           </div>
           <span className="text-[#6B7280] text-sm">453 تقييم</span>
@@ -138,9 +138,9 @@ export default function Home() {
           {[5, 4, 3, 2, 1].map((stars) => (
             <div key={stars} className="flex items-center gap-3">
               <span className="text-sm text-[#6B7280] w-4 text-center" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{stars}</span>
-              <Star size={12} className="text-[#FFD700] fill-[#FFD700] shrink-0" />
+              <Star size={12} className="text-[#D4A843] fill-[#D4A843] shrink-0" />
               <div className="flex-1 h-2.5 bg-[#e5e5e5] rounded-full overflow-hidden">
-                <div className="h-full bg-[#FFD700] rounded-full" style={{ width: stars === 5 ? '100%' : '0%' }} />
+                <div className="h-full bg-[#D4A843] rounded-full" style={{ width: stars === 5 ? '100%' : '0%' }} />
               </div>
               <span className="text-sm text-[#6B7280] w-8 text-center" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{stars === 5 ? 453 : 0}</span>
             </div>
@@ -154,7 +154,7 @@ export default function Home() {
       {/* Sub-header */}
       <div className="flex items-center justify-between">
         <h3 className="text-[#1A1A1A] font-bold text-base">أفضل التقييمات</h3>
-        <a href="#" className="text-[#008060] text-sm font-semibold hover:underline">عرض كل التقييمات</a>
+        <a href="#" className="text-[#1E3A8A] text-sm font-semibold hover:underline">عرض كل التقييمات</a>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -175,7 +175,7 @@ export default function Home() {
             </div>
             <div className="flex gap-0.5">
               {[...Array(5)].map((_, j) => (
-                <Star key={j} size={14} className="text-[#FFD700] fill-[#FFD700]" />
+                <Star key={j} size={14} className="text-[#D4A843] fill-[#D4A843]" />
               ))}
             </div>
             <p className="text-[#333333] text-sm leading-relaxed">{review.text}</p>
@@ -189,15 +189,15 @@ export default function Home() {
     <a
       ref={ctaRef}
       href="#"
-      className="block w-full text-center bg-[#008060] hover:bg-[#006e52] text-white text-lg font-bold py-4 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
-      style={{ boxShadow: '0 4px 14px rgba(0,128,96,0.2)' }}
+      className="block w-full text-center bg-[#1E3A8A] hover:bg-[#1E40AF] text-white text-lg font-bold py-4 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
+      style={{ boxShadow: '0 4px 14px rgba(30,58,138,0.2)' }}
     >
       {CTA_TEXT}
     </a>
   );
 
   const LoginLink = (
-    <a href="/login" className="block text-center text-sm text-gray-500 hover:text-[#008060] transition-colors mt-2">
+    <a href="/login" className="block text-center text-sm text-gray-500 hover:text-[#1E3A8A] transition-colors mt-2">
       لديك حساب بالفعل؟ تسجيل الدخول
     </a>
   );
@@ -261,8 +261,8 @@ export default function Home() {
 
                   <a
                     href="#"
-                    className="block w-full text-center bg-[#008060] hover:bg-[#006e52] text-white text-[15px] font-bold py-3.5 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
-                    style={{ boxShadow: '0 4px 14px rgba(0,128,96,0.2)' }}
+                    className="block w-full text-center bg-[#1E3A8A] hover:bg-[#1E40AF] text-white text-[15px] font-bold py-3.5 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
+                    style={{ boxShadow: '0 4px 14px rgba(30,58,138,0.2)' }}
                   >
                     {CTA_TEXT}
                   </a>
@@ -285,8 +285,8 @@ export default function Home() {
           </div>
           <a
             href="#"
-            className="flex-1 text-center bg-[#008060] hover:bg-[#006e52] text-white text-sm font-bold py-3 rounded-xl transition-all duration-200"
-            style={{ boxShadow: '0 4px 14px rgba(0,128,96,0.2)' }}
+            className="flex-1 text-center bg-[#1E3A8A] hover:bg-[#1E40AF] text-white text-sm font-bold py-3 rounded-xl transition-all duration-200"
+            style={{ boxShadow: '0 4px 14px rgba(30,58,138,0.2)' }}
           >
             {CTA_TEXT}
           </a>

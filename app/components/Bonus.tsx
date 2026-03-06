@@ -6,7 +6,7 @@ const CATEGORIES = [
     { id: 1, title: "مسرعات المرحلة الأولى", color: "#f97316", count: 4 },
     { id: 2, title: "دروع الحماية", color: "#3b82f6", count: 4 },
     { id: 3, title: "صناعة المحتوى", color: "#a855f7", count: 4 },
-    { id: 4, title: "الترسانة الإعلانية", color: "#008060", count: 4 },
+    { id: 4, title: "الترسانة الإعلانية", color: "#1E3A8A", count: 4 },
     { id: 5, title: "القوة الصناعية", color: "#10b981", count: 4 },
     { id: 6, title: "النخبة والمستقبل", color: "#ffd700", count: 8 },
 ];
@@ -59,9 +59,9 @@ export default function Bonus() {
         <section className="py-20 bg-gradient-to-b from-[#030712] to-[#f4f6f8]" dir="rtl">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-16">
-                    <div className="inline-block bg-gradient-to-r from-[#008060] to-[#006e52] p-[1px] rounded-full mb-6">
+                    <div className="inline-block bg-gradient-to-r from-[#1E3A8A] to-[#1E40AF] p-[1px] rounded-full mb-6">
                         <div className="bg-white px-6 py-2 rounded-full">
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#008060] to-[#006e52] font-bold">
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#1E3A8A] to-[#1E40AF] font-bold">
                                 قيمة إجمالية $148,900
                             </span>
                         </div>

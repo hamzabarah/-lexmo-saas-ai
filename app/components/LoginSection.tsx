@@ -42,7 +42,7 @@ export default function LoginSection() {
     return (
         <section id="login" className="relative py-20 bg-white border-y border-gray-200">
             {/* Background Glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#008060]/5 rounded-full blur-[100px] -z-10" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#1E3A8A]/5 rounded-full blur-[100px] -z-10" />
 
             <div className="container mx-auto px-4">
                 <div className="max-w-md mx-auto">
@@ -72,7 +72,7 @@ export default function LoginSection() {
                                         onChange={(e) => setEmail(e.target.value)}
                                         required
                                         placeholder="email@example.com"
-                                        className="w-full bg-gray-100 border border-gray-200 text-gray-900 rounded-xl px-12 py-4 focus:outline-none focus:ring-2 focus:ring-[#008060] focus:border-transparent transition-all"
+                                        className="w-full bg-gray-100 border border-gray-200 text-gray-900 rounded-xl px-12 py-4 focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] focus:border-transparent transition-all"
                                     />
                                 </div>
                             </div>
@@ -90,7 +90,7 @@ export default function LoginSection() {
                                         onChange={(e) => setPassword(e.target.value)}
                                         required
                                         placeholder="أدخل كود الدخول"
-                                        className="w-full bg-gray-100 border border-gray-200 text-gray-900 rounded-xl px-12 py-4 focus:outline-none focus:ring-2 focus:ring-[#008060] focus:border-transparent transition-all"
+                                        className="w-full bg-gray-100 border border-gray-200 text-gray-900 rounded-xl px-12 py-4 focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] focus:border-transparent transition-all"
                                     />
                                 </div>
                             </div>
@@ -106,7 +106,7 @@ export default function LoginSection() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full bg-gradient-to-r from-[#008060] to-[#006e52] hover:from-[#006e52] hover:to-[#8d40ab] text-white font-bold py-4 rounded-xl transition-all duration-200 shadow-lg shadow-emerald-600/25 hover:shadow-emerald-600/40 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+                                className="w-full bg-gradient-to-r from-[#1E3A8A] to-[#1E40AF] hover:from-[#1E40AF] hover:to-[#8d40ab] text-white font-bold py-4 rounded-xl transition-all duration-200 shadow-lg shadow-blue-900/25 hover:shadow-blue-900/40 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
                             >
                                 {loading ? (
                                     <>
@@ -124,7 +124,7 @@ export default function LoginSection() {
                             <div className="text-center">
                                 <Link
                                     href="/forgot-password"
-                                    className="text-sm text-gray-500 hover:text-[#008060] transition-colors"
+                                    className="text-sm text-gray-500 hover:text-[#1E3A8A] transition-colors"
                                 >
                                     نسيت كلمة المرور؟
                                 </Link>
@@ -138,7 +138,7 @@ export default function LoginSection() {
                             ليس لديك حساب بعد؟{' '}
                             <a
                                 href="#pricing"
-                                className="text-[#008060] font-bold hover:text-[#006e52] transition-colors"
+                                className="text-[#1E3A8A] font-bold hover:text-[#1E40AF] transition-colors"
                             >
                                 اشترك الآن ←
                             </a>

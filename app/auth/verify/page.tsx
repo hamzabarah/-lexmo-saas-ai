@@ -101,7 +101,7 @@ export default function VerifyPage() {
                     <div className="pt-4">
                         <button
                             onClick={() => router.push("/#login")}
-                            className="bg-[#008060] text-black font-bold px-6 py-2 rounded-lg hover:bg-[#006e52] transition-colors"
+                            className="bg-[#1E3A8A] text-black font-bold px-6 py-2 rounded-lg hover:bg-[#1E40AF] transition-colors"
                         >
                             Retour à la connexion
                         </button>
@@ -113,7 +113,7 @@ export default function VerifyPage() {
 
     return (
         <div className="min-h-screen bg-white flex flex-col items-center justify-center text-gray-900">
-            <Loader2 className="w-12 h-12 animate-spin text-[#008060] mb-6" />
+            <Loader2 className="w-12 h-12 animate-spin text-[#1E3A8A] mb-6" />
             <h2 className="text-2xl font-bold font-orbitron text-center">Vérification en cours...</h2>
             <p className="text-gray-500 text-sm mt-2">Validation de votre lien de sécurité</p>
         </div>

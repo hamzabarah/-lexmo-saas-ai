@@ -18,7 +18,7 @@ const PHASES: Phase[] = [
     {
         id: 1,
         name: "EXTRACTION",
-        color: "#008060",
+        color: "#1E3A8A",
         count: 12,
         title: "المرحلة 1: استخراج أول €10,000 من السوق",
         subtitle: "من 0€ إلى 10,000€… بخطة واضحة ومصادَق عليها خطوة بخطوة",
@@ -178,7 +178,7 @@ export default function Phases() {
             <div className="container mx-auto px-4 max-w-6xl">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl lg:text-5xl font-bold font-cairo mb-4">
-                        خارطة الطريق <span className="text-[#008060]">الشاملة</span>
+                        خارطة الطريق <span className="text-[#1E3A8A]">الشاملة</span>
                     </h2>
                     <p className="text-gray-500">11 مرحلة تأخذك من الصفر إلى القمة</p>
                 </div>
@@ -225,7 +225,7 @@ function PhaseCard({ phase, isOpen, onToggle }: { phase: Phase, isOpen: boolean,
                         </div>
                         <h3 className="text-2xl font-bold text-gray-900 mb-2">{phase.title}</h3>
                         <p className="text-gray-500 text-sm mb-1">{phase.subtitle}</p>
-                        <p className="text-[#008060] text-xs font-bold">{phase.count} وحدة تدريبية مكثفة</p>
+                        <p className="text-[#1E3A8A] text-xs font-bold">{phase.count} وحدة تدريبية مكثفة</p>
                     </div>
                 </div>
 
@@ -1266,7 +1266,7 @@ function ModuleCard({ index, color, title, phaseId }: { index: number, color: st
                                     ))}
                                 </div>
                                 <div className="bg-gray-50 p-2 rounded text-[10px] text-gray-600 border border-gray-200 mt-2">
-                                    <div className="font-bold text-[#008060] mb-1">👉 سيناريو الربح:</div>
+                                    <div className="font-bold text-[#1E3A8A] mb-1">👉 سيناريو الربح:</div>
                                     {details.profitScenario}
                                 </div>
                                 <div className="text-[10px] text-gray-500 italic">
