@@ -378,6 +378,12 @@ export default function Home() {
           </a>
         </div>
       </div>
+      {/* ===== FOOTER ===== */}
+      <div className="w-full py-6 text-center">
+        <a href="/legal/terms" className="text-xs text-gray-600 no-underline hover:text-gray-500 transition-colors">
+          Terms & Conditions
+        </a>
+      </div>
     </main>
   );
 }
