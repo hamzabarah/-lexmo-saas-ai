@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { logout } from "@/app/(auth)/actions";
 import {
-    LayoutDashboard,
     DollarSign,
     BookOpen,
     Settings,
@@ -18,7 +17,6 @@ import clsx from "clsx";
 import { createClient } from "@/utils/supabase/client";
 
 const MENU_ITEMS = [
-    { icon: LayoutDashboard, label: "لوحة التحكم", href: "/dashboard" },
     { icon: BookOpen, label: "الدروس", href: "/dashboard/phases" },
     { icon: Settings, label: "الإعدادات", href: "/dashboard/settings" },
 ];
