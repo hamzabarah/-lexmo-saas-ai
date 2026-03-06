@@ -39,7 +39,7 @@ export default function PhasesPage() {
         return (
             <>
                 <div className="flex items-center justify-center min-h-[60vh]">
-                    <div className="bg-[#f4f6f8]/50 border border-gray-200 rounded-2xl p-12 max-w-2xl text-center">
+                    <div className="bg-[#111111]/50 border border-[#C5A04E]/10 rounded-2xl p-12 max-w-2xl text-center">
                         {/* Lock Icon */}
                         <div className="flex justify-center mb-6">
                             <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center">
@@ -48,12 +48,12 @@ export default function PhasesPage() {
                         </div>
 
                         {/* Title */}
-                        <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                        <h2 className="text-3xl font-bold text-white mb-4">
                             الوصول مقيد 🔒
                         </h2>
 
                         {/* Message */}
-                        <p className="text-xl text-gray-600 mb-8 leading-relaxed" dir="rtl">
+                        <p className="text-xl text-gray-400 mb-8 leading-relaxed" dir="rtl">
                             يجب تفعيل اشتراكك للوصول إلى المحتوى
                         </p>
 
@@ -79,7 +79,7 @@ export default function PhasesPage() {
                         </a>
 
                         {/* Email Display */}
-                        <div className="mt-8 pt-6 border-t border-gray-200">
+                        <div className="mt-8 pt-6 border-t border-[#C5A04E]/10">
                             <p className="text-sm text-gray-500 mb-2">البريد الإلكتروني:</p>
                             <a
                                 href={`mailto:${ADMIN_EMAIL}`}

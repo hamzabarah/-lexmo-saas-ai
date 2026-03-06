@@ -49,12 +49,12 @@ export default function Sidebar() {
     return (
         <>
             {/* Top Navbar */}
-            <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200">
+            <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0A0A0A]/95 backdrop-blur-md border-b border-[#C5A04E]/10">
                 <div className="max-w-7xl mx-auto px-4 lg:px-8">
                     <div className="flex items-center justify-between h-16">
                         {/* Logo */}
                         <Link href="/dashboard" className="shrink-0">
-                            <h1 className="text-xl font-bold font-orbitron tracking-tighter">
+                            <h1 className="text-xl font-bold font-orbitron tracking-tighter text-[#C5A04E]">
                                 ECOMY
                             </h1>
                         </Link>
@@ -70,11 +70,11 @@ export default function Sidebar() {
                                         className={clsx(
                                             "flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 text-sm font-bold",
                                             isActive
-                                                ? "bg-gray-100 text-white shadow-[0_0_15px_rgba(0,210,255,0.1)]"
-                                                : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+                                                ? "bg-[#1A1A1A] text-white shadow-[0_0_15px_rgba(197,160,78,0.1)]"
+                                                : "text-gray-500 hover:text-white hover:bg-[#1A1A1A]"
                                         )}
                                     >
-                                        <item.icon size={18} className={clsx(isActive && "text-[#1E3A8A] drop-shadow-[0_0_5px_rgba(0,210,255,0.5)]")} />
+                                        <item.icon size={18} className={clsx(isActive && "text-[#C5A04E] drop-shadow-[0_0_5px_rgba(197,160,78,0.5)]")} />
                                         <span>{item.label}</span>
                                     </Link>
                                 );
@@ -92,7 +92,7 @@ export default function Sidebar() {
                         {/* Mobile Menu Button */}
                         <button
                             onClick={() => setIsOpen(!isOpen)}
-                            className="p-2 rounded-lg hover:bg-gray-100 transition-colors lg:hidden"
+                            className="p-2 rounded-lg hover:bg-[#1A1A1A] transition-colors lg:hidden"
                         >
                             {isOpen ? <X size={24} /> : <Menu size={24} />}
                         </button>
@@ -101,7 +101,7 @@ export default function Sidebar() {
 
                 {/* Mobile Menu */}
                 {isOpen && (
-                    <div className="lg:hidden border-t border-gray-200 bg-white/95 backdrop-blur-md">
+                    <div className="lg:hidden border-t border-[#C5A04E]/10 bg-[#0A0A0A]/95 backdrop-blur-md">
                         <div className="px-4 py-3 space-y-1">
                             {allItems.map((item) => {
                                 const isActive = pathname === item.href;
@@ -112,12 +112,12 @@ export default function Sidebar() {
                                         className={clsx(
                                             "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-bold",
                                             isActive
-                                                ? "bg-gray-100 text-white"
-                                                : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+                                                ? "bg-[#1A1A1A] text-white"
+                                                : "text-gray-500 hover:text-white hover:bg-[#1A1A1A]"
                                         )}
                                         onClick={() => setIsOpen(false)}
                                     >
-                                        <item.icon size={20} className={clsx(isActive && "text-[#1E3A8A]")} />
+                                        <item.icon size={20} className={clsx(isActive && "text-[#C5A04E]")} />
                                         <span>{item.label}</span>
                                     </Link>
                                 );

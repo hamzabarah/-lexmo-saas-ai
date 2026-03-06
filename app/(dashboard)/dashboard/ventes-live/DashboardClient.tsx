@@ -461,15 +461,15 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
     const [h, m, s] = timeLeft?.split(':') || ['00', '00', '00'];
 
     return (
-        <div className="min-h-screen bg-[#050A14] text-gray-900 font-cairo p-6 lg:p-10 relative overflow-x-auto">
+        <div className="min-h-screen bg-[#050A14] text-white font-cairo p-6 lg:p-10 relative overflow-x-auto">
             <style>{TIMER_ANIMATIONS}</style>
 
             <div className="max-w-[1600px] mx-auto space-y-8 pt-4 lg:pt-10">
 
                 {/* COMPACT DASHBOARD HEADER */}
-                <div className="flex justify-between items-center border-b border-gray-200 pb-8 mb-4">
+                <div className="flex justify-between items-center border-b border-[#C5A04E]/10 pb-8 mb-4">
                     <div className="flex items-center">
-                        <h1 className="text-2xl md:text-3xl font-black tracking-wider font-orbitron text-gray-900">
+                        <h1 className="text-2xl md:text-3xl font-black tracking-wider font-orbitron text-white">
                             ECOMY
                         </h1>
                     </div>
@@ -477,7 +477,7 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                     <div className="flex items-center">
                         {/* UNIFIED HEADER TIMER */}
                         {timeLeft && (
-                            <div className={`hidden flex items-center gap-3 md:gap-4 px-4 md:px-6 py-2 md:py-3 rounded-2xl bg-gray-50 border border-gray-200 shadow-xl backdrop-blur-md ${headerTimerStyle.color}`}>
+                            <div className={`hidden flex items-center gap-3 md:gap-4 px-4 md:px-6 py-2 md:py-3 rounded-2xl bg-[#1A1A1A] border border-[#C5A04E]/10 shadow-xl backdrop-blur-md ${headerTimerStyle.color}`}>
                                 <Clock className="w-5 h-5 md:w-6 md:h-6" />
                                 <span className={`text-lg md:text-2xl font-black font-orbitron tracking-tighter md:tracking-widest ${headerTimerStyle.animate}`}>
                                     {timeLeft}
@@ -511,18 +511,18 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                             {/* Right Side: Participants Progress */}
                             <div className="flex flex-col items-center lg:items-end w-full lg:w-auto">
                                 <div className="flex items-center gap-2 mb-2">
-                                    <span className="text-[10px] lg:text-sm font-black text-gray-600 uppercase tracking-widest font-orbitron">
+                                    <span className="text-[10px] lg:text-sm font-black text-gray-400 uppercase tracking-widest font-orbitron">
                                         PARTICIPANTS {live.places_prises} / {live.places_disponibles}
                                     </span>
                                     <span className="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
                                 </div>
-                                <div className="w-full lg:w-72 h-3 bg-gray-100/40 rounded-full overflow-hidden border border-gray-200 relative shadow-inner">
+                                <div className="w-full lg:w-72 h-3 bg-[#1A1A1A]/40 rounded-full overflow-hidden border border-[#C5A04E]/10 relative shadow-inner">
                                     <div
                                         className={`h-full transition-all duration-1000 ease-out ${urgenceStyle.progressColor}`}
                                         style={{ width: `${progressPercent}%` }}
                                     ></div>
                                 </div>
-                                <span className={`text-sm lg:text-lg font-black mt-3 animate-pulse bg-gray-50 px-4 py-1 rounded-full ${urgenceStyle.text}`}>
+                                <span className={`text-sm lg:text-lg font-black mt-3 animate-pulse bg-[#1A1A1A] px-4 py-1 rounded-full ${urgenceStyle.text}`}>
                                     ⚠️ {live.places_restantes < 5 ? `باقي ${live.places_restantes} أماكن فقط` : `باقي ${live.places_restantes} متبقية`} ⚠️
                                 </span>
                             </div>
@@ -538,7 +538,7 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                 <div className="grid grid-cols-1 lg:grid-cols-[65%_35%] gap-6">
 
                     {/* LEFT: Growth Chart */}
-                    <div className="bg-[#f4f6f8] border border-gray-200 rounded-3xl p-6 relative overflow-hidden group shadow-2xl">
+                    <div className="bg-[#111111] border border-[#C5A04E]/10 rounded-3xl p-6 relative overflow-hidden group shadow-2xl">
                         {/* Title */}
                         <div className="flex justify-between items-center mb-6">
                             <div className="flex items-center gap-3">
@@ -547,7 +547,7 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                                     <span className="w-3 h-3 rounded-full bg-[#00FFA3] relative block"></span>
                                 </div>
                                 <div>
-                                    <h2 className="text-lg font-bold text-gray-900">نمو الأرباح</h2>
+                                    <h2 className="text-lg font-bold text-white">نمو الأرباح</h2>
                                     <p className="text-xs text-gray-500 font-mono">LIVE REVENUE TRACKER</p>
                                 </div>
                             </div>
@@ -603,7 +603,7 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
 
                             {/* MINI TIMER FOR STATS CARD */}
                             {timeLeft && (
-                                <div className="hidden w-full pt-4 border-t border-gray-200 flex flex-col items-center">
+                                <div className="hidden w-full pt-4 border-t border-[#C5A04E]/10 flex flex-col items-center">
                                     <div className="flex items-center gap-2 text-gray-500 text-xs font-bold mb-1 uppercase tracking-tighter">
                                         <Clock size={12} className={headerTimerStyle.color} />
                                         <span>ينتهي في :</span>
@@ -616,19 +616,19 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                         </div>
 
                         {/* BOTTOM CARD: Sales Count */}
-                        <div className="h-[160px] bg-[#f4f6f8] border border-gray-200 rounded-3xl p-6 relative flex items-center justify-between group hover:border-[#00FFA3]/30 transition-colors shadow-lg">
+                        <div className="h-[160px] bg-[#111111] border border-[#C5A04E]/10 rounded-3xl p-6 relative flex items-center justify-between group hover:border-[#00FFA3]/30 transition-colors shadow-lg">
                             <div>
-                                <h3 className="text-gray-900 text-xl font-bold mb-1">عدد المبيعات</h3>
+                                <h3 className="text-white text-xl font-bold mb-1">عدد المبيعات</h3>
                                 <p className="text-xs text-gray-500 uppercase tracking-widest font-orbitron mb-2">SALES COUNT</p>
                                 <div className="flex -space-x-3 rtl:space-x-reverse">
                                     {[1, 2, 3].map(i => (
                                         <div key={i} className="w-8 h-8 rounded-full bg-gray-700 border-2 border-[#0A0F1C] flex items-center justify-center text-xs">👤</div>
                                     ))}
-                                    <div className="w-8 h-8 rounded-full bg-[#00FFA3] border-2 border-[#0A0F1C] flex items-center justify-center text-[10px] font-bold text-black">+{data.stats.total_ventes}</div>
+                                    <div className="w-8 h-8 rounded-full bg-[#00FFA3] border-2 border-[#0A0F1C] flex items-center justify-center text-[10px] font-bold text-white">+{data.stats.total_ventes}</div>
                                 </div>
                             </div>
                             <div className="flex flex-col items-end">
-                                <div className="text-5xl font-black text-gray-900 font-orbitron drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">
+                                <div className="text-5xl font-black text-white font-orbitron drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">
                                     <CountUp
                                         start={data.stats.total_ventes}
                                         end={data.stats.total_ventes}
@@ -637,7 +637,7 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                                     />
                                 </div>
                                 <div className="w-10 h-10 rounded-full bg-[#00FFA3] flex items-center justify-center shadow-[0_0_15px_rgba(0,255,163,0.4)] mt-2">
-                                    <ShoppingBag className="w-5 h-5 text-black font-bold" />
+                                    <ShoppingBag className="w-5 h-5 text-white font-bold" />
                                 </div>
                             </div>
                         </div>
@@ -648,20 +648,20 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
 
 
                 {/* TRANSACTION TABLE */}
-                <div className="bg-[#f4f6f8] border border-gray-200 rounded-3xl overflow-hidden shadow-2xl">
-                    <div className="p-6 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+                <div className="bg-[#111111] border border-[#C5A04E]/10 rounded-3xl overflow-hidden shadow-2xl">
+                    <div className="p-6 border-b border-[#C5A04E]/10 flex justify-between items-center bg-[#1A1A1A]">
                         <div className="flex gap-2">
                             <div className="h-3 w-3 rounded-full bg-red-500 animate-pulse"></div>
                             <div className="h-3 w-3 rounded-full bg-yellow-500"></div>
                             <div className="h-3 w-3 rounded-full bg-green-500"></div>
                         </div>
-                        <h2 className="text-lg font-bold text-gray-900">آخر المعاملات (Live)</h2>
+                        <h2 className="text-lg font-bold text-white">آخر المعاملات (Live)</h2>
                     </div>
 
                     <div className="overflow-x-auto">
                         <table className="w-full" dir="rtl">
                             <thead>
-                                <tr className="bg-gray-100/20 border-b border-gray-200">
+                                <tr className="bg-[#1A1A1A]/20 border-b border-[#C5A04E]/10">
                                     <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider font-orbitron">CLIENT</th>
                                     <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider font-orbitron">DATE</th>
                                     <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider font-orbitron">STATUS</th>
@@ -731,11 +731,11 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                                         return (
                                             <tr
                                                 key={index}
-                                                className="group hover:bg-gray-50 transition-colors"
+                                                className="group hover:bg-[#1A1A1A] transition-colors"
                                             >
                                                 <td className="px-6 py-5 align-middle">
                                                     <div className="flex items-center gap-4 flex-row-reverse justify-end">
-                                                        <span className="text-gray-700 font-bold text-base font-inter tracking-wide group-hover:text-gray-900 transition-colors">
+                                                        <span className="text-gray-700 font-bold text-base font-inter tracking-wide group-hover:text-white transition-colors">
                                                             {vente.nom}
                                                         </span>
 
@@ -763,14 +763,14 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-5 align-middle">
-                                                    <span className="inline-flex items-center justify-center h-6 px-3 rounded-full bg-[#00FFA3] text-black text-[10px] font-black uppercase tracking-wider font-inter shadow-[0_0_10px_rgba(0,255,163,0.4)]">
+                                                    <span className="inline-flex items-center justify-center h-6 px-3 rounded-full bg-[#00FFA3] text-white text-[10px] font-black uppercase tracking-wider font-inter shadow-[0_0_10px_rgba(0,255,163,0.4)]">
                                                         PAID
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-5 align-middle">
                                                     <div className="flex items-center gap-3 justify-end w-full">
                                                         <div className="flex flex-col items-end mr-1">
-                                                            <span className="text-gray-900 text-sm font-bold mb-0.5">{packConfig.nameAr}</span>
+                                                            <span className="text-white text-sm font-bold mb-0.5">{packConfig.nameAr}</span>
                                                             <div className="flex items-center gap-1 text-xs">
                                                                 <span className="text-gray-500 line-through decoration-white/30">{vente.prix}€</span>
                                                                 <span className="text-gray-500">⬅️</span>

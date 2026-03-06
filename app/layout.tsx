@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <body
-        className={`${cairo.variable} ${orbitron.variable} antialiased bg-white text-gray-900 font-sans`}
+        className={`${cairo.variable} ${orbitron.variable} antialiased bg-[#0A0A0A] text-white font-sans`}
       >
         {children}
       </body>

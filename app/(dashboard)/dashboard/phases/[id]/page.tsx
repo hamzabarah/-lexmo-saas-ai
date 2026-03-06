@@ -31,16 +31,16 @@ export default function StepDetailPage() {
         return (
             <>
                 <div className="mb-8">
-                    <Link href="/dashboard/phases" className="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors">
+                    <Link href="/dashboard/phases" className="flex items-center gap-2 text-gray-500 hover:text-white transition-colors">
                         <ArrowRight size={16} />
                         <span>العودة للدروس</span>
                     </Link>
                 </div>
                 <div className="flex flex-col items-center justify-center min-h-[50vh] text-center">
-                    <div className="w-20 h-20 bg-[#1E3A8A]/10 rounded-full flex items-center justify-center mb-6">
-                        <BookOpen className="w-10 h-10 text-[#1E3A8A]" />
+                    <div className="w-20 h-20 bg-[#C5A04E]/10 rounded-full flex items-center justify-center mb-6">
+                        <BookOpen className="w-10 h-10 text-[#C5A04E]" />
                     </div>
-                    <h1 className="text-2xl font-bold text-gray-900 mb-3">المرحلة {stepNumber}</h1>
+                    <h1 className="text-2xl font-bold text-white mb-3">المرحلة {stepNumber}</h1>
                     <p className="text-gray-500 text-lg">المحتوى قيد الإعداد... قريباً</p>
                 </div>
             </>
@@ -78,9 +78,9 @@ export default function StepDetailPage() {
     };
 
     const getLessonIcon = (type: string, isActive: boolean) => {
-        if (type === 'quiz') return <HelpCircle size={18} className={isActive ? "text-[#1E3A8A]" : "text-gray-500"} />;
-        if (type === 'pdf') return <FileText size={18} className={isActive ? "text-[#1E3A8A]" : "text-gray-500"} />;
-        return <Play size={18} className={isActive ? "text-[#1E3A8A]" : "text-gray-500"} />;
+        if (type === 'quiz') return <HelpCircle size={18} className={isActive ? "text-[#C5A04E]" : "text-gray-500"} />;
+        if (type === 'pdf') return <FileText size={18} className={isActive ? "text-[#C5A04E]" : "text-gray-500"} />;
+        return <Play size={18} className={isActive ? "text-[#C5A04E]" : "text-gray-500"} />;
     };
 
     // Track global lesson index for sidebar
@@ -90,19 +90,19 @@ export default function StepDetailPage() {
         <div className="space-y-6">
             {/* Header */}
             <div className="flex items-center justify-between">
-                <Link href="/dashboard/phases" className="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors">
+                <Link href="/dashboard/phases" className="flex items-center gap-2 text-gray-500 hover:text-white transition-colors">
                     <ArrowRight size={16} />
                     <span>العودة للدروس</span>
                 </Link>
             </div>
 
             {/* Title + Progress */}
-            <div className="bg-[#f4f6f8] border border-gray-200 rounded-2xl p-6">
-                <h1 className="text-2xl font-bold text-gray-900 mb-4">{step.title}</h1>
+            <div className="bg-[#111111] border border-[#C5A04E]/10 rounded-2xl p-6">
+                <h1 className="text-2xl font-bold text-white mb-4">{step.title}</h1>
                 <div className="flex items-center gap-4">
-                    <div className="flex-1 h-2 bg-gray-50 rounded-full overflow-hidden">
+                    <div className="flex-1 h-2 bg-[#1A1A1A] rounded-full overflow-hidden">
                         <div
-                            className="h-full bg-gradient-to-l from-[#1E3A8A] to-[#0ea5e9] rounded-full transition-all duration-500"
+                            className="h-full bg-gradient-to-l from-[#C5A04E] to-[#0ea5e9] rounded-full transition-all duration-500"
                             style={{ width: `${progressPercent}%` }}
                         />
                     </div>
@@ -115,7 +115,7 @@ export default function StepDetailPage() {
                 {/* Video Area (right in RTL = main content) */}
                 <div className="flex-1 space-y-4">
                     {/* Video Player / Content */}
-                    <div className="bg-[#f4f6f8] border border-white/[0.08] rounded-2xl overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+                    <div className="bg-[#111111] border border-white/[0.08] rounded-2xl overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
                         {activeLesson?.type === 'video' && activeLesson.videoUrl ? (
                             <div
                                 className="relative w-full"
@@ -138,9 +138,9 @@ export default function StepDetailPage() {
                         ) : (
                             <div className="flex flex-col items-center justify-center py-20 text-center">
                                 {activeLesson?.type === 'quiz' ? (
-                                    <HelpCircle className="w-16 h-16 text-[#1E3A8A]/30 mb-4" />
+                                    <HelpCircle className="w-16 h-16 text-[#C5A04E]/30 mb-4" />
                                 ) : (
-                                    <FileText className="w-16 h-16 text-[#1E3A8A]/30 mb-4" />
+                                    <FileText className="w-16 h-16 text-[#C5A04E]/30 mb-4" />
                                 )}
                                 <p className="text-xl text-gray-500">قريباً — سيتم الإضافة قريباً</p>
                             </div>
@@ -148,9 +148,9 @@ export default function StepDetailPage() {
                     </div>
 
                     {/* Lesson Title + Nav */}
-                    <div className="bg-[#f4f6f8] border border-gray-200 rounded-2xl p-5">
+                    <div className="bg-[#111111] border border-[#C5A04E]/10 rounded-2xl p-5">
                         <div className="flex items-center justify-between">
-                            <h2 className="text-lg font-bold text-gray-900">{activeLesson?.title}</h2>
+                            <h2 className="text-lg font-bold text-white">{activeLesson?.title}</h2>
                             {activeLesson?.duration && (
                                 <span className="flex items-center gap-1 text-sm text-gray-500">
                                     <Clock size={14} />
@@ -160,11 +160,11 @@ export default function StepDetailPage() {
                         </div>
 
                         {/* Navigation Buttons */}
-                        <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200">
+                        <div className="flex items-center justify-between mt-6 pt-4 border-t border-[#C5A04E]/10">
                             <button
                                 onClick={goPrev}
                                 disabled={activeLessonIndex === 0}
-                                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-600 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1A1A1A] hover:bg-[#1A1A1A] text-gray-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                             >
                                 <ArrowRight size={16} />
                                 <span>السابق</span>
@@ -175,7 +175,7 @@ export default function StepDetailPage() {
                                 className={`flex items-center gap-2 px-5 py-2.5 rounded-xl transition-colors ${
                                     completedLessons.has(lessonKey(activeLesson!, activeItem!.chapterTitle))
                                         ? "bg-green-500/20 text-green-400 border border-green-500/30"
-                                        : "bg-[#1E3A8A]/10 text-[#1E3A8A] border border-[#1E3A8A]/20 hover:bg-[#1E3A8A]/20"
+                                        : "bg-[#C5A04E]/10 text-[#C5A04E] border border-[#C5A04E]/20 hover:bg-[#C5A04E]/20"
                                 }`}
                             >
                                 <CheckCircle2 size={16} />
@@ -185,7 +185,7 @@ export default function StepDetailPage() {
                             <button
                                 onClick={goNext}
                                 disabled={activeLessonIndex === allLessons.length - 1}
-                                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-600 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1A1A1A] hover:bg-[#1A1A1A] text-gray-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                             >
                                 <span>التالي</span>
                                 <ArrowLeft size={16} />
@@ -196,16 +196,16 @@ export default function StepDetailPage() {
 
                 {/* Lesson Sidebar (left in RTL) */}
                 <div className="lg:w-80 shrink-0">
-                    <div className="bg-[#f4f6f8] border border-gray-200 rounded-2xl overflow-hidden">
-                        <div className="p-4 border-b border-gray-200">
-                            <h3 className="font-bold text-gray-900">المحتوى</h3>
+                    <div className="bg-[#111111] border border-[#C5A04E]/10 rounded-2xl overflow-hidden">
+                        <div className="p-4 border-b border-[#C5A04E]/10">
+                            <h3 className="font-bold text-white">المحتوى</h3>
                         </div>
 
                         <div className="max-h-[calc(100vh-300px)] overflow-y-auto">
                             {step.chapters.map((chapter, ci) => (
                                 <div key={ci}>
                                     {/* Chapter Header */}
-                                    <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
+                                    <div className="px-4 py-3 bg-[#1A1A1A] border-b border-[#C5A04E]/10">
                                         <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
                                             {chapter.title}
                                         </span>
@@ -223,10 +223,10 @@ export default function StepDetailPage() {
                                             <button
                                                 key={key}
                                                 onClick={() => setActiveLessonIndex(currentGlobalIndex)}
-                                                className={`w-full flex items-center gap-3 px-4 py-3 text-right transition-colors border-b border-gray-200 last:border-b-0 ${
+                                                className={`w-full flex items-center gap-3 px-4 py-3 text-right transition-colors border-b border-[#C5A04E]/10 last:border-b-0 ${
                                                     isActive
-                                                        ? "bg-[#1E3A8A]/10 border-r-2 border-r-[#1E3A8A]"
-                                                        : "hover:bg-gray-50"
+                                                        ? "bg-[#C5A04E]/10 border-r-2 border-r-[#C5A04E]"
+                                                        : "hover:bg-[#1A1A1A]"
                                                 }`}
                                             >
                                                 {/* Checkbox */}
@@ -237,7 +237,7 @@ export default function StepDetailPage() {
                                                     {isCompleted ? (
                                                         <CheckCircle2 size={18} className="text-green-500" />
                                                     ) : (
-                                                        <Circle size={18} className="text-gray-600" />
+                                                        <Circle size={18} className="text-gray-400" />
                                                     )}
                                                 </button>
 
@@ -246,13 +246,13 @@ export default function StepDetailPage() {
 
                                                 {/* Title + Duration */}
                                                 <div className="flex-1 min-w-0">
-                                                    <p className={`text-sm truncate ${isActive ? "text-white font-bold" : isCompleted ? "text-gray-500 line-through" : "text-gray-600"}`}>
+                                                    <p className={`text-sm truncate ${isActive ? "text-white font-bold" : isCompleted ? "text-gray-500 line-through" : "text-gray-400"}`}>
                                                         {lesson.title}
                                                     </p>
                                                 </div>
 
                                                 {lesson.duration && (
-                                                    <span className="text-xs text-gray-600 shrink-0">{lesson.duration}</span>
+                                                    <span className="text-xs text-gray-400 shrink-0">{lesson.duration}</span>
                                                 )}
                                             </button>
                                         );

@@ -38,7 +38,7 @@ export default function AvisClients() {
     const [visibleCount, setVisibleCount] = useState(12);
 
     return (
-        <section id="reviews" className="py-20 bg-gray-100/50 overflow-hidden">
+        <section id="reviews" className="py-20 bg-[#1A1A1A]/50 overflow-hidden">
             {/* Verified Badge Animation */}
             <style jsx>{`
                 @keyframes verified-pulse {
@@ -73,14 +73,14 @@ export default function AvisClients() {
                         >
                             {/* Badge Amount & Time - ABOVE the card */}
                             <div dir="ltr" className="mb-2 bg-gradient-to-r from-[#ffd700] to-orange-500 px-3 py-1.5 rounded-full shadow-lg flex items-center gap-2 w-fit">
-                                <span className="text-black font-bold font-orbitron text-sm">💰 {review.amount}</span>
-                                <span className="text-black/80 text-xs font-bold">⏱️ {review.time}</span>
+                                <span className="text-white font-bold font-orbitron text-sm">💰 {review.amount}</span>
+                                <span className="text-white/80 text-xs font-bold">⏱️ {review.time}</span>
                             </div>
 
                             {/* Card with Image */}
                             <div className="relative rounded-2xl overflow-hidden glass-card hover:border-[#ffd700]/50 transition-all duration-300">
                                 {/* Full Image - No Cropping */}
-                                <div className="relative bg-[#f4f6f8]">
+                                <div className="relative bg-[#111111]">
                                     <img
                                         src={review.image}
                                         alt={`Témoignage ${review.amount} en ${review.time}`}
@@ -106,7 +106,7 @@ export default function AvisClients() {
                     <FadeIn delay={0.2} className="text-center mt-12">
                         <button
                             onClick={() => setVisibleCount(visibleCount + 12)}
-                            className="bg-gray-50 border border-gray-200 hover:bg-gray-100 text-white px-8 py-3 rounded-full font-bold transition-all transform hover:scale-105"
+                            className="bg-[#1A1A1A] border border-[#C5A04E]/10 hover:bg-[#1A1A1A] text-white px-8 py-3 rounded-full font-bold transition-all transform hover:scale-105"
                         >
                             عرض المزيد من النتائج
                         </button>

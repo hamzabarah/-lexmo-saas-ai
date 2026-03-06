@@ -25,7 +25,7 @@ export default function StepCard({
     const showImage = imageUrl && !imgError;
 
     const content = (
-        <div className="group bg-[#f4f6f8] border border-gray-200 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-gray-200 hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)]">
+        <div className="group bg-[#111111] border border-[#C5A04E]/10 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-[#C5A04E]/10 hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)]">
             {/* Image / Placeholder */}
             <div className="relative w-full h-48 bg-[#1a1a2e] overflow-hidden">
                 {showImage ? (
@@ -48,20 +48,20 @@ export default function StepCard({
 
                 {/* Lock overlay */}
                 {isLocked && (
-                    <div className="absolute inset-0 bg-gray-100/60 backdrop-blur-sm flex items-center justify-center">
+                    <div className="absolute inset-0 bg-[#1A1A1A]/60 backdrop-blur-sm flex items-center justify-center">
                         <Lock className="w-8 h-8 text-gray-400" />
                     </div>
                 )}
 
                 {/* Step number badge */}
-                <div className="absolute top-3 right-3 bg-gray-100/50 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full border border-gray-200">
+                <div className="absolute top-3 right-3 bg-[#1A1A1A]/50 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full border border-[#C5A04E]/10">
                     المرحلة {stepNumber}
                 </div>
             </div>
 
             {/* Content */}
             <div className="p-5" dir="rtl">
-                <h3 className="text-lg font-bold text-gray-900 mb-2 font-cairo">
+                <h3 className="text-lg font-bold text-white mb-2 font-cairo">
                     {title}
                 </h3>
                 <p className="text-sm text-gray-500 leading-relaxed line-clamp-3 font-cairo">
@@ -74,9 +74,9 @@ export default function StepCard({
                         <span className="text-gray-500">التقدم</span>
                         <span className="text-gray-500 font-mono">{progress}%</span>
                     </div>
-                    <div className="h-1.5 bg-gray-50 rounded-full overflow-hidden">
+                    <div className="h-1.5 bg-[#1A1A1A] rounded-full overflow-hidden">
                         <div
-                            className="h-full bg-gradient-to-l from-[#1E3A8A] to-[#0ea5e9] rounded-full transition-all duration-500"
+                            className="h-full bg-gradient-to-l from-[#C5A04E] to-[#0ea5e9] rounded-full transition-all duration-500"
                             style={{ width: `${progress}%` }}
                         />
                     </div>

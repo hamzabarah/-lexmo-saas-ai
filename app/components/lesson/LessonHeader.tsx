@@ -34,7 +34,7 @@ export default function LessonHeader({
             <div className="absolute inset-0 bg-gradient-neo opacity-5 rounded-3xl blur-3xl" />
 
             {/* Content */}
-            <div className="relative bg-gradient-to-br from-neo-dark to-neo-black border border-gray-200 rounded-2xl p-8 md:p-12">
+            <div className="relative bg-gradient-to-br from-neo-dark to-neo-black border border-[#C5A04E]/10 rounded-2xl p-8 md:p-12">
                 {/* Breadcrumb */}
                 <div className="flex items-center gap-2 text-sm text-neo-gray-400 mb-6">
                     <span className="hover:text-neo-cyan transition-colors cursor-pointer">الدروس</span>

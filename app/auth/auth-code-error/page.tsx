@@ -5,8 +5,8 @@ export default function AuthErrorPage({ searchParams }: { searchParams: { error?
     const errorMessage = searchParams?.error;
 
     return (
-        <div className="min-h-screen bg-white text-gray-900 flex flex-col items-center justify-center p-4">
-            <div className="text-center space-y-4 max-w-md mx-auto p-8 rounded-2xl bg-gray-50 border border-gray-200 backdrop-blur-xl">
+        <div className="min-h-screen bg-[#0A0A0A] text-white flex flex-col items-center justify-center p-4">
+            <div className="text-center space-y-4 max-w-md mx-auto p-8 rounded-2xl bg-[#1A1A1A] border border-[#C5A04E]/10 backdrop-blur-xl">
                 <div className="mx-auto w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20">
                     <AlertTriangle className="w-8 h-8 text-red-500" />
                 </div>
@@ -23,7 +23,7 @@ export default function AuthErrorPage({ searchParams }: { searchParams: { error?
                     الرابط الذي استخدمته غير صالح أو منتهي الصلاحية. يحدث هذا عادةً إذا:
                 </p>
 
-                <ul className="text-right text-gray-500 text-sm space-y-2 list-disc list-inside bg-gray-100/20 p-4 rounded-lg">
+                <ul className="text-right text-gray-500 text-sm space-y-2 list-disc list-inside bg-[#1A1A1A]/20 p-4 rounded-lg">
                     <li>تم استخدام الرابط بالفعل</li>
                     <li>انتهت صلاحية الرابط (صالح لمدة ساعة واحدة)</li>
                     <li>لم يتم نسخ الرابط بالكامل</li>
@@ -32,7 +32,7 @@ export default function AuthErrorPage({ searchParams }: { searchParams: { error?
                 <div className="pt-4">
                     <Link
                         href="/#login"
-                        className="inline-flex items-center gap-2 bg-white text-black font-bold px-6 py-3 rounded-xl hover:bg-gray-200 transition-colors w-full justify-center"
+                        className="inline-flex items-center gap-2 bg-[#0A0A0A] text-white font-bold px-6 py-3 rounded-xl hover:bg-gray-200 transition-colors w-full justify-center"
                     >
                         <ArrowRight size={18} />
                         العودة لتسجيل الدخول

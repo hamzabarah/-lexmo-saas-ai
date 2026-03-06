@@ -33,25 +33,25 @@ export default function RegisterPage() {
 
     return (
         <Card className="w-full">
-            <h2 className="text-2xl font-bold text-center text-gray-900 mb-2">أنشئ حسابك 🚀</h2>
+            <h2 className="text-2xl font-bold text-center text-white mb-2">أنشئ حسابك 🚀</h2>
             <p className="text-center text-gray-500 mb-8 text-sm">انضم الآن إلى مجتمع النخبة في التجارة الإلكترونية</p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
 
                 {/* Name */}
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-600">الاسم الكامل</label>
+                    <label className="text-sm font-medium text-gray-400">الاسم الكامل</label>
                     <div className="relative">
-                        <input name="name" type="text" required className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#1E3A8A] transition-colors" />
+                        <input name="name" type="text" required className="w-full bg-[#0A0A0A] border border-[#C5A04E]/10 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#C5A04E] transition-colors" />
                         <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                     </div>
                 </div>
 
                 {/* Email */}
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-600">البريد الإلكتروني</label>
+                    <label className="text-sm font-medium text-gray-400">البريد الإلكتروني</label>
                     <div className="relative">
-                        <input name="email" type="email" required className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#1E3A8A] transition-colors" />
+                        <input name="email" type="email" required className="w-full bg-[#0A0A0A] border border-[#C5A04E]/10 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#C5A04E] transition-colors" />
                         <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                     </div>
                 </div>
@@ -59,17 +59,17 @@ export default function RegisterPage() {
                 {/* Phone & Country Row */}
                 <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-600">رقم الهاتف</label>
+                        <label className="text-sm font-medium text-gray-400">رقم الهاتف</label>
                         <div className="relative">
-                            <input name="phone" type="tel" className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#1E3A8A] transition-colors" />
+                            <input name="phone" type="tel" className="w-full bg-[#0A0A0A] border border-[#C5A04E]/10 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#C5A04E] transition-colors" />
                             <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                         </div>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-600">البلد</label>
+                        <label className="text-sm font-medium text-gray-400">البلد</label>
                         <div className="relative">
-                            <select name="country" className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#1E3A8A] transition-colors appearance-none text-gray-500">
+                            <select name="country" className="w-full bg-[#0A0A0A] border border-[#C5A04E]/10 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#C5A04E] transition-colors appearance-none text-gray-500">
                                 <option value="SA">السعودية</option>
                                 <option value="AE">الإمارات</option>
                                 <option value="KW">الكويت</option>
@@ -88,18 +88,18 @@ export default function RegisterPage() {
 
                 {/* Password */}
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-600">كلمة المرور</label>
+                    <label className="text-sm font-medium text-gray-400">كلمة المرور</label>
                     <div className="relative">
-                        <input name="password" type="password" required className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#1E3A8A] transition-colors" />
+                        <input name="password" type="password" required className="w-full bg-[#0A0A0A] border border-[#C5A04E]/10 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#C5A04E] transition-colors" />
                         <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                     </div>
                 </div>
 
                 {/* Confirm Password */}
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-600">تأكيد كلمة المرور</label>
+                    <label className="text-sm font-medium text-gray-400">تأكيد كلمة المرور</label>
                     <div className="relative">
-                        <input name="confirmPassword" type="password" required className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#1E3A8A] transition-colors" />
+                        <input name="confirmPassword" type="password" required className="w-full bg-[#0A0A0A] border border-[#C5A04E]/10 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#C5A04E] transition-colors" />
                         <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                     </div>
                 </div>
@@ -113,7 +113,7 @@ export default function RegisterPage() {
                 <button
                     type="submit"
                     disabled={isPending}
-                    className="w-full bg-[#1E3A8A] hover:bg-[#1E40AF] text-black font-bold py-3 rounded-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
+                    className="w-full bg-[#C5A04E] hover:bg-[#D4B85C] text-white font-bold py-3 rounded-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
                 >
                     {isPending ? <Loader2 className="animate-spin" /> : "إنشاء حساب"}
                 </button>
@@ -121,7 +121,7 @@ export default function RegisterPage() {
 
             <div className="mt-6 text-center text-sm text-gray-500">
                 لديك حساب بالفعل؟{" "}
-                <Link href="/#login" className="text-[#1E3A8A] font-bold hover:underline">
+                <Link href="/#login" className="text-[#C5A04E] font-bold hover:underline">
                     سجل دخولك
                 </Link>
             </div>

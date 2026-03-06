@@ -45,7 +45,7 @@ export default function Home() {
 
   // Shared components
   const ProductImage = imgError ? (
-    <div className="w-full h-[400px] rounded-2xl bg-[#f4f6f8] flex items-center justify-center">
+    <div className="w-full h-[400px] rounded-2xl bg-[#111111] flex items-center justify-center">
       <span className="text-gray-500 text-lg">صورة المنتج</span>
     </div>
   ) : (
@@ -64,28 +64,28 @@ export default function Home() {
           <Star key={i} size={14} className="text-[#D4A843] fill-[#D4A843]" />
         ))}
       </div>
-      <span className="text-[#6B7280] text-sm" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>5.0 (453)</span>
+      <span className="text-gray-500 text-sm" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>5.0 (453)</span>
     </div>
   );
 
   const PriceLine = (
     <div className="flex items-center gap-3 flex-wrap">
       <span className="text-gray-500 text-2xl font-black line-through" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{"1970 €"}</span>
-      <span className="text-[#1A1A1A] text-2xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{"197 €"}</span>
-      <span className="inline-block bg-[#1E3A8A]/10 text-[#1E3A8A] text-[11px] font-bold px-2.5 py-0.5 rounded-full">
+      <span className="text-white text-2xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{"197 €"}</span>
+      <span className="inline-block bg-[#C5A04E]/10 text-[#C5A04E] text-[11px] font-bold px-2.5 py-0.5 rounded-full">
         {"تخفيض %90"}
       </span>
     </div>
   );
 
   const Title = (
-    <h1 className="text-[#1A1A1A] text-2xl lg:text-3xl font-bold leading-relaxed">
+    <h1 className="text-white text-2xl lg:text-3xl font-bold leading-relaxed">
       {"من صفر إلى €10,000 شهرياً | 27 مرحلة عملية خطوة بخطوة | ابدأ اليوم"}
     </h1>
   );
 
   const Description = (
-    <div className="space-y-4 text-[#4B5563] text-[15px] leading-[1.9]">
+    <div className="space-y-4 text-gray-400 text-[15px] leading-[1.9]">
       <p>
         {"أكاديمية إيكومي - المنصة رقم 1 في العالم العربي لتعليم التجارة الإلكترونية من الصفر حتى الربح. نساعدك تبني متجرك الإلكتروني وتبدأ تربح من الإنترنت بخطوات عملية ومجربة. أكثر من 120 درس فيديو عملي في 27 مرحلة."}
       </p>
@@ -94,22 +94,22 @@ export default function Home() {
 
   const FAQ = (
     <div className="space-y-4">
-      <h2 className="text-[#1A1A1A] text-xl font-bold">الأسئلة الشائعة</h2>
+      <h2 className="text-white text-xl font-bold">الأسئلة الشائعة</h2>
       <div className="space-y-2">
         {faqData.map((item, i) => (
-          <div key={i} className="border border-gray-200 rounded-xl overflow-hidden">
+          <div key={i} className="border border-[#C5A04E]/10 rounded-xl overflow-hidden">
             <button
               onClick={() => setOpenFaq(openFaq === i ? null : i)}
-              className="w-full flex items-center justify-between px-5 py-4 text-right hover:bg-gray-50 transition"
+              className="w-full flex items-center justify-between px-5 py-4 text-right hover:bg-[#1A1A1A] transition"
             >
-              <span className="text-[#1A1A1A] font-semibold text-[15px]">{item.q}</span>
+              <span className="text-white font-semibold text-[15px]">{item.q}</span>
               <ChevronDown
                 size={18}
                 className={`text-gray-500 shrink-0 transition-transform duration-200 ${openFaq === i ? 'rotate-180' : ''}`}
               />
             </button>
             {openFaq === i && (
-              <div className="px-5 pb-4 text-[#4B5563] text-sm leading-relaxed">
+              <div className="px-5 pb-4 text-gray-400 text-sm leading-relaxed">
                 {item.a}
               </div>
             )}
@@ -121,40 +121,40 @@ export default function Home() {
 
   const Reviews = (
     <div className="space-y-5">
-      <h2 className="text-[#1A1A1A] text-xl font-bold">تقييمات العملاء</h2>
+      <h2 className="text-white text-xl font-bold">تقييمات العملاء</h2>
 
       {/* Overall rating — Amazon style */}
       <div className="flex flex-col sm:flex-row gap-6">
         <div className="flex flex-col items-center gap-1 shrink-0">
-          <span className="text-5xl font-black text-[#1A1A1A]" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>5.0</span>
+          <span className="text-5xl font-black text-white" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>5.0</span>
           <div className="flex gap-0.5">
             {[...Array(5)].map((_, i) => (
               <Star key={i} size={18} className="text-[#D4A843] fill-[#D4A843]" />
             ))}
           </div>
-          <span className="text-[#6B7280] text-sm">453 تقييم</span>
+          <span className="text-gray-500 text-sm">453 تقييم</span>
         </div>
         <div className="flex-1 space-y-1.5">
           {[5, 4, 3, 2, 1].map((stars) => (
             <div key={stars} className="flex items-center gap-3">
-              <span className="text-sm text-[#6B7280] w-4 text-center" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{stars}</span>
+              <span className="text-sm text-gray-500 w-4 text-center" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{stars}</span>
               <Star size={12} className="text-[#D4A843] fill-[#D4A843] shrink-0" />
-              <div className="flex-1 h-2.5 bg-[#e5e5e5] rounded-full overflow-hidden">
+              <div className="flex-1 h-2.5 bg-[#2A2A2A] rounded-full overflow-hidden">
                 <div className="h-full bg-[#D4A843] rounded-full" style={{ width: stars === 5 ? '100%' : '0%' }} />
               </div>
-              <span className="text-sm text-[#6B7280] w-8 text-center" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{stars === 5 ? 453 : 0}</span>
+              <span className="text-sm text-gray-500 w-8 text-center" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{stars === 5 ? 453 : 0}</span>
             </div>
           ))}
         </div>
       </div>
 
       {/* Separator */}
-      <div className="border-t border-gray-200" />
+      <div className="border-t border-[#C5A04E]/10" />
 
       {/* Sub-header */}
       <div className="flex items-center justify-between">
-        <h3 className="text-[#1A1A1A] font-bold text-base">أفضل التقييمات</h3>
-        <a href="#" className="text-[#1E3A8A] text-sm font-semibold hover:underline">عرض كل التقييمات</a>
+        <h3 className="text-white font-bold text-base">أفضل التقييمات</h3>
+        <a href="#" className="text-[#C5A04E] text-sm font-semibold hover:underline">عرض كل التقييمات</a>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -165,20 +165,20 @@ export default function Home() {
           { flag: "\uD83C\uDDF9\uD83C\uDDF3", name: "سامي", date: "منذ أسبوعين", text: "برنامج ممتاز بصح! كنت خايف نبدأ لأني ما عندي خبرة، بس الدورة شرحت كل شي من الصفر. ودابا عندي متجر كيبيع كل يوم \uD83D\uDD25" },
           { flag: "\uD83C\uDDEA\uD83C\uDDEC", name: "محمد", date: "منذ 3 أسابيع", text: "ربنا يجزيك خير، الدورة دي غيرت حياتي. من أول أسبوع بدأت أشوف نتايج حقيقية. الشرح عملي ومباشر ومفيش كلام فاضي. أنصح بيها أي حد عايز يبدأ في التجارة الإلكترونية" },
         ].map((review, i) => (
-          <div key={i} className="bg-[#f9f9f9] border border-[#e5e5e5] rounded-2xl p-5 space-y-3" dir="rtl">
+          <div key={i} className="bg-[#111111] border border-[#C5A04E]/10 rounded-2xl p-5 space-y-3" dir="rtl">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span style={{ fontSize: '24px', lineHeight: 1 }}>{review.flag}</span>
-                <span className="text-[#111111] font-bold text-sm">{review.name}</span>
+                <span className="text-white font-bold text-sm">{review.name}</span>
               </div>
-              <span className="text-[#888888] text-xs">{review.date}</span>
+              <span className="text-gray-500 text-xs">{review.date}</span>
             </div>
             <div className="flex gap-0.5">
               {[...Array(5)].map((_, j) => (
                 <Star key={j} size={14} className="text-[#D4A843] fill-[#D4A843]" />
               ))}
             </div>
-            <p className="text-[#333333] text-sm leading-relaxed">{review.text}</p>
+            <p className="text-gray-300 text-sm leading-relaxed">{review.text}</p>
           </div>
         ))}
       </div>
@@ -189,21 +189,21 @@ export default function Home() {
     <a
       ref={ctaRef}
       href="#"
-      className="block w-full text-center bg-[#1E3A8A] hover:bg-[#1E40AF] text-white text-lg font-bold py-4 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
-      style={{ boxShadow: '0 4px 14px rgba(30,58,138,0.2)' }}
+      className="block w-full text-center bg-[#C5A04E] hover:bg-[#D4B85C] text-white text-lg font-bold py-4 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
+      style={{ boxShadow: '0 4px 14px rgba(197,160,78,0.2)' }}
     >
       {CTA_TEXT}
     </a>
   );
 
   const LoginLink = (
-    <a href="/login" className="block text-center text-sm text-gray-500 hover:text-[#1E3A8A] transition-colors mt-2">
+    <a href="/login" className="block text-center text-sm text-gray-500 hover:text-[#C5A04E] transition-colors mt-2">
       لديك حساب بالفعل؟ تسجيل الدخول
     </a>
   );
 
   return (
-    <main className="min-h-screen bg-white font-cairo" dir="rtl">
+    <main className="min-h-screen bg-[#0A0A0A] font-cairo" dir="rtl">
       <div className="mx-auto py-8" style={{ maxWidth: '1100px', padding: '32px 24px' }}>
         <div className="flex flex-col lg:flex-row gap-8">
 
@@ -216,7 +216,7 @@ export default function Home() {
             {/* Mobile only: Rating + Price + CTA before title */}
             <div className="lg:hidden space-y-4">
               {RatingLine}
-              <p className="text-[#1A1A1A] text-lg font-bold">اربح من الإنترنت | التجارة الإلكترونية</p>
+              <p className="text-white text-lg font-bold">اربح من الإنترنت | التجارة الإلكترونية</p>
               {PriceLine}
               {CTAButton}
               {LoginLink}
@@ -239,8 +239,8 @@ export default function Home() {
           <div className="hidden lg:block lg:w-[360px] shrink-0">
             <div className="sticky top-6">
               <div
-                className="bg-white rounded-2xl overflow-hidden"
-                style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}
+                className="bg-[#0A0A0A] rounded-2xl overflow-hidden"
+                style={{ boxShadow: '0 4px 20px rgba(197,160,78,0.1)' }}
               >
                 {/* Banner Image */}
                 <img
@@ -253,7 +253,7 @@ export default function Home() {
                 <div className="p-5 space-y-3">
                   {RatingLine}
 
-                  <h3 className="text-[#1A1A1A] font-bold text-[15px] leading-snug">
+                  <h3 className="text-white font-bold text-[15px] leading-snug">
                     اربح من الإنترنت | التجارة الإلكترونية
                   </h3>
 
@@ -261,8 +261,8 @@ export default function Home() {
 
                   <a
                     href="#"
-                    className="block w-full text-center bg-[#1E3A8A] hover:bg-[#1E40AF] text-white text-[15px] font-bold py-3.5 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
-                    style={{ boxShadow: '0 4px 14px rgba(30,58,138,0.2)' }}
+                    className="block w-full text-center bg-[#C5A04E] hover:bg-[#D4B85C] text-white text-[15px] font-bold py-3.5 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
+                    style={{ boxShadow: '0 4px 14px rgba(197,160,78,0.2)' }}
                   >
                     {CTA_TEXT}
                   </a>
@@ -276,17 +276,17 @@ export default function Home() {
 
       {/* ===== MOBILE STICKY BOTTOM BAR — appears when CTA scrolls out ===== */}
       <div
-        className={`fixed bottom-0 left-0 right-0 z-50 bg-white lg:hidden transition-transform duration-300 ${showStickyBar ? 'translate-y-0' : 'translate-y-full'}`}
+        className={`fixed bottom-0 left-0 right-0 z-50 bg-[#0A0A0A] lg:hidden transition-transform duration-300 ${showStickyBar ? 'translate-y-0' : 'translate-y-full'}`}
         style={{ boxShadow: '0 -2px 10px rgba(0,0,0,0.06)' }}
       >
         <div className="px-4 py-3 flex items-center gap-4">
           <div className="shrink-0" dir="ltr">
-            <span className="text-[#1A1A1A] text-xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{"197 €"}</span>
+            <span className="text-white text-xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{"197 €"}</span>
           </div>
           <a
             href="#"
-            className="flex-1 text-center bg-[#1E3A8A] hover:bg-[#1E40AF] text-white text-sm font-bold py-3 rounded-xl transition-all duration-200"
-            style={{ boxShadow: '0 4px 14px rgba(30,58,138,0.2)' }}
+            className="flex-1 text-center bg-[#C5A04E] hover:bg-[#D4B85C] text-white text-sm font-bold py-3 rounded-xl transition-all duration-200"
+            style={{ boxShadow: '0 4px 14px rgba(197,160,78,0.2)' }}
           >
             {CTA_TEXT}
           </a>
@@ -294,7 +294,7 @@ export default function Home() {
       </div>
       {/* ===== FOOTER ===== */}
       <div className="w-full py-6 text-center">
-        <a href="/legal/terms" className="text-xs text-gray-600 no-underline hover:text-gray-500 transition-colors">
+        <a href="/legal/terms" className="text-xs text-gray-400 no-underline hover:text-gray-500 transition-colors">
           Terms & Conditions
         </a>
       </div>

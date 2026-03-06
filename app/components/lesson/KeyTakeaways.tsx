@@ -23,7 +23,7 @@ export default function KeyTakeaways({ points }: KeyTakeawaysProps) {
                     <div className="w-12 h-12 bg-neo-violet/20 rounded-lg flex items-center justify-center">
                         <Lightbulb className="text-neo-violet" size={24} />
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900">
+                    <h3 className="text-2xl font-bold text-white">
                         💡 النقاط الأساسية
                     </h3>
                 </div>

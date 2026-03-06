@@ -145,7 +145,7 @@ export default function LessonView({
                                                 animate={{ scale: 1 }}
                                                 transition={{ type: "spring", stiffness: 500 }}
                                             >
-                                                <CheckCircle2 size={16} className="text-black" strokeWidth={3} />
+                                                <CheckCircle2 size={16} className="text-white" strokeWidth={3} />
                                             </motion.div>
                                         )}
                                     </div>

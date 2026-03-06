@@ -20,8 +20,8 @@ function PricingContent() {
     return (
         <section id="pricing" className="py-20 relative overflow-hidden">
             {/* Background Glows */}
-            <div className="absolute top-1/4 left-0 w-96 h-96 bg-[#1E3A8A]/10 rounded-full blur-[128px] pointer-events-none" />
-            <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-[#1E40AF]/10 rounded-full blur-[128px] pointer-events-none" />
+            <div className="absolute top-1/4 left-0 w-96 h-96 bg-[#C5A04E]/10 rounded-full blur-[128px] pointer-events-none" />
+            <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-[#D4B85C]/10 rounded-full blur-[128px] pointer-events-none" />
 
             <div className="container mx-auto px-4 max-w-6xl relative z-10">
                 <FadeIn className="text-center mb-16">
@@ -31,7 +31,7 @@ function PricingContent() {
                         </div>
                     )}
                     <h2 className="text-4xl lg:text-5xl font-bold font-cairo mb-4 leading-tight">
-                        اختر خطتك وابدأ <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#1E3A8A] to-[#1E40AF]">رحلة الثراء</span>
+                        اختر خطتك وابدأ <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C5A04E] to-[#D4B85C]">رحلة الثراء</span>
                     </h2>
                     <p className="text-xl text-gray-500 mb-8">استثمارك اليوم هو مفتاح حريتك غداً</p>
 
@@ -67,7 +67,7 @@ function PricingContent() {
 
                     {/* PACK 2: EMPEROR */}
                     <div className="relative transform lg:-translate-y-4 lg:scale-105 z-10">
-                        <div className="absolute -inset-1 bg-gradient-to-b from-[#1E3A8A] to-[#1E40AF] rounded-3xl blur opacity-40 animate-pulse" />
+                        <div className="absolute -inset-1 bg-gradient-to-b from-[#C5A04E] to-[#D4B85C] rounded-3xl blur opacity-40 animate-pulse" />
                         <PriceCard
                             title="الإمبراطور 👑"
                             subtitle="ابنِ إمبراطوريتك الخاصة"
@@ -168,11 +168,11 @@ function CountdownTimer() {
     return (
         <div className="flex flex-wrap justify-center gap-4 lg:gap-8 font-orbitron" dir="ltr">
             <TimeBox value={time.days} label="أيام" />
-            <span className="text-4xl font-bold text-gray-600 mt-2">:</span>
+            <span className="text-4xl font-bold text-gray-400 mt-2">:</span>
             <TimeBox value={time.hours} label="ساعات" />
-            <span className="text-4xl font-bold text-gray-600 mt-2">:</span>
+            <span className="text-4xl font-bold text-gray-400 mt-2">:</span>
             <TimeBox value={time.minutes} label="دقائق" />
-            <span className="text-4xl font-bold text-gray-600 mt-2">:</span>
+            <span className="text-4xl font-bold text-gray-400 mt-2">:</span>
             <TimeBox value={time.seconds} label="ثواني" />
         </div>
     );
@@ -181,7 +181,7 @@ function CountdownTimer() {
 function TimeBox({ value, label }: { value: number, label: string }) {
     return (
         <div className="text-center">
-            <div className="bg-[#white]/5 bg-gray-50 border border-gray-200 rounded-xl p-4 min-w-[80px] lg:min-w-[100px] mb-2 backdrop-blur-sm">
+            <div className="bg-[#white]/5 bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-4 min-w-[80px] lg:min-w-[100px] mb-2 backdrop-blur-sm">
                 <div className="text-3xl lg:text-4xl font-bold text-[#ffd700]">{String(value).padStart(2, '0')}</div>
             </div>
             <div className="text-xs text-gray-500 font-cairo">{label}</div>
@@ -204,17 +204,17 @@ function PriceCard({
         legend: 'https://buy.stripe.com/3cIdR9adabEd0Xr6czgfu03'
     };
 
-    const borderColor = accentColor === 'violet' ? 'border-[#a855f7]/50 hover:border-[#a855f7]' : isPopular ? 'border-[#1E3A8A]' : 'border-gray-200';
+    const borderColor = accentColor === 'violet' ? 'border-[#a855f7]/50 hover:border-[#a855f7]' : isPopular ? 'border-[#C5A04E]' : 'border-[#C5A04E]/10';
     const btnClass = accentColor === 'violet'
         ? 'bg-[#a855f7] hover:bg-[#9333ea] text-white shadow-lg shadow-purple-500/25'
         : isPopular
-            ? 'bg-gradient-to-r from-[#1E3A8A] to-[#1E40AF] text-white shadow-lg shadow-blue-900/25'
-            : 'bg-gray-50 hover:bg-gray-100 text-white border border-gray-200';
+            ? 'bg-gradient-to-r from-[#C5A04E] to-[#D4B85C] text-white shadow-lg shadow-yellow-700/25'
+            : 'bg-[#1A1A1A] hover:bg-[#1A1A1A] text-white border border-[#C5A04E]/10';
 
     return (
-        <div className={`relative bg-[#f4f6f8] border rounded-2xl p-8 h-full flex flex-col ${borderColor} transition-colors duration-300`}>
+        <div className={`relative bg-[#111111] border rounded-2xl p-8 h-full flex flex-col ${borderColor} transition-colors duration-300`}>
             {badge && (
-                <div className={`absolute -top-4 left-1/2 -translate-x-1/2 px-6 py-1.5 rounded-full text-sm font-bold shadow-lg whitespace-nowrap ${accentColor === 'violet' ? 'bg-[#a855f7] shadow-purple-500/20' : 'bg-gradient-to-r from-[#1E3A8A] to-[#1E40AF] shadow-blue-900/20'} text-white`}>
+                <div className={`absolute -top-4 left-1/2 -translate-x-1/2 px-6 py-1.5 rounded-full text-sm font-bold shadow-lg whitespace-nowrap ${accentColor === 'violet' ? 'bg-[#a855f7] shadow-purple-500/20' : 'bg-gradient-to-r from-[#C5A04E] to-[#D4B85C] shadow-yellow-700/20'} text-white`}>
                     {badge}
                 </div>
             )}
@@ -226,7 +226,7 @@ function PriceCard({
 
             <div className="text-center mb-6">
                 <div className="text-sm text-gray-500 line-through mb-1">€{original}</div>
-                <div className="text-5xl font-bold text-gray-900 font-orbitron">€{price}</div>
+                <div className="text-5xl font-bold text-white font-orbitron">€{price}</div>
                 {paymentOption ? (
                     <div className="text-xs text-[#a855f7] font-bold mt-2">{paymentOption}</div>
                 ) : (
@@ -256,10 +256,10 @@ function PriceCard({
                 </div>
             )}
 
-            <div className="space-y-4 flex-grow border-t border-gray-200 pt-6">
+            <div className="space-y-4 flex-grow border-t border-[#C5A04E]/10 pt-6">
                 {features.map((feat, i) => (
-                    <div key={i} className="flex items-start gap-3 text-sm text-gray-600">
-                        <div className={`mt-0.5 p-0.5 rounded-full ${accentColor === 'violet' ? 'bg-[#a855f7]/20 text-[#a855f7]' : 'bg-[#1E3A8A]/20 text-[#1E3A8A]'}`}>
+                    <div key={i} className="flex items-start gap-3 text-sm text-gray-400">
+                        <div className={`mt-0.5 p-0.5 rounded-full ${accentColor === 'violet' ? 'bg-[#a855f7]/20 text-[#a855f7]' : 'bg-[#C5A04E]/20 text-[#C5A04E]'}`}>
                             <Check size={12} />
                         </div>
                         <span>{feat}</span>

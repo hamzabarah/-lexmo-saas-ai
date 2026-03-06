@@ -21,7 +21,7 @@ export default function PhaseCard({
     totalModules,
     completedModules,
     isLocked,
-    color = "#1E3A8A"
+    color = "#C5A04E"
 }: PhaseCardProps) {
     return (
         <Link href={isLocked ? "#" : `/dashboard/phases/${id}`} className={isLocked ? "pointer-events-none opacity-60 grayscale-[0.5]" : ""}>
@@ -45,7 +45,7 @@ export default function PhaseCard({
                         )}
                     </div>
 
-                    <h3 className="text-xl font-bold mb-1 group-hover:text-gray-900 transition-colors">{title}</h3>
+                    <h3 className="text-xl font-bold mb-1 group-hover:text-white transition-colors">{title}</h3>
                     {subtitle && <p className="text-sm text-gray-500 mb-4 font-cairo">{subtitle}</p>}
                 </div>
 
@@ -54,7 +54,7 @@ export default function PhaseCard({
                         <span>{progress}% مكتمل</span>
                         <span>{completedModules}/{totalModules} وحدة</span>
                     </div>
-                    <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-2 w-full bg-[#1A1A1A] rounded-full overflow-hidden">
                         <div
                             className="h-full rounded-full transition-all duration-500 ease-out"
                             style={{
@@ -65,9 +65,9 @@ export default function PhaseCard({
                     </div>
 
                     <div className="flex justify-end mt-4">
-                        <button className={isLocked ? "text-gray-600 font-bold text-sm" : "flex items-center gap-2 text-sm font-bold text-white group-hover:gap-3 transition-all"}>
+                        <button className={isLocked ? "text-gray-400 font-bold text-sm" : "flex items-center gap-2 text-sm font-bold text-white group-hover:gap-3 transition-all"}>
                             {isLocked ? "أكمل المرحلة السابقة 🔒" : "بدء التعلم"}
-                            {!isLocked && <ArrowLeft size={16} className="text-[#1E3A8A]" />}
+                            {!isLocked && <ArrowLeft size={16} className="text-[#C5A04E]" />}
                         </button>
                     </div>
                 </div>

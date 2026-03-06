@@ -1,16 +1,16 @@
 export default function RefundPage() {
     return (
-        <div className="min-h-screen bg-gradient-to-b from-[#030712] to-[#f4f6f8] text-gray-900 py-20 px-4" dir="rtl">
+        <div className="min-h-screen bg-gradient-to-b from-[#030712] to-[#f4f6f8] text-white py-20 px-4" dir="rtl">
             <div className="container mx-auto max-w-4xl">
                 <h1 className="text-4xl font-bold mb-8 text-center font-cairo">سياسة الاسترداد والضمان</h1>
 
-                <div className="prose prose-invert max-w-none space-y-8 text-gray-600 font-cairo">
+                <div className="prose prose-invert max-w-none space-y-8 text-gray-400 font-cairo">
                     <p className="text-sm text-gray-500">آخر تحديث: 26 يناير 2026</p>
 
                     <section>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">1. ضمان الرضا - 30 يوماً</h2>
+                        <h2 className="text-2xl font-bold text-white mb-4">1. ضمان الرضا - 30 يوماً</h2>
                         <p className="text-lg">
-                            نحن واثقون تماماً من جودة برنامج ECOMY. لذلك نقدم لك <strong className="text-[#1E3A8A]">ضمان استرداد كامل لمدة 30 يوماً</strong>.
+                            نحن واثقون تماماً من جودة برنامج ECOMY. لذلك نقدم لك <strong className="text-[#C5A04E]">ضمان استرداد كامل لمدة 30 يوماً</strong>.
                         </p>
                         <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-6 mt-4">
                             <p className="text-green-400 font-bold text-center text-xl">
@@ -20,21 +20,21 @@ export default function RefundPage() {
                     </section>
 
                     <section>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">2. شروط الاسترداد</h2>
+                        <h2 className="text-2xl font-bold text-white mb-4">2. شروط الاسترداد</h2>
 
-                        <h3 className="text-xl font-bold text-gray-900 mb-2">2.1 المدة</h3>
+                        <h3 className="text-xl font-bold text-white mb-2">2.1 المدة</h3>
                         <p>
                             لديك <strong>30 يوماً كاملاً</strong> من تاريخ الشراء لطلب استرداد الأموال.
                         </p>
 
-                        <h3 className="text-xl font-bold text-gray-900 mb-2 mt-4">2.2 الشروط</h3>
+                        <h3 className="text-xl font-bold text-white mb-2 mt-4">2.2 الشروط</h3>
                         <ul className="list-disc list-inside space-y-2">
                             <li>الطلب يجب أن يتم خلال 30 يوماً من تاريخ الشراء</li>
                             <li>إرسال طلب مكتوب عبر البريد الإلكتروني</li>
                             <li>توضيح سبب الاسترداد (اختياري ولكن يساعدنا على التحسين)</li>
                         </ul>
 
-                        <h3 className="text-xl font-bold text-gray-900 mb-2 mt-4">2.3 الاستثناءات</h3>
+                        <h3 className="text-xl font-bold text-white mb-2 mt-4">2.3 الاستثناءات</h3>
                         <p>لا يمكن استرداد الأموال في الحالات التالية:</p>
                         <ul className="list-disc list-inside space-y-2">
                             <li><strong>باقة الأسطورة (Legend):</strong> بعد بدء الجلسات الشخصية 1-على-1</li>
@@ -45,13 +45,13 @@ export default function RefundPage() {
                     </section>
 
                     <section>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">3. كيفية طلب الاسترداد</h2>
+                        <h2 className="text-2xl font-bold text-white mb-4">3. كيفية طلب الاسترداد</h2>
 
-                        <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
-                            <h3 className="text-xl font-bold text-gray-900 mb-4">الخطوات البسيطة:</h3>
+                        <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-6">
+                            <h3 className="text-xl font-bold text-white mb-4">الخطوات البسيطة:</h3>
                             <ol className="list-decimal list-inside space-y-3">
                                 <li>
-                                    <strong>أرسل بريد إلكتروني</strong> إلى: <span className="text-[#1E3A8A]">acadmyfrance75@gmail.com</span>
+                                    <strong>أرسل بريد إلكتروني</strong> إلى: <span className="text-[#C5A04E]">acadmyfrance75@gmail.com</span>
                                 </li>
                                 <li>
                                     <strong>الموضوع:</strong> "طلب استرداد الأموال"
@@ -77,18 +77,18 @@ export default function RefundPage() {
                     </section>
 
                     <section>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">4. مواعيد الاسترداد</h2>
+                        <h2 className="text-2xl font-bold text-white mb-4">4. مواعيد الاسترداد</h2>
                         <div className="space-y-4">
-                            <div className="bg-gray-50 p-4 rounded-lg">
-                                <p className="font-bold text-gray-900">⏱️ معالجة الطلب</p>
+                            <div className="bg-[#1A1A1A] p-4 rounded-lg">
+                                <p className="font-bold text-white">⏱️ معالجة الطلب</p>
                                 <p className="text-sm">1-2 أيام عمل بعد الموافقة</p>
                             </div>
-                            <div className="bg-gray-50 p-4 rounded-lg">
-                                <p className="font-bold text-gray-900">💳 الإرجاع إلى البطاقة</p>
+                            <div className="bg-[#1A1A1A] p-4 rounded-lg">
+                                <p className="font-bold text-white">💳 الإرجاع إلى البطاقة</p>
                                 <p className="text-sm">5-10 أيام عمل حسب البنك الخاص بك</p>
                             </div>
-                            <div className="bg-gray-50 p-4 rounded-lg">
-                                <p className="font-bold text-gray-900">💰 الإرجاع إلى PayPal</p>
+                            <div className="bg-[#1A1A1A] p-4 rounded-lg">
+                                <p className="font-bold text-white">💰 الإرجاع إلى PayPal</p>
                                 <p className="text-sm">1-3 أيام عمل</p>
                             </div>
                         </div>
@@ -98,7 +98,7 @@ export default function RefundPage() {
                     </section>
 
                     <section>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">5. ما يحدث بعد الاسترداد</h2>
+                        <h2 className="text-2xl font-bold text-white mb-4">5. ما يحدث بعد الاسترداد</h2>
                         <ul className="list-disc list-inside space-y-2">
                             <li>يتم إلغاء الوصول إلى المنصة فوراً</li>
                             <li>إزالة الوصول إلى جميع الدروس والمحتوى</li>
@@ -108,13 +108,13 @@ export default function RefundPage() {
                     </section>
 
                     <section>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">6. ضمان خاص - باقة الأسطورة (Legend)</h2>
+                        <h2 className="text-2xl font-bold text-white mb-4">6. ضمان خاص - باقة الأسطورة (Legend)</h2>
                         <div className="bg-purple-500/10 border border-purple-500/20 rounded-xl p-6">
                             <p className="text-lg mb-4">
                                 بالنسبة لباقة <strong className="text-purple-400">الأسطورة (€2,997)</strong>، نقدم ضماناً إضافياً:
                             </p>
-                            <div className="bg-gray-50 p-4 rounded-lg">
-                                <p className="font-bold text-gray-900 mb-2">🎯 ضمان البيع الأول</p>
+                            <div className="bg-[#1A1A1A] p-4 rounded-lg">
+                                <p className="font-bold text-white mb-2">🎯 ضمان البيع الأول</p>
                                 <p>
                                     إذا لم تحقق أول بيع خلال 30 يوماً بعد تطبيق جميع التوصيات والحضور لجميع الجلسات،
                                     <strong className="text-purple-400"> نعيد لك أموالك كاملة</strong>.
@@ -127,7 +127,7 @@ export default function RefundPage() {
                     </section>
 
                     <section>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">7. الاستردادات الجزئية</h2>
+                        <h2 className="text-2xl font-bold text-white mb-4">7. الاستردادات الجزئية</h2>
                         <p>
                             في حالات خاصة، قد نقدم استرداداً جزئياً بدلاً من الكامل:
                         </p>
@@ -142,7 +142,7 @@ export default function RefundPage() {
                     </section>
 
                     <section>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">8. سياسة عدم الإرجاع</h2>
+                        <h2 className="text-2xl font-bold text-white mb-4">8. سياسة عدم الإرجاع</h2>
                         <p>لن نقبل طلبات الاسترداد في الحالات التالية:</p>
                         <ul className="list-disc list-inside space-y-2">
                             <li>بعد مرور 30 يوماً من تاريخ الشراء</li>
@@ -153,7 +153,7 @@ export default function RefundPage() {
                     </section>
 
                     <section>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">9. النزاعات والخلافات</h2>
+                        <h2 className="text-2xl font-bold text-white mb-4">9. النزاعات والخلافات</h2>
                         <p>
                             إذا كانت لديك مشكلة مع المنتج، نشجعك على <strong>التواصل معنا أولاً</strong> قبل طلب رد المبالغ المدفوعة من خلال البنك أو PayPal.
                         </p>
@@ -163,25 +163,25 @@ export default function RefundPage() {
                     </section>
 
                     <section>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">10. الأسئلة الشائعة</h2>
+                        <h2 className="text-2xl font-bold text-white mb-4">10. الأسئلة الشائعة</h2>
 
                         <div className="space-y-4">
-                            <div className="bg-gray-50 p-4 rounded-lg">
-                                <p className="font-bold text-gray-900">❓ هل يمكنني الحصول على استرداد إذا لم أحقق نتائج؟</p>
+                            <div className="bg-[#1A1A1A] p-4 rounded-lg">
+                                <p className="font-bold text-white">❓ هل يمكنني الحصول على استرداد إذا لم أحقق نتائج؟</p>
                                 <p className="text-sm mt-2">
                                     نعم، إذا كان ذلك خلال 30 يوماً. لكن تذكر أن النتائج تعتمد على تطبيقك للبرنامج.
                                 </p>
                             </div>
 
-                            <div className="bg-gray-50 p-4 rounded-lg">
-                                <p className="font-bold text-gray-900">❓ ماذا لو لم يناسبني المحتوى؟</p>
+                            <div className="bg-[#1A1A1A] p-4 rounded-lg">
+                                <p className="font-bold text-white">❓ ماذا لو لم يناسبني المحتوى؟</p>
                                 <p className="text-sm mt-2">
                                     لا مشكلة! يمكنك طلب استرداد كامل خلال 30 يوماً دون الحاجة لتبرير مفصل.
                                 </p>
                             </div>
 
-                            <div className="bg-gray-50 p-4 rounded-lg">
-                                <p className="font-bold text-gray-900">❓ هل يمكنني إعادة الشراء بعد الاسترداد؟</p>
+                            <div className="bg-[#1A1A1A] p-4 rounded-lg">
+                                <p className="font-bold text-white">❓ هل يمكنني إعادة الشراء بعد الاسترداد؟</p>
                                 <p className="text-sm mt-2">
                                     نعم، ولكن في هذه الحالة لن يكون هناك ضمان استرداد في المرة الثانية.
                                 </p>
@@ -190,8 +190,8 @@ export default function RefundPage() {
                     </section>
 
                     <section>
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">11. للاتصال</h2>
-                        <div className="bg-[#1E3A8A]/10 border border-[#1E3A8A]/20 rounded-xl p-6">
+                        <h2 className="text-2xl font-bold text-white mb-4">11. للاتصال</h2>
+                        <div className="bg-[#C5A04E]/10 border border-[#C5A04E]/20 rounded-xl p-6">
                             <p className="text-lg mb-4">لأي أسئلة حول سياسة الاسترداد:</p>
                             <ul className="list-none space-y-2">
                                 <li><strong>البريد الإلكتروني:</strong> acadmyfrance75@gmail.com</li>
@@ -201,15 +201,15 @@ export default function RefundPage() {
                         </div>
                     </section>
 
-                    <section className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                        <p className="text-center text-lg font-bold text-gray-900 mb-2">
+                    <section className="bg-[#1A1A1A] p-6 rounded-xl border border-[#C5A04E]/10">
+                        <p className="text-center text-lg font-bold text-white mb-2">
                             💯 التزامنا تجاهك
                         </p>
-                        <p className="text-center text-gray-600">
+                        <p className="text-center text-gray-400">
                             نحن واثقون من أن ECOMY سيغير حياتك. لكن إذا لم تكن راضياً لأي سبب،
                             سنعيد لك أموالك بالكامل خلال 30 يوماً. لا أسئلة معقدة، لا تعقيدات.
                         </p>
-                        <p className="text-center text-[#1E3A8A] font-bold mt-4">
+                        <p className="text-center text-[#C5A04E] font-bold mt-4">
                             وعدنا لك: رضاك التام أو استرداد أموالك!
                         </p>
                     </section>

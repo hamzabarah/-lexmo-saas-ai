@@ -15,7 +15,7 @@ export default function ProgressCircle({
     percentage,
     size = 180,
     strokeWidth = 12,
-    color = "#1E3A8A",
+    color = "#C5A04E",
     completed,
     total
 }: ProgressCircleProps) {
@@ -55,8 +55,8 @@ export default function ProgressCircle({
                     />
                     <defs>
                         <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stopColor="#1E3A8A" />
-                            <stop offset="100%" stopColor="#1E40AF" />
+                            <stop offset="0%" stopColor="#C5A04E" />
+                            <stop offset="100%" stopColor="#D4B85C" />
                         </linearGradient>
                     </defs>
                 </svg>
@@ -70,8 +70,8 @@ export default function ProgressCircle({
                 </div>
             </div>
 
-            <p className="mt-4 text-gray-600 font-bold">
-                أكملت <span className="text-[#1E3A8A]">{completed}</span> من <span className="text-gray-500">{total}</span> وحدة
+            <p className="mt-4 text-gray-400 font-bold">
+                أكملت <span className="text-[#C5A04E]">{completed}</span> من <span className="text-gray-500">{total}</span> وحدة
             </p>
         </div>
     );

@@ -8,8 +8,8 @@ export default function Hero() {
     return (
         <section className="relative min-h-[90vh] flex flex-col justify-center pt-20 overflow-hidden">
             {/* Background Glows */}
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#1E3A8A]/10 rounded-full blur-[120px] -z-10 animate-pulse" />
-            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#1E40AF]/10 rounded-full blur-[120px] -z-10 animate-pulse delay-1000" />
+            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#C5A04E]/10 rounded-full blur-[120px] -z-10 animate-pulse" />
+            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#D4B85C]/10 rounded-full blur-[120px] -z-10 animate-pulse delay-1000" />
 
             <div className="container mx-auto px-4 text-center space-y-8 mb-12">
                 {/* Text Content */}
@@ -18,14 +18,14 @@ export default function Hero() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="inline-flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-full px-4 py-1.5 backdrop-blur-md mb-4"
+                        className="inline-flex items-center gap-2 bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-full px-4 py-1.5 backdrop-blur-md mb-4"
                     >
                         <div className="flex -space-x-2 space-x-reverse">
                             <img src="/images/chaima.jpg" alt="Student" className="w-8 h-8 rounded-full border-2 border-[#030712] object-cover" />
                             <img src="/images/dounia.jpg" alt="Student" className="w-8 h-8 rounded-full border-2 border-[#030712] object-cover" />
                             <img src="/images/mohamed.jpg" alt="Student" className="w-8 h-8 rounded-full border-2 border-[#030712] object-cover" />
                         </div>
-                        <span dir="ltr" className="text-sm text-gray-600 mr-2 font-cairo">Trusted by +10,000 Students</span>
+                        <span dir="ltr" className="text-sm text-gray-400 mr-2 font-cairo">Trusted by +10,000 Students</span>
                     </motion.div>
 
                     <h1 className="text-5xl lg:text-7xl font-bold font-cairo leading-tight">
@@ -41,7 +41,7 @@ export default function Hero() {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.6 }}
-                            className="block text-[#1E3A8A] text-glow"
+                            className="block text-[#C5A04E] text-glow"
                         >
                             التجارة الإلكترونية
                         </motion.span>
@@ -65,7 +65,7 @@ export default function Hero() {
                         <div className="flex flex-col items-center gap-2">
                             <a
                                 href="#pricing"
-                                className="bg-gradient-to-r from-[#1E3A8A] to-[#1E40AF] text-white px-8 py-4 rounded-full font-bold text-lg hover:shadow-[0_0_40px_rgba(0,210,255,0.6)] transition-all transform hover:scale-105 active:scale-95 duration-300"
+                                className="bg-gradient-to-r from-[#C5A04E] to-[#D4B85C] text-white px-8 py-4 rounded-full font-bold text-lg hover:shadow-[0_0_40px_rgba(0,210,255,0.6)] transition-all transform hover:scale-105 active:scale-95 duration-300"
                             >
                                 ابدأ الآن
                             </a>
@@ -83,7 +83,7 @@ export default function Hero() {
                 className="w-full px-4 lg:px-8 mb-12"
             >
                 <div className="relative w-full max-w-7xl mx-auto">
-                    <div className="relative w-full aspect-video bg-gradient-to-br from-[#0f172a] to-[#1e293b] border border-gray-200 rounded-2xl lg:rounded-3xl overflow-hidden shadow-2xl">
+                    <div className="relative w-full aspect-video bg-gradient-to-br from-[#0f172a] to-[#1e293b] border border-[#C5A04E]/10 rounded-2xl lg:rounded-3xl overflow-hidden shadow-2xl">
                         <img
                             src="/images/mokup.jpg"
                             alt="Dashboard Mockup"
@@ -100,11 +100,11 @@ export default function Hero() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.5 }}
-                className="w-full border-t border-gray-200 bg-gray-50 py-6"
+                className="w-full border-t border-[#C5A04E]/10 bg-[#1A1A1A] py-6"
             >
                 <Marquee gradient={false} speed={40}>
                     {["SHOPIFY", "META ADS", "TIKTOK", "SNAPCHAT", "GOOGLE ADS", "STRIPE", "YOUCAN"].map((tech, i) => (
-                        <span key={i} className="mx-12 text-gray-600 font-orbitron font-bold text-xl opacity-50 hover:opacity-100 transition-opacity cursor-default">
+                        <span key={i} className="mx-12 text-gray-400 font-orbitron font-bold text-xl opacity-50 hover:opacity-100 transition-opacity cursor-default">
                             {tech}
                         </span>
                     ))}

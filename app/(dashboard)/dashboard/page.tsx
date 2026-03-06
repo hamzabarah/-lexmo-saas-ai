@@ -18,7 +18,7 @@ export default async function DashboardPage() {
         <>
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900 font-cairo mb-2">مرحباً، محمد! 👋</h1>
+                    <h1 className="text-3xl font-bold text-white font-cairo mb-2">مرحباً، محمد! 👋</h1>
                     <div className="flex items-center gap-2">
                         <span className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-400 border border-green-500/30 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
                             مستوى المبتدئ 🌱
@@ -58,13 +58,13 @@ export default async function DashboardPage() {
                         title="الوحدات المكتملة"
                         value="18/150"
                         icon={BookOpen}
-                        color="#1E3A8A"
+                        color="#C5A04E"
                     />
                     <StatCard
                         title="الترتيب الحالي"
                         value="#-"
                         icon={Trophy}
-                        color="#1E40AF"
+                        color="#D4B85C"
                     />
                     <StatCard
                         title="الهدف القادم"
@@ -117,14 +117,14 @@ export default async function DashboardPage() {
 
                 {/* Right Column: Affiliate Mini & Announcements */}
                 <div className="space-y-6">
-                    <Card className="bg-gradient-to-br from-[#1E40AF]/20 to-[#030712]">
+                    <Card className="bg-gradient-to-br from-[#D4B85C]/20 to-[#030712]">
                         <h3 className="text-lg font-bold mb-2">برنامج الشراكة 🚀</h3>
                         <p className="text-gray-500 text-sm mb-4">شارك رابطك واربح 70% عمولة على كل مبيعة.</p>
-                        <div className="bg-gray-500 p-3 rounded-lg flex items-center justify-between mb-4 border border-gray-200">
-                            <span className="text-sm text-gray-600 truncate">ecomy.ai/ref/mohammed</span>
-                            <button className="text-xs text-[#1E3A8A] font-bold">نسخ</button>
+                        <div className="bg-[#1A1A1A]0 p-3 rounded-lg flex items-center justify-between mb-4 border border-[#C5A04E]/10">
+                            <span className="text-sm text-gray-400 truncate">ecomy.ai/ref/mohammed</span>
+                            <button className="text-xs text-[#C5A04E] font-bold">نسخ</button>
                         </div>
-                        <button className="w-full bg-[#1E40AF] hover:bg-[#8e44ad] text-white py-2 rounded-lg font-bold transition-colors">
+                        <button className="w-full bg-[#D4B85C] hover:bg-[#8e44ad] text-white py-2 rounded-lg font-bold transition-colors">
                             الذهاب لصفحة الأرباح
                         </button>
                     </Card>
@@ -133,12 +133,12 @@ export default async function DashboardPage() {
                         <h3 className="text-lg font-bold mb-2">تنبيهات 📢</h3>
                         <ul className="space-y-3 text-sm text-gray-500">
                             <li className="flex gap-2">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#1E3A8A] mt-2 shrink-0"></span>
-                                <span className="text-gray-600">تم تحديث المرحلة 3 (System Building) بمحتوى جديد.</span>
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#C5A04E] mt-2 shrink-0"></span>
+                                <span className="text-gray-400">تم تحديث المرحلة 3 (System Building) بمحتوى جديد.</span>
                             </li>
                             <li className="flex gap-2">
-                                <span className="w-1.5 h-1.5 rounded-full bg-white/20 mt-2 shrink-0"></span>
-                                <span className="text-gray-600">لقاء Zoom مباشر يوم الخميس القادم.</span>
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#0A0A0A]/20 mt-2 shrink-0"></span>
+                                <span className="text-gray-400">لقاء Zoom مباشر يوم الخميس القادم.</span>
                             </li>
                         </ul>
                     </Card>
