@@ -45,7 +45,7 @@ export default function Home() {
 
   // Shared components
   const ProductImage = imgError ? (
-    <div className="w-full h-[400px] rounded-2xl bg-[#1a1a1a] flex items-center justify-center">
+    <div className="w-full h-[400px] rounded-2xl bg-[#f4f6f8] flex items-center justify-center">
       <span className="text-gray-500 text-lg">صورة المنتج</span>
     </div>
   ) : (
@@ -154,7 +154,7 @@ export default function Home() {
       {/* Sub-header */}
       <div className="flex items-center justify-between">
         <h3 className="text-[#1A1A1A] font-bold text-base">أفضل التقييمات</h3>
-        <a href="#" className="text-[#d97706] text-sm font-semibold hover:underline">عرض كل التقييمات</a>
+        <a href="#" className="text-[#008060] text-sm font-semibold hover:underline">عرض كل التقييمات</a>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -189,15 +189,15 @@ export default function Home() {
     <a
       ref={ctaRef}
       href="#"
-      className="block w-full text-center bg-[#F97316] hover:bg-[#EA580C] text-white text-lg font-bold py-4 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
-      style={{ boxShadow: '0 4px 14px rgba(249,115,22,0.4)' }}
+      className="block w-full text-center bg-[#008060] hover:bg-[#006e52] text-white text-lg font-bold py-4 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
+      style={{ boxShadow: '0 4px 14px rgba(0,128,96,0.2)' }}
     >
       {CTA_TEXT}
     </a>
   );
 
   const LoginLink = (
-    <a href="/login" className="block text-center text-sm text-gray-400 hover:text-orange-400 transition-colors mt-2">
+    <a href="/login" className="block text-center text-sm text-gray-400 hover:text-[#008060] transition-colors mt-2">
       لديك حساب بالفعل؟ تسجيل الدخول
     </a>
   );
@@ -261,8 +261,8 @@ export default function Home() {
 
                   <a
                     href="#"
-                    className="block w-full text-center bg-[#F97316] hover:bg-[#EA580C] text-white text-[15px] font-bold py-3.5 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
-                    style={{ boxShadow: '0 4px 14px rgba(249,115,22,0.4)' }}
+                    className="block w-full text-center bg-[#008060] hover:bg-[#006e52] text-white text-[15px] font-bold py-3.5 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
+                    style={{ boxShadow: '0 4px 14px rgba(0,128,96,0.2)' }}
                   >
                     {CTA_TEXT}
                   </a>
@@ -285,8 +285,8 @@ export default function Home() {
           </div>
           <a
             href="#"
-            className="flex-1 text-center bg-[#F97316] hover:bg-[#EA580C] text-white text-sm font-bold py-3 rounded-xl transition-all duration-200"
-            style={{ boxShadow: '0 4px 14px rgba(249,115,22,0.4)' }}
+            className="flex-1 text-center bg-[#008060] hover:bg-[#006e52] text-white text-sm font-bold py-3 rounded-xl transition-all duration-200"
+            style={{ boxShadow: '0 4px 14px rgba(0,128,96,0.2)' }}
           >
             {CTA_TEXT}
           </a>
