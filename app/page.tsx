@@ -50,7 +50,7 @@ export default function Home() {
     </div>
   ) : (
     <img
-      src="/images/product.jpg"
+      src="/images/product2.jpg"
       alt="صورة المنتج"
       className="w-full h-[400px] object-cover rounded-2xl"
       onError={() => setImgError(true)}
@@ -236,14 +236,11 @@ export default function Home() {
                 style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}
               >
                 {/* Banner Image */}
-                <div
-                  className="w-full aspect-video"
-                  style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)' }}
-                >
-                  <div className="w-full h-full flex items-center justify-center">
-                    <p className="text-white/40 text-sm">صورة المنتج</p>
-                  </div>
-                </div>
+                <img
+                  src="/images/product1.jpg"
+                  alt="صورة المنتج"
+                  className="w-full aspect-video object-cover"
+                />
 
                 {/* Content */}
                 <div className="p-5 space-y-3">
