@@ -196,6 +196,12 @@ export default function Home() {
     </a>
   );
 
+  const LoginLink = (
+    <a href="/login" className="block text-center text-sm text-gray-400 hover:text-orange-400 transition-colors mt-2">
+      لديك حساب بالفعل؟ تسجيل الدخول
+    </a>
+  );
+
   return (
     <main className="min-h-screen bg-white font-cairo" dir="rtl">
       <div className="mx-auto py-8" style={{ maxWidth: '1100px', padding: '32px 24px' }}>
@@ -213,6 +219,7 @@ export default function Home() {
               <p className="text-[#1A1A1A] text-lg font-bold">اربح من الإنترنت | التجارة الإلكترونية</p>
               {PriceLine}
               {CTAButton}
+              {LoginLink}
             </div>
 
             {/* Title */}
@@ -259,6 +266,7 @@ export default function Home() {
                   >
                     {CTA_TEXT}
                   </a>
+                  {LoginLink}
                 </div>
               </div>
             </div>
