@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Star, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
+import { Star, ChevronDown } from "lucide-react";
 
 const CTA_TEXT = "سجل قبل إغلاق التسجيل";
 
@@ -29,62 +29,10 @@ const faqData = [
 ];
 
 export default function Home() {
-  const [currentSlide, setCurrentSlide] = useState(0);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showStickyBar, setShowStickyBar] = useState(false);
+  const [imgError, setImgError] = useState(false);
   const ctaRef = useRef<HTMLAnchorElement>(null);
-  const carouselImages = [
-    "/images/avis/500k$-30d.jpg",
-    "/images/avis/368k$-30d.jpg",
-    "/images/avis/186k$-40d.jpg",
-    "/images/avis/105k$-30d.jpg",
-    "/images/avis/100k$-30d.jpg",
-    "/images/avis/100keur-7d.jpg",
-    "/images/avis/63keur-30d.jpg",
-    "/images/avis/56k$-20d.jpg",
-    "/images/avis/51k$-25d.jpg",
-    "/images/avis/51k$-7d.jpg",
-    "/images/avis/50keur-30d.jpg",
-    "/images/avis/50keur-20d.jpg",
-    "/images/avis/50k$-12h.jpg",
-    "/images/avis/44k$-30d.jpg",
-    "/images/avis/44k$-24h.jpg",
-    "/images/avis/43keur-30d.jpg",
-    "/images/avis/43k$-30d.jpg",
-    "/images/avis/42k$-12h.jpg",
-    "/images/avis/41k$-30d.jpg",
-    "/images/avis/40k$-30d.jpg",
-    "/images/avis/35k$-14d.jpg",
-    "/images/avis/33keur-12h.jpg",
-    "/images/avis/33kgbp-7d.jpg",
-    "/images/avis/31k$-12h.jpg",
-    "/images/avis/30k$-24h.jpg",
-    "/images/avis/30k$-12h.jpg",
-    "/images/avis/27k$-30d.jpg",
-    "/images/avis/26k$-12d.jpg",
-    "/images/avis/25k$-12d.jpg",
-    "/images/avis/16kgbp-12h.jpg",
-    "/images/avis/16k$-4d.jpg",
-    "/images/avis/15k$-20d.jpg",
-    "/images/avis/14k$-7d.jpg",
-    "/images/avis/14k$-4d.jpg",
-    "/images/avis/10keur-24h.jpg",
-    "/images/avis/9k$-15d.jpg",
-    "/images/avis/9k$-12h.jpg",
-    "/images/avis/9k$-9d.jpg",
-    "/images/avis/9k-15h.jpg",
-    "/images/avis/7.3k$-24h.jpg",
-    "/images/avis/7keur-1d.jpg",
-    "/images/avis/6k$-12h.jpg",
-    "/images/avis/5k$-24h.jpg",
-    "/images/avis/3keur-24h.jpg",
-    "/images/avis/2.4k$-3h.jpg",
-    "/images/avis/2k$-24h.jpg",
-    "/images/avis/1.6k$-1d.jpg",
-    "/images/avis/1.2k$-1d.jpg",
-    "/images/avis/1keur-1h.jpg",
-    "/images/avis/243eur-3h.jpg",
-  ];
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -95,57 +43,18 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
-  // Auto-slide every 3 seconds
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((p) => (p < carouselImages.length - 1 ? p + 1 : 0));
-    }, 3000);
-    return () => clearInterval(timer);
-  }, [carouselImages.length]);
-
-  const maxSlide = carouselImages.length - 1;
-
   // Shared components
-  const Carousel = (
-    <div className="relative overflow-hidden h-[400px]">
-      {/* Desktop: 3 images */}
-      <div
-        className="hidden lg:flex transition-transform duration-500 ease-in-out h-full"
-        style={{ transform: `translateX(${currentSlide * (100 / 3)}%)` }}
-      >
-        {carouselImages.map((src, i) => (
-          <div key={i} className="h-full shrink-0 px-1" style={{ width: `${100 / 3}%` }}>
-            <img src={src} alt={`Screenshot ${i + 1}`} className="w-full h-full object-contain" />
-          </div>
-        ))}
-      </div>
-      {/* Mobile: 1 image */}
-      <div
-        className="lg:hidden flex transition-transform duration-500 ease-in-out h-full"
-        style={{ transform: `translateX(${currentSlide * 100}%)` }}
-      >
-        {carouselImages.map((src, i) => (
-          <div key={i} className="w-full h-full shrink-0">
-            <img src={src} alt={`Screenshot ${i + 1}`} className="w-full h-full object-contain" />
-          </div>
-        ))}
-      </div>
-      <button
-        onClick={() => setCurrentSlide((p) => (p > 0 ? p - 1 : maxSlide))}
-        className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow transition z-10"
-      >
-        <ChevronLeft size={18} className="text-gray-700" />
-      </button>
-      <button
-        onClick={() => setCurrentSlide((p) => (p < maxSlide ? p + 1 : 0))}
-        className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow transition z-10"
-      >
-        <ChevronRight size={18} className="text-gray-700" />
-      </button>
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs px-3 py-1 rounded-full z-10" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-        {currentSlide + 1} / {carouselImages.length}
-      </div>
+  const ProductImage = imgError ? (
+    <div className="w-full h-[400px] rounded-2xl bg-[#1a1a1a] flex items-center justify-center">
+      <span className="text-gray-500 text-lg">صورة المنتج</span>
     </div>
+  ) : (
+    <img
+      src="/images/product.jpg"
+      alt="صورة المنتج"
+      className="w-full h-[400px] object-cover rounded-2xl"
+      onError={() => setImgError(true)}
+    />
   );
 
   const RatingLine = (
@@ -296,7 +205,7 @@ export default function Home() {
           <div className="flex-1 min-w-0 space-y-8 pb-32 lg:pb-8">
 
             {/* Carousel — always first */}
-            {Carousel}
+            {ProductImage}
 
             {/* Mobile only: Rating + Price + CTA before title */}
             <div className="lg:hidden space-y-4">
