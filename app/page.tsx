@@ -154,7 +154,7 @@ export default function Home() {
       {/* Sub-header */}
       <div className="flex items-center justify-between">
         <h3 className="text-white font-bold text-base">أفضل التقييمات</h3>
-        <a href="#" className="text-[#C5A04E] text-sm font-semibold hover:underline">عرض كل التقييمات</a>
+        <a href="https://buy.stripe.com/test_cNifZh5WU5fPcG9asPgfu00" className="text-[#C5A04E] text-sm font-semibold hover:underline">عرض كل التقييمات</a>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -188,7 +188,7 @@ export default function Home() {
   const CTAButton = (
     <a
       ref={ctaRef}
-      href="#"
+      href="https://buy.stripe.com/test_cNifZh5WU5fPcG9asPgfu00"
       className="block w-full text-center bg-[#C5A04E] hover:bg-[#D4B85C] text-white text-lg font-bold py-4 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
       style={{ boxShadow: '0 4px 14px rgba(197,160,78,0.2)' }}
     >
@@ -260,7 +260,7 @@ export default function Home() {
                   {PriceLine}
 
                   <a
-                    href="#"
+                    href="https://buy.stripe.com/test_cNifZh5WU5fPcG9asPgfu00"
                     className="block w-full text-center bg-[#C5A04E] hover:bg-[#D4B85C] text-white text-[15px] font-bold py-3.5 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
                     style={{ boxShadow: '0 4px 14px rgba(197,160,78,0.2)' }}
                   >
@@ -284,7 +284,7 @@ export default function Home() {
             <span className="text-white text-xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{"197 €"}</span>
           </div>
           <a
-            href="#"
+            href="https://buy.stripe.com/test_cNifZh5WU5fPcG9asPgfu00"
             className="flex-1 text-center bg-[#C5A04E] hover:bg-[#D4B85C] text-white text-sm font-bold py-3 rounded-xl transition-all duration-200"
             style={{ boxShadow: '0 4px 14px rgba(197,160,78,0.2)' }}
           >
