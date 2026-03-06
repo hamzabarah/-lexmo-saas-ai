@@ -1,293 +1,212 @@
-export default function LegalPage() {
-    return (
-        <div className="min-h-screen bg-gradient-to-b from-[#030712] to-[#0f172a] text-white py-20 px-4" dir="rtl">
-            <div className="container mx-auto max-w-4xl">
-                <h1 className="text-4xl font-bold mb-8 text-center font-cairo">الشروط العامة للاستخدام والبيع</h1>
+import Link from "next/link";
 
-                <div className="prose prose-invert max-w-none space-y-8 text-gray-300 font-cairo">
-                    <p className="text-sm text-gray-400">آخر تحديث: 26 يناير 2026</p>
+export default function TermsPage() {
+  return (
+    <div className="min-h-screen bg-[#0f0f0f] text-gray-300 py-16 px-4 font-cairo" dir="ltr">
+      <div className="mx-auto" style={{ maxWidth: '800px' }}>
 
-                    <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">المادة 1. معلومات قانونية</h2>
+        {/* Back link */}
+        <Link href="/" className="inline-block text-[#d97706] text-sm font-semibold hover:underline mb-8">
+          &larr; Back to Home
+        </Link>
 
-                        <h3 className="text-xl font-bold text-white mb-2">1.1 الناشر</h3>
-                        <div className="bg-white/5 p-4 rounded-lg space-y-2">
-                            <p><strong>اسم المنصة:</strong> ECOMY</p>
-                            <p><strong>البريد الإلكتروني:</strong> acadmyfrance75@gmail.com</p>
-                            <p><strong>الموقع:</strong> https://ecomy.vercel.app</p>
-                        </div>
+        {/* Title */}
+        <h1 className="text-3xl lg:text-4xl font-bold text-white mb-2">
+          Terms and Conditions of Sale and Use — ECOMY
+        </h1>
+        <p className="text-sm text-gray-500 mb-12">Last updated: March 2026 — Version 3.1</p>
 
-                        <h3 className="text-xl font-bold text-white mb-2 mt-4">1.2 الاستضافة</h3>
-                        <ul className="list-disc list-inside space-y-1">
-                            <li><strong>المنصة:</strong> Vercel Inc.</li>
-                            <li><strong>قاعدة البيانات:</strong> Supabase</li>
-                            <li><strong>المدفوعات:</strong> Stripe</li>
-                        </ul>
-                    </section>
+        <div className="space-y-10 text-[15px] leading-[1.85]">
 
-                    <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">المادة 2. الهدف والقبول</h2>
-                        <p>
-                            تحدد هذه الشروط العامة كيفية استخدام منصة ECOMY وشراء الخدمات المقدمة.
-                        </p>
-                        <p className="mt-4">
-                            <strong>بإتمام عملية الشراء، فإنك توافق دون تحفظ على هذه الشروط العامة.</strong>
-                        </p>
-                    </section>
+          {/* Article 1 */}
+          <section>
+            <h2 className="text-xl font-bold text-[#d97706] mb-3">Article 1 — Seller Identification and Scope</h2>
+            <p>These Terms and Conditions of Sale and Use (hereinafter &quot;T&amp;C&quot;) govern all contractual relationships between HAMZA SHOP (hereinafter &quot;the Seller&quot; or &quot;ECOMY&quot;) and any individual or legal entity purchasing a digital product or service through the platform accessible at lexmo.ai (hereinafter &quot;the Platform&quot;).</p>
+            <p className="mt-3">By completing any purchase on the Platform, the Customer fully, unconditionally and unreservedly accepts these T&amp;C in their entirety. The Customer declares having read these T&amp;C prior to any purchase. If the Customer disagrees with any provision herein, they are advised not to proceed with the purchase.</p>
+            <p className="mt-3">These T&amp;C supersede all other documents, including any Customer purchase terms. The Seller reserves the right to modify these T&amp;C at any time. The applicable T&amp;C are those in force at the time of purchase.</p>
+            <p className="mt-3">The Seller&apos;s full contact details are available in the Legal Notice section of the Platform.</p>
+          </section>
 
-                    <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">المادة 3. وصف الخدمات</h2>
-                        <p>
-                            تقدم ECOMY برامج تدريبية عبر الإنترنت في مجال التجارة الإلكترونية والتسويق بالعمولة،
-                            منظمة في 11 مرحلة و40 وحدة تدريبية.
-                        </p>
+          {/* Article 2 */}
+          <section>
+            <h2 className="text-xl font-bold text-[#d97706] mb-3">Article 2 — Description of the Digital Product</h2>
+            <p>ECOMY markets an online training course on e-commerce, consisting of:</p>
+            <ul className="list-disc list-inside mt-2 space-y-1 text-gray-400">
+              <li>Twenty-seven (27) progressive learning modules</li>
+              <li>More than one hundred and twenty (120) practical video lessons</li>
+              <li>Downloadable PDF documents and course materials</li>
+              <li>Assessment exercises and interactive quizzes</li>
+              <li>Access to the online learning platform</li>
+            </ul>
+            <p className="mt-3">The selling price of the training is one hundred and ninety-seven euros (€197.00) including all taxes, payable in a single installment at the time of purchase.</p>
+            <p className="mt-3">The product is an intangible digital good. In accordance with Article L.221-28 of the French Consumer Code and Article 16(m) of European Directive 2011/83/EU, access to this digital content is activated immediately and automatically upon payment confirmation, after the Customer&apos;s express consent. This immediate activation carries the consequences described in Article 5 herein.</p>
+          </section>
 
-                        <h3 className="text-xl font-bold text-white mb-2 mt-4">3.1 الباقات المتاحة</h3>
+          {/* Article 3 */}
+          <section>
+            <h2 className="text-xl font-bold text-[#d97706] mb-3">Article 3 — Order Process and Contract Formation</h2>
+            <p>The contract is formed when the Customer definitively validates their order on the payment platform. Prior to this validation, the Customer:</p>
+            <ul className="list-disc list-inside mt-2 space-y-1 text-gray-400">
+              <li>Has read and expressly accepted these T&amp;C by checking the box provided for this purpose</li>
+              <li>Has confirmed understanding and acceptance of the no-refund policy</li>
+              <li>Has expressly consented to the immediate activation of the digital content</li>
+              <li>Has acknowledged thereby waiving their right of withdrawal</li>
+            </ul>
+            <p className="mt-3">The order confirmation is sent to the Customer by email at the address provided at the time of purchase. The Seller reserves the right to refuse or cancel any order for legitimate reasons.</p>
+          </section>
 
-                        <div className="space-y-4 mt-4">
-                            <div className="bg-white/5 p-4 rounded-lg border-r-4 border-orange-500">
-                                <p className="font-bold text-white text-lg">🚀 الشرارة (Spark) - €997</p>
-                                <ul className="list-disc list-inside mt-2 space-y-1 text-sm">
-                                    <li>نظام Lexmo.AI الأساسي</li>
-                                    <li>تكوين تجارة إلكترونية (10 وحدات)</li>
-                                    <li>قوالب جاهزة</li>
-                                    <li>دعم عبر البريد الإلكتروني</li>
-                                    <li>تحديثات لمدة سنة</li>
-                                </ul>
-                            </div>
+          {/* Article 4 */}
+          <section>
+            <h2 className="text-xl font-bold text-[#d97706] mb-3">Article 4 — Pricing, Payment and Transaction Security</h2>
+            <p>The price displayed on the Platform is expressed in euros including all taxes. The Seller reserves the right to modify prices at any time, it being understood that the applicable price is that in force at the time the order is validated.</p>
+            <p className="mt-3">Payment is made exclusively by credit card via the secure Stripe, Inc. platform. The Seller does not retain any banking data from the Customer. The transaction is secured by SSL protocol and PCI-DSS standards. Any attempt at fraud or misuse will be subject to legal proceedings.</p>
+            <p className="mt-3">In the event of non-payment or bank rejection, the Seller reserves the right to immediately suspend access to the training and to initiate any necessary recovery procedure, including legal action.</p>
+          </section>
 
-                            <div className="bg-white/5 p-4 rounded-lg border-r-4 border-cyan-500">
-                                <p className="font-bold text-white text-lg">👑 الإمبراطور (Emperor) - €1,497</p>
-                                <ul className="list-disc list-inside mt-2 space-y-1 text-sm">
-                                    <li>كل ما في Spark</li>
-                                    <li>28 مكافأة حصرية (قيمة €70,000+)</li>
-                                    <li>مجتمع VIP</li>
-                                    <li>جلسات Live أسبوعية</li>
-                                    <li>تحديثات مدى الحياة</li>
-                                    <li>حقوق إعادة البيع (برنامج السفير)</li>
-                                </ul>
-                            </div>
+          {/* Article 5 */}
+          <section>
+            <h2 className="text-xl font-bold text-[#d97706] mb-3">Article 5 — No-Refund Policy and Right of Withdrawal</h2>
 
-                            <div className="bg-white/5 p-4 rounded-lg border-r-4 border-purple-500">
-                                <p className="font-bold text-white text-lg">💎 الأسطورة (Legend) - €3,997</p>
-                                <ul className="list-disc list-inside mt-2 space-y-1 text-sm">
-                                    <li>كل ما في Emperor</li>
-                                    <li>مرافقة شخصية 1-على-1 (12 جلسة)</li>
-                                    <li>بناء متجرك "Done For You"</li>
-                                    <li>إدارة أول حملة إعلانية</li>
-                                    <li>واتساب خاص مباشر</li>
-                                    <li>ضمان أول بيع 30 يوم</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </section>
+            <h3 className="text-base font-bold text-white mt-4 mb-2">5.1 — Legal Basis</h3>
+            <p>In accordance with Article L.221-28, 13° of the French Consumer Code and Article 16(m) of European Directive 2011/83/EU on consumer rights, the right of withdrawal does not apply to contracts for the supply of digital content not supplied on a tangible medium, the performance of which has begun with the consumer&apos;s prior express agreement and acknowledgment that they will thereby lose their right of withdrawal.</p>
 
-                    <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">المادة 4. الأسعار</h2>
-                        <p>
-                            الأسعار المعروضة على الموقع هي بالي ورو (€) وتشمل جميع الضرائب.
-                        </p>
+            <h3 className="text-base font-bold text-white mt-4 mb-2">5.2 — Express and Irrevocable Waiver</h3>
+            <p>By proceeding with payment, the Customer expressly and irrevocably acknowledges and accepts that:</p>
+            <ul className="list-disc list-inside mt-2 space-y-1 text-gray-400">
+              <li>Access to digital content is activated immediately and automatically upon payment confirmation</li>
+              <li>The digital content is deemed fully delivered and consumed upon activation of access</li>
+              <li>The Customer expressly and definitively waives any right of withdrawal</li>
+              <li>No refund will be granted after activation of access, under any circumstances whatsoever</li>
+              <li>This waiver is final, unconditional and not subject to subsequent retraction</li>
+            </ul>
 
-                        <h3 className="text-xl font-bold text-white mb-2 mt-4">4.1 أسعار السفراء</h3>
-                        <p>العملاء الذين يستخدمون رمز إحالة السفير يحصلون على خصم:</p>
-                        <ul className="list-disc list-inside space-y-1 mt-2">
-                            <li>Spark: €697 (بدلاً من €997)</li>
-                            <li>Emperor: €997 (بدلاً من €1,497)</li>
-                            <li>Legend: €2,997 (بدلاً من €3,997)</li>
-                        </ul>
-                    </section>
+            <h3 className="text-base font-bold text-white mt-4 mb-2">5.3 — Absolute No-Refund Policy</h3>
+            <p>The Seller applies a strict and absolute no-refund policy. No refund will be granted notably in the following cases, this list not being exhaustive:</p>
+            <ul className="list-disc list-inside mt-2 space-y-1 text-gray-400">
+              <li>Subjective dissatisfaction of the Customer regarding the content of the training</li>
+              <li>Absence of financial or commercial results</li>
+              <li>Technical difficulties related to the Customer&apos;s equipment or internet connection</li>
+              <li>Change in the Customer&apos;s personal or professional situation</li>
+              <li>Customer&apos;s misjudgment regarding the suitability of the training for their needs</li>
+              <li>Total or partial non-use of the content by the Customer</li>
+              <li>Any other reason invoked by the Customer after activation of access</li>
+            </ul>
 
-                    <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">المادة 5. الطلب والدفع</h2>
+            <h3 className="text-base font-bold text-white mt-4 mb-2">5.4 — Strictly Limited Exceptions</h3>
+            <p>On an exceptional and discretionary basis, the Seller may examine — without any obligation to act — the following situations, provided they are reported within forty-eight (48) hours of purchase:</p>
+            <ul className="list-disc list-inside mt-2 space-y-1 text-gray-400">
+              <li>Serious and documented technical failure of the platform totally preventing access to the content for more than seven (7) consecutive days, exclusively attributable to the Seller</li>
+              <li>Proven double charge for the same order, justified by an official bank statement</li>
+            </ul>
+            <p className="mt-3">Any request must be sent to the address indicated in the Platform&apos;s Legal Notice, accompanied by supporting evidence. The decision to grant a refund in these exceptional cases is at the sole discretion of the Seller.</p>
+          </section>
 
-                        <h3 className="text-xl font-bold text-white mb-2">5.1 عملية الطلب</h3>
-                        <ol className="list-decimal list-inside space-y-2">
-                            <li>اختيار الباقة المطلوبة</li>
-                            <li>إعادة التوجيه إلى صفحة الدفع الآمنة Stripe</li>
-                            <li>إدخال معلومات الدفع</li>
-                            <li>التحقق من الطلب</li>
-                            <li>تلقي بريد إلكتروني للتأكيد</li>
-                            <li>الوصول الفوري إلى المنصة</li>
-                        </ol>
+          {/* Article 6 */}
+          <section>
+            <h2 className="text-xl font-bold text-[#d97706] mb-3">Article 6 — Bank Dispute Procedure (Chargeback)</h2>
+            <p>The Seller expressly draws the Customer&apos;s attention to the serious consequences of an unjustified bank dispute (chargeback) procedure.</p>
+            <p className="mt-3">In the event of a chargeback initiated by the Customer after activation of access to the digital content, the Seller will:</p>
+            <ul className="list-disc list-inside mt-2 space-y-1 text-gray-400">
+              <li>Submit to the banking institution all evidence of activation and access to the content (timestamped server logs, IP addresses, connection history)</li>
+              <li>Produce proof of the Customer&apos;s express acceptance of these T&amp;C, including waiver of the right of withdrawal</li>
+              <li>Invoke the exception provided for in Article 16(m) of Directive 2011/83/EU and Article L.221-28 of the French Consumer Code</li>
+              <li>Immediately and permanently suspend the Customer&apos;s access to the training and all associated services</li>
+              <li>Reserve the right to initiate any appropriate legal proceedings to recover amounts due and obtain compensation for damages suffered</li>
+            </ul>
+            <p className="mt-3">The Customer acknowledges that initiating an unjustified chargeback constitutes a characterised fraud and may engage their civil and criminal liability. The Seller has all technical data to demonstrate effective access to the digital content.</p>
+          </section>
 
-                        <h3 className="text-xl font-bold text-white mb-2 mt-4">5.2 وسائل الدفع</h3>
-                        <p>نقبل المدفوعات عن طريق:</p>
-                        <ul className="list-disc list-inside space-y-1">
-                            <li>البطاقات البنكية (Visa, Mastercard, American Express)</li>
-                            <li>PayPal</li>
-                            <li>تحويل بنكي (عند الطلب)</li>
-                        </ul>
+          {/* Article 7 */}
+          <section>
+            <h2 className="text-xl font-bold text-[#d97706] mb-3">Article 7 — Intellectual Property and License of Use</h2>
+            <p>All content comprising the training (videos, texts, images, PDFs, logos, trademarks, trade names, interfaces) is the exclusive property of the Seller and is protected by intellectual property law, including copyright, trademark law and sui generis database rights.</p>
+            <p className="mt-3">The Seller grants the Customer a personal, non-exclusive, non-transferable, non-sublicensable and revocable limited license to access and use the training content, solely for personal and private learning purposes, for the duration provided in Article 8 herein.</p>
+            <p className="mt-3">The following are strictly prohibited for the Customer, under penalty of immediate termination of access without refund and legal proceedings:</p>
+            <ul className="list-disc list-inside mt-2 space-y-1 text-gray-400">
+              <li>Reproducing, copying, duplicating or downloading all or part of the content</li>
+              <li>Distributing, broadcasting, publishing or sharing the content by any means whatsoever</li>
+              <li>Selling, renting, sublicensing or transferring the content or access rights</li>
+              <li>Recording or capturing videos by any technical means</li>
+              <li>Creating derivative works from the content</li>
+              <li>Sharing login credentials with third parties</li>
+              <li>Using the content for unauthorized commercial or professional purposes</li>
+            </ul>
+          </section>
 
-                        <h3 className="text-xl font-bold text-white mb-2 mt-4">5.3 الأمان</h3>
-                        <p>
-                            جميع المدفوعات تتم بشكل آمن عبر Stripe وفقاً لمعايير PCI-DSS.
-                            <strong> لا نخزن أبداً معلومات بطاقتك الائتمانية</strong> على خوادمنا.
-                        </p>
-                    </section>
+          {/* Article 8 */}
+          <section>
+            <h2 className="text-xl font-bold text-[#d97706] mb-3">Article 8 — Duration of Access and Termination Conditions</h2>
+            <p>Access to the training is granted for a fixed period of six (6) months from the activation date. Upon expiry, the Seller reserves the right to delete access without notice or compensation. The Customer may renew their access by purchasing the training again at the then-current prices.</p>
+            <p className="mt-3">The Seller reserves the right to immediately terminate access without notice in case of:</p>
+            <ul className="list-disc list-inside mt-2 space-y-1 text-gray-400">
+              <li>Violation of any provision of these T&amp;C</li>
+              <li>Unauthorized sharing of login credentials</li>
+              <li>Attempt to download or copy content</li>
+              <li>Initiation of a chargeback procedure</li>
+              <li>Any fraudulent or harmful behavior toward the Seller</li>
+            </ul>
+            <p className="mt-3">Termination for breach results in permanent loss of access without refund and does not preclude legal proceedings.</p>
+          </section>
 
-                    <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">المادة 6. حق التراجع</h2>
-                        <p className="text-lg">
-                            وفقاً للتشريعات المعمول بها، لديك <strong className="text-green-400">30 يوماً</strong> لممارسة حقك في التراجع دون إبداء الأسباب.
-                        </p>
-                        <p className="mt-4">
-                            لممارسة هذا الحق، أرسل طلباً إلى: <strong>acadmyfrance75@gmail.com</strong>
-                        </p>
-                        <p className="mt-2 text-sm">
-                            سيتم رد الأموال خلال 14 يوماً من استلام طلبك، بنفس طريقة الدفع المستخدمة عند الشراء.
-                        </p>
-                    </section>
+          {/* Article 9 */}
+          <section>
+            <h2 className="text-xl font-bold text-[#d97706] mb-3">Article 9 — Limitation of Liability and Results Disclaimer</h2>
+            <p>The training content is provided for purely educational and informational purposes. The Seller does not guarantee the achievement of specific financial, commercial or professional results following the training.</p>
+            <p className="mt-3">The Customer expressly acknowledges and accepts that:</p>
+            <ul className="list-disc list-inside mt-2 space-y-1 text-gray-400">
+              <li>Examples of results and figures presented in marketing materials are illustrations for indicative purposes only and do not constitute a promise of results</li>
+              <li>Success depends exclusively on personal effort, investment, skills and market conditions specific to each Customer</li>
+              <li>The Seller is not responsible for financial losses, direct or indirect, that may result from applying the strategies taught</li>
+              <li>The training does not constitute financial, tax, legal or accounting advice</li>
+              <li>Results vary significantly from one individual to another</li>
+            </ul>
+            <p className="mt-3">The Seller&apos;s liability, for any reason whatsoever, is expressly limited to the amount paid by the Customer for the training (€197). The Seller shall not be liable for indirect, consequential, special or exemplary damages.</p>
+          </section>
 
-                    <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">المادة 7. الوصول إلى الخدمات</h2>
+          {/* Article 10 */}
+          <section>
+            <h2 className="text-xl font-bold text-[#d97706] mb-3">Article 10 — Personal Data Protection</h2>
+            <p>In the context of the performance hereof, the Seller collects and processes the Customer&apos;s personal data in accordance with the General Data Protection Regulation (GDPR — EU Regulation 2016/679) and the French Data Protection Act.</p>
+            <p className="mt-3">Data collected (name, email address, country of residence, IP address, connection and payment data) is used exclusively for contract performance, access management, and compliance with the Seller&apos;s legal obligations.</p>
+            <p className="mt-3">The Customer has the right to access, rectify, erase and port their data, as well as the right to object to its processing. These rights may be exercised by sending a written request to the address indicated in the Platform&apos;s Legal Notice.</p>
+            <p className="mt-3">Payment data is processed exclusively by Stripe, Inc., in accordance with its own privacy policies and PCI-DSS standards. The Seller retains no banking data.</p>
+          </section>
 
-                        <h3 className="text-xl font-bold text-white mb-2">7.1 الوصول إلى المنصة</h3>
-                        <p>
-                            يتم منح الوصول إلى المنصة فوراً بعد تأكيد الدفع. ستتلقى بريداً إلكترونياً يحتوي على بيانات الاعتماد.
-                        </p>
+          {/* Article 11 */}
+          <section>
+            <h2 className="text-xl font-bold text-[#d97706] mb-3">Article 11 — Force Majeure</h2>
+            <p>The Seller shall not be held liable for non-performance or delay in performance of its obligations in the event of a force majeure event as defined by Article 1218 of the French Civil Code, including natural disasters, war, pandemic, digital infrastructure failure, cyberattack or any other unforeseeable and insurmountable event.</p>
+          </section>
 
-                        <h3 className="text-xl font-bold text-white mb-2 mt-4">7.2 مدة الوصول</h3>
-                        <ul className="list-disc list-inside space-y-2">
-                            <li><strong>Spark:</strong> وصول لمدة سنة واحدة + تحديثات</li>
-                            <li><strong>Emperor:</strong> وصول مدى الحياة + تحديثات مدى الحياة</li>
-                            <li><strong>Legend:</strong> وصول مدى الحياة + مرافقة 3 أشهر</li>
-                        </ul>
+          {/* Article 12 */}
+          <section>
+            <h2 className="text-xl font-bold text-[#d97706] mb-3">Article 12 — Governing Law, Jurisdiction and Mediation</h2>
+            <p>These T&amp;C are governed by French law. In the event of a dispute relating to the interpretation, validity or performance hereof, the parties undertake to seek an amicable solution prior to any legal action.</p>
+            <p className="mt-3">Failing amicable agreement within thirty (30) days of notification of the dispute, any disagreement shall be submitted to the exclusive jurisdiction of the courts of the Seller&apos;s registered office, even in the case of multiple defendants or warranty claims, notwithstanding any contrary clause.</p>
+            <p className="mt-3">In accordance with the Consumer Code provisions on amicable dispute resolution, the Customer may resort free of charge to the mediation service whose contact details are available on the Platform.</p>
+          </section>
 
-                        <h3 className="text-xl font-bold text-white mb-2 mt-4">7.3 السرية</h3>
-                        <p>
-                            بيانات الاعتماد الخاصة بك شخصية ومحدودة الاستخدام. تحظر مشاركتها مع أطراف ثالثة.
-                        </p>
-                    </section>
+          {/* Article 13 */}
+          <section>
+            <h2 className="text-xl font-bold text-[#d97706] mb-3">Article 13 — Miscellaneous Provisions</h2>
+            <p>If any provision of these T&amp;C is declared null or unenforceable by a competent court, the remaining provisions shall remain in full force. Partial nullity shall not entail nullity of these T&amp;C as a whole.</p>
+            <p className="mt-3">The Seller&apos;s failure to invoke any clause of these T&amp;C at any given time shall not be construed as a waiver of the right to invoke said clause subsequently.</p>
+            <p className="mt-3">These T&amp;C constitute the entire agreement between the parties regarding their subject matter and supersede all prior agreements, written or oral, on the same subject.</p>
+          </section>
 
-                    <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">المادة 8. الملكية الفكرية</h2>
-                        <p>
-                            جميع محتويات المنصة (دروس، فيديوهات، مستندات، قوالب) محمية بحقوق الملكية الفكرية
-                            وتبقى ملكية حصرية لـ ECOMY.
-                        </p>
-
-                        <h3 className="text-xl font-bold text-white mb-2 mt-4">8.1 الاستخدام المصرح به</h3>
-                        <ul className="list-disc list-inside space-y-1">
-                            <li>استخدام شخصي فقط</li>
-                            <li>التنزيل للاستخدام دون اتصال (Emperor و Legend)</li>
-                            <li>التطبيق العملي لتطوير نشاطك</li>
-                        </ul>
-
-                        <h3 className="text-xl font-bold text-white mb-2 mt-4">8.2 الاستخدام المحظور</h3>
-                        <p><strong className="text-red-400">يحظر بشكل صارم:</strong></p>
-                        <ul className="list-disc list-inside space-y-1">
-                            <li>مشاركة بيانات الاعتماد</li>
-                            <li>نسخ أو نشر المحتوى</li>
-                            <li>إعادة بيع التدريب (إلا حقوق السفير Emperor/Legend)</li>
-                            <li>الهندسة العكسية للمحتوى</li>
-                        </ul>
-                    </section>
-
-                    <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">المادة 9. برنامج السفراء</h2>
-                        <p>
-                            تتضمن باقات <strong>Emperor</strong> و <strong>Legend</strong> حقوق إعادة البيع المحدودة.
-                        </p>
-
-                        <h3 className="text-xl font-bold text-white mb-2 mt-4">9.1 العمولات</h3>
-                        <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4 space-y-2">
-                            <p>💰 <strong>Spark:</strong> €498 لكل عملية بيع (50%)</p>
-                            <p>💰 <strong>Emperor:</strong> €748 لكل عملية بيع (50%)</p>
-                            <p>💰 <strong>Legend:</strong> €1,000 لكل عملية بيع (33%)</p>
-                        </div>
-
-                        <h3 className="text-xl font-bold text-white mb-2 mt-4">9.2 الالتزامات</h3>
-                        <p>كسفير، أنت ملتزم بـ:</p>
-                        <ul className="list-disc list-inside space-y-1">
-                            <li>الترويج بطريقة أخلاقية ونزيهة</li>
-                            <li>عدم تقديم وعود كاذبة</li>
-                            <li>احترام صورة العلامة التجارية ECOMY</li>
-                            <li>الامتثال لقوانين الإعلان والتسويق</li>
-                        </ul>
-                    </section>
-
-                    <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">المادة 10. المسؤولية</h2>
-
-                        <h3 className="text-xl font-bold text-white mb-2">10.1 التزام الوسائل</h3>
-                        <p>
-                            ECOMY ملتزمة ببذل أقصى الجهود لتوفير محتوى عالي الجودة.
-                            ومع ذلك، <strong>لا يمكننا ضمان نتائج محددة</strong> حيث تعتمد النتائج على تطبيقك للبرنامج.
-                        </p>
-
-                        <h3 className="text-xl font-bold text-white mb-2 mt-4">10.2 إخلاء المسؤولية</h3>
-                        <p>ECOMY ليست مسؤولة عن:</p>
-                        <ul className="list-disc list-inside space-y-1">
-                            <li>الوصول المؤقت غير المتاح للمنصة</li>
-                            <li>فقدان البيانات بسبب مشكلة تقنية</li>
-                            <li>الأضرار غير المباشرة الناتجة عن استخدام التدريب</li>
-                            <li>النزاعات مع عملائك أو أطراف ثالثة</li>
-                        </ul>
-                    </section>
-
-                    <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">المادة 11. القوة القاهرة</h2>
-                        <p>
-                            لا يمكن تحميل ECOMY المسؤولية في حالة القوة القاهرة، بما في ذلك على سبيل المثال لا الحصر:
-                        </p>
-                        <ul className="list-disc list-inside space-y-1">
-                            <li>الكوارث الطبيعية</li>
-                            <li>انقطاع الاتصالات أو الإنترنت</li>
-                            <li>الإضرابات</li>
-                            <li>الأزمات الصحية</li>
-                            <li>أي ظرف خارج عن سيطرتنا المعقولة</li>
-                        </ul>
-                    </section>
-
-                    <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">المادة 12. حماية البيانات</h2>
-                        <p>
-                            نحن ملتزمون بحماية بياناتك الشخصية وفقاً للائحة العامة لحماية البيانات (RGPD).
-                        </p>
-                        <p className="mt-2">
-                            لمزيد من المعلومات، راجع <a href="/legal/privacy" className="text-[#00d2ff] hover:underline">سياسة الخصوصية</a> الخاصة بنا.
-                        </p>
-                    </section>
-
-                    <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">المادة 13. تعديل الشروط</h2>
-                        <p>
-                            تحتفظ ECOMY بالحق في تعديل هذه الشروط العامة في أي وقت.
-                        </p>
-                        <p className="mt-2">
-                            الشروط المعمول بها هي تلك السارية في تاريخ الطلب.
-                        </p>
-                    </section>
-
-                    <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">المادة 14. القانون المعمول به</h2>
-                        <p>
-                            تخضع هذه الشروط العامة للقانون الفرنسي.
-                        </p>
-                        <p className="mt-4">
-                            في حالة نزاع، سنحاول إيجاد حل ودي قبل اللجوء إلى المحاكم المختصة.
-                        </p>
-                    </section>
-
-                    <section>
-                        <h2 className="text-2xl font-bold text-white mb-4">المادة 15. خدمة العملاء</h2>
-                        <div className="bg-[#00d2ff]/10 border border-[#00d2ff]/20 rounded-xl p-6">
-                            <p className="text-lg mb-4">لأي أسئلة أو مشاكل، اتصل بنا:</p>
-                            <ul className="list-none space-y-2">
-                                <li><strong>البريد الإلكتروني:</strong> acadmyfrance75@gmail.com</li>
-                                <li><strong>وقت الاستجابة:</strong> 24-48 ساعة (أيام العمل)</li>
-                            </ul>
-                        </div>
-                    </section>
-
-                    <section className="bg-white/5 p-6 rounded-xl border border-white/10">
-                        <p className="text-sm text-gray-400 text-center">
-                            هذه الشروط العامة سارية المفعول اعتباراً من 26 يناير 2026.
-                            باستخدام خدماتنا، فإنك توافق على هذه الشروط دون تحفظ.
-                        </p>
-                    </section>
-                </div>
-            </div>
         </div>
-    );
+
+        {/* Legal Notice */}
+        <div className="mt-16 pt-8 border-t border-white/10 text-xs text-gray-600 space-y-1">
+          <p><strong className="text-gray-500">Company name:</strong> HAMZA SHOP</p>
+          <p><strong className="text-gray-500">Registered office:</strong> 808 Boulevard La Grand Delle, 14200 Hérouville-Saint-Clair, France</p>
+          <p><strong className="text-gray-500">RCS number:</strong> 842 966 145 R.C.S. Caen</p>
+          <p><strong className="text-gray-500">Contact:</strong> lexmoacadmy@gmail.com</p>
+          <p><strong className="text-gray-500">Platform:</strong> lexmo.ai</p>
+          <p className="mt-4 text-gray-700">© 2026 ECOMY — HAMZA SHOP. All rights reserved.</p>
+        </div>
+
+      </div>
+    </div>
+  );
 }
