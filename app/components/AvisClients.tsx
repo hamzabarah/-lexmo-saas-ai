@@ -38,7 +38,7 @@ export default function AvisClients() {
     const [visibleCount, setVisibleCount] = useState(12);
 
     return (
-        <section id="reviews" className="py-20 bg-black/50 overflow-hidden">
+        <section id="reviews" className="py-20 bg-gray-100/50 overflow-hidden">
             {/* Verified Badge Animation */}
             <style jsx>{`
                 @keyframes verified-pulse {
@@ -61,7 +61,7 @@ export default function AvisClients() {
                     <h2 className="text-4xl lg:text-5xl font-bold font-cairo mb-4">
                         لقد فعلوها.. <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ffd700] to-orange-500">والآن جاء دورك</span>
                     </h2>
-                    <p className="text-gray-400 text-lg">موظفون، طلاب، آباء وأمهات — أشخاص عاديون كسروا حاجز الشك والخوف.</p>
+                    <p className="text-gray-500 text-lg">موظفون، طلاب، آباء وأمهات — أشخاص عاديون كسروا حاجز الشك والخوف.</p>
                 </FadeIn>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -80,7 +80,7 @@ export default function AvisClients() {
                             {/* Card with Image */}
                             <div className="relative rounded-2xl overflow-hidden glass-card hover:border-[#ffd700]/50 transition-all duration-300">
                                 {/* Full Image - No Cropping */}
-                                <div className="relative bg-gray-900">
+                                <div className="relative bg-[#f4f6f8]">
                                     <img
                                         src={review.image}
                                         alt={`Témoignage ${review.amount} en ${review.time}`}
@@ -106,7 +106,7 @@ export default function AvisClients() {
                     <FadeIn delay={0.2} className="text-center mt-12">
                         <button
                             onClick={() => setVisibleCount(visibleCount + 12)}
-                            className="bg-white/5 border border-white/10 hover:bg-white/10 text-white px-8 py-3 rounded-full font-bold transition-all transform hover:scale-105"
+                            className="bg-gray-50 border border-gray-200 hover:bg-gray-100 text-white px-8 py-3 rounded-full font-bold transition-all transform hover:scale-105"
                         >
                             عرض المزيد من النتائج
                         </button>

@@ -20,8 +20,8 @@ function PricingContent() {
     return (
         <section id="pricing" className="py-20 relative overflow-hidden">
             {/* Background Glows */}
-            <div className="absolute top-1/4 left-0 w-96 h-96 bg-[#00d2ff]/10 rounded-full blur-[128px] pointer-events-none" />
-            <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-[#9d50bb]/10 rounded-full blur-[128px] pointer-events-none" />
+            <div className="absolute top-1/4 left-0 w-96 h-96 bg-[#008060]/10 rounded-full blur-[128px] pointer-events-none" />
+            <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-[#006e52]/10 rounded-full blur-[128px] pointer-events-none" />
 
             <div className="container mx-auto px-4 max-w-6xl relative z-10">
                 <FadeIn className="text-center mb-16">
@@ -31,9 +31,9 @@ function PricingContent() {
                         </div>
                     )}
                     <h2 className="text-4xl lg:text-5xl font-bold font-cairo mb-4 leading-tight">
-                        اختر خطتك وابدأ <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00d2ff] to-[#9d50bb]">رحلة الثراء</span>
+                        اختر خطتك وابدأ <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#008060] to-[#006e52]">رحلة الثراء</span>
                     </h2>
-                    <p className="text-xl text-gray-400 mb-8">استثمارك اليوم هو مفتاح حريتك غداً</p>
+                    <p className="text-xl text-gray-500 mb-8">استثمارك اليوم هو مفتاح حريتك غداً</p>
 
                     <CountdownTimer />
                 </FadeIn>
@@ -67,7 +67,7 @@ function PricingContent() {
 
                     {/* PACK 2: EMPEROR */}
                     <div className="relative transform lg:-translate-y-4 lg:scale-105 z-10">
-                        <div className="absolute -inset-1 bg-gradient-to-b from-[#00d2ff] to-[#9d50bb] rounded-3xl blur opacity-40 animate-pulse" />
+                        <div className="absolute -inset-1 bg-gradient-to-b from-[#008060] to-[#006e52] rounded-3xl blur opacity-40 animate-pulse" />
                         <PriceCard
                             title="الإمبراطور 👑"
                             subtitle="ابنِ إمبراطوريتك الخاصة"
@@ -123,16 +123,16 @@ function PricingContent() {
 
                 <div className="mt-20 text-center">
                     <div className="flex justify-center flex-wrap gap-8 mb-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-                        <div className="flex items-center gap-2 text-xl font-bold text-gray-400"><CreditCard /> STRIPE</div>
-                        <div className="flex items-center gap-2 text-xl font-bold text-gray-400">VISA</div>
-                        <div className="flex items-center gap-2 text-xl font-bold text-gray-400">MASTERCARD</div>
-                        <div className="flex items-center gap-2 text-xl font-bold text-gray-400">PAYPAL</div>
+                        <div className="flex items-center gap-2 text-xl font-bold text-gray-500"><CreditCard /> STRIPE</div>
+                        <div className="flex items-center gap-2 text-xl font-bold text-gray-500">VISA</div>
+                        <div className="flex items-center gap-2 text-xl font-bold text-gray-500">MASTERCARD</div>
+                        <div className="flex items-center gap-2 text-xl font-bold text-gray-500">PAYPAL</div>
                     </div>
-                    <div className="flex items-center justify-center gap-2 text-gray-400 text-sm mb-4">
+                    <div className="flex items-center justify-center gap-2 text-gray-500 text-sm mb-4">
                         <Shield className="w-4 h-4 text-[#10b981]" />
                         دفع آمن 100% عبر Stripe
                     </div>
-                    <div className="flex items-center justify-center gap-2 text-gray-400 text-sm">
+                    <div className="flex items-center justify-center gap-2 text-gray-500 text-sm">
                         <Shield className="w-4 h-4 text-[#10b981]" />
                         ضمان استرداد 30 يوم - بدون أسئلة
                     </div>
@@ -181,7 +181,7 @@ function CountdownTimer() {
 function TimeBox({ value, label }: { value: number, label: string }) {
     return (
         <div className="text-center">
-            <div className="bg-[#white]/5 bg-white/5 border border-white/10 rounded-xl p-4 min-w-[80px] lg:min-w-[100px] mb-2 backdrop-blur-sm">
+            <div className="bg-[#white]/5 bg-gray-50 border border-gray-200 rounded-xl p-4 min-w-[80px] lg:min-w-[100px] mb-2 backdrop-blur-sm">
                 <div className="text-3xl lg:text-4xl font-bold text-[#ffd700]">{String(value).padStart(2, '0')}</div>
             </div>
             <div className="text-xs text-gray-500 font-cairo">{label}</div>
@@ -204,29 +204,29 @@ function PriceCard({
         legend: 'https://buy.stripe.com/3cIdR9adabEd0Xr6czgfu03'
     };
 
-    const borderColor = accentColor === 'violet' ? 'border-[#a855f7]/50 hover:border-[#a855f7]' : isPopular ? 'border-[#00d2ff]' : 'border-white/10';
+    const borderColor = accentColor === 'violet' ? 'border-[#a855f7]/50 hover:border-[#a855f7]' : isPopular ? 'border-[#008060]' : 'border-gray-200';
     const btnClass = accentColor === 'violet'
         ? 'bg-[#a855f7] hover:bg-[#9333ea] text-white shadow-lg shadow-purple-500/25'
         : isPopular
-            ? 'bg-gradient-to-r from-[#00d2ff] to-[#9d50bb] text-white shadow-lg shadow-cyan-500/25'
-            : 'bg-white/5 hover:bg-white/10 text-white border border-white/10';
+            ? 'bg-gradient-to-r from-[#008060] to-[#006e52] text-white shadow-lg shadow-emerald-600/25'
+            : 'bg-gray-50 hover:bg-gray-100 text-white border border-gray-200';
 
     return (
-        <div className={`relative bg-[#0f172a] border rounded-2xl p-8 h-full flex flex-col ${borderColor} transition-colors duration-300`}>
+        <div className={`relative bg-[#f4f6f8] border rounded-2xl p-8 h-full flex flex-col ${borderColor} transition-colors duration-300`}>
             {badge && (
-                <div className={`absolute -top-4 left-1/2 -translate-x-1/2 px-6 py-1.5 rounded-full text-sm font-bold shadow-lg whitespace-nowrap ${accentColor === 'violet' ? 'bg-[#a855f7] shadow-purple-500/20' : 'bg-gradient-to-r from-[#00d2ff] to-[#9d50bb] shadow-cyan-500/20'} text-white`}>
+                <div className={`absolute -top-4 left-1/2 -translate-x-1/2 px-6 py-1.5 rounded-full text-sm font-bold shadow-lg whitespace-nowrap ${accentColor === 'violet' ? 'bg-[#a855f7] shadow-purple-500/20' : 'bg-gradient-to-r from-[#008060] to-[#006e52] shadow-emerald-600/20'} text-white`}>
                     {badge}
                 </div>
             )}
 
             <div className="text-center mb-6">
                 <h3 className={`text-2xl font-bold mb-2 ${accentColor === 'violet' ? 'text-[#a855f7]' : 'text-gray-100'}`}>{title}</h3>
-                <p className="text-sm text-gray-400 h-6">{subtitle}</p>
+                <p className="text-sm text-gray-500 h-6">{subtitle}</p>
             </div>
 
             <div className="text-center mb-6">
                 <div className="text-sm text-gray-500 line-through mb-1">€{original}</div>
-                <div className="text-5xl font-bold text-white font-orbitron">€{price}</div>
+                <div className="text-5xl font-bold text-gray-900 font-orbitron">€{price}</div>
                 {paymentOption ? (
                     <div className="text-xs text-[#a855f7] font-bold mt-2">{paymentOption}</div>
                 ) : (
@@ -256,10 +256,10 @@ function PriceCard({
                 </div>
             )}
 
-            <div className="space-y-4 flex-grow border-t border-white/5 pt-6">
+            <div className="space-y-4 flex-grow border-t border-gray-200 pt-6">
                 {features.map((feat, i) => (
-                    <div key={i} className="flex items-start gap-3 text-sm text-gray-300">
-                        <div className={`mt-0.5 p-0.5 rounded-full ${accentColor === 'violet' ? 'bg-[#a855f7]/20 text-[#a855f7]' : 'bg-[#00d2ff]/20 text-[#00d2ff]'}`}>
+                    <div key={i} className="flex items-start gap-3 text-sm text-gray-600">
+                        <div className={`mt-0.5 p-0.5 rounded-full ${accentColor === 'violet' ? 'bg-[#a855f7]/20 text-[#a855f7]' : 'bg-[#008060]/20 text-[#008060]'}`}>
                             <Check size={12} />
                         </div>
                         <span>{feat}</span>

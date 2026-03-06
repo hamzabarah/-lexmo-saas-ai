@@ -105,7 +105,7 @@ export default function Home() {
               <span className="text-[#1A1A1A] font-semibold text-[15px]">{item.q}</span>
               <ChevronDown
                 size={18}
-                className={`text-gray-400 shrink-0 transition-transform duration-200 ${openFaq === i ? 'rotate-180' : ''}`}
+                className={`text-gray-500 shrink-0 transition-transform duration-200 ${openFaq === i ? 'rotate-180' : ''}`}
               />
             </button>
             {openFaq === i && (
@@ -197,7 +197,7 @@ export default function Home() {
   );
 
   const LoginLink = (
-    <a href="/login" className="block text-center text-sm text-gray-400 hover:text-[#008060] transition-colors mt-2">
+    <a href="/login" className="block text-center text-sm text-gray-500 hover:text-[#008060] transition-colors mt-2">
       لديك حساب بالفعل؟ تسجيل الدخول
     </a>
   );

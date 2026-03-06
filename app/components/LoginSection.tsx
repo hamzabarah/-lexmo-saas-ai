@@ -40,28 +40,28 @@ export default function LoginSection() {
     };
 
     return (
-        <section id="login" className="relative py-20 bg-[#0a0a0a] border-y border-white/5">
+        <section id="login" className="relative py-20 bg-white border-y border-gray-200">
             {/* Background Glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#00d2ff]/5 rounded-full blur-[100px] -z-10" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#008060]/5 rounded-full blur-[100px] -z-10" />
 
             <div className="container mx-auto px-4">
                 <div className="max-w-md mx-auto">
                     {/* Header */}
                     <div className="text-center mb-8">
-                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
+                        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
                             هل لديك حساب بالفعل؟
                         </h2>
-                        <p className="text-gray-400 text-lg">
+                        <p className="text-gray-500 text-lg">
                             سجّل دخولك للوصول إلى التدريب
                         </p>
                     </div>
 
                     {/* Login Form */}
-                    <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-8 backdrop-blur-sm">
+                    <div className="bg-[#f4f6f8]/50 border border-gray-200 rounded-2xl p-8 backdrop-blur-sm">
                         <form onSubmit={handleLogin} className="space-y-6">
                             {/* Email Field */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-300 mb-2">
+                                <label className="block text-sm font-semibold text-gray-600 mb-2">
                                     البريد الإلكتروني
                                 </label>
                                 <div className="relative">
@@ -72,14 +72,14 @@ export default function LoginSection() {
                                         onChange={(e) => setEmail(e.target.value)}
                                         required
                                         placeholder="email@example.com"
-                                        className="w-full bg-gray-800 border border-gray-700 text-white rounded-xl px-12 py-4 focus:outline-none focus:ring-2 focus:ring-[#00d2ff] focus:border-transparent transition-all"
+                                        className="w-full bg-gray-100 border border-gray-200 text-gray-900 rounded-xl px-12 py-4 focus:outline-none focus:ring-2 focus:ring-[#008060] focus:border-transparent transition-all"
                                     />
                                 </div>
                             </div>
 
                             {/* Password Field */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-300 mb-2">
+                                <label className="block text-sm font-semibold text-gray-600 mb-2">
                                     كود الدخول (كلمة المرور)
                                 </label>
                                 <div className="relative">
@@ -90,7 +90,7 @@ export default function LoginSection() {
                                         onChange={(e) => setPassword(e.target.value)}
                                         required
                                         placeholder="أدخل كود الدخول"
-                                        className="w-full bg-gray-800 border border-gray-700 text-white rounded-xl px-12 py-4 focus:outline-none focus:ring-2 focus:ring-[#00d2ff] focus:border-transparent transition-all"
+                                        className="w-full bg-gray-100 border border-gray-200 text-gray-900 rounded-xl px-12 py-4 focus:outline-none focus:ring-2 focus:ring-[#008060] focus:border-transparent transition-all"
                                     />
                                 </div>
                             </div>
@@ -106,7 +106,7 @@ export default function LoginSection() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full bg-gradient-to-r from-[#00d2ff] to-[#9d50bb] hover:from-[#00c2ee] hover:to-[#8d40ab] text-white font-bold py-4 rounded-xl transition-all duration-200 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+                                className="w-full bg-gradient-to-r from-[#008060] to-[#006e52] hover:from-[#006e52] hover:to-[#8d40ab] text-white font-bold py-4 rounded-xl transition-all duration-200 shadow-lg shadow-emerald-600/25 hover:shadow-emerald-600/40 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
                             >
                                 {loading ? (
                                     <>
@@ -124,7 +124,7 @@ export default function LoginSection() {
                             <div className="text-center">
                                 <Link
                                     href="/forgot-password"
-                                    className="text-sm text-gray-400 hover:text-[#00d2ff] transition-colors"
+                                    className="text-sm text-gray-500 hover:text-[#008060] transition-colors"
                                 >
                                     نسيت كلمة المرور؟
                                 </Link>
@@ -134,11 +134,11 @@ export default function LoginSection() {
 
                     {/* Sign Up Link */}
                     <div className="text-center mt-6">
-                        <p className="text-gray-400">
+                        <p className="text-gray-500">
                             ليس لديك حساب بعد؟{' '}
                             <a
                                 href="#pricing"
-                                className="text-[#00d2ff] font-bold hover:text-[#00c2ee] transition-colors"
+                                className="text-[#008060] font-bold hover:text-[#006e52] transition-colors"
                             >
                                 اشترك الآن ←
                             </a>

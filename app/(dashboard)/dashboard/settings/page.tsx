@@ -45,18 +45,18 @@ export default function SettingsPage() {
     return (
         <div className="container mx-auto px-4 py-8 max-w-2xl relative">
             {/* Background Glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#00d2ff]/5 rounded-full blur-[100px] -z-10" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#008060]/5 rounded-full blur-[100px] -z-10" />
 
-            <h1 className="text-3xl font-bold text-white mb-8 text-center font-orbitron">إعدادات الحساب ⚙️</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center font-orbitron">إعدادات الحساب ⚙️</h1>
 
             {/* Password Section */}
-            <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-8 backdrop-blur-sm">
+            <div className="bg-[#f4f6f8]/50 border border-gray-200 rounded-2xl p-8 backdrop-blur-sm">
                 <div className="text-center mb-8">
-                    <div className="w-16 h-16 bg-[#00d2ff]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                        <Lock className="w-8 h-8 text-[#00d2ff]" />
+                    <div className="w-16 h-16 bg-[#008060]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <Lock className="w-8 h-8 text-[#008060]" />
                     </div>
-                    <h2 className="text-2xl font-bold text-white mb-2">كلمة المرور</h2>
-                    <p className="text-gray-400">قم بتعيين كلمة مرور لتسجيل الدخول</p>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">كلمة المرور</h2>
+                    <p className="text-gray-500">قم بتعيين كلمة مرور لتسجيل الدخول</p>
                 </div>
 
                 <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4 mb-8 text-right" dir="rtl">
@@ -68,27 +68,27 @@ export default function SettingsPage() {
 
                 <form onSubmit={handleSetPassword} className="space-y-6">
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-gray-300 block text-right mb-2">كلمة المرور الجديدة</label>
+                        <label className="text-sm font-semibold text-gray-600 block text-right mb-2">كلمة المرور الجديدة</label>
                         <input
                             name="newPassword"
                             type="password"
                             required
                             minLength={6}
                             placeholder="6 أحرف كحد أدنى"
-                            className="w-full bg-gray-800 border border-gray-700 text-white rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-[#00d2ff] focus:border-transparent transition-all text-right"
+                            className="w-full bg-gray-100 border border-gray-200 text-gray-900 rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-[#008060] focus:border-transparent transition-all text-right"
                             dir="rtl"
                         />
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-gray-300 block text-right mb-2">تأكيد كلمة المرور</label>
+                        <label className="text-sm font-semibold text-gray-600 block text-right mb-2">تأكيد كلمة المرور</label>
                         <input
                             name="confirmPassword"
                             type="password"
                             required
                             minLength={6}
                             placeholder="أعد كتابة كلمة المرور"
-                            className="w-full bg-gray-800 border border-gray-700 text-white rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-[#00d2ff] focus:border-transparent transition-all text-right"
+                            className="w-full bg-gray-100 border border-gray-200 text-gray-900 rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-[#008060] focus:border-transparent transition-all text-right"
                             dir="rtl"
                         />
                     </div>
@@ -106,7 +106,7 @@ export default function SettingsPage() {
                     <button
                         type="submit"
                         disabled={isPending}
-                        className="w-full bg-gradient-to-r from-[#00d2ff] to-[#9d50bb] hover:from-[#00c2ee] hover:to-[#8d40ab] text-white font-bold py-4 rounded-xl transition-all duration-200 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed text-lg mt-4"
+                        className="w-full bg-gradient-to-r from-[#008060] to-[#006e52] hover:from-[#006e52] hover:to-[#8d40ab] text-white font-bold py-4 rounded-xl transition-all duration-200 shadow-lg shadow-emerald-600/25 hover:shadow-emerald-600/40 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed text-lg mt-4"
                     >
                         {isPending ? 'جاري الحفظ...' : 'حفظ كلمة المرور'}
                     </button>

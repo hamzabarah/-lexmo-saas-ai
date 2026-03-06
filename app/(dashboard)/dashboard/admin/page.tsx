@@ -236,19 +236,19 @@ ${LOGIN_URL}
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#030712] flex items-center justify-center">
-                <div className="text-white text-xl">جاري التحميل...</div>
+            <div className="min-h-screen bg-white flex items-center justify-center">
+                <div className="text-gray-900 text-xl">جاري التحميل...</div>
             </div>
         );
     }
 
     if (unauthorized) {
         return (
-            <div className="min-h-screen bg-[#030712] flex items-center justify-center p-4">
+            <div className="min-h-screen bg-white flex items-center justify-center p-4">
                 <div className="bg-red-950/20 border border-red-500/30 rounded-2xl p-8 max-w-md text-center">
                     <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-                    <h1 className="text-2xl font-bold text-white mb-2">غير مصرح</h1>
-                    <p className="text-gray-400 mb-6">ليس لديك صلاحية الوصول إلى هذه الصفحة</p>
+                    <h1 className="text-2xl font-bold text-gray-900 mb-2">غير مصرح</h1>
+                    <p className="text-gray-500 mb-6">ليس لديك صلاحية الوصول إلى هذه الصفحة</p>
                     <button
                         onClick={() => router.push('/dashboard')}
                         className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition"
@@ -261,81 +261,81 @@ ${LOGIN_URL}
     }
 
     return (
-        <div className="min-h-screen bg-[#030712] p-4 md:p-8">
+        <div className="min-h-screen bg-white p-4 md:p-8">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
                     <div className="flex items-center gap-3 mb-2">
                         <Shield className="w-8 h-8 text-blue-500" />
-                        <h1 className="text-3xl font-bold text-white">لوحة الإدارة</h1>
+                        <h1 className="text-3xl font-bold text-gray-900">لوحة الإدارة</h1>
                     </div>
-                    <p className="text-gray-400">إدارة الطلاب والاشتراكات</p>
+                    <p className="text-gray-500">إدارة الطلاب والاشتراكات</p>
                 </div>
 
                 {/* Statistics */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                    <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
+                    <div className="bg-[#f4f6f8]/50 border border-gray-200 rounded-xl p-6">
                         <div className="flex items-center gap-3 mb-2">
                             <TrendingUp className="w-5 h-5 text-blue-400" />
-                            <div className="text-gray-400 text-sm">عدد الطلاب الكلي</div>
+                            <div className="text-gray-500 text-sm">عدد الطلاب الكلي</div>
                         </div>
-                        <div className="text-3xl font-bold text-white">{totalStudents}</div>
+                        <div className="text-3xl font-bold text-gray-900">{totalStudents}</div>
                     </div>
-                    <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
+                    <div className="bg-[#f4f6f8]/50 border border-gray-200 rounded-xl p-6">
                         <div className="flex items-center gap-3 mb-2">
                             <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                            <div className="text-gray-400 text-sm">الطلاب النشطين</div>
+                            <div className="text-gray-500 text-sm">الطلاب النشطين</div>
                         </div>
                         <div className="text-3xl font-bold text-green-500">{activeStudents}</div>
                     </div>
-                    <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
+                    <div className="bg-[#f4f6f8]/50 border border-gray-200 rounded-xl p-6">
                         <div className="flex items-center gap-3 mb-2">
                             <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-                            <div className="text-gray-400 text-sm">في انتظار التفعيل</div>
+                            <div className="text-gray-500 text-sm">في انتظار التفعيل</div>
                         </div>
                         <div className="text-3xl font-bold text-orange-500">{pendingStudents}</div>
                     </div>
                 </div>
 
                 {/* Add New Student Section */}
-                <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6 mb-8">
+                <div className="bg-[#f4f6f8]/50 border border-gray-200 rounded-xl p-6 mb-8">
                     <div className="flex items-center gap-3 mb-6">
                         <UserPlus className="w-6 h-6 text-blue-500" />
-                        <h2 className="text-2xl font-bold text-white">إضافة طالب جديد</h2>
+                        <h2 className="text-2xl font-bold text-gray-900">إضافة طالب جديد</h2>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                         {/* Name Input */}
                         <div>
-                            <label className="block text-sm text-gray-400 mb-2">الاسم</label>
+                            <label className="block text-sm text-gray-500 mb-2">الاسم</label>
                             <input
                                 type="text"
                                 value={newStudentName}
                                 onChange={(e) => setNewStudentName(e.target.value)}
                                 placeholder="الاسم الكامل"
-                                className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full bg-gray-100 border border-gray-200 text-gray-900 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
 
                         {/* Email Input */}
                         <div>
-                            <label className="block text-sm text-gray-400 mb-2">البريد الإلكتروني</label>
+                            <label className="block text-sm text-gray-500 mb-2">البريد الإلكتروني</label>
                             <input
                                 type="email"
                                 value={newStudentEmail}
                                 onChange={(e) => setNewStudentEmail(e.target.value)}
                                 placeholder="student@example.com"
-                                className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full bg-gray-100 border border-gray-200 text-gray-900 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
 
                         {/* Plan Dropdown */}
                         <div>
-                            <label className="block text-sm text-gray-400 mb-2">الخطة</label>
+                            <label className="block text-sm text-gray-500 mb-2">الخطة</label>
                             <select
                                 value={newStudentPlan}
                                 onChange={(e) => setNewStudentPlan(e.target.value)}
-                                className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full bg-gray-100 border border-gray-200 text-gray-900 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                                 <option value="spark">🚀 Spark</option>
                                 <option value="emperor">👑 Emperor</option>
@@ -365,16 +365,16 @@ ${LOGIN_URL}
 
                             <div className="space-y-3 mb-6">
                                 <div className="flex items-center gap-3">
-                                    <span className="text-gray-400 font-semibold min-w-[120px]">الاسم:</span>
-                                    <span className="text-white">{createdStudent.name}</span>
+                                    <span className="text-gray-500 font-semibold min-w-[120px]">الاسم:</span>
+                                    <span className="text-gray-900">{createdStudent.name}</span>
                                 </div>
                                 <div className="flex items-center gap-3">
-                                    <span className="text-gray-400 font-semibold min-w-[120px]">البريد الإلكتروني:</span>
-                                    <span className="text-white font-mono">{createdStudent.email}</span>
+                                    <span className="text-gray-500 font-semibold min-w-[120px]">البريد الإلكتروني:</span>
+                                    <span className="text-gray-900 font-mono">{createdStudent.email}</span>
                                 </div>
                                 <div className="flex items-center gap-3">
-                                    <span className="text-gray-400 font-semibold min-w-[120px]">كود الدخول:</span>
-                                    <code className="bg-gray-800 px-3 py-1 rounded text-yellow-400 font-mono text-lg">
+                                    <span className="text-gray-500 font-semibold min-w-[120px]">كود الدخول:</span>
+                                    <code className="bg-gray-100 px-3 py-1 rounded text-amber-600 font-mono text-lg">
                                         {createdStudent.password}
                                     </code>
                                     <button
@@ -388,15 +388,15 @@ ${LOGIN_URL}
                                             </>
                                         ) : (
                                             <>
-                                                <Copy className="w-4 h-4 text-gray-300" />
-                                                <span className="text-gray-300 text-sm">نسخ</span>
+                                                <Copy className="w-4 h-4 text-gray-600" />
+                                                <span className="text-gray-600 text-sm">نسخ</span>
                                             </>
                                         )}
                                     </button>
                                 </div>
                                 <div className="flex items-center gap-3">
-                                    <span className="text-gray-400 font-semibold min-w-[120px]">الخطة:</span>
-                                    <span className="text-white">{createdStudent.plan === 'spark' ? '🚀 Spark' : createdStudent.plan === 'emperor' ? '👑 Emperor' : '💎 Legend'}</span>
+                                    <span className="text-gray-500 font-semibold min-w-[120px]">الخطة:</span>
+                                    <span className="text-gray-900">{createdStudent.plan === 'spark' ? '🚀 Spark' : createdStudent.plan === 'emperor' ? '👑 Emperor' : '💎 Legend'}</span>
                                 </div>
                             </div>
 
@@ -412,23 +412,23 @@ ${LOGIN_URL}
                 </div>
 
                 {/* Members Table */}
-                <div className="bg-gray-900/50 border border-gray-800 rounded-xl overflow-hidden">
-                    <div className="p-6 border-b border-gray-800">
-                        <h2 className="text-2xl font-bold text-white">جميع الأعضاء</h2>
+                <div className="bg-[#f4f6f8]/50 border border-gray-200 rounded-xl overflow-hidden">
+                    <div className="p-6 border-b border-gray-200">
+                        <h2 className="text-2xl font-bold text-gray-900">جميع الأعضاء</h2>
                     </div>
 
                     <div className="overflow-x-auto">
                         <table className="w-full">
-                            <thead className="bg-gray-800/50 border-b border-gray-700">
+                            <thead className="bg-gray-100/50 border-b border-gray-200">
                                 <tr>
-                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-300">البريد الإلكتروني</th>
-                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-300">الاسم</th>
-                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-300">الهاتف</th>
-                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-300">البلد</th>
-                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-300">الخطة</th>
-                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-300">الحالة</th>
-                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-300">تاريخ التسجيل</th>
-                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-300">الإجراءات</th>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-600">البريد الإلكتروني</th>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-600">الاسم</th>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-600">الهاتف</th>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-600">البلد</th>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-600">الخطة</th>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-600">الحالة</th>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-600">تاريخ التسجيل</th>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-600">الإجراءات</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-800">
@@ -450,17 +450,17 @@ ${LOGIN_URL}
                                     };
 
                                     return (
-                                        <tr key={subscription.id} className="hover:bg-gray-800/30 transition">
+                                        <tr key={subscription.id} className="hover:bg-gray-100/30 transition">
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-2">
                                                     <Mail className="w-4 h-4 text-gray-500" />
-                                                    <span className="text-gray-300 text-sm">{subscription.email}</span>
+                                                    <span className="text-gray-600 text-sm">{subscription.email}</span>
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4 text-gray-300 text-sm">{userData?.name || '-'}</td>
-                                            <td className="px-6 py-4 text-gray-300 text-sm">{userData?.phone || '-'}</td>
-                                            <td className="px-6 py-4 text-gray-300 text-sm">{userData?.country || '-'}</td>
-                                            <td className="px-6 py-4 text-gray-300 text-sm">
+                                            <td className="px-6 py-4 text-gray-600 text-sm">{userData?.name || '-'}</td>
+                                            <td className="px-6 py-4 text-gray-600 text-sm">{userData?.phone || '-'}</td>
+                                            <td className="px-6 py-4 text-gray-600 text-sm">{userData?.country || '-'}</td>
+                                            <td className="px-6 py-4 text-gray-600 text-sm">
                                                 {planIcons[subscription.plan as keyof typeof planIcons]} {subscription.plan.charAt(0).toUpperCase() + subscription.plan.slice(1)}
                                             </td>
                                             <td className="px-6 py-4">
@@ -468,7 +468,7 @@ ${LOGIN_URL}
                                                     {status.text}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 text-gray-400 text-sm">
+                                            <td className="px-6 py-4 text-gray-500 text-sm">
                                                 {new Date(subscription.created_at).toLocaleDateString('ar-EG')}
                                             </td>
                                             <td className="px-6 py-4">

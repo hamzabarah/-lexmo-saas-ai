@@ -8,32 +8,32 @@ export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <nav className="fixed top-0 w-full z-50 glass border-b border-white/10 h-20">
+        <nav className="fixed top-0 w-full z-50 glass border-b border-gray-200 h-20">
             <div className="container mx-auto px-4 h-full flex items-center justify-between">
                 {/* Logo */}
                 <Link href="/" className="text-2xl font-bold font-orbitron tracking-wider">
-                    <span className="text-[#00d2ff]">ECOMY</span>
+                    <span className="text-[#008060]">ECOMY</span>
                 </Link>
 
                 {/* Desktop Menu */}
-                <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
-                    <Link href="#content" className="hover:text-[#00d2ff] transition-colors">المحتوى</Link>
-                    <Link href="#reviews" className="hover:text-[#00d2ff] transition-colors">آراء العملاء</Link>
-                    <Link href="#pricing" className="hover:text-[#00d2ff] transition-colors">الأسعار</Link>
-                    <Link href="#faq" className="hover:text-[#00d2ff] transition-colors">الأسئلة الشائعة</Link>
+                <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
+                    <Link href="#content" className="hover:text-[#008060] transition-colors">المحتوى</Link>
+                    <Link href="#reviews" className="hover:text-[#008060] transition-colors">آراء العملاء</Link>
+                    <Link href="#pricing" className="hover:text-[#008060] transition-colors">الأسعار</Link>
+                    <Link href="#faq" className="hover:text-[#008060] transition-colors">الأسئلة الشائعة</Link>
                 </div>
 
                 {/* CTA Buttons */}
                 <div className="hidden md:flex items-center gap-3">
                     <a
                         href="#login"
-                        className="text-white px-5 py-2.5 rounded-full font-bold hover:bg-white/5 transition-all border border-white/10"
+                        className="text-white px-5 py-2.5 rounded-full font-bold hover:bg-gray-50 transition-all border border-gray-200"
                     >
                         تسجيل الدخول
                     </a>
                     <a
                         href="#pricing"
-                        className="bg-gradient-to-r from-[#00d2ff] to-[#9d50bb] text-white px-6 py-2.5 rounded-full font-bold hover:shadow-[0_0_20px_rgba(0,210,255,0.5)] transition-all transform hover:scale-105"
+                        className="bg-gradient-to-r from-[#008060] to-[#006e52] text-white px-6 py-2.5 rounded-full font-bold hover:shadow-[0_0_20px_rgba(0,210,255,0.5)] transition-all transform hover:scale-105"
                     >
                         ابدأ الآن
                     </a>
@@ -50,23 +50,23 @@ export default function Navbar() {
 
             {/* Mobile Menu */}
             {isOpen && (
-                <div className="md:hidden absolute top-20 w-full bg-[#030712]/95 backdrop-blur-xl border-b border-white/10 py-6 px-4 flex flex-col gap-4 text-center shadow-2xl">
-                    <Link href="#content" onClick={() => setIsOpen(false)} className="text-white text-lg font-medium hover:text-[#00d2ff] transition-colors py-2">المحتوى</Link>
-                    <Link href="#reviews" onClick={() => setIsOpen(false)} className="text-white text-lg font-medium hover:text-[#00d2ff] transition-colors py-2">آراء العملاء</Link>
-                    <Link href="#pricing" onClick={() => setIsOpen(false)} className="text-white text-lg font-medium hover:text-[#00d2ff] transition-colors py-2">الأسعار</Link>
-                    <Link href="#faq" onClick={() => setIsOpen(false)} className="text-white text-lg font-medium hover:text-[#00d2ff] transition-colors py-2">الأسئلة الشائعة</Link>
-                    <div className="h-px bg-white/10 my-2"></div>
+                <div className="md:hidden absolute top-20 w-full bg-white/95 backdrop-blur-xl border-b border-gray-200 py-6 px-4 flex flex-col gap-4 text-center shadow-2xl">
+                    <Link href="#content" onClick={() => setIsOpen(false)} className="text-white text-lg font-medium hover:text-[#008060] transition-colors py-2">المحتوى</Link>
+                    <Link href="#reviews" onClick={() => setIsOpen(false)} className="text-white text-lg font-medium hover:text-[#008060] transition-colors py-2">آراء العملاء</Link>
+                    <Link href="#pricing" onClick={() => setIsOpen(false)} className="text-white text-lg font-medium hover:text-[#008060] transition-colors py-2">الأسعار</Link>
+                    <Link href="#faq" onClick={() => setIsOpen(false)} className="text-white text-lg font-medium hover:text-[#008060] transition-colors py-2">الأسئلة الشائعة</Link>
+                    <div className="h-px bg-gray-100 my-2"></div>
                     <a
                         href="#login"
                         onClick={() => setIsOpen(false)}
-                        className="border border-white/20 text-white px-6 py-3 rounded-full font-bold hover:bg-white/5 transition-all"
+                        className="border border-gray-300 text-white px-6 py-3 rounded-full font-bold hover:bg-gray-50 transition-all"
                     >
                         تسجيل الدخول
                     </a>
                     <a
                         href="#pricing"
                         onClick={() => setIsOpen(false)}
-                        className="bg-gradient-to-r from-[#00d2ff] to-[#9d50bb] text-white px-6 py-3 rounded-full font-bold shadow-lg hover:shadow-[0_0_20px_rgba(0,210,255,0.5)] transition-all"
+                        className="bg-gradient-to-r from-[#008060] to-[#006e52] text-white px-6 py-3 rounded-full font-bold shadow-lg hover:shadow-[0_0_20px_rgba(0,210,255,0.5)] transition-all"
                     >
                         ابدأ الآن
                     </a>

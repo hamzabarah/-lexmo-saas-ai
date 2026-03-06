@@ -6,7 +6,7 @@ export default function DashboardLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="min-h-screen bg-[#030712] text-white font-cairo" dir="rtl">
+        <div className="min-h-screen bg-white text-gray-900 font-cairo" dir="rtl">
             {/* Top Navbar */}
             <Sidebar />
 

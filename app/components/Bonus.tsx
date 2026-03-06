@@ -6,7 +6,7 @@ const CATEGORIES = [
     { id: 1, title: "مسرعات المرحلة الأولى", color: "#f97316", count: 4 },
     { id: 2, title: "دروع الحماية", color: "#3b82f6", count: 4 },
     { id: 3, title: "صناعة المحتوى", color: "#a855f7", count: 4 },
-    { id: 4, title: "الترسانة الإعلانية", color: "#00d2ff", count: 4 },
+    { id: 4, title: "الترسانة الإعلانية", color: "#008060", count: 4 },
     { id: 5, title: "القوة الصناعية", color: "#10b981", count: 4 },
     { id: 6, title: "النخبة والمستقبل", color: "#ffd700", count: 8 },
 ];
@@ -56,12 +56,12 @@ const ALL_BONUSES: Record<number, { title: string; value: string; description: s
 
 export default function Bonus() {
     return (
-        <section className="py-20 bg-gradient-to-b from-[#030712] to-[#0f172a]" dir="rtl">
+        <section className="py-20 bg-gradient-to-b from-[#030712] to-[#f4f6f8]" dir="rtl">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-16">
-                    <div className="inline-block bg-gradient-to-r from-[#00d2ff] to-[#9d50bb] p-[1px] rounded-full mb-6">
-                        <div className="bg-[#030712] px-6 py-2 rounded-full">
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00d2ff] to-[#9d50bb] font-bold">
+                    <div className="inline-block bg-gradient-to-r from-[#008060] to-[#006e52] p-[1px] rounded-full mb-6">
+                        <div className="bg-white px-6 py-2 rounded-full">
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#008060] to-[#006e52] font-bold">
                                 قيمة إجمالية $148,900
                             </span>
                         </div>
@@ -69,7 +69,7 @@ export default function Bonus() {
                     <h2 className="text-4xl lg:text-5xl font-bold font-cairo mb-4">
                         28 <span className="text-[#ffd700]">هدية حصرية</span> مجانية
                     </h2>
-                    <p className="text-gray-400">أدوات وموارد لا تقدر بثمن لضمان نجاحك</p>
+                    <p className="text-gray-500">أدوات وموارد لا تقدر بثمن لضمان نجاحك</p>
                 </div>
 
                 <div className="space-y-16">
@@ -78,13 +78,13 @@ export default function Bonus() {
                             <h3 className="text-2xl font-bold mb-8 flex items-center gap-3" style={{ color: cat.color }}>
                                 <Gift size={24} />
                                 {cat.title}
-                                <span className="text-sm bg-white/5 px-2 py-0.5 rounded text-gray-400">{cat.count} هدايا</span>
+                                <span className="text-sm bg-gray-50 px-2 py-0.5 rounded text-gray-500">{cat.count} هدايا</span>
                             </h3>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                                 {ALL_BONUSES[cat.id]?.map((bonus, i) => (
-                                    <div key={i} className="bg-white/5 border border-white/5 rounded-xl p-4 hover:border-white/10 transition-colors group">
-                                        <div className="aspect-video bg-black/40 rounded-lg mb-4 flex items-center justify-center relative overflow-hidden">
+                                    <div key={i} className="bg-gray-50 border border-gray-200 rounded-xl p-4 hover:border-gray-200 transition-colors group">
+                                        <div className="aspect-video bg-gray-100/40 rounded-lg mb-4 flex items-center justify-center relative overflow-hidden">
                                             <Gift className="text-white/10 w-12 h-12 group-hover:scale-110 transition-transform" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                                             <div className="absolute bottom-2 right-2 text-xs font-bold text-[#ffd700]">{bonus.value}</div>

@@ -50,29 +50,29 @@ export default function FAQ() {
     const [openIndex, setOpenIndex] = useState<number | null>(0);
 
     return (
-        <section id="faq" className="py-20 bg-black/50">
+        <section id="faq" className="py-20 bg-gray-100/50">
             <div className="container mx-auto px-4 max-w-4xl">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl lg:text-5xl font-bold font-cairo mb-4 leading-tight">
-                        الأسئلة <span className="text-[#9d50bb]">الشائعة</span>
+                        الأسئلة <span className="text-[#006e52]">الشائعة</span>
                     </h2>
-                    <p className="text-xl text-gray-400">إجابات على كل تساؤلاتك قبل الانضمام</p>
+                    <p className="text-xl text-gray-500">إجابات على كل تساؤلاتك قبل الانضمام</p>
                 </div>
 
                 <div className="space-y-4">
                     {FAQS.map((faq, i) => (
-                        <div key={i} className="border border-white/10 rounded-2xl bg-white/5 overflow-hidden hover:border-[#00d2ff]/30 transition-colors duration-300">
+                        <div key={i} className="border border-gray-200 rounded-2xl bg-gray-50 overflow-hidden hover:border-[#008060]/30 transition-colors duration-300">
                             <button
                                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                                className="w-full flex items-center justify-between p-6 text-right hover:bg-white/5 transition-colors group"
+                                className="w-full flex items-center justify-between p-6 text-right hover:bg-gray-50 transition-colors group"
                             >
-                                <span className="font-bold text-lg text-white group-hover:text-[#00d2ff] transition-colors">{faq.q}</span>
-                                {openIndex === i ? <Minus className="text-[#00d2ff]" /> : <Plus className="text-gray-400 group-hover:text-[#00d2ff] transition-colors" />}
+                                <span className="font-bold text-lg text-white group-hover:text-[#008060] transition-colors">{faq.q}</span>
+                                {openIndex === i ? <Minus className="text-[#008060]" /> : <Plus className="text-gray-500 group-hover:text-[#008060] transition-colors" />}
                             </button>
                             <div
                                 className={`overflow-hidden transition-all duration-300 ease-in-out ${openIndex === i ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}
                             >
-                                <div className="p-6 pt-0 text-slate-300 leading-relaxed border-t border-white/5 mt-2 whitespace-pre-line">
+                                <div className="p-6 pt-0 text-gray-600 leading-relaxed border-t border-gray-200 mt-2 whitespace-pre-line">
                                     {faq.a}
                                 </div>
                             </div>

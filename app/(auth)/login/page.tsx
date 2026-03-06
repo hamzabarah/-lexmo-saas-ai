@@ -26,22 +26,22 @@ export default function LoginPage() {
 
     return (
         <Card className="w-full">
-            <h2 className="text-2xl font-bold text-center text-white mb-2">تسجيل الدخول</h2>
-            <p className="text-center text-gray-400 mb-8 text-sm">أدخل بياناتك للوصول إلى التدريب</p>
+            <h2 className="text-2xl font-bold text-center text-gray-900 mb-2">تسجيل الدخول</h2>
+            <p className="text-center text-gray-500 mb-8 text-sm">أدخل بياناتك للوصول إلى التدريب</p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-300">البريد الإلكتروني</label>
+                    <label className="text-sm font-medium text-gray-600">البريد الإلكتروني</label>
                     <div className="relative">
-                        <input name="email" type="email" required placeholder="email@example.com" className="w-full bg-[#030712] border border-white/10 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#00d2ff] transition-colors" />
+                        <input name="email" type="email" required placeholder="email@example.com" className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#008060] transition-colors" />
                         <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                     </div>
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-300">كلمة المرور</label>
+                    <label className="text-sm font-medium text-gray-600">كلمة المرور</label>
                     <div className="relative">
-                        <input name="password" type="password" required placeholder="أدخل كلمة المرور" className="w-full bg-[#030712] border border-white/10 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#00d2ff] transition-colors" />
+                        <input name="password" type="password" required placeholder="أدخل كلمة المرور" className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#008060] transition-colors" />
                         <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                     </div>
                 </div>
@@ -55,14 +55,14 @@ export default function LoginPage() {
                 <button
                     type="submit"
                     disabled={isPending}
-                    className="w-full bg-[#00d2ff] hover:bg-[#00c2ee] text-black font-bold py-3 rounded-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
+                    className="w-full bg-[#008060] hover:bg-[#006e52] text-black font-bold py-3 rounded-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
                 >
                     {isPending ? <Loader2 className="animate-spin" /> : "تسجيل الدخول"}
                 </button>
             </form>
 
             <div className="mt-4 text-center">
-                <Link href="/forgot-password" className="text-sm text-gray-400 hover:text-[#00d2ff] transition-colors">
+                <Link href="/forgot-password" className="text-sm text-gray-500 hover:text-[#008060] transition-colors">
                     نسيت كلمة المرور؟
                 </Link>
             </div>

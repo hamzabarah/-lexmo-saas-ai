@@ -152,7 +152,7 @@ export default function LessonView({
 
                                     <span
                                         className={`flex-1 text-lg transition-all ${task.is_completed
-                                            ? "text-gray-400 line-through"
+                                            ? "text-gray-500 line-through"
                                             : "text-white hover:text-neo-cyan"
                                             }`}
                                     >

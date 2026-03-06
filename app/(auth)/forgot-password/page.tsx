@@ -39,19 +39,19 @@ export default function ForgotPasswordPage() {
 
     return (
         <Card className="w-full">
-            <Link href="/#login" className="flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors text-sm">
+            <Link href="/#login" className="flex items-center gap-2 text-gray-500 hover:text-gray-900 mb-6 transition-colors text-sm">
                 <ArrowLeft size={16} />
                 عودة لتسجيل الدخول
             </Link>
 
-            <h2 className="text-2xl font-bold text-center text-white mb-2">نسيت كلمة المرور؟ 🔒</h2>
-            <p className="text-center text-gray-400 mb-8 text-sm">أدخل بريدك الإلكتروني لاستعادة حسابك</p>
+            <h2 className="text-2xl font-bold text-center text-gray-900 mb-2">نسيت كلمة المرور؟ 🔒</h2>
+            <p className="text-center text-gray-500 mb-8 text-sm">أدخل بريدك الإلكتروني لاستعادة حسابك</p>
 
             {success ? (
                 <div className="text-center bg-green-500/10 border border-green-500/20 rounded-xl p-6">
                     <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
                     <h3 className="text-lg font-bold text-green-400 mb-2">تم الإرسال بنجاح!</h3>
-                    <p className="text-sm text-gray-300">
+                    <p className="text-sm text-gray-600">
                         راجع بريدك الإلكتروني واتبع الرابط لإعادة تعيين كلمة المرور.
                     </p>
                 </div>
@@ -64,7 +64,7 @@ export default function ForgotPasswordPage() {
                                 type="email"
                                 required
                                 placeholder="name@example.com"
-                                className="w-full bg-[#030712] border border-white/10 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#00d2ff] transition-colors"
+                                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#008060] transition-colors"
                             />
                             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                         </div>
@@ -79,7 +79,7 @@ export default function ForgotPasswordPage() {
                     <button
                         type="submit"
                         disabled={isPending}
-                        className="w-full bg-[#00d2ff] hover:bg-[#00c2ee] text-black font-bold py-3 rounded-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
+                        className="w-full bg-[#008060] hover:bg-[#006e52] text-black font-bold py-3 rounded-xl transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
                     >
                         {isPending ? <Loader2 className="animate-spin" /> : "إرسال رابط الاستعادة"}
                     </button>

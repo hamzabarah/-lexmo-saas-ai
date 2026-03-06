@@ -1,26 +1,26 @@
 export default function Footer() {
     return (
-        <footer className="py-12 border-t border-white/10 bg-[#030712]">
+        <footer className="py-12 border-t border-gray-200 bg-white">
             <div className="container mx-auto px-4">
                 {/* Legal Links */}
                 <div className="flex flex-wrap justify-center gap-6 mb-6" dir="rtl">
                     <a
                         href="/legal/terms"
-                        className="text-gray-400 hover:text-white transition-colors text-sm font-cairo"
+                        className="text-gray-500 hover:text-gray-900 transition-colors text-sm font-cairo"
                     >
                         الشروط العامة
                     </a>
                     <span className="text-gray-600">•</span>
                     <a
                         href="/legal/privacy"
-                        className="text-gray-400 hover:text-white transition-colors text-sm font-cairo"
+                        className="text-gray-500 hover:text-gray-900 transition-colors text-sm font-cairo"
                     >
                         سياسة الخصوصية
                     </a>
                     <span className="text-gray-600">•</span>
                     <a
                         href="/legal/refund"
-                        className="text-gray-400 hover:text-white transition-colors text-sm font-cairo"
+                        className="text-gray-500 hover:text-gray-900 transition-colors text-sm font-cairo"
                     >
                         سياسة الاسترداد
                     </a>
@@ -28,8 +28,8 @@ export default function Footer() {
 
                 {/* Contact */}
                 <div className="text-center mb-6">
-                    <p className="text-gray-400 text-sm font-cairo" dir="rtl">
-                        للاتصال: <a href="mailto:acadmyfrance75@gmail.com" className="text-[#00d2ff] hover:underline">acadmyfrance75@gmail.com</a>
+                    <p className="text-gray-500 text-sm font-cairo" dir="rtl">
+                        للاتصال: <a href="mailto:acadmyfrance75@gmail.com" className="text-[#008060] hover:underline">acadmyfrance75@gmail.com</a>
                     </p>
                 </div>
 

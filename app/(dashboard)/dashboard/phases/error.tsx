@@ -18,7 +18,7 @@ export default function Error({
         <div className="p-8 flex items-center justify-center min-h-[50vh]">
             <Card className="text-center p-8 border-red-500/30 bg-red-500/10">
                 <h2 className="text-xl font-bold text-red-400 mb-2">عذراً، حدث خطأ ما!</h2>
-                <p className="text-gray-400 mb-6">{error.message || "لم نتمكن من تحميل الدروس."}</p>
+                <p className="text-gray-500 mb-6">{error.message || "لم نتمكن من تحميل الدروس."}</p>
                 <button
                     onClick={
                         // Attempt to recover by trying to re-render the segment

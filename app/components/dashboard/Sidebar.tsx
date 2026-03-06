@@ -49,7 +49,7 @@ export default function Sidebar() {
     return (
         <>
             {/* Top Navbar */}
-            <nav className="fixed top-0 left-0 right-0 z-50 bg-[#030712]/90 backdrop-blur-md border-b border-white/10">
+            <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200">
                 <div className="max-w-7xl mx-auto px-4 lg:px-8">
                     <div className="flex items-center justify-between h-16">
                         {/* Logo */}
@@ -70,11 +70,11 @@ export default function Sidebar() {
                                         className={clsx(
                                             "flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 text-sm font-bold",
                                             isActive
-                                                ? "bg-white/10 text-white shadow-[0_0_15px_rgba(0,210,255,0.1)]"
-                                                : "text-gray-400 hover:text-white hover:bg-white/5"
+                                                ? "bg-gray-100 text-white shadow-[0_0_15px_rgba(0,210,255,0.1)]"
+                                                : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
                                         )}
                                     >
-                                        <item.icon size={18} className={clsx(isActive && "text-[#00d2ff] drop-shadow-[0_0_5px_rgba(0,210,255,0.5)]")} />
+                                        <item.icon size={18} className={clsx(isActive && "text-[#008060] drop-shadow-[0_0_5px_rgba(0,210,255,0.5)]")} />
                                         <span>{item.label}</span>
                                     </Link>
                                 );
@@ -92,7 +92,7 @@ export default function Sidebar() {
                         {/* Mobile Menu Button */}
                         <button
                             onClick={() => setIsOpen(!isOpen)}
-                            className="p-2 rounded-lg hover:bg-white/10 transition-colors lg:hidden"
+                            className="p-2 rounded-lg hover:bg-gray-100 transition-colors lg:hidden"
                         >
                             {isOpen ? <X size={24} /> : <Menu size={24} />}
                         </button>
@@ -101,7 +101,7 @@ export default function Sidebar() {
 
                 {/* Mobile Menu */}
                 {isOpen && (
-                    <div className="lg:hidden border-t border-white/10 bg-[#030712]/95 backdrop-blur-md">
+                    <div className="lg:hidden border-t border-gray-200 bg-white/95 backdrop-blur-md">
                         <div className="px-4 py-3 space-y-1">
                             {allItems.map((item) => {
                                 const isActive = pathname === item.href;
@@ -112,12 +112,12 @@ export default function Sidebar() {
                                         className={clsx(
                                             "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-bold",
                                             isActive
-                                                ? "bg-white/10 text-white"
-                                                : "text-gray-400 hover:text-white hover:bg-white/5"
+                                                ? "bg-gray-100 text-white"
+                                                : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
                                         )}
                                         onClick={() => setIsOpen(false)}
                                     >
-                                        <item.icon size={20} className={clsx(isActive && "text-[#00d2ff]")} />
+                                        <item.icon size={20} className={clsx(isActive && "text-[#008060]")} />
                                         <span>{item.label}</span>
                                     </Link>
                                 );

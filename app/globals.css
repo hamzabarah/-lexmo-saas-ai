@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  --color-cyan: #00d2ff;
-  --color-magenta: #9d50bb;
+  --color-cyan: #008060;
+  --color-magenta: #006e52;
   --color-gold: #ffd700;
-  --color-dark: #030712;
+  --color-dark: #ffffff;
 
   --font-orbitron: var(--font-orbitron);
   --font-cairo: var(--font-cairo);
@@ -17,11 +17,11 @@ html {
 }
 
 @utility glass {
-  @apply bg-white/5 backdrop-blur-lg border border-white/10;
+  @apply bg-white/90 backdrop-blur-lg border border-gray-200;
 }
 
 @utility glass-card {
-  @apply bg-[#0f172a]/60 backdrop-blur-md border border-white/5 shadow-xl;
+  @apply bg-white/80 backdrop-blur-md border border-gray-200 shadow-xl;
 }
 
 @utility text-glow {
@@ -46,7 +46,7 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  background: #030712;
+  background: #ffffff;
 }
 
 ::-webkit-scrollbar-thumb {

@@ -18,7 +18,7 @@ const PHASES: Phase[] = [
     {
         id: 1,
         name: "EXTRACTION",
-        color: "#00d2ff",
+        color: "#008060",
         count: 12,
         title: "المرحلة 1: استخراج أول €10,000 من السوق",
         subtitle: "من 0€ إلى 10,000€… بخطة واضحة ومصادَق عليها خطوة بخطوة",
@@ -178,9 +178,9 @@ export default function Phases() {
             <div className="container mx-auto px-4 max-w-6xl">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl lg:text-5xl font-bold font-cairo mb-4">
-                        خارطة الطريق <span className="text-[#00d2ff]">الشاملة</span>
+                        خارطة الطريق <span className="text-[#008060]">الشاملة</span>
                     </h2>
-                    <p className="text-gray-400">11 مرحلة تأخذك من الصفر إلى القمة</p>
+                    <p className="text-gray-500">11 مرحلة تأخذك من الصفر إلى القمة</p>
                 </div>
 
                 <div className="space-y-6">
@@ -202,7 +202,7 @@ function PhaseCard({ phase, isOpen, onToggle }: { phase: Phase, isOpen: boolean,
     return (
         <div className={clsx(
             "rounded-2xl border transition-all duration-300 overflow-hidden",
-            isOpen ? "bg-[#0f172a]/80 border-white/20" : "bg-white/5 border-white/5 hover:border-white/10"
+            isOpen ? "bg-[#f4f6f8]/80 border-gray-300" : "bg-gray-50 border-gray-200 hover:border-gray-200"
         )}>
             {/* Header */}
             <div
@@ -223,9 +223,9 @@ function PhaseCard({ phase, isOpen, onToggle }: { phase: Phase, isOpen: boolean,
                         >
                             PHASE {phase.id}: {phase.name}
                         </div>
-                        <h3 className="text-2xl font-bold text-white mb-2">{phase.title}</h3>
-                        <p className="text-gray-400 text-sm mb-1">{phase.subtitle}</p>
-                        <p className="text-[#00d2ff] text-xs font-bold">{phase.count} وحدة تدريبية مكثفة</p>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-2">{phase.title}</h3>
+                        <p className="text-gray-500 text-sm mb-1">{phase.subtitle}</p>
+                        <p className="text-[#008060] text-xs font-bold">{phase.count} وحدة تدريبية مكثفة</p>
                     </div>
                 </div>
 
@@ -244,7 +244,7 @@ function PhaseCard({ phase, isOpen, onToggle }: { phase: Phase, isOpen: boolean,
 
             {/* Grid Content */}
             {isOpen && (
-                <div className="p-6 pt-0 border-t border-white/10 mt-6">
+                <div className="p-6 pt-0 border-t border-gray-200 mt-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-6">
                         {phase.modules.map((moduleName: string, i: number) => (
                             <ModuleCard key={i} index={i} color={phase.color} title={moduleName} phaseId={phase.id} />
@@ -1218,11 +1218,11 @@ function ModuleCard({ index, color, title, phaseId }: { index: number, color: st
     }
 
     return (
-        <div className="bg-black/40 rounded-xl border border-white/5 overflow-hidden group hover:border-white/10 transition-all">
+        <div className="bg-gray-100/40 rounded-xl border border-gray-200 overflow-hidden group hover:border-gray-200 transition-all">
             {/* Image Placeholder */}
-            <div className="h-32 bg-gray-800 relative flex items-center justify-center overflow-hidden">
-                <Lock className="text-white/20 w-12 h-12 group-hover:text-white/40 transition-colors" />
-                <div className="absolute top-2 right-2 px-2 py-0.5 rounded text-[10px] font-bold bg-black/60 backdrop-blur" style={{ color }}>
+            <div className="h-32 bg-gray-100 relative flex items-center justify-center overflow-hidden">
+                <Lock className="text-white/20 w-12 h-12 group-hover:text-gray-400 transition-colors" />
+                <div className="absolute top-2 right-2 px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100/60 backdrop-blur" style={{ color }}>
                     {details ? details.badge : `UNIT ${String(index + 1).padStart(2, '0')}`}
                 </div>
             </div>
@@ -1241,7 +1241,7 @@ function ModuleCard({ index, color, title, phaseId }: { index: number, color: st
                         <span>مغلق</span>
                         <span>0%</span>
                     </div>
-                    <div className="h-1 bg-gray-800 rounded-full overflow-hidden"></div>
+                    <div className="h-1 bg-gray-100 rounded-full overflow-hidden"></div>
                 </div>
 
                 {/* Only show "Show Tasks" button if we have checklist details (Phase 1 currently) */}
@@ -1249,24 +1249,24 @@ function ModuleCard({ index, color, title, phaseId }: { index: number, color: st
                     <>
                         <button
                             onClick={(e) => { e.stopPropagation(); setShowTasks(!showTasks); }}
-                            className="w-full py-2 text-xs font-bold border border-white/10 rounded-lg hover:bg-white/5 transition-colors flex items-center justify-center gap-2 mt-2 text-gray-400"
+                            className="w-full py-2 text-xs font-bold border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 mt-2 text-gray-500"
                         >
                             {showTasks ? "إخفاء التفاصيل" : "عرض التفاصيل"}
                             {showTasks ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
                         </button>
 
                         {showTasks && (
-                            <div className="space-y-3 pt-3 border-t border-white/5 animate-in slide-in-from-top-2">
+                            <div className="space-y-3 pt-3 border-t border-gray-200 animate-in slide-in-from-top-2">
                                 <div className="space-y-2">
                                     {details.checklist.map((task, t) => (
-                                        <div key={t} className="flex items-start gap-2 text-xs text-gray-400">
+                                        <div key={t} className="flex items-start gap-2 text-xs text-gray-500">
                                             <Lock size={12} className="mt-0.5 shrink-0 text-gray-600" />
                                             <span>{task}</span>
                                         </div>
                                     ))}
                                 </div>
-                                <div className="bg-white/5 p-2 rounded text-[10px] text-gray-300 border border-white/5 mt-2">
-                                    <div className="font-bold text-[#00d2ff] mb-1">👉 سيناريو الربح:</div>
+                                <div className="bg-gray-50 p-2 rounded text-[10px] text-gray-600 border border-gray-200 mt-2">
+                                    <div className="font-bold text-[#008060] mb-1">👉 سيناريو الربح:</div>
                                     {details.profitScenario}
                                 </div>
                                 <div className="text-[10px] text-gray-500 italic">

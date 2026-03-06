@@ -94,14 +94,14 @@ export default function VerifyPage() {
 
     if (error) {
         return (
-            <div className="min-h-screen bg-[#030712] flex items-center justify-center text-red-500 p-4">
-                <div className="text-center space-y-4 max-w-md bg-white/5 p-8 rounded-xl border border-white/10">
+            <div className="min-h-screen bg-white flex items-center justify-center text-red-500 p-4">
+                <div className="text-center space-y-4 max-w-md bg-gray-50 p-8 rounded-xl border border-gray-200">
                     <h1 className="text-2xl font-bold font-orbitron">Erreur de vérification</h1>
-                    <p className="text-gray-300 font-mono text-sm break-words">{error}</p>
+                    <p className="text-gray-600 font-mono text-sm break-words">{error}</p>
                     <div className="pt-4">
                         <button
                             onClick={() => router.push("/#login")}
-                            className="bg-[#00d2ff] text-black font-bold px-6 py-2 rounded-lg hover:bg-[#00c2ee] transition-colors"
+                            className="bg-[#008060] text-black font-bold px-6 py-2 rounded-lg hover:bg-[#006e52] transition-colors"
                         >
                             Retour à la connexion
                         </button>
@@ -112,10 +112,10 @@ export default function VerifyPage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#030712] flex flex-col items-center justify-center text-white">
-            <Loader2 className="w-12 h-12 animate-spin text-[#00d2ff] mb-6" />
+        <div className="min-h-screen bg-white flex flex-col items-center justify-center text-gray-900">
+            <Loader2 className="w-12 h-12 animate-spin text-[#008060] mb-6" />
             <h2 className="text-2xl font-bold font-orbitron text-center">Vérification en cours...</h2>
-            <p className="text-gray-400 text-sm mt-2">Validation de votre lien de sécurité</p>
+            <p className="text-gray-500 text-sm mt-2">Validation de votre lien de sécurité</p>
         </div>
     );
 }
