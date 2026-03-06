@@ -197,7 +197,7 @@ export default function Home() {
   );
 
   const LoginLink = (
-    <a href="/login" className="block text-center text-sm text-gray-400 hover:text-orange-400 transition-colors mt-2">
+    <a href="/register" className="block text-center text-sm text-gray-400 hover:text-orange-400 transition-colors mt-2">
       لديك حساب بالفعل؟ تسجيل الدخول
     </a>
   );
