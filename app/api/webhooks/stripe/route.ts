@@ -31,6 +31,17 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
     const supabase = getSupabaseAdmin();
 
+    // Try to find user_id from auth.users by email
+    let userId: string | null = null;
+    try {
+        const { data: usersData } = await supabase.auth.admin.listUsers();
+        const authUser = usersData?.users?.find(u => u.email === email);
+        userId = authUser?.id || null;
+        console.log('🔍 [STEP 3.5] user_id from auth.users:', userId);
+    } catch (err) {
+        console.log('⚠️ [STEP 3.5] Could not lookup user_id (non-blocking):', err);
+    }
+
     const { data: existing, error: fetchError } = await supabase
         .from('user_subscriptions')
         .select('id, status')
@@ -40,12 +51,15 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     console.log('🔍 [STEP 4] Supabase lookup:', JSON.stringify({ existing, fetchError }));
 
     if (existing) {
+        const updateData: Record<string, any> = {
+            status: 'active',
+            activated_at: new Date().toISOString(),
+        };
+        if (userId) updateData.user_id = userId;
+
         const { error } = await supabase
             .from('user_subscriptions')
-            .update({
-                status: 'active',
-                activated_at: new Date().toISOString(),
-            })
+            .update(updateData)
             .eq('email', email);
 
         if (error) {
@@ -54,15 +68,18 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         }
         console.log('✅ [STEP 4] Supabase updated - subscription activated for:', email);
     } else {
+        const insertData: Record<string, any> = {
+            email,
+            plan: 'spark',
+            status: 'active',
+            activated_at: new Date().toISOString(),
+            created_at: new Date().toISOString(),
+        };
+        if (userId) insertData.user_id = userId;
+
         const { error } = await supabase
             .from('user_subscriptions')
-            .insert({
-                email,
-                plan: 'spark',
-                status: 'active',
-                activated_at: new Date().toISOString(),
-                created_at: new Date().toISOString(),
-            });
+            .insert(insertData);
 
         if (error) {
             console.error('❌ [STEP 4] Error creating subscription:', error);

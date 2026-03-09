@@ -46,11 +46,11 @@ export async function checkUserSubscription(): Promise<SubscriptionCheckResult> 
             };
         }
 
-        // Query user_subscriptions table
+        // Query user_subscriptions table by email
         const { data: subscription, error: subscriptionError } = await supabase
             .from('user_subscriptions')
             .select('*')
-            .eq('user_id', user.id)
+            .eq('email', user.email!)
             .eq('status', 'active')
             .single();
 
