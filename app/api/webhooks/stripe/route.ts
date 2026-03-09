@@ -16,24 +16,26 @@ function getSupabaseAdmin() {
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     const email = session.customer_details?.email;
 
+    console.log('🔍 [STEP 3] Email client :', email);
+    console.log('🔍 [STEP 3] customer_details :', JSON.stringify(session.customer_details));
+
     if (!email) {
-        console.error('❌ No email found in checkout session');
+        console.error('❌ [STEP 3] No email found in checkout session');
         return;
     }
-
-    console.log(`📧 Processing checkout for: ${email}`);
 
     const supabase = getSupabaseAdmin();
 
     // Check if subscription already exists
-    const { data: existing } = await supabase
+    const { data: existing, error: fetchError } = await supabase
         .from('user_subscriptions')
         .select('id, status')
         .eq('email', email)
         .single();
 
+    console.log('🔍 [STEP 4] Supabase lookup result:', JSON.stringify({ existing, fetchError }));
+
     if (existing) {
-        // Update existing subscription to active
         const { error } = await supabase
             .from('user_subscriptions')
             .update({
@@ -43,12 +45,11 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
             .eq('email', email);
 
         if (error) {
-            console.error('❌ Error updating subscription:', error);
+            console.error('❌ [STEP 4] Error updating subscription:', error);
             throw error;
         }
-        console.log(`✅ Subscription updated to active for: ${email}`);
+        console.log('✅ [STEP 4] Supabase updated - subscription activated for:', email);
     } else {
-        // Insert new subscription
         const { error } = await supabase
             .from('user_subscriptions')
             .insert({
@@ -60,22 +61,29 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
             });
 
         if (error) {
-            console.error('❌ Error creating subscription:', error);
+            console.error('❌ [STEP 4] Error creating subscription:', error);
             throw error;
         }
-        console.log(`✅ New subscription created for: ${email}`);
+        console.log('✅ [STEP 4] Supabase updated - new subscription created for:', email);
     }
 
     // Send activation email
+    console.log('🔍 [STEP 5] Sending activation email to:', email);
+    console.log('🔍 [STEP 5] RESEND_API_KEY exists:', !!process.env.RESEND_API_KEY);
+    console.log('🔍 [STEP 5] RESEND_FROM_EMAIL:', process.env.RESEND_FROM_EMAIL);
+
     try {
-        await sendActivationEmail(email);
-    } catch (emailError) {
-        // Don't fail the webhook if email fails — subscription is already active
-        console.error('⚠️ Email sending failed (subscription still activated):', emailError);
+        const result = await sendActivationEmail(email);
+        console.log('✅ [STEP 5] Email envoyé avec succès:', JSON.stringify(result));
+    } catch (emailError: any) {
+        console.error('❌ [STEP 5] Email sending failed:', emailError?.message || emailError);
+        console.error('❌ [STEP 5] Full error:', JSON.stringify(emailError));
     }
 }
 
 export async function POST(req: NextRequest) {
+    console.log('🔍 [STEP 1] Webhook reçu');
+
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
         apiVersion: '2025-12-15.clover',
     });
@@ -83,6 +91,7 @@ export async function POST(req: NextRequest) {
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
     if (!webhookSecret) {
+        console.error('❌ [STEP 1] STRIPE_WEBHOOK_SECRET is not set');
         return NextResponse.json(
             { error: 'Stripe webhook secret is not set' },
             { status: 500 }
@@ -93,6 +102,7 @@ export async function POST(req: NextRequest) {
     const signature = req.headers.get('stripe-signature');
 
     if (!signature) {
+        console.error('❌ [STEP 1] Missing stripe-signature header');
         return NextResponse.json(
             { error: 'Missing stripe-signature header' },
             { status: 400 }
@@ -104,15 +114,14 @@ export async function POST(req: NextRequest) {
     try {
         event = stripe.webhooks.constructEvent(payload, signature, webhookSecret);
     } catch (err: any) {
-        console.error(`⚠️  Webhook signature verification failed.`, err.message);
+        console.error('❌ [STEP 2] Signature vérification ÉCHOUÉE:', err.message);
         return NextResponse.json(
             { error: `Webhook Error: ${err.message}` },
             { status: 400 }
         );
     }
 
-    // Handle the event
-    console.log(`✅ Received Stripe event: ${event.type} (${event.id})`);
+    console.log('✅ [STEP 2] Signature vérifiée - Event:', event.type, '- ID:', event.id);
 
     if (event.type === 'checkout.session.completed') {
         try {
@@ -124,7 +133,10 @@ export async function POST(req: NextRequest) {
                 { status: 500 }
             );
         }
+    } else {
+        console.log('ℹ️ Event type ignoré:', event.type);
     }
 
+    console.log('✅ [DONE] Webhook traité avec succès');
     return NextResponse.json({ received: true });
 }
