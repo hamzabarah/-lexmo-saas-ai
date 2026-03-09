@@ -83,6 +83,8 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
 export async function POST(req: NextRequest) {
     console.log('🔍 [STEP 1] Webhook reçu');
+    console.log('🔍 [STEP 1] Webhook secret prefix:', process.env.STRIPE_WEBHOOK_SECRET?.substring(0, 10));
+    console.log('🔍 [STEP 1] Stripe key prefix:', process.env.STRIPE_SECRET_KEY?.substring(0, 12));
 
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
         apiVersion: '2025-12-15.clover',
