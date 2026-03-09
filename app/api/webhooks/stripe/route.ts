@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { sendActivationEmail } from '@/lib/resend';
 
@@ -12,11 +13,13 @@ function getSupabaseAdmin() {
     );
 }
 
-async function handleCheckoutCompleted(customerEmail: string) {
-    console.log('🔍 [STEP 3] Email client :', customerEmail);
+async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
+    const email = session.customer_details?.email;
 
-    if (!customerEmail) {
-        console.error('❌ [STEP 3] No email found');
+    console.log('🔍 [STEP 3] Email client :', email);
+
+    if (!email) {
+        console.error('❌ [STEP 3] No email found in checkout session');
         return;
     }
 
@@ -25,7 +28,7 @@ async function handleCheckoutCompleted(customerEmail: string) {
     const { data: existing, error: fetchError } = await supabase
         .from('user_subscriptions')
         .select('id, status')
-        .eq('email', customerEmail)
+        .eq('email', email)
         .single();
 
     console.log('🔍 [STEP 4] Supabase lookup:', JSON.stringify({ existing, fetchError }));
@@ -37,18 +40,18 @@ async function handleCheckoutCompleted(customerEmail: string) {
                 status: 'active',
                 activated_at: new Date().toISOString(),
             })
-            .eq('email', customerEmail);
+            .eq('email', email);
 
         if (error) {
             console.error('❌ [STEP 4] Error updating subscription:', error);
             throw error;
         }
-        console.log('✅ [STEP 4] Supabase updated - subscription activated for:', customerEmail);
+        console.log('✅ [STEP 4] Supabase updated - subscription activated for:', email);
     } else {
         const { error } = await supabase
             .from('user_subscriptions')
             .insert({
-                email: customerEmail,
+                email,
                 plan: 'spark',
                 status: 'active',
                 activated_at: new Date().toISOString(),
@@ -59,47 +62,75 @@ async function handleCheckoutCompleted(customerEmail: string) {
             console.error('❌ [STEP 4] Error creating subscription:', error);
             throw error;
         }
-        console.log('✅ [STEP 4] Supabase updated - new subscription created for:', customerEmail);
+        console.log('✅ [STEP 4] Supabase updated - new subscription created for:', email);
     }
 
-    console.log('🔍 [STEP 5] Sending activation email to:', customerEmail);
-    console.log('🔍 [STEP 5] RESEND_API_KEY exists:', !!process.env.RESEND_API_KEY);
-    console.log('🔍 [STEP 5] RESEND_FROM_EMAIL:', process.env.RESEND_FROM_EMAIL);
+    console.log('🔍 [STEP 5] Sending activation email to:', email);
 
     try {
-        const result = await sendActivationEmail(customerEmail);
+        const result = await sendActivationEmail(email);
         console.log('✅ [STEP 5] Email envoyé avec succès:', JSON.stringify(result));
     } catch (emailError: any) {
         console.error('❌ [STEP 5] Email sending failed:', emailError?.message || emailError);
-        console.error('❌ [STEP 5] Full error:', JSON.stringify(emailError));
     }
 }
 
-// ⚠️ TEMPORARY: Signature verification bypassed for testing
 export async function POST(req: NextRequest) {
-    console.log('🔍 [STEP 1] Webhook reçu (BYPASS MODE)');
+    console.log('🔍 [STEP 1] Webhook reçu');
+
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+        apiVersion: '2025-12-15.clover',
+    });
+
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+
+    if (!webhookSecret) {
+        console.error('❌ [STEP 1] STRIPE_WEBHOOK_SECRET is not set');
+        return NextResponse.json(
+            { error: 'Stripe webhook secret is not set' },
+            { status: 500 }
+        );
+    }
+
+    const payload = await req.text();
+    const signature = req.headers.get('stripe-signature');
+
+    if (!signature) {
+        console.error('❌ [STEP 1] Missing stripe-signature header');
+        return NextResponse.json(
+            { error: 'Missing stripe-signature header' },
+            { status: 400 }
+        );
+    }
+
+    let event: Stripe.Event;
 
     try {
-        const body = await req.json();
-        console.log('🔍 [STEP 2] Body reçu - type:', body?.type);
-
-        const eventType = body?.type;
-        const email = body?.data?.object?.customer_details?.email
-            || body?.data?.object?.customer_email
-            || body?.email; // fallback for manual test
-
-        console.log('🔍 [STEP 2] Email extrait:', email);
-
-        if (eventType === 'checkout.session.completed' || body?.test) {
-            await handleCheckoutCompleted(email);
-        } else {
-            console.log('ℹ️ Event type ignoré:', eventType);
-        }
-
-        console.log('✅ [DONE] Webhook traité avec succès');
-        return NextResponse.json({ received: true });
-    } catch (error: any) {
-        console.error('❌ Webhook error:', error?.message || error);
-        return NextResponse.json({ error: error?.message }, { status: 500 });
+        event = stripe.webhooks.constructEvent(payload, signature, webhookSecret);
+    } catch (err: any) {
+        console.error('❌ [STEP 2] Signature vérification ÉCHOUÉE:', err.message);
+        return NextResponse.json(
+            { error: `Webhook Error: ${err.message}` },
+            { status: 400 }
+        );
     }
+
+    console.log('✅ [STEP 2] Signature vérifiée - Event:', event.type, '- ID:', event.id);
+
+    if (event.type === 'checkout.session.completed') {
+        try {
+            await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
+        } catch (error: any) {
+            console.error('❌ Error handling checkout.session.completed:', error);
+            return NextResponse.json(
+                { error: 'Webhook handler failed' },
+                { status: 500 }
+            );
+        }
+    } else {
+        console.log('ℹ️ Event type ignoré:', event.type);
+    }
+
+    console.log('✅ [DONE] Webhook traité avec succès');
+    return NextResponse.json({ received: true });
 }
