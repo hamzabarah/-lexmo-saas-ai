@@ -25,7 +25,7 @@ export default function PaymentSuccessPage() {
 
                 {/* CTA Button */}
                 <Link
-                    href="/login"
+                    href="/register"
                     className="inline-block bg-[#008060] hover:bg-[#006e52] text-white font-bold text-lg px-10 py-4 rounded-xl transition-all duration-200 shadow-lg shadow-[#008060]/20 hover:shadow-[#008060]/30"
                 >
                     ابدأ التعلم الآن
