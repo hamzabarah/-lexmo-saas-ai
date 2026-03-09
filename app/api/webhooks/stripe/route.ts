@@ -14,9 +14,15 @@ function getSupabaseAdmin() {
 }
 
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
-    const email = session.customer_details?.email;
+    const emailFromDetails = session.customer_details?.email;
+    const emailFromSession = (session as any).customer_email;
+    const emailFromMetadata = session.metadata?.email;
+    const email = emailFromDetails || emailFromSession || emailFromMetadata;
 
-    console.log('🔍 [STEP 3] Email client :', email);
+    console.log('🔍 [STEP 3] customer_details.email :', emailFromDetails);
+    console.log('🔍 [STEP 3] customer_email :', emailFromSession);
+    console.log('🔍 [STEP 3] metadata.email :', emailFromMetadata);
+    console.log('🔍 [STEP 3] Email utilisé :', email);
 
     if (!email) {
         console.error('❌ [STEP 3] No email found in checkout session');
