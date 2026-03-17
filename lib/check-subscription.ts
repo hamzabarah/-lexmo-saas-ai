@@ -1,5 +1,3 @@
-import { createClient } from '@/utils/supabase/client';
-
 export interface SubscriptionData {
     id: string;
     user_id: string;
@@ -17,52 +15,20 @@ export interface SubscriptionCheckResult {
 
 /**
  * Check if the current user has an active subscription
- * @returns Object with hasAccess boolean and subscription data
+ * Calls server API route that uses service role to bypass RLS
  */
 export async function checkUserSubscription(): Promise<SubscriptionCheckResult> {
-    const supabase = createClient();
-
     try {
-        // Get current user
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        const res = await fetch('/api/check-subscription', {
+            credentials: 'include',
+        });
 
-        if (userError || !user) {
+        if (!res.ok) {
             return { hasAccess: false, subscription: null };
         }
 
-        // Admin Bypass
-        if (user.email === 'academyfrance75@gmail.com') {
-            return {
-                hasAccess: true,
-                subscription: {
-                    id: 'admin-override',
-                    user_id: user.id,
-                    email: user.email!,
-                    plan: 'legend',
-                    status: 'active',
-                    activated_at: new Date().toISOString(),
-                    created_at: new Date().toISOString()
-                }
-            };
-        }
-
-        // Query user_subscriptions table by email
-        const { data: subscription, error: subscriptionError } = await supabase
-            .from('user_subscriptions')
-            .select('*')
-            .eq('email', user.email!)
-            .eq('status', 'active')
-            .single();
-
-        if (subscriptionError || !subscription) {
-            return { hasAccess: false, subscription: null };
-        }
-
-        // User has an active subscription
-        return {
-            hasAccess: true,
-            subscription: subscription as SubscriptionData
-        };
+        const data = await res.json();
+        return data as SubscriptionCheckResult;
     } catch (error) {
         console.error('Error checking subscription:', error);
         return { hasAccess: false, subscription: null };

@@ -12,11 +12,14 @@ CREATE TABLE IF NOT EXISTS user_subscriptions (
 -- Enable Row Level Security
 ALTER TABLE user_subscriptions ENABLE ROW LEVEL SECURITY;
 
--- Policy: Users can view their own subscription
+-- Policy: Users can view their own subscription (by user_id OR by email)
 CREATE POLICY "Users can view own subscription"
     ON user_subscriptions
     FOR SELECT
-    USING (auth.uid() = user_id);
+    USING (
+        auth.uid() = user_id
+        OR email = (SELECT email FROM auth.users WHERE id = auth.uid())
+    );
 
 -- Policy: Only admin can insert subscriptions
 CREATE POLICY "Admin can insert subscriptions"
