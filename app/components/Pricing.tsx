@@ -199,9 +199,9 @@ function PriceCard({
 }) {
     // Direct Stripe payment links for each pack (PRODUCTION)
     const STRIPE_LINKS = {
-        spark: 'https://buy.stripe.com/28obJg1i37vIgmIcMN',
-        emperor: 'https://buy.stripe.com/3cI3cvada37Hay1cAXgfu02',
-        legend: 'https://buy.stripe.com/3cIdR9adabEd0Xr6czgfu03'
+        spark: 'https://buy.stripe.com/4gM4gz4SQ5fP7lP44rgfu04',
+        emperor: 'https://buy.stripe.com/4gM4gz4SQ5fP7lP44rgfu04',
+        legend: 'https://buy.stripe.com/4gM4gz4SQ5fP7lP44rgfu04'
     };
 
     const borderColor = accentColor === 'violet' ? 'border-[#a855f7]/50 hover:border-[#a855f7]' : isPopular ? 'border-[#C5A04E]' : 'border-[#C5A04E]/10';
