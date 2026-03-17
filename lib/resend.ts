@@ -40,7 +40,7 @@ export async function sendActivationEmail(toEmail: string) {
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td align="center" style="padding:10px 0 30px;">
-                                        <a href="https://lexmo.ai/register" style="display:inline-block;background-color:#008060;color:#ffffff;text-decoration:none;padding:16px 40px;border-radius:8px;font-size:18px;font-weight:bold;">
+                                        <a href="https://lexmo.ai/register?email=${encodeURIComponent(toEmail)}" style="display:inline-block;background-color:#008060;color:#ffffff;text-decoration:none;padding:16px 40px;border-radius:8px;font-size:18px;font-weight:bold;">
                                             ابدأ التعلم الآن
                                         </a>
                                     </td>

@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
+import { createClient as createAdminClient } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 
@@ -26,13 +27,30 @@ export async function login(formData: FormData) {
 }
 
 export async function signup(formData: FormData) {
-    const headersList = await headers();
-    const origin = headersList.get("origin");
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
     const name = formData.get("name") as string;
     const phone = formData.get("phone") as string;
     const country = formData.get("country") as string;
+
+    // Verify payment exists before allowing registration
+    const admin = createAdminClient(
+        process.env.SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        { auth: { autoRefreshToken: false, persistSession: false } }
+    );
+
+    const { data: subscription } = await admin
+        .from("user_subscriptions")
+        .select("id")
+        .eq("email", email)
+        .single();
+
+    if (!subscription) {
+        return {
+            error: "هذا البريد الإلكتروني غير مرتبط بعملية دفع. يرجى الدفع أولاً",
+        };
+    }
 
     const supabase = await createClient();
 
@@ -50,7 +68,10 @@ export async function signup(formData: FormData) {
 
     if (error) {
         console.error("Signup Error:", error);
-        return { error: error.message }; // Temporarily return raw error for debugging
+        if (error.message.includes("already registered")) {
+            return { error: "هذا البريد الإلكتروني مسجل بالفعل. جرب تسجيل الدخول" };
+        }
+        return { error: error.message };
     }
 
     return redirect("/dashboard");

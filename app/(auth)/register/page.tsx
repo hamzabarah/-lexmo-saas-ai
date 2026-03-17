@@ -1,13 +1,18 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { Suspense, useState, useTransition } from "react";
+import { useSearchParams } from "next/navigation";
 import { signup } from "../actions";
 import Link from "next/link";
 import { Mail, Lock, User, Phone, MapPin, Loader2 } from "lucide-react";
 import Card from "@/app/components/dashboard/Card";
 
-export default function RegisterPage() {
-    const [isPending, startTransition] = useTransition(); // Corrected hook usage
+function RegisterForm() {
+    const searchParams = useSearchParams();
+    const emailFromUrl = searchParams.get("email") || "";
+    const isEmailLocked = !!emailFromUrl;
+
+    const [isPending, startTransition] = useTransition();
     const [error, setError] = useState<string | null>(null);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -51,9 +56,19 @@ export default function RegisterPage() {
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-400">البريد الإلكتروني</label>
                     <div className="relative">
-                        <input name="email" type="email" required className="w-full bg-[#0A0A0A] border border-[#C5A04E]/10 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#C5A04E] transition-colors" />
+                        <input
+                            name="email"
+                            type="email"
+                            required
+                            defaultValue={emailFromUrl}
+                            readOnly={isEmailLocked}
+                            className={`w-full bg-[#0A0A0A] border border-[#C5A04E]/10 rounded-xl px-4 py-3 pl-10 focus:outline-none focus:border-[#C5A04E] transition-colors ${isEmailLocked ? "opacity-60 cursor-not-allowed" : ""}`}
+                        />
                         <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                     </div>
+                    {isEmailLocked && (
+                        <p className="text-xs text-gray-500">هذا هو البريد الإلكتروني المرتبط بعملية الدفع</p>
+                    )}
                 </div>
 
                 {/* Phone & Country Row */}
@@ -121,10 +136,24 @@ export default function RegisterPage() {
 
             <div className="mt-6 text-center text-sm text-gray-500">
                 لديك حساب بالفعل؟{" "}
-                <Link href="/#login" className="text-[#C5A04E] font-bold hover:underline">
+                <Link href="/login" className="text-[#C5A04E] font-bold hover:underline">
                     سجل دخولك
                 </Link>
             </div>
         </Card>
+    );
+}
+
+export default function RegisterPage() {
+    return (
+        <Suspense fallback={
+            <Card className="w-full">
+                <div className="flex items-center justify-center py-12">
+                    <Loader2 className="animate-spin text-[#C5A04E]" size={32} />
+                </div>
+            </Card>
+        }>
+            <RegisterForm />
+        </Suspense>
     );
 }
