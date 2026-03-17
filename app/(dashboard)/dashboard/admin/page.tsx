@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js';
-import { Shield, Mail, AlertCircle, UserPlus, TrendingUp, Copy, Check } from 'lucide-react';
+import { Shield, Mail, AlertCircle, UserPlus, TrendingUp, Copy, Check, Settings, Eye, EyeOff } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 interface UserData {
@@ -49,6 +49,10 @@ export default function AdminPage() {
     const [createdStudent, setCreatedStudent] = useState<CreatedStudent | null>(null);
     const [passwordCopied, setPasswordCopied] = useState(false);
 
+    // Settings
+    const [showCompanyInfo, setShowCompanyInfo] = useState(true);
+    const [togglingCompanyInfo, setTogglingCompanyInfo] = useState(false);
+
     const supabase = createClient();
     const router = useRouter();
 
@@ -70,6 +74,43 @@ export default function AdminPage() {
 
         setUser(user);
         await loadData();
+        await loadSettings();
+    };
+
+    const loadSettings = async () => {
+        try {
+            const res = await fetch('/api/admin/settings');
+            const data = await res.json();
+            setShowCompanyInfo(data.settings?.show_company_info ?? true);
+        } catch (error) {
+            console.error('Error loading settings:', error);
+        }
+    };
+
+    const toggleCompanyInfo = async () => {
+        setTogglingCompanyInfo(true);
+        const newValue = !showCompanyInfo;
+        try {
+            const { data: { session } } = await supabase.auth.getSession();
+            const res = await fetch('/api/admin/settings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${session?.access_token}`,
+                },
+                body: JSON.stringify({ key: 'show_company_info', value: newValue }),
+            });
+            if (res.ok) {
+                setShowCompanyInfo(newValue);
+            } else {
+                alert('حدث خطأ أثناء تحديث الإعداد');
+            }
+        } catch (error) {
+            console.error('Error toggling company info:', error);
+            alert('حدث خطأ أثناء تحديث الإعداد');
+        } finally {
+            setTogglingCompanyInfo(false);
+        }
     };
 
     const loadData = async () => {
@@ -294,6 +335,41 @@ ${LOGIN_URL}
                             <div className="text-gray-500 text-sm">في انتظار التفعيل</div>
                         </div>
                         <div className="text-3xl font-bold text-orange-500">{pendingStudents}</div>
+                    </div>
+                </div>
+
+                {/* Site Settings */}
+                <div className="bg-[#111111]/50 border border-[#C5A04E]/10 rounded-xl p-6 mb-8">
+                    <div className="flex items-center gap-3 mb-6">
+                        <Settings className="w-6 h-6 text-[#C5A04E]" />
+                        <h2 className="text-2xl font-bold text-white">إعدادات الموقع</h2>
+                    </div>
+
+                    <div className="flex items-center justify-between bg-[#1A1A1A] rounded-lg px-5 py-4">
+                        <div className="flex items-center gap-3">
+                            {showCompanyInfo ? (
+                                <Eye className="w-5 h-5 text-green-500" />
+                            ) : (
+                                <EyeOff className="w-5 h-5 text-gray-500" />
+                            )}
+                            <div>
+                                <p className="text-white font-semibold text-sm">إظهار معلومات الشركة</p>
+                                <p className="text-gray-500 text-xs mt-0.5">إظهار أو إخفاء بيانات الشركة في صفحة الشروط والأحكام</p>
+                            </div>
+                        </div>
+                        <button
+                            onClick={toggleCompanyInfo}
+                            disabled={togglingCompanyInfo}
+                            className={`relative w-14 h-7 rounded-full transition-colors duration-200 ${
+                                showCompanyInfo ? 'bg-green-500' : 'bg-gray-600'
+                            } ${togglingCompanyInfo ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                        >
+                            <span
+                                className={`absolute top-0.5 w-6 h-6 bg-white rounded-full shadow transition-transform duration-200 ${
+                                    showCompanyInfo ? 'left-0.5 translate-x-7' : 'left-0.5 translate-x-0'
+                                }`}
+                            />
+                        </button>
                     </div>
                 </div>
 

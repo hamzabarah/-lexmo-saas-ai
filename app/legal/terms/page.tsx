@@ -1,6 +1,27 @@
 import Link from "next/link";
+import { createClient } from "@supabase/supabase-js";
 
-export default function TermsPage() {
+async function getShowCompanyInfo(): Promise<boolean> {
+  try {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+    const { data } = await supabase
+      .from("live_dashboard_state")
+      .select("data")
+      .eq("id", 1)
+      .single();
+    return data?.data?.settings?.show_company_info ?? true;
+  } catch {
+    return true;
+  }
+}
+
+export const dynamic = "force-dynamic";
+
+export default async function TermsPage() {
+  const showCompanyInfo = await getShowCompanyInfo();
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-gray-700 py-16 px-4 font-cairo" dir="ltr">
       <div className="mx-auto" style={{ maxWidth: '800px' }}>
@@ -197,14 +218,16 @@ export default function TermsPage() {
         </div>
 
         {/* Legal Notice */}
-        <div className="mt-16 pt-8 border-t border-[#C5A04E]/10 text-xs text-gray-400 space-y-1">
-          <p><strong className="text-gray-500">Company name:</strong> HAMZA SHOP</p>
-          <p><strong className="text-gray-500">Registered office:</strong> 808 Boulevard La Grand Delle, 14200 Hérouville-Saint-Clair, France</p>
-          <p><strong className="text-gray-500">RCS number:</strong> 842 966 145 R.C.S. Caen</p>
-          <p><strong className="text-gray-500">Contact:</strong> lexmoacadmy@gmail.com</p>
-          <p><strong className="text-gray-500">Platform:</strong> lexmo.ai</p>
-          <p className="mt-4 text-gray-700">© 2026 ECOMY — HAMZA SHOP. All rights reserved.</p>
-        </div>
+        {showCompanyInfo && (
+          <div className="mt-16 pt-8 border-t border-[#C5A04E]/10 text-xs text-gray-400 space-y-1">
+            <p><strong className="text-gray-500">Company name:</strong> HAMZA SHOP</p>
+            <p><strong className="text-gray-500">Registered office:</strong> 808 Boulevard La Grand Delle, 14200 Hérouville-Saint-Clair, France</p>
+            <p><strong className="text-gray-500">RCS number:</strong> 842 966 145 R.C.S. Caen</p>
+            <p><strong className="text-gray-500">Contact:</strong> lexmoacadmy@gmail.com</p>
+            <p><strong className="text-gray-500">Platform:</strong> lexmo.ai</p>
+            <p className="mt-4 text-gray-700">© 2026 ECOMY — HAMZA SHOP. All rights reserved.</p>
+          </div>
+        )}
 
       </div>
     </div>
