@@ -10,6 +10,7 @@ export interface SubscriptionData {
 
 export interface SubscriptionCheckResult {
     hasAccess: boolean;
+    isAdmin?: boolean;
     subscription: SubscriptionData | null;
 }
 

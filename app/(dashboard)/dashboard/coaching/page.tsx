@@ -25,7 +25,7 @@ export default function CoachingPage() {
             setSubscriptionCheck(result);
             setLoading(false);
 
-            if (result?.hasAccess && result?.subscription?.plan === 'diagnostic') {
+            if (result?.hasAccess && (result?.subscription?.plan === 'diagnostic' || result?.isAdmin)) {
                 loadSlots();
             }
         });
@@ -75,10 +75,10 @@ export default function CoachingPage() {
         );
     }
 
-    // Access check: must have 'diagnostic' plan
+    // Access check: must have 'diagnostic' plan or be admin
     const hasDiagnosticAccess =
         subscriptionCheck?.hasAccess &&
-        subscriptionCheck?.subscription?.plan === 'diagnostic';
+        (subscriptionCheck?.subscription?.plan === 'diagnostic' || subscriptionCheck?.isAdmin);
 
     if (!hasDiagnosticAccess) {
         return (

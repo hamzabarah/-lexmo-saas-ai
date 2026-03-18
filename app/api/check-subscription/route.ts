@@ -22,10 +22,11 @@ export async function GET() {
             return NextResponse.json({ hasAccess: false, subscription: null });
         }
 
-        // Admin bypass
+        // Admin bypass — full access to all areas
         if (user.email === 'academyfrance75@gmail.com') {
             return NextResponse.json({
                 hasAccess: true,
+                isAdmin: true,
                 subscription: {
                     id: 'admin-override',
                     user_id: user.id,

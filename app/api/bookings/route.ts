@@ -79,17 +79,20 @@ export async function POST(req: NextRequest) {
         }
 
         const admin = getAdmin();
+        const isAdmin = user.email === 'academyfrance75@gmail.com';
 
-        // Verify user has diagnostic plan
-        const { data: subscription } = await admin
-            .from('user_subscriptions')
-            .select('plan, status')
-            .eq('email', user.email!)
-            .eq('status', 'active')
-            .single();
+        // Verify user has diagnostic plan (admin bypasses this check)
+        if (!isAdmin) {
+            const { data: subscription } = await admin
+                .from('user_subscriptions')
+                .select('plan, status')
+                .eq('email', user.email!)
+                .eq('status', 'active')
+                .single();
 
-        if (!subscription || subscription.plan !== 'diagnostic') {
-            return NextResponse.json({ error: 'No diagnostic subscription found' }, { status: 403 });
+            if (!subscription || subscription.plan !== 'diagnostic') {
+                return NextResponse.json({ error: 'No diagnostic subscription found' }, { status: 403 });
+            }
         }
 
         // Check user doesn't already have a scheduled booking
