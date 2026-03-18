@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js';
-import { Shield, Mail, AlertCircle, UserPlus, TrendingUp, Copy, Check, Settings, Eye, EyeOff } from 'lucide-react';
+import { Shield, Mail, AlertCircle, UserPlus, TrendingUp, Copy, Check, Settings, Eye, EyeOff, Calendar, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 interface UserData {
@@ -32,6 +32,22 @@ interface CreatedStudent {
     plan: string;
 }
 
+interface AvailabilitySlot {
+    id: string;
+    day_of_week: number;
+    hour: number;
+    minute: number;
+    is_active: boolean;
+}
+
+interface Booking {
+    id: string;
+    user_id: string;
+    booking_date: string;
+    status: string;
+    product_type: string;
+}
+
 export default function AdminPage() {
     const [user, setUser] = useState<User | null>(null);
     const [users, setUsers] = useState<UserData[]>([]);
@@ -52,6 +68,16 @@ export default function AdminPage() {
     // Settings
     const [showCompanyInfo, setShowCompanyInfo] = useState(true);
     const [togglingCompanyInfo, setTogglingCompanyInfo] = useState(false);
+
+    // Availability
+    const [availabilitySlots, setAvailabilitySlots] = useState<AvailabilitySlot[]>([]);
+    const [newSlotDay, setNewSlotDay] = useState(1);
+    const [newSlotHour, setNewSlotHour] = useState(10);
+    const [newSlotMinute, setNewSlotMinute] = useState(0);
+    const [savingSlot, setSavingSlot] = useState(false);
+
+    // Bookings
+    const [bookings, setBookings] = useState<Booking[]>([]);
 
     const supabase = createClient();
     const router = useRouter();
@@ -75,6 +101,8 @@ export default function AdminPage() {
         setUser(user);
         await loadData();
         await loadSettings();
+        await loadAvailability();
+        await loadBookings();
     };
 
     const loadSettings = async () => {
@@ -112,6 +140,91 @@ export default function AdminPage() {
             setTogglingCompanyInfo(false);
         }
     };
+
+    const loadAvailability = async () => {
+        try {
+            const res = await fetch('/api/admin/availability');
+            const data = await res.json();
+            setAvailabilitySlots(data.slots || []);
+        } catch (error) {
+            console.error('Error loading availability:', error);
+        }
+    };
+
+    const loadBookings = async () => {
+        try {
+            const res = await fetch('/api/bookings');
+            // We need an admin endpoint, but for now use the existing bookings data
+            // Bookings are loaded via supabase directly
+            const { data: bookingsData } = await supabase
+                .from('bookings')
+                .select('*')
+                .order('booking_date', { ascending: false });
+            setBookings(bookingsData || []);
+        } catch (error) {
+            console.error('Error loading bookings:', error);
+        }
+    };
+
+    const handleAddSlot = async () => {
+        setSavingSlot(true);
+        try {
+            const res = await fetch('/api/admin/availability', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ day_of_week: newSlotDay, hour: newSlotHour, minute: newSlotMinute }),
+            });
+            if (res.ok) {
+                await loadAvailability();
+            } else {
+                alert('حدث خطأ أثناء إضافة الموعد');
+            }
+        } catch (error) {
+            console.error('Error adding slot:', error);
+        }
+        setSavingSlot(false);
+    };
+
+    const handleDeleteSlot = async (slotId: string) => {
+        try {
+            const res = await fetch('/api/admin/availability', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: slotId }),
+            });
+            if (res.ok) {
+                await loadAvailability();
+            }
+        } catch (error) {
+            console.error('Error deleting slot:', error);
+        }
+    };
+
+    const handleMarkCompleted = async (bookingId: string) => {
+        try {
+            const { error } = await supabase
+                .from('bookings')
+                .update({ status: 'completed' })
+                .eq('id', bookingId);
+            if (!error) await loadBookings();
+        } catch (error) {
+            console.error('Error marking booking completed:', error);
+        }
+    };
+
+    const handleCancelBooking = async (bookingId: string) => {
+        try {
+            const { error } = await supabase
+                .from('bookings')
+                .update({ status: 'cancelled' })
+                .eq('id', bookingId);
+            if (!error) await loadBookings();
+        } catch (error) {
+            console.error('Error cancelling booking:', error);
+        }
+    };
+
+    const DAY_NAMES = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
 
     const loadData = async () => {
         try {
@@ -413,7 +526,8 @@ ${LOGIN_URL}
                                 onChange={(e) => setNewStudentPlan(e.target.value)}
                                 className="w-full bg-[#1A1A1A] border border-[#C5A04E]/10 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
-                                <option value="spark">🚀 Spark</option>
+                                <option value="spark">📚 Formation (Spark)</option>
+                                <option value="diagnostic">🔍 Diagnostic</option>
                                 <option value="emperor">👑 Emperor</option>
                                 <option value="legend">💎 Legend</option>
                             </select>
@@ -472,7 +586,7 @@ ${LOGIN_URL}
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <span className="text-gray-500 font-semibold min-w-[120px]">الخطة:</span>
-                                    <span className="text-white">{createdStudent.plan === 'spark' ? '🚀 Spark' : createdStudent.plan === 'emperor' ? '👑 Emperor' : '💎 Legend'}</span>
+                                    <span className="text-white">{createdStudent.plan === 'spark' ? '📚 Formation' : createdStudent.plan === 'diagnostic' ? '🔍 Diagnostic' : createdStudent.plan === 'emperor' ? '👑 Emperor' : '💎 Legend'}</span>
                                 </div>
                             </div>
 
@@ -520,7 +634,8 @@ ${LOGIN_URL}
                                     const status = statusConfig[subscription.status as keyof typeof statusConfig] || statusConfig.pending;
 
                                     const planIcons = {
-                                        spark: '🚀',
+                                        spark: '📚',
+                                        diagnostic: '🔍',
                                         emperor: '👑',
                                         legend: '💎'
                                     };
@@ -580,6 +695,156 @@ ${LOGIN_URL}
                         لا توجد بيانات للعرض
                     </div>
                 )}
+
+                {/* ===== Availability Management ===== */}
+                <div className="bg-[#111111]/50 border border-[#C5A04E]/10 rounded-xl p-6 mt-8">
+                    <div className="flex items-center gap-3 mb-6">
+                        <Calendar className="w-6 h-6 text-[#C5A04E]" />
+                        <h2 className="text-2xl font-bold text-white">إدارة مواعيد التشخيص</h2>
+                    </div>
+
+                    {/* Add new slot form */}
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                        <div>
+                            <label className="block text-sm text-gray-500 mb-2">اليوم</label>
+                            <select
+                                value={newSlotDay}
+                                onChange={e => setNewSlotDay(Number(e.target.value))}
+                                className="w-full bg-[#1A1A1A] border border-[#C5A04E]/10 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C5A04E]"
+                            >
+                                {DAY_NAMES.map((d, i) => (
+                                    <option key={i} value={i}>{d}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-sm text-gray-500 mb-2">الساعة</label>
+                            <input
+                                type="number"
+                                min={0}
+                                max={23}
+                                value={newSlotHour}
+                                onChange={e => setNewSlotHour(Number(e.target.value))}
+                                className="w-full bg-[#1A1A1A] border border-[#C5A04E]/10 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C5A04E]"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm text-gray-500 mb-2">الدقيقة</label>
+                            <select
+                                value={newSlotMinute}
+                                onChange={e => setNewSlotMinute(Number(e.target.value))}
+                                className="w-full bg-[#1A1A1A] border border-[#C5A04E]/10 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C5A04E]"
+                            >
+                                <option value={0}>:00</option>
+                                <option value={30}>:30</option>
+                            </select>
+                        </div>
+                        <div className="flex items-end">
+                            <button
+                                onClick={handleAddSlot}
+                                disabled={savingSlot}
+                                className="w-full bg-[#C5A04E] hover:bg-[#D4B85C] text-white font-bold py-3 rounded-lg transition disabled:opacity-50"
+                            >
+                                {savingSlot ? 'جاري الحفظ...' : 'إضافة موعد'}
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Existing slots list */}
+                    <div className="space-y-2">
+                        {availabilitySlots.map(slot => (
+                            <div key={slot.id} className="flex items-center justify-between bg-[#1A1A1A] rounded-lg px-4 py-3">
+                                <span className="text-white text-sm">
+                                    {DAY_NAMES[slot.day_of_week]} — {String(slot.hour).padStart(2, '0')}:{String(slot.minute).padStart(2, '0')}
+                                </span>
+                                <button
+                                    onClick={() => handleDeleteSlot(slot.id)}
+                                    className="text-red-500 hover:text-red-400 text-sm transition flex items-center gap-1"
+                                >
+                                    <Trash2 className="w-4 h-4" />
+                                    حذف
+                                </button>
+                            </div>
+                        ))}
+                        {availabilitySlots.length === 0 && (
+                            <p className="text-gray-500 text-sm text-center py-4">لا توجد مواعيد متاحة. أضف مواعيد جديدة.</p>
+                        )}
+                    </div>
+                </div>
+
+                {/* ===== Bookings Table ===== */}
+                <div className="bg-[#111111]/50 border border-[#C5A04E]/10 rounded-xl overflow-hidden mt-8">
+                    <div className="p-6 border-b border-[#C5A04E]/10">
+                        <h2 className="text-2xl font-bold text-white">حجوزات التشخيص</h2>
+                    </div>
+                    <div className="overflow-x-auto">
+                        <table className="w-full">
+                            <thead className="bg-[#1A1A1A]/50 border-b border-[#C5A04E]/10">
+                                <tr>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-400">العميل</th>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-400">تاريخ الجلسة</th>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-400">الحالة</th>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-400">الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-800">
+                                {bookings.map(booking => {
+                                    const bookingUser = users.find(u => u.id === booking.user_id);
+                                    const statusConfig: Record<string, { text: string; color: string }> = {
+                                        scheduled: { text: 'محجوز', color: 'text-blue-400 bg-blue-500/10' },
+                                        completed: { text: 'مكتمل', color: 'text-green-400 bg-green-500/10' },
+                                        cancelled: { text: 'ملغي', color: 'text-red-400 bg-red-500/10' },
+                                    };
+                                    const bStatus = statusConfig[booking.status] || statusConfig.scheduled;
+
+                                    return (
+                                        <tr key={booking.id} className="hover:bg-[#1A1A1A]/30 transition">
+                                            <td className="px-6 py-4 text-gray-400 text-sm">
+                                                {bookingUser?.email || booking.user_id}
+                                            </td>
+                                            <td className="px-6 py-4 text-gray-400 text-sm">
+                                                {new Date(booking.booking_date).toLocaleString('ar-EG', {
+                                                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+                                                    hour: '2-digit', minute: '2-digit'
+                                                })}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${bStatus.color}`}>
+                                                    {bStatus.text}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <div className="flex gap-2">
+                                                    {booking.status === 'scheduled' && (
+                                                        <>
+                                                            <button
+                                                                onClick={() => handleMarkCompleted(booking.id)}
+                                                                className="text-xs bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg transition"
+                                                            >
+                                                                تم الانتهاء
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleCancelBooking(booking.id)}
+                                                                className="text-xs bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg transition"
+                                                            >
+                                                                إلغاء
+                                                            </button>
+                                                        </>
+                                                    )}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                    {bookings.length === 0 && (
+                        <div className="text-center py-8 text-gray-500 text-sm">
+                            لا توجد حجوزات بعد
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

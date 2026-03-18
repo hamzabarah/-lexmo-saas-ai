@@ -1,303 +1,96 @@
-"use client";
+import Link from "next/link";
 
-import { useState, useEffect, useRef } from "react";
-import { Star, ChevronDown } from "lucide-react";
-
-const CTA_TEXT = "سجل قبل إغلاق التسجيل";
-
-const faqData = [
-  {
-    q: "هل الكورس مناسب للمبتدئين؟",
-    a: "نعم، الكورس مصمم خصيصاً للمبتدئين من الصفر. نبدأ معك من إنشاء المتجر خطوة بخطوة حتى تحقيق أول مبيعة وما بعدها.",
-  },
-  {
-    q: "كم من الوقت أحتاج لأبدأ أربح؟",
-    a: "معظم الطلاب يبدأون بتحقيق مبيعات خلال 2-4 أسابيع من بداية التطبيق. النتائج تعتمد على مدى التزامك بالتطبيق.",
-  },
-  {
-    q: "هل أحتاج رأس مال كبير للبدء؟",
-    a: "لا، يمكنك البدء بميزانية بسيطة. نعلمك كيف تبدأ بأقل تكلفة ممكنة وتنمّي مشروعك تدريجياً.",
-  },
-  {
-    q: "هل يوجد دعم بعد الشراء؟",
-    a: "نعم، لديك وصول مدى الحياة للمحتوى بالإضافة إلى مجتمع خاص للطلاب للدعم والمساعدة.",
-  },
-  {
-    q: "ما الفرق بينكم وبين الكورسات الأخرى؟",
-    a: "نقدم 27 مرحلة عملية مع أكثر من 120 درس فيديو، تغطي كل شيء من إنشاء المتجر إلى الإعلانات المدفوعة على فيسبوك وتيك توك. كل شيء مُحدّث لسنة 2026.",
-  },
-];
-
-export default function Home() {
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [showStickyBar, setShowStickyBar] = useState(false);
-  const [imgError, setImgError] = useState(false);
-  const ctaRef = useRef<HTMLAnchorElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => setShowStickyBar(!entry.isIntersecting),
-      { threshold: 0 }
-    );
-    if (ctaRef.current) observer.observe(ctaRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  // Shared components
-  const ProductImage = imgError ? (
-    <div className="w-full h-[400px] rounded-2xl bg-[#111111] flex items-center justify-center">
-      <span className="text-gray-500 text-lg">صورة المنتج</span>
-    </div>
-  ) : (
-    <img
-      src="/images/product2.jpg"
-      alt="صورة المنتج"
-      className="w-full h-auto lg:h-[400px] object-contain lg:object-cover rounded-2xl"
-      onError={() => setImgError(true)}
-    />
-  );
-
-  const RatingLine = (
-    <div className="flex items-center gap-1.5">
-      <div className="flex gap-0.5">
-        {[...Array(5)].map((_, i) => (
-          <Star key={i} size={14} className="text-[#D4A843] fill-[#D4A843]" />
-        ))}
-      </div>
-      <span className="text-gray-500 text-sm" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>5.0 (453)</span>
-    </div>
-  );
-
-  const PriceLine = (
-    <div className="flex items-center gap-3 flex-wrap">
-      <span className="text-gray-500 text-2xl font-black line-through" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{"1970 €"}</span>
-      <span className="text-white text-2xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{"197 €"}</span>
-      <span className="inline-block bg-[#C5A04E]/10 text-[#C5A04E] text-[11px] font-bold px-2.5 py-0.5 rounded-full">
-        {"تخفيض %90"}
-      </span>
-    </div>
-  );
-
-  const Title = (
-    <h1 className="text-white text-2xl lg:text-3xl font-bold leading-relaxed">
-      {"من صفر إلى €10,000 شهرياً | 27 مرحلة عملية خطوة بخطوة | ابدأ اليوم"}
-    </h1>
-  );
-
-  const Description = (
-    <div className="space-y-4 text-gray-400 text-[15px] leading-[1.9]">
-      <p>
-        {"أكاديمية إيكومي - المنصة رقم 1 في العالم العربي لتعليم التجارة الإلكترونية من الصفر حتى الربح. نساعدك تبني متجرك الإلكتروني وتبدأ تربح من الإنترنت بخطوات عملية ومجربة. أكثر من 120 درس فيديو عملي في 27 مرحلة."}
-      </p>
-    </div>
-  );
-
-  const FAQ = (
-    <div className="space-y-4">
-      <h2 className="text-white text-xl font-bold">الأسئلة الشائعة</h2>
-      <div className="space-y-2">
-        {faqData.map((item, i) => (
-          <div key={i} className="border border-[#C5A04E]/10 rounded-xl overflow-hidden">
-            <button
-              onClick={() => setOpenFaq(openFaq === i ? null : i)}
-              className="w-full flex items-center justify-between px-5 py-4 text-right hover:bg-[#1A1A1A] transition"
-            >
-              <span className="text-white font-semibold text-[15px]">{item.q}</span>
-              <ChevronDown
-                size={18}
-                className={`text-gray-500 shrink-0 transition-transform duration-200 ${openFaq === i ? 'rotate-180' : ''}`}
-              />
-            </button>
-            {openFaq === i && (
-              <div className="px-5 pb-4 text-gray-400 text-sm leading-relaxed">
-                {item.a}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-
-  const Reviews = (
-    <div className="space-y-5">
-      <h2 className="text-white text-xl font-bold">تقييمات العملاء</h2>
-
-      {/* Overall rating — Amazon style */}
-      <div className="flex flex-col sm:flex-row gap-6">
-        <div className="flex flex-col items-center gap-1 shrink-0">
-          <span className="text-5xl font-black text-white" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>5.0</span>
-          <div className="flex gap-0.5">
-            {[...Array(5)].map((_, i) => (
-              <Star key={i} size={18} className="text-[#D4A843] fill-[#D4A843]" />
-            ))}
-          </div>
-          <span className="text-gray-500 text-sm">453 تقييم</span>
-        </div>
-        <div className="flex-1 space-y-1.5">
-          {[5, 4, 3, 2, 1].map((stars) => (
-            <div key={stars} className="flex items-center gap-3">
-              <span className="text-sm text-gray-500 w-4 text-center" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{stars}</span>
-              <Star size={12} className="text-[#D4A843] fill-[#D4A843] shrink-0" />
-              <div className="flex-1 h-2.5 bg-[#2A2A2A] rounded-full overflow-hidden">
-                <div className="h-full bg-[#D4A843] rounded-full" style={{ width: stars === 5 ? '100%' : '0%' }} />
-              </div>
-              <span className="text-sm text-gray-500 w-8 text-center" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{stars === 5 ? 453 : 0}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Separator */}
-      <div className="border-t border-[#C5A04E]/10" />
-
-      {/* Sub-header */}
-      <div className="flex items-center justify-between">
-        <h3 className="text-white font-bold text-base">أفضل التقييمات</h3>
-        <a href="#reviews" className="text-[#C5A04E] text-sm font-semibold hover:underline">عرض كل التقييمات</a>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {[
-          { flag: "\uD83C\uDDF2\uD83C\uDDE6", name: "يوسف", date: "منذ يومين", text: "والله ما كنتش كنصدق أنني غادي نبيع أونلاين، ودابا كاين نهار ما مشا بلا طلبيات. الشرح بسيط وواضح وكل مرحلة مبنية على اللي قبلها. شكرا على هاد البرنامج الرائع!" },
-          { flag: "\uD83C\uDDE9\uD83C\uDDFF", name: "أمين", date: "منذ 5 أيام", text: "من أحسن الدورات اللي شفتها في حياتي. بدأت من الصفر وما عندي حتى تجربة، وخلال أسبوعين حققت أول مبيعة! ما توقعتش يكون الأمر سهل بهاد الشكل" },
-          { flag: "\uD83C\uDDF8\uD83C\uDDE6", name: "عبدالله", date: "منذ أسبوع", text: "أفضل استثمار عملته في حياتي. المحتوى شامل ومفصل والشرح واضح جداً حتى للمبتدئين. حققت أول €2000 في الشهر الأول من التطبيق" },
-          { flag: "\uD83C\uDDF9\uD83C\uDDF3", name: "سامي", date: "منذ أسبوعين", text: "برنامج ممتاز بصح! كنت خايف نبدأ لأني ما عندي خبرة، بس الدورة شرحت كل شي من الصفر. ودابا عندي متجر كيبيع كل يوم \uD83D\uDD25" },
-          { flag: "\uD83C\uDDEA\uD83C\uDDEC", name: "محمد", date: "منذ 3 أسابيع", text: "ربنا يجزيك خير، الدورة دي غيرت حياتي. من أول أسبوع بدأت أشوف نتايج حقيقية. الشرح عملي ومباشر ومفيش كلام فاضي. أنصح بيها أي حد عايز يبدأ في التجارة الإلكترونية" },
-        ].map((review, i) => (
-          <div key={i} className="bg-[#111111] border border-[#C5A04E]/10 rounded-2xl p-5 space-y-3" dir="rtl">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span style={{ fontSize: '24px', lineHeight: 1 }}>{review.flag}</span>
-                <span className="text-white font-bold text-sm">{review.name}</span>
-              </div>
-              <span className="text-gray-500 text-xs">{review.date}</span>
-            </div>
-            <div className="flex gap-0.5">
-              {[...Array(5)].map((_, j) => (
-                <Star key={j} size={14} className="text-[#D4A843] fill-[#D4A843]" />
-              ))}
-            </div>
-            <p className="text-gray-300 text-sm leading-relaxed">{review.text}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-
-  const CTAButton = (
-    <a
-      ref={ctaRef}
-      href="https://buy.stripe.com/4gM4gz4SQ5fP7lP44rgfu04"
-      className="block w-full text-center bg-[#C5A04E] hover:bg-[#D4B85C] text-white text-lg font-bold py-4 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
-      style={{ boxShadow: '0 4px 14px rgba(197,160,78,0.2)' }}
-    >
-      {CTA_TEXT}
-    </a>
-  );
-
-  const LoginLink = (
-    <a href="/login" className="block text-center text-sm text-gray-500 hover:text-[#C5A04E] transition-colors mt-2">
-      لديك حساب بالفعل؟ تسجيل الدخول
-    </a>
-  );
-
+export default function HomePage() {
   return (
-    <main className="min-h-screen bg-[#0A0A0A] font-cairo" dir="rtl">
-      <div className="mx-auto py-8" style={{ maxWidth: '1100px', padding: '32px 24px' }}>
-        <div className="flex flex-col lg:flex-row gap-8">
+    <main className="min-h-screen bg-[#0A0A0A] font-cairo flex flex-col items-center" dir="rtl">
 
-          {/* ===== LEFT COLUMN — Main Content ===== */}
-          <div className="flex-1 min-w-0 space-y-8 pb-32 lg:pb-8">
+      {/* Header — ECOMY logo */}
+      <header className="w-full py-10 flex justify-center">
+        <h1 className="text-3xl font-bold font-orbitron tracking-tighter text-[#C5A04E]">
+          ECOMY
+        </h1>
+      </header>
 
-            {/* Carousel — always first */}
-            {ProductImage}
+      {/* 3-Card Grid */}
+      <section className="flex-1 flex items-center justify-center w-full px-4 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl w-full">
 
-            {/* Mobile only: Rating + Price + CTA before title */}
-            <div className="lg:hidden space-y-4">
-              {RatingLine}
-              <p className="text-white text-lg font-bold">اربح من الإنترنت | التجارة الإلكترونية</p>
-              {PriceLine}
-              {CTAButton}
-              {LoginLink}
-            </div>
-
-            {/* Title */}
-            {Title}
-
-            {/* Description */}
-            {Description}
-
-            {/* FAQ */}
-            {FAQ}
-
-            {/* Reviews */}
-            {Reviews}
-          </div>
-
-          {/* ===== RIGHT SIDEBAR (sticky) — desktop only ===== */}
-          <div className="hidden lg:block lg:w-[360px] shrink-0">
-            <div className="sticky top-6">
-              <div
-                className="bg-[#0A0A0A] rounded-2xl overflow-hidden"
-                style={{ boxShadow: '0 4px 20px rgba(197,160,78,0.1)' }}
-              >
-                {/* Banner Image */}
-                <img
-                  src="/images/product1.jpg"
-                  alt="صورة المنتج"
-                  className="w-full aspect-video object-cover"
-                />
-
-                {/* Content */}
-                <div className="p-5 space-y-3">
-                  {RatingLine}
-
-                  <h3 className="text-white font-bold text-[15px] leading-snug">
-                    اربح من الإنترنت | التجارة الإلكترونية
-                  </h3>
-
-                  {PriceLine}
-
-                  <a
-                    href="https://buy.stripe.com/4gM4gz4SQ5fP7lP44rgfu04"
-                    className="block w-full text-center bg-[#C5A04E] hover:bg-[#D4B85C] text-white text-[15px] font-bold py-3.5 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
-                    style={{ boxShadow: '0 4px 14px rgba(197,160,78,0.2)' }}
-                  >
-                    {CTA_TEXT}
-                  </a>
-                  {LoginLink}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ===== MOBILE STICKY BOTTOM BAR — appears when CTA scrolls out ===== */}
-      <div
-        className={`fixed bottom-0 left-0 right-0 z-50 bg-[#0A0A0A] lg:hidden transition-transform duration-300 ${showStickyBar ? 'translate-y-0' : 'translate-y-full'}`}
-        style={{ boxShadow: '0 -2px 10px rgba(0,0,0,0.06)' }}
-      >
-        <div className="px-4 py-3 flex items-center gap-4">
-          <div className="shrink-0" dir="ltr">
-            <span className="text-white text-xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{"197 €"}</span>
-          </div>
-          <a
-            href="https://buy.stripe.com/4gM4gz4SQ5fP7lP44rgfu04"
-            className="flex-1 text-center bg-[#C5A04E] hover:bg-[#D4B85C] text-white text-sm font-bold py-3 rounded-xl transition-all duration-200"
-            style={{ boxShadow: '0 4px 14px rgba(197,160,78,0.2)' }}
+          {/* Card 1 — Formation E-commerce */}
+          <Link
+            href="/formation"
+            className="group block bg-[#111111] border border-[#C5A04E]/15 rounded-2xl p-8 hover:border-[#C5A04E]/40 hover:bg-[#141414] transition-all duration-200 text-center space-y-5"
+            style={{ boxShadow: '0 4px 24px rgba(197,160,78,0.05)' }}
           >
-            {CTA_TEXT}
-          </a>
+            <div className="text-5xl">📚</div>
+            <h2 className="text-white text-xl font-bold">عندي فكرة وبغيت نبدأ</h2>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              تكوين شامل في التجارة الإلكترونية | 27 مرحلة | 120+ درس
+            </p>
+            <div className="text-[#C5A04E] text-3xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+              197 €
+            </div>
+            <div className="w-full bg-[#10B981] hover:bg-[#0D9668] text-white font-bold py-3.5 rounded-xl transition-colors text-base">
+              ابدأ الآن
+            </div>
+          </Link>
+
+          {/* Card 2 — Diagnostic Business */}
+          <Link
+            href="/diagnostic"
+            className="group block bg-[#111111] border border-[#C5A04E]/15 rounded-2xl p-8 hover:border-[#C5A04E]/40 hover:bg-[#141414] transition-all duration-200 text-center space-y-5"
+            style={{ boxShadow: '0 4px 24px rgba(197,160,78,0.05)' }}
+          >
+            <div className="text-5xl">🔍</div>
+            <h2 className="text-white text-xl font-bold">ما عرفتش من وين نبدأ</h2>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              مكالمة خاصة 45 دقيقة - تحليل وضعك واكتشاف البزنس المناسب لك
+            </p>
+            <div className="text-[#C5A04E] text-3xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+              97 €
+            </div>
+            <div className="w-full bg-[#E8600A] hover:bg-[#D15509] text-white font-bold py-3.5 rounded-xl transition-colors text-base">
+              احجز موعدك
+            </div>
+          </Link>
+
+          {/* Card 3 — Connexion espace membre */}
+          <Link
+            href="/login"
+            className="group block bg-[#111111] border border-white/10 rounded-2xl p-8 hover:border-white/20 hover:bg-[#141414] transition-all duration-200 text-center space-y-5"
+          >
+            <div className="text-5xl">🔓</div>
+            <h2 className="text-white text-xl font-bold">عندي حساب بالفعل</h2>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              الدخول إلى المنصة
+            </p>
+            <div className="w-full bg-[#1A1A1A] hover:bg-[#222222] text-white font-bold py-3.5 rounded-xl transition-colors text-base border border-white/10 mt-6">
+              تسجيل الدخول
+            </div>
+          </Link>
         </div>
-      </div>
-      {/* ===== FOOTER ===== */}
-      <div className="w-full py-6 text-center">
-        <a href="/legal/terms" className="text-xs text-gray-400 no-underline hover:text-gray-500 transition-colors">
+      </section>
+
+      {/* Telegram Community Banner */}
+      <section className="w-full px-4 pb-8">
+        <a
+          href="https://t.me/TELEGRAM_LINK"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="max-w-5xl mx-auto flex items-center justify-center gap-4 bg-[#111111]/60 border border-[#C5A04E]/10 rounded-2xl px-8 py-4 hover:border-[#C5A04E]/30 transition-colors"
+        >
+          <svg className="w-6 h-6 text-[#26A5E4] shrink-0" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+          </svg>
+          <span className="text-gray-400 text-sm font-semibold">انضم لمجتمعنا على تيليغرام</span>
+        </a>
+      </section>
+
+      {/* Footer */}
+      <footer className="w-full py-6 text-center">
+        <a href="/legal/terms" className="text-xs text-gray-500 hover:text-gray-400 transition-colors">
           Terms & Conditions
         </a>
-      </div>
+      </footer>
     </main>
   );
 }

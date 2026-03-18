@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS user_subscriptions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NULL,  -- Nullable for invitations
     email TEXT NOT NULL UNIQUE,  -- Email must be unique
-    plan TEXT NOT NULL CHECK (plan IN ('spark', 'emperor', 'legend')),
+    plan TEXT NOT NULL CHECK (plan IN ('spark', 'emperor', 'legend', 'diagnostic')),
     status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'active', 'inactive')),
     activated_at TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()

@@ -4,7 +4,27 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'noreply@lexmo.ai';
 
-export async function sendActivationEmail(toEmail: string) {
+export async function sendActivationEmail(toEmail: string, plan: string = 'spark') {
+    const isFormation = plan !== 'diagnostic';
+
+    const subject = isFormation
+        ? '🎉 تم تفعيل حسابك في ECOMY'
+        : '✅ تم تأكيد حجز جلسة التشخيص';
+
+    const bodyTitle = isFormation
+        ? 'مرحباً! تم تفعيل حسابك بنجاح 🎉'
+        : 'تم تأكيد حجزك! جلسة التشخيص جاهزة ✅';
+
+    const bodyText = isFormation
+        ? 'يمكنك الآن الوصول إلى جميع الدروس والمراحل التعليمية'
+        : 'يمكنك الآن إنشاء حسابك وحجز موعد جلسة التشخيص الخاصة بك';
+
+    const ctaText = isFormation
+        ? 'ابدأ التعلم الآن'
+        : 'احجز موعد جلستك';
+
+    const ctaColor = isFormation ? '#008060' : '#E8600A';
+
     const html = `
 <!DOCTYPE html>
 <html dir="rtl" lang="ar">
@@ -29,19 +49,19 @@ export async function sendActivationEmail(toEmail: string) {
                     <tr>
                         <td style="padding:40px 30px;">
                             <h2 style="margin:0 0 20px;font-size:24px;color:#1a1a1a;text-align:center;">
-                                مرحباً! تم تفعيل حسابك بنجاح 🎉
+                                ${bodyTitle}
                             </h2>
 
                             <p style="margin:0 0 30px;font-size:16px;color:#555555;text-align:center;line-height:1.8;">
-                                يمكنك الآن الوصول إلى جميع الدروس والمراحل التعليمية
+                                ${bodyText}
                             </p>
 
                             <!-- CTA Button -->
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td align="center" style="padding:10px 0 30px;">
-                                        <a href="https://lexmo.ai/register?email=${encodeURIComponent(toEmail)}" style="display:inline-block;background-color:#008060;color:#ffffff;text-decoration:none;padding:16px 40px;border-radius:8px;font-size:18px;font-weight:bold;">
-                                            ابدأ التعلم الآن
+                                        <a href="https://lexmo.ai/register?email=${encodeURIComponent(toEmail)}" style="display:inline-block;background-color:${ctaColor};color:#ffffff;text-decoration:none;padding:16px 40px;border-radius:8px;font-size:18px;font-weight:bold;">
+                                            ${ctaText}
                                         </a>
                                     </td>
                                 </tr>
@@ -51,7 +71,7 @@ export async function sendActivationEmail(toEmail: string) {
 
                             <p style="margin:0;font-size:14px;color:#999999;text-align:center;line-height:1.8;">
                                 إذا كان لديك أي سؤال، تواصل معنا على
-                                <a href="mailto:lexmoacadmy@gmail.com" style="color:#008060;text-decoration:none;">lexmoacadmy@gmail.com</a>
+                                <a href="mailto:lexmoacadmy@gmail.com" style="color:${ctaColor};text-decoration:none;">lexmoacadmy@gmail.com</a>
                             </p>
                         </td>
                     </tr>
@@ -76,7 +96,7 @@ export async function sendActivationEmail(toEmail: string) {
     const { data, error } = await resend.emails.send({
         from: `ECOMY <${FROM_EMAIL}>`,
         to: toEmail,
-        subject: '🎉 تم تفعيل حسابك في ECOMY',
+        subject,
         html,
     });
 
@@ -85,6 +105,6 @@ export async function sendActivationEmail(toEmail: string) {
         throw error;
     }
 
-    console.log(`✅ Activation email sent to ${toEmail}`, data);
+    console.log(`✅ Activation email sent to ${toEmail} (plan: ${plan})`, data);
     return data;
 }

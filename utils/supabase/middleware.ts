@@ -64,6 +64,8 @@ export async function updateSession(request: NextRequest) {
         '/reset-password',
         '/payment-success',
         '/api/webhooks/stripe',
+        '/formation',
+        '/diagnostic',
     ];
 
     const isPublicRoute = publicRoutes.some(route =>

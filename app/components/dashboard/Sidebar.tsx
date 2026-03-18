@@ -10,14 +10,20 @@ import {
     LogOut,
     Menu,
     X,
-    Shield
+    Shield,
+    Calendar
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import clsx from "clsx";
 import { createClient } from "@/utils/supabase/client";
 
-const MENU_ITEMS = [
+const FORMATION_ITEMS = [
     { icon: BookOpen, label: "الدروس", href: "/dashboard/phases" },
+    { icon: Settings, label: "الإعدادات", href: "/dashboard/settings" },
+];
+
+const DIAGNOSTIC_ITEMS = [
+    { icon: Calendar, label: "جلسة التشخيص", href: "/dashboard/coaching" },
     { icon: Settings, label: "الإعدادات", href: "/dashboard/settings" },
 ];
 
@@ -30,19 +36,29 @@ export default function Sidebar() {
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [userPlan, setUserPlan] = useState<string | null>(null);
 
     useEffect(() => {
-        const checkAdmin = async () => {
+        const init = async () => {
             const supabase = createClient();
             const { data: { user } } = await supabase.auth.getUser();
             if (user?.email === 'academyfrance75@gmail.com') {
                 setIsAdmin(true);
             }
+            // Fetch user plan
+            try {
+                const res = await fetch('/api/check-subscription', { credentials: 'include' });
+                const data = await res.json();
+                if (data.subscription?.plan) {
+                    setUserPlan(data.subscription.plan);
+                }
+            } catch { /* non-blocking */ }
         };
-        checkAdmin();
+        init();
     }, []);
 
-    const allItems = isAdmin ? [...MENU_ITEMS, ...ADMIN_ITEMS] : MENU_ITEMS;
+    const menuItems = userPlan === 'diagnostic' ? DIAGNOSTIC_ITEMS : FORMATION_ITEMS;
+    const allItems = isAdmin ? [...menuItems, ...ADMIN_ITEMS] : menuItems;
 
     return (
         <>

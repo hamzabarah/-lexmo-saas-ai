@@ -29,6 +29,13 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         return;
     }
 
+    // Determine product type by amount
+    // 19700 = 197€ = formation (plan: 'spark')
+    // 9700  = 97€  = diagnostic (plan: 'diagnostic')
+    const amountTotal = session.amount_total;
+    const plan: string = amountTotal === 9700 ? 'diagnostic' : 'spark';
+    console.log('🔍 [STEP 3] amount_total:', amountTotal, '→ plan:', plan);
+
     const supabase = getSupabaseAdmin();
 
     // Try to find user_id from auth.users by email
@@ -54,6 +61,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         const updateData: Record<string, any> = {
             status: 'active',
             activated_at: new Date().toISOString(),
+            plan,
         };
         if (userId) updateData.user_id = userId;
 
@@ -70,7 +78,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     } else {
         const insertData: Record<string, any> = {
             email,
-            plan: 'spark',
+            plan,
             status: 'active',
             activated_at: new Date().toISOString(),
             created_at: new Date().toISOString(),
@@ -91,7 +99,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     console.log('🔍 [STEP 5] Sending activation email to:', email);
 
     try {
-        const result = await sendActivationEmail(email);
+        const result = await sendActivationEmail(email, plan);
         console.log('✅ [STEP 5] Email envoyé avec succès:', JSON.stringify(result));
     } catch (emailError: any) {
         console.error('❌ [STEP 5] Email sending failed:', emailError?.message || emailError);
