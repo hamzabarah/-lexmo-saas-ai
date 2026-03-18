@@ -30,12 +30,12 @@ export default function HomePage() {
 
       {/* 3-Card Grid */}
       <section className="flex-1 flex items-center justify-center w-full px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-[1050px] w-full">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-[1050px] w-full md:auto-rows-[1fr]">
 
           {/* Card 1 — Formation E-commerce */}
           <Link
             href="/formation"
-            className="group block bg-[#0A0A0A] rounded-2xl overflow-hidden hover:scale-[1.02] transition-all duration-200"
+            className="group flex flex-col bg-[#0A0A0A] rounded-2xl overflow-hidden hover:scale-[1.02] transition-all duration-200"
             style={{ boxShadow: '0 4px 20px rgba(197,160,78,0.1)' }}
           >
             {/* Banner Image */}
@@ -46,7 +46,7 @@ export default function HomePage() {
             />
 
             {/* Content */}
-            <div className="p-5 space-y-3">
+            <div className="p-5 space-y-3 flex-1 flex flex-col">
               <StarRating count={5} total="453" />
 
               <h3 className="text-white font-bold text-[15px] leading-snug">
@@ -61,6 +61,7 @@ export default function HomePage() {
                 </span>
               </div>
 
+              <div className="flex-1" />
               <div className="w-full text-center bg-[#10B981] group-hover:bg-[#0D9668] text-white text-[15px] font-bold py-3.5 rounded-xl transition-colors">
                 ابدأ الآن
               </div>
@@ -70,7 +71,7 @@ export default function HomePage() {
           {/* Card 2 — Diagnostic Business */}
           <Link
             href="/diagnostic"
-            className="group block bg-[#0A0A0A] rounded-2xl overflow-hidden hover:scale-[1.02] transition-all duration-200"
+            className="group flex flex-col bg-[#0A0A0A] rounded-2xl overflow-hidden hover:scale-[1.02] transition-all duration-200"
             style={{ boxShadow: '0 4px 20px rgba(197,160,78,0.1)' }}
           >
             {/* Banner Placeholder */}
@@ -86,7 +87,7 @@ export default function HomePage() {
             </div>
 
             {/* Content */}
-            <div className="p-5 space-y-3">
+            <div className="p-5 space-y-3 flex-1 flex flex-col">
               <StarRating count={5} total="120" />
 
               <h3 className="text-white font-bold text-[15px] leading-snug">
@@ -101,6 +102,7 @@ export default function HomePage() {
                 </span>
               </div>
 
+              <div className="flex-1" />
               <div className="w-full text-center bg-[#E8600A] group-hover:bg-[#D15509] text-white text-[15px] font-bold py-3.5 rounded-xl transition-colors">
                 احجز موعدك
               </div>
@@ -110,15 +112,15 @@ export default function HomePage() {
           {/* Card 3 — Connexion espace membre */}
           <Link
             href="/login"
-            className="group block bg-[#0A0A0A] rounded-2xl overflow-hidden hover:scale-[1.02] transition-all duration-200"
+            className="group flex flex-col bg-[#0A0A0A] rounded-2xl overflow-hidden hover:scale-[1.02] transition-all duration-200"
             style={{ boxShadow: '0 4px 20px rgba(255,255,255,0.03)' }}
           >
-            {/* Banner Placeholder */}
+            {/* Banner — Large lock/shield icon */}
             <div className="w-full aspect-video bg-[#111111] flex items-center justify-center border-b border-white/5">
-              <div className="text-center space-y-2">
-                <div className="w-16 h-16 mx-auto bg-white/5 rounded-full flex items-center justify-center">
-                  <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              <div className="text-center space-y-3">
+                <div className="w-20 h-20 mx-auto bg-[#C5A04E]/10 rounded-full flex items-center justify-center">
+                  <svg className="w-10 h-10 text-[#C5A04E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
                 </div>
                 <p className="text-gray-500 text-xs font-bold">منطقة الأعضاء</p>
@@ -126,13 +128,31 @@ export default function HomePage() {
             </div>
 
             {/* Content */}
-            <div className="p-5 space-y-3">
+            <div className="p-5 space-y-3 flex-1 flex flex-col">
               <h3 className="text-white font-bold text-[15px] leading-snug">
                 عندي حساب بالفعل
               </h3>
 
               <p className="text-gray-500 text-sm">الدخول إلى المنصة</p>
 
+              {/* Social proof — avatars + member count */}
+              <div className="flex items-center gap-3">
+                <div className="flex -space-x-2 rtl:space-x-reverse">
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className="w-7 h-7 rounded-full bg-[#1A1A1A] border-2 border-[#0A0A0A] flex items-center justify-center">
+                      <svg className="w-3.5 h-3.5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                    </div>
+                  ))}
+                  <div className="w-7 h-7 rounded-full bg-[#C5A04E]/20 border-2 border-[#0A0A0A] flex items-center justify-center">
+                    <span className="text-[#C5A04E] text-[9px] font-bold" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>+</span>
+                  </div>
+                </div>
+                <span className="text-gray-400 text-xs font-bold">+1000 عضو مسجل</span>
+              </div>
+
+              <div className="flex-1" />
               <div className="w-full text-center bg-[#1A1A1A] group-hover:bg-[#222222] text-white text-[15px] font-bold py-3.5 rounded-xl transition-colors border border-white/10">
                 تسجيل الدخول
               </div>
