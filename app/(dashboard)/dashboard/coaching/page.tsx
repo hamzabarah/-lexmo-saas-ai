@@ -414,7 +414,7 @@ export default function CoachingPage() {
                                                                     {Array.from({ length: 7 }, (_, di) => {
                                                                         const date = new Date(calendarWeekStart);
                                                                         date.setDate(calendarWeekStart.getDate() + di);
-                                                                        date.setHours(hour, 0, 0, 0);
+                                                                        date.setUTCHours(hour, 0, 0, 0);
                                                                         const iso = date.toISOString();
                                                                         const isAvailable = availableSlotsSet.has(iso);
                                                                         const isPast = date < new Date();

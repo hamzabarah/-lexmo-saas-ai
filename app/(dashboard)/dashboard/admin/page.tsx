@@ -164,7 +164,7 @@ export default function AdminPage() {
             end.setDate(start.getDate() + 7);
             const res = await fetch(`/api/admin/blocked-slots?from=${start.toISOString()}&to=${end.toISOString()}`);
             const data = await res.json();
-            const set = new Set<string>((data.slots || []).map((s: any) => s.slot_datetime));
+            const set = new Set<string>((data.slots || []).map((s: any) => new Date(s.slot_datetime).toISOString()));
             setBlockedSlots(set);
         } catch (error) {
             console.error('Error loading blocked slots:', error);
@@ -810,14 +810,14 @@ ${LOGIN_URL}
                                     {Array.from({ length: 7 }, (_, di) => {
                                         const date = new Date(calendarWeekStart);
                                         date.setDate(calendarWeekStart.getDate() + di);
-                                        date.setHours(hour, 0, 0, 0);
+                                        date.setUTCHours(hour, 0, 0, 0);
                                         const iso = date.toISOString();
                                         const isBlocked = blockedSlots.has(iso);
                                         const isPast = date < new Date();
                                         const isToggling = togglingSlot === iso;
 
                                         // Check if this slot has a booking
-                                        const hasBooking = bookings.some(b => b.booking_date === iso && b.status !== 'cancelled');
+                                        const hasBooking = bookings.some(b => new Date(b.booking_date).toISOString() === iso && b.status !== 'cancelled');
 
                                         return (
                                             <button

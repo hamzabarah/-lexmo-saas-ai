@@ -29,8 +29,9 @@ export async function GET() {
             .gte('slot_datetime', today.toISOString())
             .lte('slot_datetime', thirtyDaysLater.toISOString());
 
+        // Normalize to epoch ms for reliable comparison (Supabase returns +00:00, JS uses Z)
         const blockedSet = new Set(
-            (blockedSlots || []).map((s: any) => s.slot_datetime)
+            (blockedSlots || []).map((s: any) => new Date(s.slot_datetime).getTime())
         );
 
         // Get all future non-cancelled bookings
@@ -41,7 +42,7 @@ export async function GET() {
             .neq('status', 'cancelled');
 
         const takenSet = new Set(
-            (existingBookings || []).map((b: any) => b.booking_date)
+            (existingBookings || []).map((b: any) => new Date(b.booking_date).getTime())
         );
 
         // Generate all slots 9h-19h for next 30 days, excluding blocked and booked
@@ -53,10 +54,11 @@ export async function GET() {
 
             for (let hour = 9; hour <= 19; hour++) {
                 const slotDate = new Date(date);
-                slotDate.setHours(hour, 0, 0, 0);
+                slotDate.setUTCHours(hour, 0, 0, 0);
                 const iso = slotDate.toISOString();
+                const ms = slotDate.getTime();
 
-                if (!blockedSet.has(iso) && !takenSet.has(iso)) {
+                if (!blockedSet.has(ms) && !takenSet.has(ms)) {
                     availableSlots.push(iso);
                 }
             }
