@@ -310,7 +310,7 @@ export default function CoachingPage() {
                                             <p className="text-gray-400 text-sm">أدخل معلوماتك لحجز جلسة التشخيص</p>
 
                                             <div>
-                                                <label className="flex items-center gap-2 text-sm text-gray-400 mb-2">
+                                                <label className="flex items-center gap-2 text-sm text-white font-semibold mb-2">
                                                     <User className="w-4 h-4" />
                                                     الاسم الكامل
                                                 </label>
@@ -319,12 +319,12 @@ export default function CoachingPage() {
                                                     value={fullName}
                                                     onChange={e => setFullName(e.target.value)}
                                                     placeholder="أدخل اسمك الكامل"
-                                                    className="w-full bg-[#0A0A0A] border border-[#C5A04E]/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C5A04E]/50 placeholder-gray-600"
+                                                    className="w-full bg-[#F3F4F6] border border-gray-300 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C5A04E] focus:border-[#C5A04E] placeholder-[#9CA3AF]"
                                                 />
                                             </div>
 
                                             <div>
-                                                <label className="flex items-center gap-2 text-sm text-gray-400 mb-2">
+                                                <label className="flex items-center gap-2 text-sm text-white font-semibold mb-2">
                                                     <Mail className="w-4 h-4" />
                                                     البريد الإلكتروني لـ Google Meet
                                                 </label>
@@ -334,7 +334,7 @@ export default function CoachingPage() {
                                                     onChange={e => setGoogleMeetEmail(e.target.value)}
                                                     placeholder="example@gmail.com"
                                                     dir="ltr"
-                                                    className="w-full bg-[#0A0A0A] border border-[#C5A04E]/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C5A04E]/50 placeholder-gray-600 text-left"
+                                                    className="w-full bg-[#F3F4F6] border border-gray-300 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C5A04E] focus:border-[#C5A04E] placeholder-[#9CA3AF] text-left"
                                                 />
                                             </div>
 
