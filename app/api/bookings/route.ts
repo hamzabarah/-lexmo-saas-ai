@@ -49,12 +49,12 @@ export async function GET() {
         const availableSlots: string[] = [];
 
         for (let dayOffset = 1; dayOffset <= 30; dayOffset++) {
-            const date = new Date(today);
-            date.setDate(today.getDate() + dayOffset);
+            const d = new Date(today);
+            d.setDate(today.getDate() + dayOffset);
 
             for (let hour = 9; hour <= 19; hour++) {
-                const slotDate = new Date(date);
-                slotDate.setUTCHours(hour, 0, 0, 0);
+                // Build UTC date explicitly to avoid timezone day-shift
+                const slotDate = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), hour, 0, 0, 0));
                 const iso = slotDate.toISOString();
                 const ms = slotDate.getTime();
 

@@ -808,9 +808,10 @@ ${LOGIN_URL}
                             {Array.from({ length: 11 }, (_, hi) => 9 + hi).map(hour => (
                                 <div key={hour} className="grid grid-cols-7 gap-1 mb-1">
                                     {Array.from({ length: 7 }, (_, di) => {
-                                        const date = new Date(calendarWeekStart);
-                                        date.setDate(calendarWeekStart.getDate() + di);
-                                        date.setUTCHours(hour, 0, 0, 0);
+                                        const d = new Date(calendarWeekStart);
+                                        d.setDate(calendarWeekStart.getDate() + di);
+                                        // Use local date components to build UTC date (avoids day shift)
+                                        const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), hour, 0, 0, 0));
                                         const iso = date.toISOString();
                                         const isBlocked = blockedSlots.has(iso);
                                         const isPast = date < new Date();
