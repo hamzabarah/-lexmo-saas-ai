@@ -1,5 +1,22 @@
 import Link from "next/link";
 
+function StarRating({ count, total }: { count: number; total: string }) {
+  return (
+    <div className="flex items-center gap-1.5">
+      <div className="flex gap-0.5">
+        {[...Array(5)].map((_, i) => (
+          <svg key={i} width="14" height="14" viewBox="0 0 24 24" fill="#D4A843" stroke="#D4A843" strokeWidth="1">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+          </svg>
+        ))}
+      </div>
+      <span className="text-gray-500 text-sm" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+        {count}.0 ({total})
+      </span>
+    </div>
+  );
+}
+
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#0A0A0A] font-cairo flex flex-col items-center" dir="rtl">
@@ -13,58 +30,112 @@ export default function HomePage() {
 
       {/* 3-Card Grid */}
       <section className="flex-1 flex items-center justify-center w-full px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl w-full">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-[1050px] w-full">
 
           {/* Card 1 — Formation E-commerce */}
           <Link
             href="/formation"
-            className="group block bg-[#111111] border border-[#C5A04E]/15 rounded-2xl p-8 hover:border-[#C5A04E]/40 hover:bg-[#141414] transition-all duration-200 text-center space-y-5"
-            style={{ boxShadow: '0 4px 24px rgba(197,160,78,0.05)' }}
+            className="group block bg-[#0A0A0A] rounded-2xl overflow-hidden hover:scale-[1.02] transition-all duration-200"
+            style={{ boxShadow: '0 4px 20px rgba(197,160,78,0.1)' }}
           >
-            <div className="text-5xl">📚</div>
-            <h2 className="text-white text-xl font-bold">عندي فكرة وبغيت نبدأ</h2>
-            <p className="text-gray-400 text-sm leading-relaxed">
-              تكوين شامل في التجارة الإلكترونية | 27 مرحلة | 120+ درس
-            </p>
-            <div className="text-[#C5A04E] text-3xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-              197 €
-            </div>
-            <div className="w-full bg-[#10B981] hover:bg-[#0D9668] text-white font-bold py-3.5 rounded-xl transition-colors text-base">
-              ابدأ الآن
+            {/* Banner Image */}
+            <img
+              src="/images/product1.jpg"
+              alt="تكوين التجارة الإلكترونية"
+              className="w-full aspect-video object-cover"
+            />
+
+            {/* Content */}
+            <div className="p-5 space-y-3">
+              <StarRating count={5} total="453" />
+
+              <h3 className="text-white font-bold text-[15px] leading-snug">
+                اربح من الإنترنت | التجارة الإلكترونية
+              </h3>
+
+              <div className="flex items-center gap-3 flex-wrap">
+                <span className="text-gray-500 text-xl font-black line-through" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>1970 €</span>
+                <span className="text-white text-xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>197 €</span>
+                <span className="inline-block bg-[#C5A04E]/10 text-[#C5A04E] text-[11px] font-bold px-2.5 py-0.5 rounded-full">
+                  تخفيض %90
+                </span>
+              </div>
+
+              <div className="w-full text-center bg-[#10B981] group-hover:bg-[#0D9668] text-white text-[15px] font-bold py-3.5 rounded-xl transition-colors">
+                ابدأ الآن
+              </div>
             </div>
           </Link>
 
           {/* Card 2 — Diagnostic Business */}
           <Link
             href="/diagnostic"
-            className="group block bg-[#111111] border border-[#C5A04E]/15 rounded-2xl p-8 hover:border-[#C5A04E]/40 hover:bg-[#141414] transition-all duration-200 text-center space-y-5"
-            style={{ boxShadow: '0 4px 24px rgba(197,160,78,0.05)' }}
+            className="group block bg-[#0A0A0A] rounded-2xl overflow-hidden hover:scale-[1.02] transition-all duration-200"
+            style={{ boxShadow: '0 4px 20px rgba(197,160,78,0.1)' }}
           >
-            <div className="text-5xl">🔍</div>
-            <h2 className="text-white text-xl font-bold">ما عرفتش من وين نبدأ</h2>
-            <p className="text-gray-400 text-sm leading-relaxed">
-              مكالمة خاصة 45 دقيقة - تحليل وضعك واكتشاف البزنس المناسب لك
-            </p>
-            <div className="text-[#C5A04E] text-3xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-              97 €
+            {/* Banner Placeholder */}
+            <div className="w-full aspect-video bg-[#111111] flex items-center justify-center border-b border-[#C5A04E]/10">
+              <div className="text-center space-y-2">
+                <div className="w-16 h-16 mx-auto bg-[#E8600A]/10 rounded-full flex items-center justify-center">
+                  <svg className="w-8 h-8 text-[#E8600A]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <p className="text-gray-500 text-xs font-bold">مكالمة خاصة 45 دقيقة</p>
+              </div>
             </div>
-            <div className="w-full bg-[#E8600A] hover:bg-[#D15509] text-white font-bold py-3.5 rounded-xl transition-colors text-base">
-              احجز موعدك
+
+            {/* Content */}
+            <div className="p-5 space-y-3">
+              <StarRating count={5} total="120" />
+
+              <h3 className="text-white font-bold text-[15px] leading-snug">
+                تشخيص بزنس | اكتشف البزنس المناسب لك
+              </h3>
+
+              <div className="flex items-center gap-3 flex-wrap">
+                <span className="text-gray-500 text-xl font-black line-through" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>970 €</span>
+                <span className="text-white text-xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>97 €</span>
+                <span className="inline-block bg-[#C5A04E]/10 text-[#C5A04E] text-[11px] font-bold px-2.5 py-0.5 rounded-full">
+                  تخفيض %90
+                </span>
+              </div>
+
+              <div className="w-full text-center bg-[#E8600A] group-hover:bg-[#D15509] text-white text-[15px] font-bold py-3.5 rounded-xl transition-colors">
+                احجز موعدك
+              </div>
             </div>
           </Link>
 
           {/* Card 3 — Connexion espace membre */}
           <Link
             href="/login"
-            className="group block bg-[#111111] border border-white/10 rounded-2xl p-8 hover:border-white/20 hover:bg-[#141414] transition-all duration-200 text-center space-y-5"
+            className="group block bg-[#0A0A0A] rounded-2xl overflow-hidden hover:scale-[1.02] transition-all duration-200"
+            style={{ boxShadow: '0 4px 20px rgba(255,255,255,0.03)' }}
           >
-            <div className="text-5xl">🔓</div>
-            <h2 className="text-white text-xl font-bold">عندي حساب بالفعل</h2>
-            <p className="text-gray-400 text-sm leading-relaxed">
-              الدخول إلى المنصة
-            </p>
-            <div className="w-full bg-[#1A1A1A] hover:bg-[#222222] text-white font-bold py-3.5 rounded-xl transition-colors text-base border border-white/10 mt-6">
-              تسجيل الدخول
+            {/* Banner Placeholder */}
+            <div className="w-full aspect-video bg-[#111111] flex items-center justify-center border-b border-white/5">
+              <div className="text-center space-y-2">
+                <div className="w-16 h-16 mx-auto bg-white/5 rounded-full flex items-center justify-center">
+                  <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+                <p className="text-gray-500 text-xs font-bold">منطقة الأعضاء</p>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="p-5 space-y-3">
+              <h3 className="text-white font-bold text-[15px] leading-snug">
+                عندي حساب بالفعل
+              </h3>
+
+              <p className="text-gray-500 text-sm">الدخول إلى المنصة</p>
+
+              <div className="w-full text-center bg-[#1A1A1A] group-hover:bg-[#222222] text-white text-[15px] font-bold py-3.5 rounded-xl transition-colors border border-white/10">
+                تسجيل الدخول
+              </div>
             </div>
           </Link>
         </div>
@@ -76,7 +147,7 @@ export default function HomePage() {
           href="https://t.me/TELEGRAM_LINK"
           target="_blank"
           rel="noopener noreferrer"
-          className="max-w-5xl mx-auto flex items-center justify-center gap-4 bg-[#111111]/60 border border-[#C5A04E]/10 rounded-2xl px-8 py-4 hover:border-[#C5A04E]/30 transition-colors"
+          className="max-w-[1050px] mx-auto flex items-center justify-center gap-4 bg-[#111111]/60 border border-[#C5A04E]/10 rounded-2xl px-8 py-4 hover:border-[#C5A04E]/30 transition-colors"
         >
           <svg className="w-6 h-6 text-[#26A5E4] shrink-0" viewBox="0 0 24 24" fill="currentColor">
             <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
