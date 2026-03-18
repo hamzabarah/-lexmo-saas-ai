@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { createClient as createAdminClient } from '@supabase/supabase-js';
+import { sendBookingConfirmationEmail } from '@/lib/resend';
 
 export const dynamic = 'force-dynamic';
 
@@ -138,6 +139,19 @@ export async function POST(req: NextRequest) {
 
         if (insertError) {
             return NextResponse.json({ error: insertError.message }, { status: 500 });
+        }
+
+        // Advance coaching profile to step 3 (countdown)
+        await admin
+            .from('coaching_profiles')
+            .update({ current_step: 3, updated_at: new Date().toISOString() })
+            .eq('user_id', user.id);
+
+        // Send confirmation email
+        try {
+            await sendBookingConfirmationEmail(user.email!, booking_date);
+        } catch (emailErr) {
+            console.error('Failed to send booking confirmation email:', emailErr);
         }
 
         return NextResponse.json({ booking });

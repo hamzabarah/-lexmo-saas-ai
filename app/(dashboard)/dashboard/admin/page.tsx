@@ -48,6 +48,16 @@ interface Booking {
     product_type: string;
 }
 
+interface CoachingClient {
+    user_id: string;
+    email: string;
+    full_name: string | null;
+    google_meet_email: string | null;
+    current_step: number;
+    booking_date: string | null;
+    booking_status: string | null;
+}
+
 export default function AdminPage() {
     const [user, setUser] = useState<User | null>(null);
     const [users, setUsers] = useState<UserData[]>([]);
@@ -79,6 +89,9 @@ export default function AdminPage() {
     // Bookings
     const [bookings, setBookings] = useState<Booking[]>([]);
 
+    // Coaching clients
+    const [coachingClients, setCoachingClients] = useState<CoachingClient[]>([]);
+
     const supabase = createClient();
     const router = useRouter();
 
@@ -103,6 +116,7 @@ export default function AdminPage() {
         await loadSettings();
         await loadAvailability();
         await loadBookings();
+        await loadCoachingClients();
     };
 
     const loadSettings = async () => {
@@ -222,6 +236,52 @@ export default function AdminPage() {
         } catch (error) {
             console.error('Error cancelling booking:', error);
         }
+    };
+
+    const loadCoachingClients = async () => {
+        try {
+            const { data: profiles } = await supabase
+                .from('coaching_profiles')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (!profiles) { setCoachingClients([]); return; }
+
+            // Get bookings for these users
+            const userIds = profiles.map((p: any) => p.user_id);
+            const { data: clientBookings } = await supabase
+                .from('bookings')
+                .select('*')
+                .in('user_id', userIds)
+                .eq('product_type', 'diagnostic')
+                .neq('status', 'cancelled');
+
+            const clients: CoachingClient[] = profiles.map((p: any) => {
+                const userData = users.find(u => u.id === p.user_id);
+                const userBooking = (clientBookings || []).find((b: any) => b.user_id === p.user_id);
+                return {
+                    user_id: p.user_id,
+                    email: userData?.email || p.user_id,
+                    full_name: p.full_name,
+                    google_meet_email: p.google_meet_email,
+                    current_step: p.current_step,
+                    booking_date: userBooking?.booking_date || null,
+                    booking_status: userBooking?.status || null,
+                };
+            });
+
+            setCoachingClients(clients);
+        } catch (error) {
+            console.error('Error loading coaching clients:', error);
+        }
+    };
+
+    const STEP_LABELS: Record<number, string> = {
+        1: 'الاستمارة',
+        2: 'حجز الموعد',
+        3: 'في الانتظار',
+        4: 'التشخيص',
+        5: 'النتيجة',
     };
 
     const DAY_NAMES = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
@@ -842,6 +902,80 @@ ${LOGIN_URL}
                     {bookings.length === 0 && (
                         <div className="text-center py-8 text-gray-500 text-sm">
                             لا توجد حجوزات بعد
+                        </div>
+                    )}
+                </div>
+
+                {/* ===== Coaching Clients Table ===== */}
+                <div className="bg-[#111111]/50 border border-[#C5A04E]/10 rounded-xl overflow-hidden mt-8">
+                    <div className="p-6 border-b border-[#C5A04E]/10">
+                        <h2 className="text-2xl font-bold text-white">عملاء التشخيص</h2>
+                        <p className="text-gray-500 text-sm mt-1">معلومات العملاء وتقدمهم في مسار التشخيص</p>
+                    </div>
+                    <div className="overflow-x-auto">
+                        <table className="w-full">
+                            <thead className="bg-[#1A1A1A]/50 border-b border-[#C5A04E]/10">
+                                <tr>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-400">البريد</th>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-400">الاسم</th>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-400">Google Meet</th>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-400">الخطوة</th>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-400">تاريخ الجلسة</th>
+                                    <th className="text-right px-6 py-4 text-sm font-semibold text-gray-400">الحالة</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-800">
+                                {coachingClients.map(client => {
+                                    const stepColor = client.current_step >= 3
+                                        ? 'text-green-400 bg-green-500/10'
+                                        : client.current_step === 2
+                                            ? 'text-blue-400 bg-blue-500/10'
+                                            : 'text-orange-400 bg-orange-500/10';
+
+                                    const bookingStatusConfig: Record<string, { text: string; color: string }> = {
+                                        scheduled: { text: 'محجوز', color: 'text-blue-400 bg-blue-500/10' },
+                                        completed: { text: 'مكتمل', color: 'text-green-400 bg-green-500/10' },
+                                    };
+                                    const bStatus = client.booking_status
+                                        ? bookingStatusConfig[client.booking_status] || { text: client.booking_status, color: 'text-gray-400 bg-gray-500/10' }
+                                        : null;
+
+                                    return (
+                                        <tr key={client.user_id} className="hover:bg-[#1A1A1A]/30 transition">
+                                            <td className="px-6 py-4 text-gray-400 text-sm">{client.email}</td>
+                                            <td className="px-6 py-4 text-white text-sm">{client.full_name || '-'}</td>
+                                            <td className="px-6 py-4 text-gray-400 text-sm" dir="ltr">{client.google_meet_email || '-'}</td>
+                                            <td className="px-6 py-4">
+                                                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${stepColor}`}>
+                                                    {client.current_step}/5 — {STEP_LABELS[client.current_step] || '?'}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 text-gray-400 text-sm">
+                                                {client.booking_date
+                                                    ? new Date(client.booking_date).toLocaleString('ar-EG', {
+                                                        weekday: 'long', month: 'long', day: 'numeric',
+                                                        hour: '2-digit', minute: '2-digit'
+                                                    })
+                                                    : '-'}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                {bStatus ? (
+                                                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${bStatus.color}`}>
+                                                        {bStatus.text}
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-gray-600 text-sm">—</span>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                    {coachingClients.length === 0 && (
+                        <div className="text-center py-8 text-gray-500 text-sm">
+                            لا يوجد عملاء تشخيص بعد
                         </div>
                     )}
                 </div>
