@@ -118,7 +118,7 @@ export async function POST(req: NextRequest) {
             .from('coaching_blocked_slots')
             .select('id')
             .eq('slot_datetime', booking_date)
-            .single();
+            .maybeSingle();
 
         if (blocked) {
             return NextResponse.json({ error: 'هذا الموعد لم يعد متاحاً' }, { status: 409 });
@@ -130,7 +130,7 @@ export async function POST(req: NextRequest) {
             .select('id')
             .eq('booking_date', booking_date)
             .neq('status', 'cancelled')
-            .single();
+            .maybeSingle();
 
         if (conflict) {
             return NextResponse.json({ error: 'هذا الموعد لم يعد متاحاً' }, { status: 409 });

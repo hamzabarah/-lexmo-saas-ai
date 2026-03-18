@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
             .from('coaching_blocked_slots')
             .select('id')
             .eq('slot_datetime', slot_datetime)
-            .single();
+            .maybeSingle();
 
         if (existing) {
             // Unblock: delete it
