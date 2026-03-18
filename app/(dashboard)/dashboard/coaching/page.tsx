@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { checkUserSubscription, SubscriptionCheckResult } from "@/lib/check-subscription";
-import { Lock, Calendar, Clock, CheckCircle, ClipboardList, Timer, Search, FileText, User, Mail } from "lucide-react";
+import { Lock, Calendar, Clock, CheckCircle, ClipboardList, Timer, Search, FileText, User, Mail, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface CoachingProfile {
     id: string;
@@ -95,12 +95,26 @@ export default function CoachingPage() {
     const [bookingLoading, setBookingLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    // Calendar week state
+    const [calendarWeekStart, setCalendarWeekStart] = useState(() => {
+        const now = new Date();
+        const day = now.getDay();
+        const start = new Date(now);
+        start.setDate(now.getDate() - day);
+        start.setHours(0, 0, 0, 0);
+        return start;
+    });
+
     // Form fields (step 1)
     const [fullName, setFullName] = useState("");
     const [googleMeetEmail, setGoogleMeetEmail] = useState("");
     const [formSubmitting, setFormSubmitting] = useState(false);
 
     const currentStep = profile?.current_step || 1;
+
+    const DAY_NAMES = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+
+    const availableSlotsSet = new Set(availableSlots);
 
     const loadProfile = useCallback(async () => {
         try {
@@ -232,15 +246,11 @@ export default function CoachingPage() {
         );
     }
 
-    // Group slots by date for step 2
-    const slotsByDate: Record<string, string[]> = {};
-    for (const slot of availableSlots) {
-        const dateKey = new Date(slot).toLocaleDateString('ar-EG', {
-            weekday: 'long', month: 'long', day: 'numeric'
-        });
-        if (!slotsByDate[dateKey]) slotsByDate[dateKey] = [];
-        slotsByDate[dateKey].push(slot);
-    }
+    const navigateWeek = (direction: number) => {
+        const newStart = new Date(calendarWeekStart);
+        newStart.setDate(calendarWeekStart.getDate() + (direction * 7));
+        setCalendarWeekStart(newStart);
+    };
 
     return (
         <div className="max-w-3xl mx-auto space-y-4 py-4">
@@ -356,55 +366,87 @@ export default function CoachingPage() {
                                         </div>
                                     )}
 
-                                    {/* STEP 2: Slot picker */}
+                                    {/* STEP 2: Weekly Calendar Picker */}
                                     {step.num === 2 && (
-                                        <div className="space-y-5">
-                                            <p className="text-gray-400 text-sm">اختر الموعد المناسب لجلستك الفردية 45 دقيقة</p>
-
+                                        <div className="space-y-4">
                                             {slotsLoading ? (
                                                 <div className="text-center text-gray-500 py-8">جاري تحميل المواعيد...</div>
-                                            ) : availableSlots.length === 0 ? (
-                                                <div className="text-center py-8">
-                                                    <Calendar className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-                                                    <p className="text-gray-400">لا توجد مواعيد متاحة حالياً</p>
-                                                    <p className="text-gray-500 text-sm mt-2">
-                                                        تواصل معنا على{' '}
-                                                        <a href="mailto:lexmoacadmy@gmail.com" className="text-[#C5A04E] hover:underline">lexmoacadmy@gmail.com</a>
-                                                    </p>
-                                                </div>
                                             ) : (
-                                                <div className="space-y-4">
-                                                    {Object.entries(slotsByDate).map(([dateLabel, slots]) => (
-                                                        <div key={dateLabel}>
-                                                            <h4 className="text-white font-bold text-sm mb-2 flex items-center gap-2">
-                                                                <Calendar className="w-4 h-4 text-[#C5A04E]" />
-                                                                {dateLabel}
-                                                            </h4>
-                                                            <div className="flex flex-wrap gap-2">
-                                                                {slots.map(slot => {
-                                                                    const time = new Date(slot).toLocaleTimeString('ar-EG', {
-                                                                        hour: '2-digit', minute: '2-digit'
-                                                                    });
-                                                                    const isSelected = selectedSlot === slot;
+                                                <>
+                                                    {/* Week Navigation */}
+                                                    <div className="flex items-center justify-between">
+                                                        <button onClick={() => navigateWeek(-1)} className="flex items-center gap-1 text-gray-400 hover:text-white transition px-2 py-1 rounded-lg hover:bg-white/5">
+                                                            <ChevronRight className="w-4 h-4" />
+                                                            <span className="text-xs font-bold hidden sm:inline">السابق</span>
+                                                        </button>
+                                                        <span className="text-white font-bold text-sm">
+                                                            {calendarWeekStart.toLocaleDateString('ar-EG', { day: 'numeric', month: 'long', year: 'numeric' })}
+                                                            {' — '}
+                                                            {(() => { const end = new Date(calendarWeekStart); end.setDate(calendarWeekStart.getDate() + 6); return end.toLocaleDateString('ar-EG', { day: 'numeric', month: 'long' }); })()}
+                                                        </span>
+                                                        <button onClick={() => navigateWeek(1)} className="flex items-center gap-1 text-gray-400 hover:text-white transition px-2 py-1 rounded-lg hover:bg-white/5">
+                                                            <span className="text-xs font-bold hidden sm:inline">التالي</span>
+                                                            <ChevronLeft className="w-4 h-4" />
+                                                        </button>
+                                                    </div>
+
+                                                    {/* Calendar Grid */}
+                                                    <div className="overflow-x-auto -mx-6 px-6">
+                                                        <div className="min-w-[560px]">
+                                                            {/* Day headers */}
+                                                            <div className="grid grid-cols-7 gap-1 mb-2">
+                                                                {DAY_NAMES.map((dayName, i) => {
+                                                                    const date = new Date(calendarWeekStart);
+                                                                    date.setDate(calendarWeekStart.getDate() + i);
+                                                                    const isToday = date.toDateString() === new Date().toDateString();
                                                                     return (
-                                                                        <button
-                                                                            key={slot}
-                                                                            onClick={() => setSelectedSlot(slot)}
-                                                                            className={`flex items-center gap-2 px-4 py-2 rounded-lg border font-semibold text-sm transition-all ${
-                                                                                isSelected
-                                                                                    ? 'bg-[#C5A04E] border-[#C5A04E] text-white'
-                                                                                    : 'bg-[#0A0A0A] border-[#C5A04E]/20 text-gray-300 hover:border-[#C5A04E]/50'
-                                                                            }`}
-                                                                        >
-                                                                            <Clock className="w-4 h-4" />
-                                                                            {time}
-                                                                        </button>
+                                                                        <div key={i} className={`text-center py-1.5 rounded-lg ${isToday ? 'bg-[#C5A04E]/10' : ''}`}>
+                                                                            <div className={`text-[10px] font-bold ${isToday ? 'text-[#C5A04E]' : 'text-gray-500'}`}>{dayName}</div>
+                                                                            <div className={`text-sm font-bold ${isToday ? 'text-[#C5A04E]' : 'text-white'}`}>{date.getDate()}</div>
+                                                                        </div>
                                                                     );
                                                                 })}
                                                             </div>
+
+                                                            {/* Hour rows */}
+                                                            {Array.from({ length: 11 }, (_, hi) => 9 + hi).map(hour => (
+                                                                <div key={hour} className="grid grid-cols-7 gap-1 mb-1">
+                                                                    {Array.from({ length: 7 }, (_, di) => {
+                                                                        const date = new Date(calendarWeekStart);
+                                                                        date.setDate(calendarWeekStart.getDate() + di);
+                                                                        date.setHours(hour, 0, 0, 0);
+                                                                        const iso = date.toISOString();
+                                                                        const isAvailable = availableSlotsSet.has(iso);
+                                                                        const isPast = date < new Date();
+                                                                        const isSelected = selectedSlot === iso;
+
+                                                                        if (isPast || !isAvailable) {
+                                                                            return (
+                                                                                <div key={di} className="py-1.5 rounded text-[11px] font-bold text-center bg-[#0A0A0A] text-gray-700">
+                                                                                    {String(hour).padStart(2, '0')}:00
+                                                                                </div>
+                                                                            );
+                                                                        }
+
+                                                                        return (
+                                                                            <button
+                                                                                key={di}
+                                                                                onClick={() => setSelectedSlot(iso)}
+                                                                                className={`py-1.5 rounded text-[11px] font-bold transition-all ${
+                                                                                    isSelected
+                                                                                        ? 'bg-[#C5A04E] text-white border border-[#C5A04E]'
+                                                                                        : 'bg-[#1A1A1A] text-gray-300 border border-transparent hover:border-[#C5A04E]/40 hover:bg-[#C5A04E]/10'
+                                                                                }`}
+                                                                            >
+                                                                                {String(hour).padStart(2, '0')}:00
+                                                                            </button>
+                                                                        );
+                                                                    })}
+                                                                </div>
+                                                            ))}
                                                         </div>
-                                                    ))}
-                                                </div>
+                                                    </div>
+                                                </>
                                             )}
 
                                             {selectedSlot && (

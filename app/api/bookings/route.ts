@@ -14,50 +14,49 @@ function getAdmin() {
 }
 
 // GET: Return available slots for the next 30 days
+// All slots 9h-19h are available by default, minus blocked slots and existing bookings
 export async function GET() {
     try {
         const admin = getAdmin();
+        const today = new Date();
+        const thirtyDaysLater = new Date(today);
+        thirtyDaysLater.setDate(today.getDate() + 31);
 
-        // Get active availability slots
-        const { data: slots, error } = await admin
-            .from('availability_slots')
-            .select('*')
-            .eq('is_active', true)
-            .order('day_of_week')
-            .order('hour');
+        // Get blocked slots in range
+        const { data: blockedSlots } = await admin
+            .from('coaching_blocked_slots')
+            .select('slot_datetime')
+            .gte('slot_datetime', today.toISOString())
+            .lte('slot_datetime', thirtyDaysLater.toISOString());
 
-        if (error) {
-            return NextResponse.json({ error: error.message }, { status: 500 });
-        }
+        const blockedSet = new Set(
+            (blockedSlots || []).map((s: any) => s.slot_datetime)
+        );
 
         // Get all future non-cancelled bookings
-        const now = new Date().toISOString();
         const { data: existingBookings } = await admin
             .from('bookings')
             .select('booking_date')
-            .gte('booking_date', now)
+            .gte('booking_date', today.toISOString())
             .neq('status', 'cancelled');
 
-        const takenTimes = new Set(
+        const takenSet = new Set(
             (existingBookings || []).map((b: any) => b.booking_date)
         );
 
-        // Generate concrete datetime slots for next 30 days
+        // Generate all slots 9h-19h for next 30 days, excluding blocked and booked
         const availableSlots: string[] = [];
-        const today = new Date();
 
         for (let dayOffset = 1; dayOffset <= 30; dayOffset++) {
             const date = new Date(today);
             date.setDate(today.getDate() + dayOffset);
-            const dow = date.getDay();
 
-            const daySlots = (slots || []).filter((s: any) => s.day_of_week === dow);
-
-            for (const slot of daySlots) {
+            for (let hour = 9; hour <= 19; hour++) {
                 const slotDate = new Date(date);
-                slotDate.setHours(slot.hour, slot.minute, 0, 0);
+                slotDate.setHours(hour, 0, 0, 0);
                 const iso = slotDate.toISOString();
-                if (!takenTimes.has(iso)) {
+
+                if (!blockedSet.has(iso) && !takenSet.has(iso)) {
                     availableSlots.push(iso);
                 }
             }
@@ -114,7 +113,18 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Missing booking_date' }, { status: 400 });
         }
 
-        // Verify slot is not taken
+        // Verify slot is not blocked by admin
+        const { data: blocked } = await admin
+            .from('coaching_blocked_slots')
+            .select('id')
+            .eq('slot_datetime', booking_date)
+            .single();
+
+        if (blocked) {
+            return NextResponse.json({ error: 'هذا الموعد لم يعد متاحاً' }, { status: 409 });
+        }
+
+        // Verify slot is not taken by another booking
         const { data: conflict } = await admin
             .from('bookings')
             .select('id')

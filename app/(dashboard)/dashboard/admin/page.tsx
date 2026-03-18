@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js';
-import { Shield, Mail, AlertCircle, UserPlus, TrendingUp, Copy, Check, Settings, Eye, EyeOff, Calendar, Trash2 } from 'lucide-react';
+import { Shield, Mail, AlertCircle, UserPlus, TrendingUp, Copy, Check, Settings, Eye, EyeOff, Calendar, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 interface UserData {
@@ -32,12 +32,9 @@ interface CreatedStudent {
     plan: string;
 }
 
-interface AvailabilitySlot {
+interface BlockedSlot {
     id: string;
-    day_of_week: number;
-    hour: number;
-    minute: number;
-    is_active: boolean;
+    slot_datetime: string;
 }
 
 interface Booking {
@@ -79,12 +76,17 @@ export default function AdminPage() {
     const [showCompanyInfo, setShowCompanyInfo] = useState(true);
     const [togglingCompanyInfo, setTogglingCompanyInfo] = useState(false);
 
-    // Availability
-    const [availabilitySlots, setAvailabilitySlots] = useState<AvailabilitySlot[]>([]);
-    const [newSlotDay, setNewSlotDay] = useState(1);
-    const [newSlotHour, setNewSlotHour] = useState(10);
-    const [newSlotMinute, setNewSlotMinute] = useState(0);
-    const [savingSlot, setSavingSlot] = useState(false);
+    // Calendar availability
+    const [blockedSlots, setBlockedSlots] = useState<Set<string>>(new Set());
+    const [calendarWeekStart, setCalendarWeekStart] = useState(() => {
+        const now = new Date();
+        const day = now.getDay();
+        const start = new Date(now);
+        start.setDate(now.getDate() - day);
+        start.setHours(0, 0, 0, 0);
+        return start;
+    });
+    const [togglingSlot, setTogglingSlot] = useState<string | null>(null);
 
     // Bookings
     const [bookings, setBookings] = useState<Booking[]>([]);
@@ -114,7 +116,7 @@ export default function AdminPage() {
         setUser(user);
         await loadData();
         await loadSettings();
-        await loadAvailability();
+        await loadBlockedSlots();
         await loadBookings();
         await loadCoachingClients();
     };
@@ -155,13 +157,17 @@ export default function AdminPage() {
         }
     };
 
-    const loadAvailability = async () => {
+    const loadBlockedSlots = async (weekStart?: Date) => {
         try {
-            const res = await fetch('/api/admin/availability');
+            const start = weekStart || calendarWeekStart;
+            const end = new Date(start);
+            end.setDate(start.getDate() + 7);
+            const res = await fetch(`/api/admin/blocked-slots?from=${start.toISOString()}&to=${end.toISOString()}`);
             const data = await res.json();
-            setAvailabilitySlots(data.slots || []);
+            const set = new Set<string>((data.slots || []).map((s: any) => s.slot_datetime));
+            setBlockedSlots(set);
         } catch (error) {
-            console.error('Error loading availability:', error);
+            console.error('Error loading blocked slots:', error);
         }
     };
 
@@ -180,38 +186,37 @@ export default function AdminPage() {
         }
     };
 
-    const handleAddSlot = async () => {
-        setSavingSlot(true);
+    const handleToggleSlot = async (slotDatetime: string) => {
+        setTogglingSlot(slotDatetime);
         try {
-            const res = await fetch('/api/admin/availability', {
+            const res = await fetch('/api/admin/blocked-slots', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ day_of_week: newSlotDay, hour: newSlotHour, minute: newSlotMinute }),
+                body: JSON.stringify({ slot_datetime: slotDatetime }),
             });
             if (res.ok) {
-                await loadAvailability();
-            } else {
-                alert('حدث خطأ أثناء إضافة الموعد');
+                const data = await res.json();
+                setBlockedSlots(prev => {
+                    const next = new Set(prev);
+                    if (data.action === 'blocked') {
+                        next.add(slotDatetime);
+                    } else {
+                        next.delete(slotDatetime);
+                    }
+                    return next;
+                });
             }
         } catch (error) {
-            console.error('Error adding slot:', error);
+            console.error('Error toggling slot:', error);
         }
-        setSavingSlot(false);
+        setTogglingSlot(null);
     };
 
-    const handleDeleteSlot = async (slotId: string) => {
-        try {
-            const res = await fetch('/api/admin/availability', {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: slotId }),
-            });
-            if (res.ok) {
-                await loadAvailability();
-            }
-        } catch (error) {
-            console.error('Error deleting slot:', error);
-        }
+    const navigateWeek = (direction: number) => {
+        const newStart = new Date(calendarWeekStart);
+        newStart.setDate(calendarWeekStart.getDate() + (direction * 7));
+        setCalendarWeekStart(newStart);
+        loadBlockedSlots(newStart);
     };
 
     const handleMarkCompleted = async (bookingId: string) => {
@@ -756,79 +761,107 @@ ${LOGIN_URL}
                     </div>
                 )}
 
-                {/* ===== Availability Management ===== */}
+                {/* ===== Weekly Calendar Availability ===== */}
                 <div className="bg-[#111111]/50 border border-[#C5A04E]/10 rounded-xl p-6 mt-8">
-                    <div className="flex items-center gap-3 mb-6">
+                    <div className="flex items-center gap-3 mb-2">
                         <Calendar className="w-6 h-6 text-[#C5A04E]" />
                         <h2 className="text-2xl font-bold text-white">إدارة مواعيد التشخيص</h2>
                     </div>
+                    <p className="text-gray-500 text-sm mb-6">اضغط على الموعد لحظره (أحمر) أو إتاحته (فارغ). المواعيد الفارغة متاحة للعملاء.</p>
 
-                    {/* Add new slot form */}
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                        <div>
-                            <label className="block text-sm text-gray-500 mb-2">اليوم</label>
-                            <select
-                                value={newSlotDay}
-                                onChange={e => setNewSlotDay(Number(e.target.value))}
-                                className="w-full bg-[#1A1A1A] border border-[#C5A04E]/10 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C5A04E]"
-                            >
-                                {DAY_NAMES.map((d, i) => (
-                                    <option key={i} value={i}>{d}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div>
-                            <label className="block text-sm text-gray-500 mb-2">الساعة</label>
-                            <input
-                                type="number"
-                                min={0}
-                                max={23}
-                                value={newSlotHour}
-                                onChange={e => setNewSlotHour(Number(e.target.value))}
-                                className="w-full bg-[#1A1A1A] border border-[#C5A04E]/10 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C5A04E]"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm text-gray-500 mb-2">الدقيقة</label>
-                            <select
-                                value={newSlotMinute}
-                                onChange={e => setNewSlotMinute(Number(e.target.value))}
-                                className="w-full bg-[#1A1A1A] border border-[#C5A04E]/10 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C5A04E]"
-                            >
-                                <option value={0}>:00</option>
-                                <option value={30}>:30</option>
-                            </select>
-                        </div>
-                        <div className="flex items-end">
-                            <button
-                                onClick={handleAddSlot}
-                                disabled={savingSlot}
-                                className="w-full bg-[#C5A04E] hover:bg-[#D4B85C] text-white font-bold py-3 rounded-lg transition disabled:opacity-50"
-                            >
-                                {savingSlot ? 'جاري الحفظ...' : 'إضافة موعد'}
-                            </button>
+                    {/* Week Navigation */}
+                    <div className="flex items-center justify-between mb-4">
+                        <button onClick={() => navigateWeek(-1)} className="flex items-center gap-1 text-gray-400 hover:text-white transition px-3 py-2 rounded-lg hover:bg-white/5">
+                            <ChevronRight className="w-5 h-5" />
+                            <span className="text-sm font-bold">الأسبوع السابق</span>
+                        </button>
+                        <span className="text-white font-bold text-sm">
+                            {calendarWeekStart.toLocaleDateString('ar-EG', { day: 'numeric', month: 'long', year: 'numeric' })}
+                            {' — '}
+                            {(() => { const end = new Date(calendarWeekStart); end.setDate(calendarWeekStart.getDate() + 6); return end.toLocaleDateString('ar-EG', { day: 'numeric', month: 'long' }); })()}
+                        </span>
+                        <button onClick={() => navigateWeek(1)} className="flex items-center gap-1 text-gray-400 hover:text-white transition px-3 py-2 rounded-lg hover:bg-white/5">
+                            <span className="text-sm font-bold">الأسبوع التالي</span>
+                            <ChevronLeft className="w-5 h-5" />
+                        </button>
+                    </div>
+
+                    {/* Calendar Grid */}
+                    <div className="overflow-x-auto">
+                        <div className="min-w-[700px]">
+                            {/* Day headers */}
+                            <div className="grid grid-cols-7 gap-1 mb-2">
+                                {DAY_NAMES.map((dayName, i) => {
+                                    const date = new Date(calendarWeekStart);
+                                    date.setDate(calendarWeekStart.getDate() + i);
+                                    const isToday = date.toDateString() === new Date().toDateString();
+                                    return (
+                                        <div key={i} className={`text-center py-2 rounded-lg ${isToday ? 'bg-[#C5A04E]/10' : ''}`}>
+                                            <div className={`text-xs font-bold ${isToday ? 'text-[#C5A04E]' : 'text-gray-400'}`}>{dayName}</div>
+                                            <div className={`text-lg font-bold ${isToday ? 'text-[#C5A04E]' : 'text-white'}`}>{date.getDate()}</div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            {/* Hour rows */}
+                            {Array.from({ length: 11 }, (_, hi) => 9 + hi).map(hour => (
+                                <div key={hour} className="grid grid-cols-7 gap-1 mb-1">
+                                    {Array.from({ length: 7 }, (_, di) => {
+                                        const date = new Date(calendarWeekStart);
+                                        date.setDate(calendarWeekStart.getDate() + di);
+                                        date.setHours(hour, 0, 0, 0);
+                                        const iso = date.toISOString();
+                                        const isBlocked = blockedSlots.has(iso);
+                                        const isPast = date < new Date();
+                                        const isToggling = togglingSlot === iso;
+
+                                        // Check if this slot has a booking
+                                        const hasBooking = bookings.some(b => b.booking_date === iso && b.status !== 'cancelled');
+
+                                        return (
+                                            <button
+                                                key={di}
+                                                onClick={() => !isPast && !hasBooking && handleToggleSlot(iso)}
+                                                disabled={isPast || isToggling || hasBooking}
+                                                className={`py-1.5 rounded text-xs font-bold transition-all ${
+                                                    hasBooking
+                                                        ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30 cursor-not-allowed'
+                                                        : isPast
+                                                            ? 'bg-[#0A0A0A] text-gray-700 cursor-not-allowed'
+                                                            : isBlocked
+                                                                ? 'bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30'
+                                                                : 'bg-[#1A1A1A] text-gray-300 border border-transparent hover:border-[#C5A04E]/30 hover:bg-[#C5A04E]/5'
+                                                } ${isToggling ? 'opacity-50' : ''}`}
+                                            >
+                                                {String(hour).padStart(2, '0')}:00
+                                                {hasBooking && ' 📅'}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            ))}
                         </div>
                     </div>
 
-                    {/* Existing slots list */}
-                    <div className="space-y-2">
-                        {availabilitySlots.map(slot => (
-                            <div key={slot.id} className="flex items-center justify-between bg-[#1A1A1A] rounded-lg px-4 py-3">
-                                <span className="text-white text-sm">
-                                    {DAY_NAMES[slot.day_of_week]} — {String(slot.hour).padStart(2, '0')}:{String(slot.minute).padStart(2, '0')}
-                                </span>
-                                <button
-                                    onClick={() => handleDeleteSlot(slot.id)}
-                                    className="text-red-500 hover:text-red-400 text-sm transition flex items-center gap-1"
-                                >
-                                    <Trash2 className="w-4 h-4" />
-                                    حذف
-                                </button>
-                            </div>
-                        ))}
-                        {availabilitySlots.length === 0 && (
-                            <p className="text-gray-500 text-sm text-center py-4">لا توجد مواعيد متاحة. أضف مواعيد جديدة.</p>
-                        )}
+                    {/* Legend */}
+                    <div className="flex flex-wrap gap-4 mt-4 pt-4 border-t border-gray-800">
+                        <div className="flex items-center gap-2 text-xs text-gray-400">
+                            <div className="w-4 h-4 rounded bg-[#1A1A1A] border border-gray-700"></div>
+                            <span>متاح</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-gray-400">
+                            <div className="w-4 h-4 rounded bg-red-500/20 border border-red-500/30"></div>
+                            <span>محظور</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-gray-400">
+                            <div className="w-4 h-4 rounded bg-blue-500/20 border border-blue-500/30"></div>
+                            <span>محجوز</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-gray-400">
+                            <div className="w-4 h-4 rounded bg-[#0A0A0A]"></div>
+                            <span>ماضي</span>
+                        </div>
                     </div>
                 </div>
 
