@@ -45,18 +45,23 @@ export async function GET() {
             (existingBookings || []).map((b: any) => new Date(b.booking_date).getTime())
         );
 
-        // Generate all slots 9h-19h for next 30 days, excluding blocked and booked
+        // Generate all slots 9h-19h for today + next 30 days, excluding blocked, booked, and past
         const availableSlots: string[] = [];
+        const nowMs = today.getTime();
 
-        for (let dayOffset = 1; dayOffset <= 30; dayOffset++) {
+        for (let dayOffset = 0; dayOffset <= 30; dayOffset++) {
             const d = new Date(today);
             d.setDate(today.getDate() + dayOffset);
 
             for (let hour = 9; hour <= 19; hour++) {
                 // Build UTC date explicitly to avoid timezone day-shift
                 const slotDate = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), hour, 0, 0, 0));
-                const iso = slotDate.toISOString();
                 const ms = slotDate.getTime();
+
+                // Skip past slots
+                if (ms <= nowMs) continue;
+
+                const iso = slotDate.toISOString();
 
                 if (!blockedSet.has(ms) && !takenSet.has(ms)) {
                     availableSlots.push(iso);
