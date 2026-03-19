@@ -725,7 +725,7 @@ ${LOGIN_URL}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 text-gray-500 text-sm">
-                                                {new Date(subscription.created_at).toLocaleDateString('ar-EG')}
+                                                {new Date(subscription.created_at).toLocaleDateString('ar-u-nu-latn')}
                                             </td>
                                             <td className="px-6 py-4">
                                                 <div className="flex gap-2">
@@ -776,9 +776,9 @@ ${LOGIN_URL}
                             <span className="text-sm font-bold">الأسبوع السابق</span>
                         </button>
                         <span className="text-white font-bold text-sm">
-                            {calendarWeekStart.toLocaleDateString('ar-EG', { day: 'numeric', month: 'long', year: 'numeric' })}
+                            {calendarWeekStart.toLocaleDateString('ar-u-nu-latn', { day: 'numeric', month: 'long', year: 'numeric' })}
                             {' — '}
-                            {(() => { const end = new Date(calendarWeekStart); end.setDate(calendarWeekStart.getDate() + 6); return end.toLocaleDateString('ar-EG', { day: 'numeric', month: 'long' }); })()}
+                            {(() => { const end = new Date(calendarWeekStart); end.setDate(calendarWeekStart.getDate() + 6); return end.toLocaleDateString('ar-u-nu-latn', { day: 'numeric', month: 'long' }); })()}
                         </span>
                         <button onClick={() => navigateWeek(1)} className="flex items-center gap-1 text-gray-400 hover:text-white transition px-3 py-2 rounded-lg hover:bg-white/5">
                             <span className="text-sm font-bold">الأسبوع التالي</span>
@@ -897,7 +897,7 @@ ${LOGIN_URL}
                                                 {bookingUser?.email || booking.user_id}
                                             </td>
                                             <td className="px-6 py-4 text-gray-400 text-sm">
-                                                {new Date(booking.booking_date).toLocaleString('ar-EG', {
+                                                {new Date(booking.booking_date).toLocaleString('ar-u-nu-latn', {
                                                     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
                                                     hour: '2-digit', minute: '2-digit'
                                                 })}
@@ -986,7 +986,7 @@ ${LOGIN_URL}
                                             </td>
                                             <td className="px-6 py-4 text-gray-400 text-sm">
                                                 {client.booking_date
-                                                    ? new Date(client.booking_date).toLocaleString('ar-EG', {
+                                                    ? new Date(client.booking_date).toLocaleString('ar-u-nu-latn', {
                                                         weekday: 'long', month: 'long', day: 'numeric',
                                                         hour: '2-digit', minute: '2-digit'
                                                     })

@@ -380,9 +380,9 @@ export default function CoachingPage() {
                                                             <span className="text-xs font-bold hidden sm:inline">السابق</span>
                                                         </button>
                                                         <span className="text-white font-bold text-sm">
-                                                            {calendarWeekStart.toLocaleDateString('ar-EG', { day: 'numeric', month: 'long', year: 'numeric' })}
+                                                            {calendarWeekStart.toLocaleDateString('ar-u-nu-latn', { day: 'numeric', month: 'long', year: 'numeric' })}
                                                             {' — '}
-                                                            {(() => { const end = new Date(calendarWeekStart); end.setDate(calendarWeekStart.getDate() + 6); return end.toLocaleDateString('ar-EG', { day: 'numeric', month: 'long' }); })()}
+                                                            {(() => { const end = new Date(calendarWeekStart); end.setDate(calendarWeekStart.getDate() + 6); return end.toLocaleDateString('ar-u-nu-latn', { day: 'numeric', month: 'long' }); })()}
                                                         </span>
                                                         <button onClick={() => navigateWeek(1)} className="flex items-center gap-1 text-gray-400 hover:text-white transition px-2 py-1 rounded-lg hover:bg-white/5">
                                                             <span className="text-xs font-bold hidden sm:inline">التالي</span>
@@ -455,7 +455,7 @@ export default function CoachingPage() {
                                                     <p className="text-gray-400 text-sm text-center">
                                                         الموعد المختار:{' '}
                                                         <span className="text-[#C5A04E] font-bold">
-                                                            {new Date(selectedSlot).toLocaleString('ar-EG', {
+                                                            {new Date(selectedSlot).toLocaleString('ar-u-nu-latn', {
                                                                 weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
                                                                 hour: '2-digit', minute: '2-digit'
                                                             })}
@@ -480,11 +480,11 @@ export default function CoachingPage() {
                                             <div>
                                                 <p className="text-gray-400 text-sm mb-1">موعد جلستك</p>
                                                 <p className="text-[#C5A04E] text-lg font-bold">
-                                                    {new Date(booking.booking_date).toLocaleDateString('ar-EG', {
+                                                    {new Date(booking.booking_date).toLocaleDateString('ar-u-nu-latn', {
                                                         weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
                                                     })}
                                                     {' — '}
-                                                    {new Date(booking.booking_date).toLocaleTimeString('ar-EG', {
+                                                    {new Date(booking.booking_date).toLocaleTimeString('ar-u-nu-latn', {
                                                         hour: '2-digit', minute: '2-digit'
                                                     })}
                                                 </p>
@@ -516,7 +516,7 @@ export default function CoachingPage() {
                                     <p className="text-gray-400 text-sm">
                                         <span className="text-gray-500">الموعد:</span>{' '}
                                         <span className="text-white">
-                                            {new Date(booking.booking_date).toLocaleString('ar-EG', {
+                                            {new Date(booking.booking_date).toLocaleString('ar-u-nu-latn', {
                                                 weekday: 'long', month: 'long', day: 'numeric',
                                                 hour: '2-digit', minute: '2-digit'
                                             })}

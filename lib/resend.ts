@@ -111,8 +111,8 @@ export async function sendActivationEmail(toEmail: string, plan: string = 'spark
 
 export async function sendBookingConfirmationEmail(toEmail: string, bookingDate: string) {
     const date = new Date(bookingDate);
-    const dateStr = date.toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    const timeStr = date.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+    const dateStr = date.toLocaleDateString('ar-u-nu-latn', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    const timeStr = date.toLocaleTimeString('ar-u-nu-latn', { hour: '2-digit', minute: '2-digit' });
 
     const html = `
 <!DOCTYPE html>
