@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cairo, Orbitron } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 
 const cairo = Cairo({
@@ -31,6 +32,7 @@ export default function RootLayout({
       >
         {children}
       </body>
+      <GoogleAnalytics gaId="G-P3LDE3ME0N" />
     </html>
   );
 }
