@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowRight, ArrowLeft, BookOpen, Play, FileText, HelpCircle, CheckCircle2, Circle, Clock } from "lucide-react";
 import { getStepContent, Lesson } from "../stepsData";
+import LessonContentRenderer from "./LessonContentRenderer";
 
 export default function StepDetailPage() {
     const params = useParams();
@@ -135,6 +136,8 @@ export default function StepDetailPage() {
                                 {/* Bottom full width: blocks "Watch on YouTube", subtitles, settings, YouTube logo */}
                                 <div className="absolute bottom-0 left-0 right-0 h-[42px] z-10 cursor-default" onContextMenu={(e) => e.preventDefault()} />
                             </div>
+                        ) : activeLesson?.content ? (
+                            <LessonContentRenderer contentKey={activeLesson.content} />
                         ) : (
                             <div className="flex flex-col items-center justify-center py-20 text-center">
                                 {activeLesson?.type === 'quiz' ? (

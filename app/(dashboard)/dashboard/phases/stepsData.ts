@@ -4,6 +4,7 @@ export type Lesson = {
     type: 'video' | 'quiz' | 'pdf';
     videoUrl?: string;
     duration?: string;
+    content?: string;
 };
 
 export type Chapter = {
@@ -114,7 +115,7 @@ export const stepsContent: StepContent[] = [
             {
                 title: "الدروس",
                 lessons: [
-                    { id: 1, title: "الدليل الكامل للبحث عن المنتج الرابح", type: "pdf" },
+                    { id: 1, title: "الدليل الكامل للبحث عن المنتج الرابح", type: "pdf", content: "phase5_product_research" },
                 ],
             },
         ],
