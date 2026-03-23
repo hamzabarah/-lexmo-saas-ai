@@ -42,7 +42,14 @@ export async function GET() {
             .limit(1)
             .single();
 
-        return NextResponse.json({ profile: profile || null, booking: booking || null });
+        // Get diagnostic data (if any)
+        const { data: diagnostic } = await admin
+            .from('coaching_diagnostics')
+            .select('*')
+            .eq('user_id', user.id)
+            .maybeSingle();
+
+        return NextResponse.json({ profile: profile || null, booking: booking || null, diagnostic: diagnostic || null });
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
@@ -87,7 +94,7 @@ export async function POST(req: NextRequest) {
     }
 }
 
-// PATCH: Update current_step
+// PATCH: Update current_step or validate diagnostic
 export async function PATCH(req: NextRequest) {
     try {
         const supabase = await createClient();
@@ -97,13 +104,51 @@ export async function PATCH(req: NextRequest) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { current_step } = await req.json();
+        const body = await req.json();
+        const admin = getAdmin();
+
+        // Handle diagnostic validation
+        if (body.action === 'validate_diagnostic') {
+            // Verify diagnostic is published before allowing validation
+            const { data: diag } = await admin
+                .from('coaching_diagnostics')
+                .select('id, published')
+                .eq('user_id', user.id)
+                .eq('published', true)
+                .maybeSingle();
+
+            if (!diag) {
+                return NextResponse.json({ error: 'لا يوجد تشخيص منشور' }, { status: 400 });
+            }
+
+            // Mark diagnostic as validated by client
+            await admin
+                .from('coaching_diagnostics')
+                .update({
+                    client_validated: true,
+                    validated_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString(),
+                })
+                .eq('user_id', user.id);
+
+            // Advance to step 5
+            const { data: profile, error } = await admin
+                .from('coaching_profiles')
+                .update({ current_step: 5, updated_at: new Date().toISOString() })
+                .eq('user_id', user.id)
+                .select()
+                .single();
+
+            if (error) throw error;
+            return NextResponse.json({ profile });
+        }
+
+        // Default: update current_step
+        const { current_step } = body;
 
         if (!current_step || current_step < 1 || current_step > 5) {
             return NextResponse.json({ error: 'Invalid step' }, { status: 400 });
         }
-
-        const admin = getAdmin();
 
         const { data: profile, error } = await admin
             .from('coaching_profiles')

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js';
-import { Shield, Mail, AlertCircle, UserPlus, TrendingUp, Copy, Check, Settings, Eye, EyeOff, Calendar, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Shield, Mail, AlertCircle, UserPlus, TrendingUp, Copy, Check, Settings, Eye, EyeOff, Calendar, Trash2, ChevronLeft, ChevronRight, X, MessageSquare, FileText, Send } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 interface UserData {
@@ -55,6 +55,36 @@ interface CoachingClient {
     booking_status: string | null;
 }
 
+interface DiagnosticData {
+    id: string;
+    user_id: string;
+    admin_id: string;
+    answers: { question: string; answer: string; is_custom: boolean }[];
+    summary: string | null;
+    recommended_business: string | null;
+    action_plan: string | null;
+    recommendation: string | null;
+    published: boolean;
+    published_at: string | null;
+    client_validated: boolean;
+    validated_at: string | null;
+}
+
+const DIAGNOSTIC_QUESTIONS = [
+    {
+        question: 'ما هو مستواك الحالي في التجارة الإلكترونية؟',
+        options: ['مبتدئ تماماً', 'لدي معرفة نظرية', 'لدي تجربة سابقة', 'لدي متجر نشط'],
+    },
+    {
+        question: 'ما هي الميزانية المتاحة لديك للاستثمار؟',
+        options: ['أقل من 500€', 'بين 500 و 1000€', 'بين 1000 و 3000€', 'أكثر من 3000€'],
+    },
+    {
+        question: 'كم ساعة يمكنك تخصيصها أسبوعياً؟',
+        options: ['أقل من 5 ساعات', 'بين 5 و 10 ساعات', 'بين 10 و 20 ساعة', 'تفرغ كامل'],
+    },
+];
+
 export default function AdminPage() {
     const [user, setUser] = useState<User | null>(null);
     const [users, setUsers] = useState<UserData[]>([]);
@@ -93,6 +123,18 @@ export default function AdminPage() {
 
     // Coaching clients
     const [coachingClients, setCoachingClients] = useState<CoachingClient[]>([]);
+
+    // Diagnostic modal state
+    const [selectedClient, setSelectedClient] = useState<CoachingClient | null>(null);
+    const [clientDiagnostic, setClientDiagnostic] = useState<DiagnosticData | null>(null);
+    const [diagnosticLoading, setDiagnosticLoading] = useState(false);
+    const [diagnosticView, setDiagnosticView] = useState<'fiche' | 'questions' | 'bilan'>('fiche');
+    const [diagnosticAnswers, setDiagnosticAnswers] = useState<{ question: string; answer: string; is_custom: boolean }[]>([]);
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [customAnswer, setCustomAnswer] = useState('');
+    const [bilanForm, setBilanForm] = useState({ summary: '', recommended_business: '', action_plan: '', recommendation: '' });
+    const [savingDiagnostic, setSavingDiagnostic] = useState(false);
+    const [publishingDiagnostic, setPublishingDiagnostic] = useState(false);
 
     const supabase = createClient();
     const router = useRouter();
@@ -279,6 +321,110 @@ export default function AdminPage() {
         } catch (error) {
             console.error('Error loading coaching clients:', error);
         }
+    };
+
+    // ===== Diagnostic handlers =====
+    const handleOpenClientFiche = async (client: CoachingClient) => {
+        setSelectedClient(client);
+        setDiagnosticView('fiche');
+        setDiagnosticLoading(true);
+        setClientDiagnostic(null);
+        setDiagnosticAnswers([]);
+        setCurrentQuestionIndex(0);
+        setCustomAnswer('');
+        setBilanForm({ summary: '', recommended_business: '', action_plan: '', recommendation: '' });
+
+        try {
+            const res = await fetch(`/api/admin/diagnostic?user_id=${client.user_id}`);
+            const data = await res.json();
+            if (data.diagnostic) {
+                setClientDiagnostic(data.diagnostic);
+                if (data.diagnostic.answers?.length) {
+                    setDiagnosticAnswers(data.diagnostic.answers);
+                }
+                setBilanForm({
+                    summary: data.diagnostic.summary || '',
+                    recommended_business: data.diagnostic.recommended_business || '',
+                    action_plan: data.diagnostic.action_plan || '',
+                    recommendation: data.diagnostic.recommendation || '',
+                });
+            }
+        } catch (err) {
+            console.error('Error loading diagnostic:', err);
+        }
+        setDiagnosticLoading(false);
+    };
+
+    const handleCloseClientFiche = () => {
+        setSelectedClient(null);
+        setClientDiagnostic(null);
+        setDiagnosticView('fiche');
+    };
+
+    const handleStartDiagnostic = () => {
+        setDiagnosticView('questions');
+        setCurrentQuestionIndex(0);
+        setDiagnosticAnswers([]);
+        setCustomAnswer('');
+    };
+
+    const handleAnswerQuestion = async (answer: string, isCustom: boolean) => {
+        const currentQ = DIAGNOSTIC_QUESTIONS[currentQuestionIndex];
+        const newAnswers = [...diagnosticAnswers, { question: currentQ.question, answer, is_custom: isCustom }];
+        setDiagnosticAnswers(newAnswers);
+        setCustomAnswer('');
+
+        if (currentQuestionIndex < DIAGNOSTIC_QUESTIONS.length - 1) {
+            setCurrentQuestionIndex(currentQuestionIndex + 1);
+        } else {
+            // Last question — save answers
+            setSavingDiagnostic(true);
+            try {
+                const res = await fetch('/api/admin/diagnostic', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: selectedClient!.user_id, answers: newAnswers }),
+                });
+                const data = await res.json();
+                if (data.diagnostic) setClientDiagnostic(data.diagnostic);
+            } catch (err) {
+                console.error('Error saving answers:', err);
+            }
+            setSavingDiagnostic(false);
+            setDiagnosticView('bilan');
+        }
+    };
+
+    const handleSaveBilan = async (publish: boolean = false) => {
+        if (publish) {
+            setPublishingDiagnostic(true);
+        } else {
+            setSavingDiagnostic(true);
+        }
+
+        try {
+            const res = await fetch('/api/admin/diagnostic', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    user_id: selectedClient!.user_id,
+                    ...bilanForm,
+                    publish,
+                }),
+            });
+            const data = await res.json();
+            if (data.diagnostic) {
+                setClientDiagnostic(data.diagnostic);
+                if (publish) {
+                    await loadCoachingClients();
+                    alert('تم نشر التشخيص بنجاح');
+                }
+            }
+        } catch (err) {
+            console.error('Error saving bilan:', err);
+        }
+        setSavingDiagnostic(false);
+        setPublishingDiagnostic(false);
     };
 
     const STEP_LABELS: Record<number, string> = {
@@ -975,7 +1121,7 @@ ${LOGIN_URL}
                                         : null;
 
                                     return (
-                                        <tr key={client.user_id} className="hover:bg-[#1A1A1A]/30 transition">
+                                        <tr key={client.user_id} onClick={() => handleOpenClientFiche(client)} className="hover:bg-[#1A1A1A]/30 transition cursor-pointer">
                                             <td className="px-6 py-4 text-gray-400 text-sm">{client.email}</td>
                                             <td className="px-6 py-4 text-white text-sm">{client.full_name || '-'}</td>
                                             <td className="px-6 py-4 text-gray-400 text-sm" dir="ltr">{client.google_meet_email || '-'}</td>
@@ -1014,6 +1160,274 @@ ${LOGIN_URL}
                     )}
                 </div>
             </div>
+
+            {/* ===== Diagnostic Modal ===== */}
+            {selectedClient && (
+                <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4" onClick={handleCloseClientFiche}>
+                    <div className="bg-[#111111] border border-[#C5A04E]/10 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+                        {/* Modal header */}
+                        <div className="flex items-center justify-between p-6 border-b border-[#C5A04E]/10">
+                            <h2 className="text-xl font-bold text-white">
+                                {diagnosticView === 'fiche' && 'ملف العميل'}
+                                {diagnosticView === 'questions' && `سؤال ${currentQuestionIndex + 1} / ${DIAGNOSTIC_QUESTIONS.length}`}
+                                {diagnosticView === 'bilan' && 'تحرير التشخيص'}
+                            </h2>
+                            <button onClick={handleCloseClientFiche} className="text-gray-400 hover:text-white transition">
+                                <X className="w-6 h-6" />
+                            </button>
+                        </div>
+
+                        <div className="p-6">
+                            {diagnosticLoading ? (
+                                <div className="text-center py-8 text-gray-500">جاري التحميل...</div>
+                            ) : diagnosticView === 'fiche' ? (
+                                /* ===== FICHE VIEW ===== */
+                                <div className="space-y-6">
+                                    {/* Client info */}
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="bg-[#1A1A1A] rounded-xl p-4">
+                                            <p className="text-gray-500 text-xs mb-1">الاسم الكامل</p>
+                                            <p className="text-white font-semibold">{selectedClient.full_name || '-'}</p>
+                                        </div>
+                                        <div className="bg-[#1A1A1A] rounded-xl p-4">
+                                            <p className="text-gray-500 text-xs mb-1">البريد الإلكتروني</p>
+                                            <p className="text-white font-semibold text-sm" dir="ltr">{selectedClient.email}</p>
+                                        </div>
+                                        <div className="bg-[#1A1A1A] rounded-xl p-4">
+                                            <p className="text-gray-500 text-xs mb-1">Google Meet</p>
+                                            <p className="text-white font-semibold text-sm" dir="ltr">{selectedClient.google_meet_email || '-'}</p>
+                                        </div>
+                                        <div className="bg-[#1A1A1A] rounded-xl p-4">
+                                            <p className="text-gray-500 text-xs mb-1">تاريخ الجلسة</p>
+                                            <p className="text-white font-semibold text-sm">
+                                                {selectedClient.booking_date
+                                                    ? new Date(selectedClient.booking_date).toLocaleString('ar-u-nu-latn', {
+                                                        weekday: 'long', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                                                    })
+                                                    : '-'}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {/* Step badge */}
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-gray-500 text-sm">الخطوة الحالية:</span>
+                                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                                            selectedClient.current_step >= 4 ? 'text-green-400 bg-green-500/10' :
+                                            selectedClient.current_step === 3 ? 'text-blue-400 bg-blue-500/10' :
+                                            'text-orange-400 bg-orange-500/10'
+                                        }`}>
+                                            {selectedClient.current_step}/5 — {STEP_LABELS[selectedClient.current_step] || '?'}
+                                        </span>
+                                    </div>
+
+                                    {/* Diagnostic status + actions */}
+                                    {clientDiagnostic?.published ? (
+                                        <div className="space-y-4">
+                                            <div className="flex items-center gap-2">
+                                                <Check className="w-5 h-5 text-green-500" />
+                                                <span className="text-green-400 font-semibold">تم نشر التشخيص</span>
+                                                {clientDiagnostic.client_validated && (
+                                                    <span className="text-xs text-green-500 bg-green-500/10 px-2 py-0.5 rounded-full mr-2">تم التأكيد من العميل</span>
+                                                )}
+                                            </div>
+
+                                            {/* Show answers */}
+                                            {clientDiagnostic.answers?.length > 0 && (
+                                                <div className="space-y-2">
+                                                    <h4 className="text-gray-400 text-sm font-bold">الإجابات</h4>
+                                                    {clientDiagnostic.answers.map((a: any, i: number) => (
+                                                        <div key={i} className="bg-[#0A0A0A] rounded-lg p-3">
+                                                            <p className="text-gray-500 text-xs mb-1">{a.question}</p>
+                                                            <p className="text-white text-sm">{a.answer} {a.is_custom && <span className="text-[#C5A04E] text-xs">(إجابة مخصصة)</span>}</p>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+
+                                            {/* Show bilan */}
+                                            <div className="space-y-2">
+                                                <h4 className="text-gray-400 text-sm font-bold">التشخيص</h4>
+                                                {[
+                                                    { label: 'ملخص الوضع', value: clientDiagnostic.summary },
+                                                    { label: 'البزنس المناسب', value: clientDiagnostic.recommended_business },
+                                                    { label: 'خطة العمل', value: clientDiagnostic.action_plan },
+                                                    { label: 'التوصية', value: clientDiagnostic.recommendation },
+                                                ].map((field, i) => (
+                                                    <div key={i} className="bg-[#0A0A0A] rounded-lg p-3">
+                                                        <p className="text-[#C5A04E] text-xs font-bold mb-1">{field.label}</p>
+                                                        <p className="text-gray-300 text-sm whitespace-pre-wrap">{field.value || '-'}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ) : clientDiagnostic?.answers?.length ? (
+                                        <div className="space-y-4">
+                                            <div className="flex items-center gap-2">
+                                                <MessageSquare className="w-5 h-5 text-orange-400" />
+                                                <span className="text-orange-400 font-semibold">التشخيص قيد التحرير</span>
+                                            </div>
+                                            <div className="flex gap-3">
+                                                <button
+                                                    onClick={() => setDiagnosticView('questions')}
+                                                    className="flex-1 bg-[#1A1A1A] border border-[#C5A04E]/20 hover:border-[#C5A04E]/40 text-white font-bold py-3 rounded-xl transition"
+                                                >
+                                                    إعادة الأسئلة
+                                                </button>
+                                                <button
+                                                    onClick={() => setDiagnosticView('bilan')}
+                                                    className="flex-1 bg-[#C5A04E] hover:bg-[#D4B85C] text-white font-bold py-3 rounded-xl transition"
+                                                >
+                                                    تحرير التشخيص
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <button
+                                            onClick={handleStartDiagnostic}
+                                            className="w-full bg-[#E8600A] hover:bg-[#D15509] text-white font-bold py-4 rounded-xl transition-colors flex items-center justify-center gap-3"
+                                        >
+                                            <MessageSquare className="w-5 h-5" />
+                                            بدء التشخيص
+                                        </button>
+                                    )}
+                                </div>
+
+                            ) : diagnosticView === 'questions' ? (
+                                /* ===== QUESTIONS VIEW ===== */
+                                <div className="space-y-6">
+                                    <div className="text-center">
+                                        <p className="text-[#C5A04E] text-sm font-bold mb-2">
+                                            السؤال {currentQuestionIndex + 1} من {DIAGNOSTIC_QUESTIONS.length}
+                                        </p>
+                                        <div className="w-full bg-[#1A1A1A] rounded-full h-1.5 mb-4">
+                                            <div
+                                                className="bg-[#C5A04E] h-1.5 rounded-full transition-all"
+                                                style={{ width: `${((currentQuestionIndex + 1) / DIAGNOSTIC_QUESTIONS.length) * 100}%` }}
+                                            />
+                                        </div>
+                                        <h3 className="text-white text-lg font-bold">
+                                            {DIAGNOSTIC_QUESTIONS[currentQuestionIndex].question}
+                                        </h3>
+                                    </div>
+
+                                    {/* Option buttons */}
+                                    <div className="space-y-2">
+                                        {DIAGNOSTIC_QUESTIONS[currentQuestionIndex].options.map((option, i) => (
+                                            <button
+                                                key={i}
+                                                onClick={() => handleAnswerQuestion(option, false)}
+                                                disabled={savingDiagnostic}
+                                                className="w-full text-right bg-[#1A1A1A] border border-[#C5A04E]/10 hover:border-[#C5A04E]/40 hover:bg-[#C5A04E]/5 text-white py-3.5 px-5 rounded-xl transition-all disabled:opacity-50"
+                                            >
+                                                {option}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    {/* Custom answer */}
+                                    <div className="border-t border-gray-800 pt-4">
+                                        <p className="text-gray-500 text-sm mb-2">أخرى (إجابة مخصصة)</p>
+                                        <div className="flex gap-2">
+                                            <input
+                                                type="text"
+                                                value={customAnswer}
+                                                onChange={e => setCustomAnswer(e.target.value)}
+                                                placeholder="اكتب الإجابة هنا..."
+                                                className="flex-1 bg-[#1A1A1A] border border-[#C5A04E]/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C5A04E] focus:border-[#C5A04E]"
+                                                onKeyDown={e => {
+                                                    if (e.key === 'Enter' && customAnswer.trim()) {
+                                                        handleAnswerQuestion(customAnswer.trim(), true);
+                                                    }
+                                                }}
+                                            />
+                                            <button
+                                                onClick={() => customAnswer.trim() && handleAnswerQuestion(customAnswer.trim(), true)}
+                                                disabled={!customAnswer.trim() || savingDiagnostic}
+                                                className="bg-[#C5A04E] hover:bg-[#D4B85C] text-white font-bold px-5 rounded-xl transition disabled:opacity-50"
+                                            >
+                                                <Send className="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {savingDiagnostic && (
+                                        <p className="text-center text-gray-500 text-sm">جاري حفظ الإجابات...</p>
+                                    )}
+                                </div>
+
+                            ) : diagnosticView === 'bilan' ? (
+                                /* ===== BILAN VIEW ===== */
+                                <div className="space-y-6">
+                                    {/* Answers summary */}
+                                    {diagnosticAnswers.length > 0 && (
+                                        <div className="space-y-2">
+                                            <h4 className="text-gray-400 text-sm font-bold flex items-center gap-2">
+                                                <MessageSquare className="w-4 h-4" />
+                                                ملخص الإجابات
+                                            </h4>
+                                            {diagnosticAnswers.map((a, i) => (
+                                                <div key={i} className="bg-[#0A0A0A] rounded-lg p-3">
+                                                    <p className="text-gray-500 text-xs mb-1">{a.question}</p>
+                                                    <p className="text-white text-sm">{a.answer} {a.is_custom && <span className="text-[#C5A04E] text-xs">(مخصصة)</span>}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {/* Bilan form */}
+                                    <div className="space-y-4">
+                                        <h4 className="text-white font-bold flex items-center gap-2">
+                                            <FileText className="w-5 h-5 text-[#C5A04E]" />
+                                            تحرير التشخيص
+                                        </h4>
+
+                                        {[
+                                            { key: 'summary' as const, label: 'ملخص الوضع', placeholder: 'اكتب ملخص وضع العميل...' },
+                                            { key: 'recommended_business' as const, label: 'البزنس المناسب', placeholder: 'ما هو البزنس المناسب لهذا العميل...' },
+                                            { key: 'action_plan' as const, label: 'خطة العمل', placeholder: 'الخطوات العملية التي يجب اتباعها...' },
+                                            { key: 'recommendation' as const, label: 'التوصية', placeholder: 'التوصية النهائية للعميل...' },
+                                        ].map(field => (
+                                            <div key={field.key}>
+                                                <label className="block text-sm text-[#C5A04E] font-bold mb-2">{field.label}</label>
+                                                <textarea
+                                                    value={bilanForm[field.key]}
+                                                    onChange={e => setBilanForm(prev => ({ ...prev, [field.key]: e.target.value }))}
+                                                    placeholder={field.placeholder}
+                                                    rows={3}
+                                                    className="w-full bg-[#1A1A1A] border border-[#C5A04E]/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C5A04E] focus:border-[#C5A04E] resize-none"
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* Actions */}
+                                    <div className="flex gap-3 pt-2">
+                                        <button
+                                            onClick={() => handleSaveBilan(false)}
+                                            disabled={savingDiagnostic}
+                                            className="flex-1 border border-[#C5A04E]/30 hover:border-[#C5A04E] text-[#C5A04E] font-bold py-3.5 rounded-xl transition disabled:opacity-50"
+                                        >
+                                            {savingDiagnostic ? 'جاري الحفظ...' : 'حفظ المسودة'}
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                if (confirm('هل تريد نشر التشخيص؟ سيتمكن العميل من رؤيته فوراً.')) {
+                                                    handleSaveBilan(true);
+                                                }
+                                            }}
+                                            disabled={publishingDiagnostic || !bilanForm.summary || !bilanForm.recommended_business}
+                                            className="flex-1 bg-[#E8600A] hover:bg-[#D15509] text-white font-bold py-3.5 rounded-xl transition disabled:opacity-50"
+                                        >
+                                            {publishingDiagnostic ? 'جاري النشر...' : 'نشر التشخيص'}
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : null}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

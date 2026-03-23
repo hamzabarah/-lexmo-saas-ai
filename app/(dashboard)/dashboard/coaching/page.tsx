@@ -94,6 +94,8 @@ export default function CoachingPage() {
     const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
     const [bookingLoading, setBookingLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [diagnostic, setDiagnostic] = useState<any>(null);
+    const [validating, setValidating] = useState(false);
 
     // Calendar week state
     const [calendarWeekStart, setCalendarWeekStart] = useState(() => {
@@ -122,6 +124,7 @@ export default function CoachingPage() {
             const data = await res.json();
             if (data.profile) setProfile(data.profile);
             if (data.booking) setBooking(data.booking);
+            if (data.diagnostic) setDiagnostic(data.diagnostic);
         } catch {
             console.error('Error loading profile');
         }
@@ -212,6 +215,23 @@ export default function CoachingPage() {
             setError('حدث خطأ أثناء الحجز');
         }
         setBookingLoading(false);
+    };
+
+    const handleValidateDiagnostic = async () => {
+        setValidating(true);
+        try {
+            const res = await fetch('/api/coaching-profile', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'validate_diagnostic' }),
+            });
+            if (res.ok) {
+                await loadProfile();
+            }
+        } catch {
+            console.error('Error validating diagnostic');
+        }
+        setValidating(false);
     };
 
     if (loading) {
@@ -497,6 +517,44 @@ export default function CoachingPage() {
                                             </p>
                                         </div>
                                     )}
+
+                                    {/* STEP 4: Diagnostic result */}
+                                    {step.num === 4 && diagnostic && (
+                                        <div className="space-y-5">
+                                            <p className="text-gray-400 text-sm">نتيجة تحليل جلسة التشخيص الخاصة بك</p>
+
+                                            {[
+                                                { label: 'ملخص الوضع', value: diagnostic.summary },
+                                                { label: 'البزنس المناسب', value: diagnostic.recommended_business },
+                                                { label: 'خطة العمل', value: diagnostic.action_plan },
+                                                { label: 'التوصية', value: diagnostic.recommendation },
+                                            ].map((field, i) => (
+                                                <div key={i} className="bg-[#0A0A0A] border border-[#C5A04E]/20 rounded-xl p-4">
+                                                    <h4 className="text-[#C5A04E] font-bold text-sm mb-2">{field.label}</h4>
+                                                    <p className="text-gray-300 text-sm whitespace-pre-wrap">{field.value || '-'}</p>
+                                                </div>
+                                            ))}
+
+                                            <button
+                                                onClick={handleValidateDiagnostic}
+                                                disabled={validating}
+                                                className="w-full bg-[#C5A04E] hover:bg-[#D4B85C] text-white font-bold py-3.5 rounded-xl transition-colors disabled:opacity-50"
+                                            >
+                                                {validating ? 'جاري التأكيد...' : 'لقد استلمت تشخيصي ✅'}
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    {/* STEP 5: Completion */}
+                                    {step.num === 5 && (
+                                        <div className="text-center space-y-4 py-4">
+                                            <CheckCircle className="w-16 h-16 text-green-500 mx-auto" />
+                                            <h3 className="text-xl font-bold text-white">تهانينا! تم إتمام التشخيص</h3>
+                                            <p className="text-gray-400 text-sm">
+                                                تم استلام تشخيصك بنجاح. سيتم التواصل معك قريباً بخصوص الخطوات القادمة.
+                                            </p>
+                                        </div>
+                                    )}
                                 </div>
                             )}
 
@@ -521,6 +579,15 @@ export default function CoachingPage() {
                                                 hour: '2-digit', minute: '2-digit'
                                             })}
                                         </span>
+                                    </p>
+                                </div>
+                            )}
+
+                            {isCompleted && step.num === 4 && diagnostic && (
+                                <div className="bg-[#111111]/30 border border-green-500/10 rounded-xl px-5 py-3 mt-3">
+                                    <p className="text-gray-400 text-sm">
+                                        <span className="text-gray-500">البزنس المناسب:</span>{' '}
+                                        <span className="text-white">{diagnostic.recommended_business}</span>
                                     </p>
                                 </div>
                             )}
