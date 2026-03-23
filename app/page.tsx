@@ -154,7 +154,7 @@ export default function HomePage() {
       {/* Telegram Community Banner */}
       <section className="w-full px-4 pb-8">
         <a
-          href="https://t.me/TELEGRAM_LINK"
+          href="https://t.me/ecom_europe"
           target="_blank"
           rel="noopener noreferrer"
           className="max-w-[1050px] mx-auto flex items-center justify-center gap-4 bg-[#111111]/60 border border-[#C5A04E]/10 rounded-2xl px-8 py-4 hover:border-[#C5A04E]/30 transition-colors"
