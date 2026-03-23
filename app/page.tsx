@@ -74,17 +74,12 @@ export default function HomePage() {
             className="group flex flex-col bg-[#0A0A0A] rounded-2xl overflow-hidden hover:scale-[1.02] transition-all duration-200"
             style={{ boxShadow: '0 4px 20px rgba(197,160,78,0.1)' }}
           >
-            {/* Banner Placeholder */}
-            <div className="w-full aspect-video bg-[#111111] flex items-center justify-center border-b border-[#C5A04E]/10">
-              <div className="text-center space-y-2">
-                <div className="w-16 h-16 mx-auto bg-[#E8600A]/10 rounded-full flex items-center justify-center">
-                  <svg className="w-8 h-8 text-[#E8600A]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <p className="text-gray-500 text-xs font-bold">مكالمة خاصة 45 دقيقة</p>
-              </div>
-            </div>
+            {/* Banner Image */}
+            <img
+              src="/images/diagnostic-banner.png"
+              alt="تشخيص بزنس"
+              className="w-full aspect-video object-cover"
+            />
 
             {/* Content */}
             <div className="p-5 space-y-3 flex-1 flex flex-col">

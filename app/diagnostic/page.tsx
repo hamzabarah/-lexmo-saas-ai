@@ -203,14 +203,12 @@ export default function DiagnosticPage() {
           {/* ===== LEFT COLUMN — Main Content ===== */}
           <div className="flex-1 min-w-0 space-y-8 pb-32 lg:pb-8">
 
-            {/* Hero image placeholder */}
-            <div className="w-full h-[300px] lg:h-[400px] rounded-2xl bg-[#111111] border border-[#C5A04E]/10 flex items-center justify-center">
-              <div className="text-center space-y-3">
-                <span className="text-6xl">🔍</span>
-                <p className="text-gray-500 text-lg font-bold">تشخيص بزنس</p>
-                <p className="text-gray-600 text-sm">جلسة فردية 45 دقيقة</p>
-              </div>
-            </div>
+            {/* Hero image */}
+            <img
+              src="/images/diagnostic-banner.png"
+              alt="تشخيص بزنس"
+              className="w-full h-[300px] lg:h-[400px] rounded-2xl object-cover"
+            />
 
             {/* Mobile only: Rating + Price + CTA before title */}
             <div className="lg:hidden space-y-4">
@@ -240,13 +238,12 @@ export default function DiagnosticPage() {
                 className="bg-[#0A0A0A] rounded-2xl overflow-hidden border border-[#C5A04E]/10"
                 style={{ boxShadow: '0 4px 20px rgba(197,160,78,0.1)' }}
               >
-                {/* Banner placeholder */}
-                <div className="w-full aspect-video bg-[#111111] flex items-center justify-center">
-                  <div className="text-center space-y-2">
-                    <span className="text-5xl">🔍</span>
-                    <p className="text-gray-500 text-sm font-bold">تشخيص بزنس</p>
-                  </div>
-                </div>
+                {/* Banner image */}
+                <img
+                  src="/images/diagnostic-banner.png"
+                  alt="تشخيص بزنس"
+                  className="w-full aspect-video object-cover"
+                />
 
                 {/* Content */}
                 <div className="p-5 space-y-3">
