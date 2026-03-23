@@ -40,7 +40,7 @@ export default function HomePage() {
           >
             {/* Banner Image */}
             <img
-              src="/images/product1.jpg"
+              src="/images/ecommerce-banner.png"
               alt="تكوين التجارة الإلكترونية"
               className="w-full aspect-video object-cover"
             />
@@ -110,17 +110,12 @@ export default function HomePage() {
             className="group flex flex-col bg-[#0A0A0A] rounded-2xl overflow-hidden hover:scale-[1.02] transition-all duration-200"
             style={{ boxShadow: '0 4px 20px rgba(255,255,255,0.03)' }}
           >
-            {/* Banner — Large lock/shield icon */}
-            <div className="w-full aspect-video bg-[#111111] flex items-center justify-center border-b border-white/5">
-              <div className="text-center space-y-3">
-                <div className="w-20 h-20 mx-auto bg-[#C5A04E]/10 rounded-full flex items-center justify-center">
-                  <svg className="w-10 h-10 text-[#C5A04E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                </div>
-                <p className="text-gray-500 text-xs font-bold">منطقة الأعضاء</p>
-              </div>
-            </div>
+            {/* Banner Image */}
+            <img
+              src="/images/members-area.png"
+              alt="منطقة الأعضاء"
+              className="w-full aspect-video object-cover"
+            />
 
             {/* Content */}
             <div className="p-5 space-y-3 flex-1 flex flex-col">

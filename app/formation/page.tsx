@@ -50,7 +50,7 @@ export default function FormationPage() {
     </div>
   ) : (
     <img
-      src="/images/product2.jpg"
+      src="/images/ecommerce-banner.png"
       alt="صورة المنتج"
       className="w-full h-auto lg:h-[400px] object-contain lg:object-cover rounded-2xl"
       onError={() => setImgError(true)}
@@ -237,7 +237,7 @@ export default function FormationPage() {
               >
                 {/* Banner Image */}
                 <img
-                  src="/images/product1.jpg"
+                  src="/images/ecommerce-banner.png"
                   alt="صورة المنتج"
                   className="w-full aspect-video object-cover"
                 />
