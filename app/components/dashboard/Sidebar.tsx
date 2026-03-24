@@ -11,7 +11,8 @@ import {
     Menu,
     X,
     Shield,
-    Calendar
+    Calendar,
+    Search
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import clsx from "clsx";
@@ -30,6 +31,7 @@ const DIAGNOSTIC_ITEMS = [
 const ADMIN_ITEMS = [
     { icon: Shield, label: "لوحة الإدارة", href: "/dashboard/admin" },
     { icon: DollarSign, label: "المبيعات المباشرة", href: "/dashboard/ventes-live" },
+    { icon: Search, label: "التشخيص", href: "/dashboard/coaching" },
 ];
 
 export default function Sidebar() {
