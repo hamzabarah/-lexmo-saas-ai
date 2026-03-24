@@ -62,7 +62,7 @@ export interface Vente {
     nom: string;
     codePays: string;
     pays?: string; // Added for precise Emoji support
-    pack: 'Spark' | 'Emperor' | 'Legend';
+    pack: 'Ecommerce' | 'Diagnostic';
     prix: number;
     gain: number;
     status: 'paid' | 'pending';
@@ -93,26 +93,19 @@ export interface VentesData {
 }
 
 const PACK_CONFIG: Record<string, { icon: string; nameAr: string; color: string; bgColor: string; borderColor: string }> = {
-    Spark: {
-        icon: '🚀',
-        nameAr: 'الشرارة',
-        color: 'from-blue-500 to-emerald-600',
-        bgColor: 'bg-blue-500/10',
-        borderColor: 'border-blue-500/30'
+    Ecommerce: {
+        icon: '🛒',
+        nameAr: 'التجارة الإلكترونية',
+        color: 'from-emerald-500 to-green-600',
+        bgColor: 'bg-emerald-500/10',
+        borderColor: 'border-emerald-500/30'
     },
-    Emperor: {
-        icon: '👑',
-        nameAr: 'الإمبراطور',
-        color: 'from-purple-500 to-pink-500',
-        bgColor: 'bg-purple-500/10',
-        borderColor: 'border-purple-500/30'
-    },
-    Legend: {
-        icon: '💎',
-        nameAr: 'الأسطورة',
-        color: 'from-yellow-500 to-orange-500',
-        bgColor: 'bg-yellow-500/10',
-        borderColor: 'border-yellow-500/30'
+    Diagnostic: {
+        icon: '🔍',
+        nameAr: 'تشخيص بزنس',
+        color: 'from-orange-500 to-red-500',
+        bgColor: 'bg-orange-500/10',
+        borderColor: 'border-orange-500/30'
     }
 };
 

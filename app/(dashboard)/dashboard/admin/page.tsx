@@ -95,7 +95,7 @@ export default function AdminPage() {
     // Add Student Form State
     const [newStudentName, setNewStudentName] = useState('');
     const [newStudentEmail, setNewStudentEmail] = useState('');
-    const [newStudentPlan, setNewStudentPlan] = useState('spark');
+    const [newStudentPlan, setNewStudentPlan] = useState('ecommerce');
     const [creatingStudent, setCreatingStudent] = useState(false);
 
     // Created student credentials
@@ -737,10 +737,8 @@ ${LOGIN_URL}
                                 onChange={(e) => setNewStudentPlan(e.target.value)}
                                 className="w-full bg-[#1A1A1A] border border-[#C5A04E]/10 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
-                                <option value="spark">📚 Formation (Spark)</option>
-                                <option value="diagnostic">🔍 Diagnostic</option>
-                                <option value="emperor">👑 Emperor</option>
-                                <option value="legend">💎 Legend</option>
+                                <option value="ecommerce">🛒 التجارة الإلكترونية (197€)</option>
+                                <option value="diagnostic">🔍 تشخيص بزنس (97€)</option>
                             </select>
                         </div>
 
@@ -797,7 +795,7 @@ ${LOGIN_URL}
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <span className="text-gray-500 font-semibold min-w-[120px]">الخطة:</span>
-                                    <span className="text-white">{createdStudent.plan === 'spark' ? '📚 Formation' : createdStudent.plan === 'diagnostic' ? '🔍 Diagnostic' : createdStudent.plan === 'emperor' ? '👑 Emperor' : '💎 Legend'}</span>
+                                    <span className="text-white">{createdStudent.plan === 'ecommerce' ? '🛒 التجارة الإلكترونية' : '🔍 تشخيص بزنس'}</span>
                                 </div>
                             </div>
 
