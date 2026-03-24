@@ -9,7 +9,7 @@ const supabaseAdmin = createClient(
 
 export async function GET() {
     try {
-        const today = "2026-01-29";
+        const today = new Date().toISOString().split('T')[0];
 
         const resetData = {
             ventes: [],

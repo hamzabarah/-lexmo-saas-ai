@@ -671,7 +671,11 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                                     </tr>
                                 ) : (
                                     data.ventes.map((vente, index) => {
-                                        const packConfig = PACK_CONFIG[vente.pack];
+                                        const packConfig = PACK_CONFIG[vente.pack] || {
+                                            icon: '📦', nameAr: vente.pack,
+                                            color: 'from-gray-500 to-gray-600',
+                                            bgColor: 'bg-gray-500/10', borderColor: 'border-gray-500/30'
+                                        };
 
                                         // 💡 FINAL ROBUST FIX: FORCE CSS IMAGES (FLAGS)
                                         // The user's Windows machine doesn't render Emojis correctly despite fonts.
