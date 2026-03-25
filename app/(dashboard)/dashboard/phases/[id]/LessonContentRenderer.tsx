@@ -2778,6 +2778,713 @@ function Phase14EssentialApps() {
     );
 }
 
+/* ─── Phase 22: Ad Campaign ─── */
+function Phase22AdCampaign() {
+    return (
+        <div className="p-6 lg:p-8 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin" dir="rtl">
+            <h1 className="text-3xl font-bold text-white mb-2">إنشاء حملة إعلانية</h1>
+            <p className="text-[#C5A04E] text-lg mb-8">دليل عملي خطوة بخطوة لإنشاء أول حملة إعلانية على فيسبوك وإنستغرام</p>
+
+            {/* Table of Contents */}
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-2xl p-6 mb-8">
+                <h3 className="text-lg font-bold text-[#C5A04E] mb-4">جدول المحتويات</h3>
+                <div className="space-y-2">
+                    {[
+                        "التجهيز قبل إنشاء الحملة",
+                        "تثبيت البيكسل (Facebook Pixel)",
+                        "ربط المتجر بفيسبوك",
+                        "المثال التطبيقي — المنتج اللي غادي نعلنو عليه",
+                        "إنشاء الحملة (Campaign)",
+                        "إعداد المجموعة الإعلانية (Ad Set)",
+                        "إنشاء الإعلان (Ad)",
+                        "مراجعة ونشر الحملة",
+                        "استراتيجيات التيست",
+                        "الميزانية المثالية للمبتدئين",
+                        "Checklist قبل ما تنشر",
+                    ].map((item, i) => (
+                        <div key={i} className="flex items-center gap-3 text-gray-300 leading-relaxed">
+                            <span className="w-7 h-7 rounded-full bg-[#C5A04E]/20 text-[#C5A04E] font-bold flex items-center justify-center text-sm shrink-0"
+                                style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{i + 1}</span>
+                            <span>{item}</span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* ═══════ Section 1 ═══════ */}
+            <SectionTitle>1. التجهيز قبل إنشاء الحملة</SectionTitle>
+            <Paragraph>قبل ما تصرف سنتيم واحد، تأكد من هاد الحاجات:</Paragraph>
+
+            <div className="space-y-3 mb-6">
+                {[
+                    "المتجر جاهز 100% (منتج + صور + وصف + دفع + شحن + سياسات)",
+                    "صفحة فيسبوك منشأة واحترافية",
+                    "مدير الأعمال (Business Manager) منشأ",
+                    "حساب إعلاني (Ad Account) مفتوح",
+                    "بطاقة الدفع مضافة في حساب الإعلانات",
+                    "البيكسل (Pixel) مثبت على المتجر",
+                    "المنتج اللي غادي تعلن عليه مختار ومجهز",
+                    "الفيديو أو الصور ديال الإعلان جاهزين",
+                    "النص الإعلاني مكتوب",
+                ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-3 bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl px-5 py-3">
+                        <span className="text-[#C5A04E] shrink-0">&#x2610;</span>
+                        <span className="text-gray-300">{item}</span>
+                    </div>
+                ))}
+            </div>
+
+            <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-5 py-4 mb-6">
+                <p className="text-red-400 font-bold leading-relaxed">
+                    إلى ما درتيش هاد الخطوات، ارجع للمراحل 16 و 17.
+                </p>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ Section 2 ═══════ */}
+            <SectionTitle>2. تثبيت البيكسل (Facebook Pixel)</SectionTitle>
+
+            <SubSubTitle>شنو هو البيكسل؟</SubSubTitle>
+            <Paragraph>
+                كود صغير كتحطو في المتجر ديالك. كيتبع كل شيء: شكون دخل للمتجر، شكون شاف المنتج، شكون ضاف للسلة، شكون شرى. هاد المعلومات كتستعملها فيسبوك باش تلقى ليك عملاء شبيهين.
+            </Paragraph>
+
+            <div className="space-y-3 mb-6">
+                <div className="flex items-center gap-3 bg-red-500/10 border border-red-500/20 rounded-xl px-5 py-3">
+                    <span className="text-red-400 font-bold">بلا بيكسل = كتعلن أعمى.</span>
+                </div>
+                <div className="flex items-center gap-3 bg-green-500/10 border border-green-500/20 rounded-xl px-5 py-3">
+                    <span className="text-green-400 font-bold">مع بيكسل = كتعلن بذكاء.</span>
+                </div>
+            </div>
+
+            <SubTitle>الخطوة 1: إنشاء البيكسل</SubTitle>
+            <BulletList items={[
+                "ادخل business.facebook.com",
+                "في القائمة اليسرى اضغط على All tools",
+                "اضغط على Events Manager",
+                "اضغط على Connect data sources (الزر الأخضر)",
+                "اختر Web",
+                "اختر Facebook Pixel",
+                "اضغط Connect",
+                'Pixel name: سميه باسم المتجر (مثال: "GlamBeauty Pixel")',
+                "Website URL: حط رابط المتجر ديالك",
+                "اضغط Continue",
+            ]} />
+
+            <SubTitle>الخطوة 2: ربط البيكسل بشوبيفاي</SubTitle>
+            <BulletList items={[
+                "ارجع للوحة تحكم شوبيفاي",
+                "اضغط على Online Store > Preferences",
+                "انزل لقسم Facebook Pixel",
+                "الصق Pixel ID (رقم البيكسل اللي نسختيه من فيسبوك)",
+                "اضغط Save",
+            ]} />
+
+            <SubTitle>الطريقة الأحسن (عبر تطبيق Facebook & Instagram)</SubTitle>
+            <BulletList items={[
+                "في شوبيفاي اضغط Apps > Shopify App Store",
+                "قلب على Facebook & Instagram",
+                "اضغط Add app > Install app",
+                "اضغط Start setup",
+                "سجل دخول بحساب فيسبوك ديالك",
+                "اختر Business Manager ديالك",
+                "اختر Ad Account ديالك",
+                "اختر Pixel ديالك",
+                "اختر صفحة فيسبوك ديالك",
+                "اضغط Complete setup",
+            ]} />
+
+            <div className="bg-green-500/10 border border-green-500/20 rounded-xl px-5 py-3 mb-6">
+                <span className="text-green-400 font-bold">البيكسل مربوط أوتوماتيكياً</span>
+            </div>
+
+            <SubTitle>الخطوة 3: التأكد أن البيكسل خدام</SubTitle>
+            <BulletList items={[
+                "ثبت إضافة Facebook Pixel Helper على Chrome",
+                'ادخل Chrome Web Store > قلب على "Facebook Pixel Helper" > Add to Chrome',
+                "ادخل للمتجر ديالك",
+                "اضغط على أيقونة الإضافة في شريط المتصفح",
+                "إلى كان البيكسل خدام غادي تشوف علامة خضراء مع رقم البيكسل",
+                "تجول في المتجر: شوف منتج > ضيف للسلة > ابدأ الدفع",
+            ]} />
+
+            <SubSubTitle>تأكد أن الأحداث كتبان في Events Manager:</SubSubTitle>
+            <GreenList items={[
+                "PageView",
+                "ViewContent",
+                "AddToCart",
+                "InitiateCheckout",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 3 ═══════ */}
+            <SectionTitle>3. ربط المتجر بفيسبوك</SectionTitle>
+            <Paragraph>إلى كنتي ثبتي تطبيق Facebook & Instagram في الخطوة السابقة، هذا خلاص مدار.</Paragraph>
+
+            <SubSubTitle>تأكد أن هاد العناصر مربوطة:</SubSubTitle>
+            <Paragraph>ادخل شوبيفاي {'>'} Apps {'>'} Facebook & Instagram وشوف أن كلشي أخضر:</Paragraph>
+            <GreenList items={[
+                "Facebook account connected",
+                "Business Manager connected",
+                "Ad account connected",
+                "Facebook Pixel connected",
+                "Facebook Page connected",
+                "Commerce account connected",
+                "Data sharing enabled (اختر Maximum للأفضل نتائج)",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 4 ═══════ */}
+            <SectionTitle>4. المثال التطبيقي — المنتج اللي غادي نعلنو عليه</SectionTitle>
+            <Paragraph>باش يكون الشرح واقعي، غادي نستعملو مثال حقيقي:</Paragraph>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full border-collapse">
+                    <tbody>
+                        {[
+                            { label: "المنتج", value: "قاطع الخضروات الذكي" },
+                            { label: "ثمن الشراء", value: "$7 (منتج $5 + شحن $2)" },
+                            { label: "ثمن البيع", value: "$29.99" },
+                            { label: "الهامش قبل الإعلان", value: "$22.99" },
+                            { label: "السوق المستهدف", value: "المغرب + السعودية" },
+                            { label: "الجمهور", value: "نساء 25-55 سنة مهتمات بالطبخ والمطبخ" },
+                            { label: "ميزانية التيست", value: "$50 (5 أيام × $10/يوم)" },
+                            { label: "الهدف", value: "مبيعات (Conversions)" },
+                        ].map((row, i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{row.label}</td>
+                                <td className="text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/10">{row.value}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ Section 5 ═══════ */}
+            <SectionTitle>5. إنشاء الحملة (Campaign)</SectionTitle>
+
+            <SubTitle>الدخول لمدير الإعلانات</SubTitle>
+            <BulletList items={[
+                "ادخل business.facebook.com",
+                "في القائمة اليسرى اضغط All tools",
+                "اضغط على Ads Manager",
+                "اضغط على الزر الأخضر + Create",
+            ]} />
+
+            <SubTitle>الخطوة 1: اختيار الهدف (Campaign Objective)</SubTitle>
+            <BulletList items={[
+                "غادي تبان ليك 6 أهداف",
+            ]} />
+            <div className="bg-green-500/10 border border-green-500/20 rounded-xl px-5 py-3 mb-4">
+                <span className="text-green-400 font-bold">اختر Sales (مبيعات) — هذا كيقول لفيسبوك: &quot;قلب ليا على الناس اللي غادي يشريو فعلاً&quot;</span>
+            </div>
+            <BulletList items={["اضغط Continue"]} />
+
+            <SubTitle>الخطوة 2: إعدادات الحملة</SubTitle>
+            <SubSubTitle>Campaign name — سميها باسم واضح:</SubSubTitle>
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-4 mb-4">
+                <p className="text-gray-400 text-sm mb-1">مثال:</p>
+                <p className="text-white font-bold">{`"قاطع الخضروات — مبيعات — تيست 1"`}</p>
+                <p className="text-gray-500 text-sm mt-1">القاعدة: [المنتج] — [الهدف] — [رقم التيست]</p>
+            </div>
+            <BulletList items={[
+                "Special ad categories: إلى ما كنتيش كتبيع عقارات أو توظيف أو سياسة، خليها فارغة",
+            ]} />
+            <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-5 py-3 mb-4">
+                <span className="text-red-400 font-bold">CBO (Campaign budget optimization): أطفيها في البداية — باش تتحكم في الميزانية على مستوى المجموعة الإعلانية</span>
+            </div>
+            <BulletList items={["اضغط Next"]} />
+
+            <Divider />
+
+            {/* ═══════ Section 6 ═══════ */}
+            <SectionTitle>6. إعداد المجموعة الإعلانية (Ad Set)</SectionTitle>
+            <Paragraph>هنا كتحدد: شكون غادي يشوف الإعلان ديالك، فين، وبشحال.</Paragraph>
+
+            <SubSubTitle>الاسم:</SubSubTitle>
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-4 mb-4">
+                <p className="text-gray-400 text-sm mb-1">مثال:</p>
+                <p className="text-white font-bold">{`"المغرب — نساء 25-55 — اهتمامات الطبخ"`}</p>
+                <p className="text-gray-500 text-sm mt-1">القاعدة: [البلد] — [الجمهور] — [الاستهداف]</p>
+            </div>
+
+            <SubTitle>التحويل (Conversion)</SubTitle>
+            <BulletList items={[
+                "Conversion location: اختر Website",
+                "Pixel: اختر البيكسل ديالك",
+                'Conversion event: اختر Purchase (شراء) — هذا كيقول لفيسبوك: "قلب ليا على الناس اللي غادي يشريو، ماشي غير يزورو"',
+            ]} />
+
+            <SubTitle>الميزانية والجدولة</SubTitle>
+            <BulletList items={[
+                "Budget: اختر Daily budget",
+                "Amount: $10 في اليوم (للتيست)",
+                "Start date: اختر اليوم أو غداً",
+                "End date: حط 5 أيام من بعد (باش ما تنساش توقفها)",
+            ]} />
+
+            <SubTitle>الجمهور (Audience)</SubTitle>
+
+            <SubSubTitle>الموقع الجغرافي:</SubSubTitle>
+            <BulletList items={[
+                'Locations: اضغط وكتب "Morocco" أو "Saudi Arabia"',
+                "اختر People living in this location (الناس اللي ساكنين فيها)",
+            ]} />
+
+            <SubSubTitle>العمر والجنس:</SubSubTitle>
+            <BulletList items={[
+                "Age: 25 - 55",
+                "Gender: Women (نساء)",
+            ]} />
+
+            <SubSubTitle>الاهتمامات (Detailed Targeting):</SubSubTitle>
+            <BulletList items={[
+                "اضغط Edit بجانب Detailed targeting",
+                "في خانة البحث كتب واحد واحد وزيدهم:",
+            ]} />
+            <GreenList items={[
+                '"Cooking" (الطبخ)',
+                '"Kitchen" (المطبخ)',
+                '"Recipe" (وصفات)',
+                '"Food" (الأكل)',
+                '"Home cooking" (الطبخ المنزلي)',
+            ]} />
+            <BulletList items={["اضغط Save this audience باش تحفظو للمستقبل"]} />
+
+            <SubSubTitle>حجم الجمهور:</SubSubTitle>
+            <div className="space-y-3 mb-6">
+                <div className="flex items-center gap-3 bg-green-500/10 border border-green-500/20 rounded-xl px-5 py-3">
+                    <span className="text-green-400 font-bold">المثالي: بين 1 مليون و 10 مليون</span>
+                </div>
+            </div>
+            <BulletList items={[
+                "إلى كان صغير بزاف: وسع الاهتمامات أو العمر",
+                "إلى كان كبير بزاف: ضيق الاهتمامات أو الموقع",
+            ]} />
+
+            <SubTitle>أماكن العرض (Placements)</SubTitle>
+            <div className="bg-green-500/10 border border-green-500/20 rounded-xl px-5 py-3 mb-4">
+                <span className="text-green-400 font-bold">اختر Advantage+ placements (فيسبوك كيختار أحسن الأماكن أوتوماتيكياً)</span>
+            </div>
+            <Paragraph>أو إلى بغيتي تتحكم: اختر Manual placements وفعل:</Paragraph>
+            <GreenList items={[
+                "Facebook Feed",
+                "Facebook Reels",
+                "Instagram Feed",
+                "Instagram Reels",
+                "Instagram Stories",
+            ]} />
+            <RedList items={[
+                "أطفي باقي الأماكن في البداية",
+            ]} />
+            <BulletList items={["اضغط Next"]} />
+
+            <Divider />
+
+            {/* ═══════ Section 7 ═══════ */}
+            <SectionTitle>7. إنشاء الإعلان (Ad)</SectionTitle>
+            <Paragraph>هنا كتصنع المحتوى اللي غادي يشوفوه الناس.</Paragraph>
+
+            <SubSubTitle>الاسم:</SubSubTitle>
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-4 mb-4">
+                <p className="text-gray-400 text-sm mb-1">مثال:</p>
+                <p className="text-white font-bold">{`"فيديو 1 — قاطع الخضروات — عربي"`}</p>
+                <p className="text-gray-500 text-sm mt-1">القاعدة: [نوع المحتوى] — [المنتج] — [اللغة]</p>
+            </div>
+
+            <SubTitle>الهوية (Identity)</SubTitle>
+            <BulletList items={[
+                "Facebook Page: اختر الصفحة ديالك",
+                "Instagram account: اختر حساب إنستغرام ديالك (إلى كان عندك)",
+            ]} />
+
+            <SubTitle>إعداد الإعلان (Ad Setup)</SubTitle>
+            <BulletList items={[
+                "Create ad: اختر هذا الخيار (إنشاء إعلان جديد)",
+                "Format: اختر Single image or video",
+            ]} />
+
+            <SubTitle>المحتوى (Ad Creative)</SubTitle>
+            <SubSubTitle>الفيديو أو الصورة:</SubSubTitle>
+            <BulletList items={[
+                "اضغط Add media",
+                "اختر Add video (الفيديو أحسن بكثير من الصور)",
+                "حمل الفيديو ديال المنتج",
+                "Thumbnail: اختر أحسن صورة من الفيديو كغلاف",
+            ]} />
+
+            <SubSubTitle>مواصفات الفيديو المثالي:</SubSubTitle>
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full border-collapse">
+                    <tbody>
+                        {[
+                            { label: "المدة", value: "15-30 ثانية (الأحسن)" },
+                            { label: "النسبة", value: "9:16 (عمودي) للريلز والستوريز / 1:1 (مربع) للفييد" },
+                            { label: "الدقة", value: "1080 × 1920 (عمودي) أو 1080 × 1080 (مربع)" },
+                            { label: "حجم الملف", value: "أقل من 30 ميغا" },
+                            { label: "أول 3 ثواني", value: "خاصهم يجذبو الانتباه — هنا العميل كيقرر واش يكمل يتفرج" },
+                        ].map((row, i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{row.label}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{row.value}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <SubSubTitle>هيكل الفيديو الناجح (15-30 ثانية):</SubSubTitle>
+            <StepCard num={1} title='ثانية 1-3: الخطاف (Hook)' items={[
+                '"عياتي وأنت كتقطع الخضرة بالسكين؟"',
+            ]} />
+            <StepCard num={2} title="ثانية 4-10: المشكلة" items={[
+                "مشهد شخص كيعاني مع تقطيع الخضرة بالسكين العادي",
+            ]} />
+            <StepCard num={3} title="ثانية 11-20: الحل" items={[
+                "المنتج في الاستعمال — سرعة + سهولة + نتيجة",
+            ]} />
+            <StepCard num={4} title="ثانية 21-25: المميزات" items={[
+                "3 مميزات سريعة مع نص على الفيديو",
+            ]} />
+            <StepCard num={5} title="ثانية 26-30: الدعوة للشراء" items={[
+                '"اطلب الآن — شحن مجاني! الرابط في الوصف"',
+            ]} />
+
+            <SubTitle>النص الإعلاني (Primary Text)</SubTitle>
+
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-4">
+                <h4 className="text-white font-bold mb-3">مثال بالدارجة المغربية:</h4>
+                <div className="text-gray-300 leading-[2] whitespace-pre-line text-sm">
+{`عياتي وأنت كتقطع الخضرة بالسكين العادي؟
+قاطع الخضروات الذكي غادي يخليك تحضر أي وجبة في أقل من 5 دقائق!
+
+✅ 7 أشكال قطع مختلفة
+✅ آمن 100% — حماية للأصابع
+✅ سهل التنظيف — كيتغسل في ثواني
+✅ حجم صغير — ما كياخذش بلاصة
+
+عرض خاص لمدة محدودة — شحن مجاني!
+اطلب دابا قبل ما يسالي`}
+                </div>
+            </div>
+
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-4">
+                <h4 className="text-white font-bold mb-3">مثال بالعربية الفصحى (للسعودية):</h4>
+                <div className="text-gray-300 leading-[2] whitespace-pre-line text-sm">
+{`هل سئمت من تقطيع الخضروات بالسكين التقليدي؟
+قاطع الخضروات الذكي يجعلك تحضر أي وجبة في أقل من 5 دقائق!
+
+✅ 7 أشكال قطع مختلفة
+✅ آمن 100% مع حماية مدمجة
+✅ سهل التنظيف
+✅ حجم صغير لا يأخذ مساحة
+
+عرض لفترة محدودة — شحن مجاني!
+اطلب الآن`}
+                </div>
+            </div>
+
+            <SubSubTitle>باقي الحقول:</SubSubTitle>
+            <BulletList items={[
+                'Headline: العنوان القصير — مثال: "قاطع الخضروات الذكي — وفر 30 دقيقة كل يوم"',
+                'Description: الوصف الإضافي — مثال: "عرض محدود — الكمية محدودة"',
+                "Call to Action: اختر Shop Now (تسوق الآن)",
+                "Website URL: حط رابط صفحة المنتج في متجرك",
+            ]} />
+
+            <SubSubTitle>معاينة الإعلان:</SubSubTitle>
+            <Paragraph>على اليمين غادي تشوف كيفاش غادي يبان الإعلان. تأكد أنه كيبان مزيان في:</Paragraph>
+            <GreenList items={[
+                "Facebook Feed",
+                "Instagram Feed",
+                "Instagram Stories",
+                "Facebook Reels",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 8 ═══════ */}
+            <SectionTitle>8. مراجعة ونشر الحملة</SectionTitle>
+            <Paragraph>قبل ما تضغط Publish، راجع كلشي:</Paragraph>
+            <BulletList items={[
+                "اضغط Review في أسفل الصفحة",
+                "فيسبوك غادي يوريك ملخص الحملة",
+            ]} />
+
+            <SubSubTitle>تأكد من:</SubSubTitle>
+            <GreenList items={[
+                "الهدف: Sales (مبيعات)",
+                "الميزانية: $10/يوم",
+                "المدة: 5 أيام",
+                "الجمهور: صحيح (البلد + العمر + الجنس + الاهتمامات)",
+                "البيكسل: مربوط",
+                "حدث التحويل: Purchase",
+                "الفيديو/الصورة: كيبان مزيان",
+                "النص: بلا أخطاء",
+                "الرابط: كيودي لصفحة المنتج الصحيحة",
+                "زر CTA: Shop Now",
+            ]} />
+
+            <SubTitle>النشر</SubTitle>
+            <BulletList items={[
+                "إلى كلشي مزيان اضغط Publish",
+                "الحملة غادي تدخل لمرحلة In Review (المراجعة)",
+                "فيسبوك كيراجع الإعلان — عادة كياخذ بين 15 دقيقة و 24 ساعة",
+                "بعد الموافقة الحالة كتولي Active",
+                "إلى تم الرفض: غادي يوريك السبب — صححو وعاود أرسلو",
+            ]} />
+
+            <SubSubTitle>أسباب الرفض الشائعة:</SubSubTitle>
+            <RedList items={[
+                "صور قبل/بعد مبالغ فيها",
+                "ادعاءات صحية غير مثبتة",
+                "محتوى مضلل",
+                'نص فيه كلمات ممنوعة ("ضمان 100%" / "أفضل منتج في العالم")',
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 9 ═══════ */}
+            <SectionTitle>9. استراتيجيات التيست</SectionTitle>
+
+            <SubTitle>الاستراتيجية 1: تيست الجمهور (Audience Testing)</SubTitle>
+            <Paragraph>الهدف: تلقى أحسن جمهور. أنشئ 3 مجموعات إعلانية في نفس الحملة، كل وحدة بجمهور مختلف:</Paragraph>
+
+            <div className="overflow-x-auto mb-6">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10">
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">المجموعة</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">الجمهور</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">الميزانية</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            { set: "Ad Set 1", audience: "نساء 25-45 — اهتمام: الطبخ", budget: "$10/يوم" },
+                            { set: "Ad Set 2", audience: "نساء 25-45 — اهتمام: أدوات المطبخ", budget: "$10/يوم" },
+                            { set: "Ad Set 3", audience: "نساء 25-55 — اهتمام: وصفات الطبخ", budget: "$10/يوم" },
+                        ].map((row, i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{row.set}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{row.audience}</td>
+                                <td className="text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/10" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{row.budget}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20 mb-6">
+                <p className="text-[#C5A04E] font-bold leading-relaxed">
+                    بعد 3-5 أيام: شوف أي مجموعة جابت أحسن نتائج وزيد الميزانية ديالها.
+                </p>
+            </div>
+
+            <SubTitle>الاستراتيجية 2: تيست المحتوى (Creative Testing)</SubTitle>
+            <Paragraph>الهدف: تلقى أحسن إعلان. أنشئ مجموعة إعلانية وحدة فيها 3 إعلانات مختلفة:</Paragraph>
+
+            <div className="overflow-x-auto mb-6">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10">
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">الإعلان</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">المحتوى</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            { ad: "Ad 1", content: "فيديو 15 ثانية — خطاف بالمشكلة" },
+                            { ad: "Ad 2", content: "فيديو 30 ثانية — شرح مفصل" },
+                            { ad: "Ad 3", content: "صورة Infographic — المميزات مكتوبة" },
+                        ].map((row, i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{row.ad}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{row.content}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <Paragraph>فيسبوك غادي يعرض الثلاثة ويركز على اللي كيجيب أحسن نتائج أوتوماتيكياً.</Paragraph>
+
+            <SubTitle>الاستراتيجية 3: تيست البلدان (Country Testing)</SubTitle>
+            <Paragraph>الهدف: تلقى أحسن سوق.</Paragraph>
+
+            <div className="overflow-x-auto mb-6">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10">
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">المجموعة</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">البلد</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">الميزانية</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            { set: "Ad Set 1", country: "المغرب", budget: "$10/يوم" },
+                            { set: "Ad Set 2", country: "السعودية", budget: "$10/يوم" },
+                            { set: "Ad Set 3", country: "الإمارات", budget: "$10/يوم" },
+                        ].map((row, i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{row.set}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{row.country}</td>
+                                <td className="text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/10" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{row.budget}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ Section 10 ═══════ */}
+            <SectionTitle>10. الميزانية المثالية للمبتدئين</SectionTitle>
+
+            <SubSubTitle>القاعدة الذهبية:</SubSubTitle>
+            <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20 mb-6">
+                <p className="text-[#C5A04E] font-bold leading-relaxed">
+                    ميزانية التيست = 3 × ثمن المنتج × 5 أيام
+                </p>
+                <p className="text-gray-400 text-sm mt-2">
+                    مثال: المنتج ب $30 → 3 × 30 = $90 → 90/5 = $18/يوم
+                </p>
+            </div>
+
+            <SubSubTitle>سيناريوهات الميزانية:</SubSubTitle>
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10">
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">الميزانية الإجمالية</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">التقسيم</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">المدة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            { budget: "$50 (الحد الأدنى)", split: "$10/يوم × مجموعة وحدة", duration: "5 أيام" },
+                            { budget: "$100 (مقبول)", split: "$10/يوم × مجموعتين", duration: "5 أيام" },
+                            { budget: "$150 (مثالي)", split: "$10/يوم × 3 مجموعات", duration: "5 أيام" },
+                        ].map((row, i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{row.budget}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{row.split}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{row.duration}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <SubSubTitle>متى تزيد الميزانية:</SubSubTitle>
+            <GreenList items={[
+                "المنتج كيبيع بربح (ROAS أكثر من 2)",
+                "تكلفة الشراء (CPA) أقل من هامش الربح",
+                "زيد الميزانية ب 20-30% كل يومين (ماشي ضعفها مرة وحدة)",
+            ]} />
+
+            <SubSubTitle>متى توقف الحملة:</SubSubTitle>
+            <RedList items={[
+                "صرفتي ضعف ثمن المنتج بلا ولا بيعة (مثال: صرفتي $60 والمنتج ب $30 وما بعتي والو)",
+                "تكلفة الشراء أكبر من هامش الربح",
+                "5 أيام بلا نتائج رغم تفاعل مزيان",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 11 — Checklist ═══════ */}
+            <SectionTitle>11. Checklist قبل ما تنشر</SectionTitle>
+
+            {[
+                {
+                    category: "التجهيز",
+                    items: [
+                        "المتجر جاهز 100%",
+                        "البيكسل مثبت وخدام (تأكد بPixel Helper)",
+                        "المتجر مربوط بفيسبوك عبر التطبيق",
+                        "بطاقة الدفع مضافة في حساب الإعلانات",
+                    ],
+                },
+                {
+                    category: "الحملة (Campaign)",
+                    items: [
+                        "الهدف: Sales",
+                        "الاسم واضح ومنظم",
+                        "CBO مطفي (في البداية)",
+                    ],
+                },
+                {
+                    category: "المجموعة الإعلانية (Ad Set)",
+                    items: [
+                        "حدث التحويل: Purchase",
+                        "الميزانية: $10-20/يوم",
+                        "المدة: 5 أيام",
+                        "الموقع الجغرافي محدد",
+                        "العمر والجنس محددين",
+                        "الاهتمامات مضافة",
+                        "حجم الجمهور بين 1 مليون و 10 مليون",
+                    ],
+                },
+                {
+                    category: "الإعلان (Ad)",
+                    items: [
+                        "الصفحة الصحيحة مختارة",
+                        "الفيديو/الصورة محملة وكتبان مزيان",
+                        "أول 3 ثواني في الفيديو جذابة",
+                        "النص الإعلاني مكتوب بلا أخطاء",
+                        "العنوان قصير وجذاب",
+                        "الرابط كيودي لصفحة المنتج الصحيحة",
+                        "زر CTA: Shop Now",
+                        "المعاينة مزيانة على كل الأماكن",
+                    ],
+                },
+                {
+                    category: "بعد النشر",
+                    items: [
+                        "الحملة في حالة Active",
+                        "ما تقيسش على النتائج في أول 24 ساعة (فيسبوك كيتعلم)",
+                        "راجع النتائج بعد 48-72 ساعة",
+                        "ما تبدلش في الحملة كل يوم (كل تعديل كيرجع فيسبوك للمرحلة ديال التعلم)",
+                    ],
+                },
+            ].map((section, si) => (
+                <div key={si} className="mb-6">
+                    <SubSubTitle>{section.category}</SubSubTitle>
+                    <div className="space-y-2">
+                        {section.items.map((item, i) => (
+                            <div key={i} className="flex items-center gap-3 bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl px-5 py-3">
+                                <span className="text-[#C5A04E] shrink-0">&#x2610;</span>
+                                <span className="text-gray-300">{item}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            ))}
+
+            <Divider />
+
+            {/* ═══════ Summary ═══════ */}
+            <div className="bg-[#C5A04E]/5 border border-[#C5A04E]/20 rounded-2xl p-6">
+                <h2 className="text-2xl font-bold text-[#C5A04E] mb-5">الخلاصة</h2>
+                <Paragraph>
+                    أول حملة ماشي خاصها تجيب أرباح — خاصها تجيب بيانات. البيانات هي اللي غادي تعلمك شنو خدام وشنو ما خدامش. اتبع هاد الخطوات بالضبط وما تستعجلش النتائج. التيست هو المرحلة الأهم.
+                </Paragraph>
+                <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20">
+                    <p className="text-[#C5A04E] font-bold leading-relaxed text-center">
+                        © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 /* ─── Router ─── */
 const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase5_product_research: Phase5ProductResearch,
@@ -2785,6 +3492,7 @@ const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase12_import_product: Phase12ImportProduct,
     phase13_store_design: Phase13StoreDesign,
     phase14_essential_apps: Phase14EssentialApps,
+    phase22_ad_campaign: Phase22AdCampaign,
 };
 
 export default function LessonContentRenderer({ contentKey }: { contentKey: string }) {

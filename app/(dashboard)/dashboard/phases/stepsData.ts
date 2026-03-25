@@ -458,7 +458,7 @@ export const stepsContent: StepContent[] = [
             {
                 title: "الدروس",
                 lessons: [
-                    { id: 1, title: "إنشاء حملة إعلانية", type: "pdf" },
+                    { id: 1, title: "إنشاء حملة إعلانية", type: "pdf", content: "phase22_ad_campaign" },
                 ],
             },
             {
