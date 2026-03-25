@@ -232,7 +232,7 @@ export const stepsContent: StepContent[] = [
             {
                 title: "الدروس",
                 lessons: [
-                    { id: 1, title: "دليل شوبيفاي الكامل", type: "pdf" },
+                    { id: 1, title: "دليل شوبيفاي الكامل", type: "pdf", content: "phase11_shopify_guide" },
                 ],
             },
         ],

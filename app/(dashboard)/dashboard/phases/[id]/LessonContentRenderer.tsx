@@ -461,9 +461,503 @@ function Phase5ProductResearch() {
     );
 }
 
+/* ─── Phase 11: Shopify Guide ─── */
+function Phase11ShopifyGuide() {
+    return (
+        <div className="p-6 lg:p-8 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin" dir="rtl">
+            <h1 className="text-3xl font-bold text-white mb-2">الدليل الكامل لفتح متجر شوبيفاي من الصفر</h1>
+            <p className="text-[#C5A04E] text-lg mb-8">كل ما تحتاج معرفته لإنشاء وإطلاق متجرك الإلكتروني على شوبيفاي</p>
+
+            {/* ═══════ Section 1 ═══════ */}
+            <SectionTitle>1. شنو هو شوبيفاي ولماذا هو الأفضل</SectionTitle>
+            <Paragraph>
+                شوبيفاي هو أكبر منصة في العالم لإنشاء المتاجر الإلكترونية. أكثر من مليون متجر كيستعملو شوبيفاي حول العالم.
+            </Paragraph>
+
+            <SubSubTitle>علاش شوبيفاي أحسن اختيار:</SubSubTitle>
+            <GreenList items={[
+                "سهل الاستعمال — ما محتاجش أي خبرة في البرمجة",
+                "فيه كل الأدوات اللي محتاج: دفع، شحن، تصميم، تسويق",
+                "دعم فني 24/7",
+                "آلاف التطبيقات والإضافات",
+                "آمن وموثوق — شوبيفاي كيتكلف بالأمان والاستضافة",
+                "كيتوافق مع كل بوابات الدفع العالمية",
+            ]} />
+
+            <SubSubTitle>شوبيفاي مناسب ل:</SubSubTitle>
+            <BulletList items={[
+                "الدروبشيبينغ",
+                "بيع المنتجات الفيزيائية",
+                "بيع المنتجات الرقمية",
+                "بيع الخدمات",
+                "متاجر البراند الخاصة",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 2 ═══════ */}
+            <SectionTitle>2. التسجيل وفتح الحساب</SectionTitle>
+
+            <SubSubTitle>الخطوات:</SubSubTitle>
+            <BulletList items={[
+                "ادخل على shopify.com",
+                'اضغط على "Start free trial"',
+                "دخل الإيميل ديالك",
+                "اختر كلمة سر قوية",
+                "دخل اسم المتجر (تقدر تبدلو من بعد)",
+                "جاوب على الأسئلة (نوع المنتج، واش عندك مبيعات...)",
+                "دخل العنوان ديالك (مهم للفواتير والضرائب)",
+            ]} />
+
+            <SubSubTitle>نصائح مهمة:</SubSubTitle>
+            <GreenList items={[
+                "استعمل إيميل احترافي (ماشي إيميل شخصي)",
+                "اسم المتجر خاصو يكون عندو علاقة بالنيتش ديالك",
+                "فترة التجربة المجانية كتكون عادة 3 أيام + شهر بـ $1",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 3 ═══════ */}
+            <SectionTitle>3. اختيار الباقة المناسبة</SectionTitle>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10">
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">الباقة</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">الثمن/شهر</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">مناسبة ل</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            { plan: "Basic", price: "$39", desc: "المبتدئين — فيها كل اللي محتاج للبداية" },
+                            { plan: "Shopify", price: "$105", desc: "المتاجر اللي بدات كتكبر وكتحتاج تقارير أكثر" },
+                            { plan: "Advanced", price: "$399", desc: "المتاجر الكبيرة اللي عندها فريق عمل ومبيعات عالية" },
+                        ].map((row, i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{row.plan}</td>
+                                <td className="text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/10" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{row.price}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{row.desc}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20 mb-6">
+                <p className="text-[#C5A04E] font-bold leading-relaxed">
+                    النصيحة: ابدأ بالباقة Basic فيها كلشي اللي محتاج.
+                </p>
+            </div>
+
+            <SubSubTitle>كل الباقات فيها:</SubSubTitle>
+            <GreenList items={[
+                "منتجات غير محدودة",
+                "شهادة SSL مجانية (أمان)",
+                "أكواد الخصم",
+                "استرداد السلات المتروكة",
+                "تقارير أساسية",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 4 ═══════ */}
+            <SectionTitle>4. شراء اسم النطاق (Domain)</SectionTitle>
+            <Paragraph>
+                شنو هو اسم النطاق؟ هو العنوان اللي كيكتبوه العملاء باش يوصلو لمتجرك. مثال: mystore.com
+            </Paragraph>
+
+            <SubSubTitle>من فين تشريه؟</SubSubTitle>
+            <BulletList items={[
+                "من داخل شوبيفاي (الأسهل — كيتربط تلقائياً)",
+                "من Namecheap أو GoDaddy (أرخص شوية ولكن خاصك تربطو يدوياً)",
+            ]} />
+
+            <SubSubTitle>قواعد اختيار اسم النطاق:</SubSubTitle>
+            <GreenList items={[
+                "قصير وسهل الحفظ",
+                "سهل النطق والكتابة",
+                "ما فيهش أرقام ولا رموز (-)",
+                "عندو علاقة بالنيتش ديالك",
+                "بامتداد .com (الأفضل) أو .store",
+            ]} />
+
+            <SubSubTitle>أمثلة مزيانة:</SubSubTitle>
+            <GreenList items={[
+                "beautyglam.com (نيتش التجميل)",
+                "petzone.store (نيتش الحيوانات)",
+                "fitgear.com (نيتش الرياضة)",
+            ]} />
+
+            <SubSubTitle>أمثلة خايبة:</SubSubTitle>
+            <RedList items={[
+                "my-best-store-2024-morocco.com (طويل ومعقد)",
+                "abc123shop.com (ما عندو معنى)",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 5 ═══════ */}
+            <SectionTitle>5. اختيار وتخصيص القالب (Theme)</SectionTitle>
+
+            <SubSubTitle>كيفاش تختار القالب:</SubSubTitle>
+            <BulletList items={[
+                "ادخل على Online Store > Themes",
+                "اختر من القوالب المجانية (Dawn هو الأفضل للمبتدئين)",
+                "اضغط Customize باش تبدأ تعدل",
+            ]} />
+
+            <SubSubTitle>شنو خاصك تشوف في القالب:</SubSubTitle>
+            <GreenList items={[
+                "سرعة التحميل (كل ما كان سريع كل ما كان أحسن)",
+                "متجاوب مع الهاتف (أغلب العملاء كيشريو من الهاتف)",
+                "سهل التخصيص",
+                "فيه أقسام كافية (Hero banner, Featured products, Testimonials...)",
+            ]} />
+
+            <SubSubTitle>تخصيص القالب:</SubSubTitle>
+            <BulletList items={[
+                "غير الألوان باش تتوافق مع البراند ديالك",
+                "حط الشعار ديالك",
+                "عدل الخطوط (Font)",
+                "أضف الأقسام اللي محتاج",
+                "حط صور احترافية عالية الجودة",
+            ]} />
+
+            <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20 mb-6">
+                <p className="text-[#C5A04E] font-bold leading-relaxed">
+                    نصيحة ذهبية: ما تصرفش وقت كبير في التصميم من البداية. متجر بسيط ونظيف أحسن من متجر معقد. ركز على المنتج والتسويق.
+                </p>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ Section 6 ═══════ */}
+            <SectionTitle>6. تصميم الشعار (Logo)</SectionTitle>
+
+            <SubSubTitle>أدوات مجانية لتصميم الشعار:</SubSubTitle>
+            <BulletList items={[
+                "Canva (الأسهل — فيه قوالب جاهزة)",
+                "أدوات الذكاء الاصطناعي (مثل DALL-E, Midjourney)",
+                "Hatchful من شوبيفاي (مولد شعارات مجاني)",
+            ]} />
+
+            <SubSubTitle>قواعد الشعار الاحترافي:</SubSubTitle>
+            <GreenList items={[
+                "بسيط وواضح",
+                "كيبان مزيان في حجم صغير (على الهاتف)",
+                "ألوان متناسقة مع البراند",
+                "ما فيهش تفاصيل كثيرة",
+                "كيخدم على خلفية بيضاء وسوداء",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 7 ═══════ */}
+            <SectionTitle>7. إعداد صفحة المنتج</SectionTitle>
+
+            <SubSubTitle>العناصر الأساسية:</SubSubTitle>
+            <BulletList items={[
+                "عنوان المنتج: واضح وجذاب",
+                "الصور: على الأقل 5 صور عالية الجودة من زوايا مختلفة",
+                "الوصف: كيحكي الفوائد ماشي غير المميزات",
+                "الثمن: واضح + ثمن مشطوب إلى كان عندك عرض",
+                "المتغيرات: الألوان، الأحجام...",
+                "التقييمات: مهمة بزاف لبناء الثقة",
+                "زر الشراء: بارز وواضح",
+            ]} />
+
+            <SubSubTitle>نصائح لوصف المنتج:</SubSubTitle>
+            <GreenList items={[
+                "ابدأ بالمشكلة اللي كيحلها المنتج",
+                "استعمل نقاط (Bullet points) للمميزات",
+                "حط فوائد ماشي مميزات تقنية",
+                "أضف شهادات العملاء",
+                "حط ضمان أو عرض خاص",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 8 ═══════ */}
+            <SectionTitle>8. أنواع المتاجر</SectionTitle>
+
+            <SubTitle>متجر المنتج الواحد (One Product Store)</SubTitle>
+            <BulletList items={[
+                "مركز على منتج واحد فقط",
+                "صفحة بيع قوية ومقنعة",
+                "مثالي للمبتدئين",
+                "أسهل في التسويق",
+            ]} />
+
+            <SubTitle>متجر النيتش (Niche Store)</SubTitle>
+            <BulletList items={[
+                "متخصص في مجال واحد (مثل التجميل، المطبخ، الحيوانات)",
+                "كيبني ثقة لأنه متخصص",
+                "تسويق أسهل لأن الجمهور محدد",
+                "مثالي للنمو على المدى الطويل",
+            ]} />
+
+            <SubTitle>متجر المنتجات العامة (General Store)</SubTitle>
+            <BulletList items={[
+                "فيه منتجات من نيتشات مختلفة",
+                "مرن — تقدر تتيستي بزاف ديال المنتجات",
+                "صعب تبني براند قوي",
+                "مناسب للتيست في البداية",
+            ]} />
+
+            <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20 mb-6">
+                <p className="text-[#C5A04E] font-bold leading-relaxed">
+                    النصيحة: ابدأ بمتجر منتج واحد أو نيتش. ما تبداش بمتجر عام حتى تفهم كيفاش كيخدم الدروبشيبينغ.
+                </p>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ Section 9 ═══════ */}
+            <SectionTitle>9. إعدادات الدفع</SectionTitle>
+
+            <SubSubTitle>بوابات الدفع الأساسية:</SubSubTitle>
+            <BulletList items={[
+                "Shopify Payments: الأفضل إلى كان متوفر في بلادك (بلا عمولة إضافية)",
+                "PayPal: مهم بزاف — بزاف ديال العملاء كيفضلوه",
+                "Stripe: بديل ممتاز لـ Shopify Payments",
+                "COD (الدفع عند الاستلام): ضروري للسوق المغربي والعربي",
+            ]} />
+
+            <SubSubTitle>كيفاش تفعل طرق الدفع:</SubSubTitle>
+            <BulletList items={[
+                "ادخل Settings > Payments",
+                "اختر البوابة اللي بغيتي",
+                "دخل المعلومات المطلوبة",
+                "فعل وجرب",
+            ]} />
+
+            <SubSubTitle>نصائح:</SubSubTitle>
+            <GreenList items={[
+                "فعل أكبر عدد ممكن من طرق الدفع",
+                "كل طريقة دفع ناقصة = عملاء ضايعين",
+                "تأكد أن العملة صحيحة",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 10 ═══════ */}
+            <SectionTitle>10. إعدادات الشحن</SectionTitle>
+
+            <SubSubTitle>كيفاش تضبط مناطق الشحن:</SubSubTitle>
+            <BulletList items={[
+                "ادخل Settings > Shipping and delivery",
+                "أنشئ مناطق شحن حسب البلدان اللي كتبيع فيها",
+                "حدد ثمن الشحن لكل منطقة",
+                "حدد مدة التوصيل المتوقعة",
+            ]} />
+
+            <SubSubTitle>استراتيجيات الشحن:</SubSubTitle>
+            <BulletList items={[
+                "شحن مجاني: زيد الثمن على المنتج وحط شحن مجاني — العملاء كيحبو هادا",
+                "شحن بثمن ثابت: نفس الثمن لكل الطلبيات",
+                "شحن حسب الوزن أو الثمن: كيتغير حسب الطلبية",
+            ]} />
+
+            <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20 mb-6">
+                <p className="text-[#C5A04E] font-bold leading-relaxed">
+                    {`نصيحة: "شحن مجاني" هو أقوى حافز للشراء. إلى أمكن، دمج ثمن الشحن في ثمن المنتج.`}
+                </p>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ Section 11 ═══════ */}
+            <SectionTitle>11. الضرائب والرسوم</SectionTitle>
+
+            <SubSubTitle>القواعد الأساسية:</SubSubTitle>
+            <BulletList items={[
+                "شوبيفاي كيحسب الضرائب أوتوماتيكياً حسب البلد",
+                "في أمريكا: Sales Tax كتختلف حسب الولاية",
+                "في أوروبا: VAT عادة 20%",
+                "في المغرب والخليج: حسب القوانين المحلية",
+            ]} />
+
+            <SubSubTitle>كيفاش تضبطها:</SubSubTitle>
+            <BulletList items={[
+                "ادخل Settings > Taxes and duties",
+                "شوبيفاي كيقترح عليك الإعدادات حسب الموقع ديالك",
+                "تقدر تختار واش الأثمنة شاملة الضريبة ولا بلا ضريبة",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 12 ═══════ */}
+            <SectionTitle>12. المستخدمون والصلاحيات</SectionTitle>
+
+            <SubSubTitle>أمتى تحتاج تضيف مستخدمين:</SubSubTitle>
+            <BulletList items={[
+                "عندك مساعد لخدمة العملاء",
+                "عندك شخص كيدير ليك الإعلانات",
+                "عندك محاسب",
+            ]} />
+
+            <SubSubTitle>كيفاش تحدد الصلاحيات:</SubSubTitle>
+            <BulletList items={[
+                "مساعد خدمة العملاء → وصول للطلبيات والرسائل فقط",
+                "مسوق → وصول للمنتجات والتقارير",
+                "محاسب → وصول للتقارير المالية فقط",
+                "ما تعطيش وصول كامل لحد غير أنت",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 13 ═══════ */}
+            <SectionTitle>13. الإشعارات واللغات</SectionTitle>
+
+            <SubSubTitle>الإشعارات المهمة اللي خاصك تفعلها:</SubSubTitle>
+            <GreenList items={[
+                "تأكيد الطلبية (Order Confirmation)",
+                "تأكيد الشحن (Shipping Confirmation)",
+                "تحديث التتبع (Shipping Update)",
+                "إيميل السلة المتروكة (Abandoned Cart)",
+                "تأكيد الإرجاع (Refund Confirmation)",
+            ]} />
+
+            <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20 mb-6">
+                <p className="text-[#C5A04E] font-bold leading-relaxed">
+                    نصيحة: خصص الإيميلات بالبراند ديالك — الشعار، الألوان. إيميل احترافي كيبني الثقة.
+                </p>
+            </div>
+
+            <SubSubTitle>اللغات:</SubSubTitle>
+            <BulletList items={[
+                "تقدر تضيف لغات متعددة (عربي، فرنسي، إنجليزي)",
+                "مهم إلى كنت كتبيع في أسواق مختلفة",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 14 ═══════ */}
+            <SectionTitle>14. الصفحات القانونية</SectionTitle>
+
+            <SubSubTitle>الصفحات الضرورية:</SubSubTitle>
+            <BulletList items={[
+                "سياسة الإرجاع (Refund Policy): شروط إرجاع المنتج والمدة المسموحة",
+                "سياسة الخصوصية (Privacy Policy): كيفاش كتحمي بيانات العملاء",
+                "شروط الاستخدام (Terms of Service): القواعد العامة لاستعمال المتجر",
+                "سياسة الشحن (Shipping Policy): مدة التوصيل والأثمنة",
+            ]} />
+
+            <SubSubTitle>صفحات إضافية مهمة:</SubSubTitle>
+            <BulletList items={[
+                "About Us: قصة البراند ديالك",
+                "Contact Us: إيميل + فورمولير اتصال + واتساب",
+                "FAQ: الأسئلة الشائعة",
+            ]} />
+
+            <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20 mb-6">
+                <p className="text-[#C5A04E] font-bold leading-relaxed">
+                    نصيحة: استعمل مولد السياسات ديال شوبيفاي كنقطة بداية وعدلهم حسب متجرك.
+                </p>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ Section 15 ═══════ */}
+            <SectionTitle>15. تتبع الطلبات</SectionTitle>
+
+            <SubSubTitle>الأساسيات:</SubSubTitle>
+            <BulletList items={[
+                "فاش كتأكد الطلبية (Fulfill) دخل رقم التتبع",
+                "العميل كيتوصل أوتوماتيكياً بإيميل فيه رابط التتبع",
+            ]} />
+
+            <SubSubTitle>تطبيقات التتبع:</SubSubTitle>
+            <BulletList items={[
+                "AfterShip: صفحة تتبع احترافية بالبراند ديالك",
+                "17Track: كيدعم أغلب شركات الشحن",
+            ]} />
+
+            <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20 mb-6">
+                <p className="text-[#C5A04E] font-bold leading-relaxed">
+                    نصيحة: صفحة تتبع بالبراند ديالك كتبني الثقة وكتقلل الاستفسارات.
+                </p>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ Section 16 ═══════ */}
+            <SectionTitle>16. الطلبية التجريبية (Test Order)</SectionTitle>
+            <Paragraph>قبل ما تطلق متجرك، دير طلبية تجريبية:</Paragraph>
+
+            <StepCard num={1} title="تفعيل وضع الاختبار" items={[
+                "فعل Bogus Gateway في إعدادات الدفع",
+            ]} />
+            <StepCard num={2} title="دير طلبية كعميل عادي" items={[
+                "اختار منتج وأضفو للسلة",
+                "أكمل عملية الدفع بالكامل",
+            ]} />
+            <StepCard num={3} title="تأكد من كلشي" items={[
+                "صفحة المنتج كتبان مزيان",
+                "عملية الدفع سهلة",
+                "إيميل التأكيد وصل",
+                "التتبع خدام",
+                "الموقع سريع على الهاتف",
+            ]} />
+            <StepCard num={4} title="رجع الإعدادات" items={[
+                "أطفئ Bogus Gateway ورجع البوابة الحقيقية",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 17 — Final Checklist ═══════ */}
+            <SectionTitle>17. Checklist النهائي قبل الإطلاق</SectionTitle>
+
+            <div className="space-y-3 mb-8">
+                {[
+                    "الحساب مفعل والباقة مختارة",
+                    "اسم النطاق مشرى ومربوط",
+                    "القالب مخصص واحترافي",
+                    "الشعار موجود",
+                    "المنتجات مضافة (صور + وصف + أثمنة)",
+                    "طرق الدفع مفعلة",
+                    "مناطق الشحن مضبوطة",
+                    "الضرائب مضبوطة",
+                    "الصفحات القانونية موجودة (Refund, Privacy, Terms, Shipping)",
+                    "صفحة About Us و Contact Us جاهزة",
+                    "الإشعارات مفعلة",
+                    "تتبع الطلبات جاهز",
+                    "الطلبية التجريبية ناجحة",
+                    "الموقع سريع وكيخدم مزيان على الهاتف",
+                    "الميزانية للإعلانات جاهزة",
+                ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-3 bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl px-5 py-3">
+                        <span className="text-[#C5A04E] shrink-0">&#x2610;</span>
+                        <span className="text-gray-300">{item}</span>
+                    </div>
+                ))}
+            </div>
+
+            <Divider />
+
+            {/* ═══════ Summary ═══════ */}
+            <div className="bg-[#C5A04E]/5 border border-[#C5A04E]/20 rounded-2xl p-6">
+                <h2 className="text-2xl font-bold text-[#C5A04E] mb-5">الخلاصة</h2>
+                <Paragraph>
+                    فتح متجر على شوبيفاي بسيط إلى مشيتي خطوة بخطوة. ما تحاولش تدير كلشي في يوم واحد. ابدأ بالأساسيات وتطور مع الوقت. المهم تبدا!
+                </Paragraph>
+                <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20">
+                    <p className="text-[#C5A04E] font-bold leading-relaxed text-center">
+                        © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 /* ─── Router ─── */
 const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase5_product_research: Phase5ProductResearch,
+    phase11_shopify_guide: Phase11ShopifyGuide,
 };
 
 export default function LessonContentRenderer({ contentKey }: { contentKey: string }) {
