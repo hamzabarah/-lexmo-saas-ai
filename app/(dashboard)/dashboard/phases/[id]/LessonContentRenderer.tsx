@@ -2032,12 +2032,759 @@ function Phase13StoreDesign() {
     );
 }
 
+/* ─── Phase 14: Essential Apps ─── */
+function Phase14EssentialApps() {
+    return (
+        <div className="p-6 lg:p-8 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin" dir="rtl">
+            <h1 className="text-3xl font-bold text-white mb-2">التطبيقات الأساسية</h1>
+            <p className="text-[#C5A04E] text-lg mb-8">كل التطبيقات اللي محتاج تثبتها باش متجرك يكون احترافي ويبيع أكثر</p>
+
+            {/* Table of Contents */}
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-2xl p-6 mb-8">
+                <h3 className="text-lg font-bold text-[#C5A04E] mb-4">جدول المحتويات</h3>
+                <div className="space-y-2">
+                    {[
+                        "كيفاش تثبت أي تطبيق على شوبيفاي",
+                        "تطبيق العروض المجمعة (Bundle)",
+                        "تطبيق تتبع الطرود (Order Tracking)",
+                        "تطبيق تقييمات العملاء (Reviews)",
+                        "تطبيق برنامج الولاء (Loyalty Program)",
+                        "تطبيق تحسين محركات البحث (SEO)",
+                        "التسويق بالإيميل (Email Marketing)",
+                        "أتمتة الفواتير (Invoicing)",
+                        "تطبيقات إضافية مفيدة",
+                        "Checklist النهائي",
+                    ].map((item, i) => (
+                        <div key={i} className="flex items-center gap-3 text-gray-300 leading-relaxed">
+                            <span className="w-7 h-7 rounded-full bg-[#C5A04E]/20 text-[#C5A04E] font-bold flex items-center justify-center text-sm shrink-0"
+                                style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{i + 1}</span>
+                            <span>{item}</span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* ═══════ Section 1 ═══════ */}
+            <SectionTitle>1. كيفاش تثبت أي تطبيق على شوبيفاي</SectionTitle>
+            <Paragraph>هاد الخطوات كتطبقها على أي تطبيق:</Paragraph>
+
+            <StepCard num={1} title="الدخول للمتجر" items={[
+                "ادخل للوحة تحكم شوبيفاي admin.shopify.com",
+                "في القائمة اليسرى اضغط على Apps",
+            ]} />
+            <StepCard num={2} title="البحث والتثبيت" items={[
+                "اضغط على Shopify App Store (كيفتح في صفحة جديدة)",
+                "في خانة البحث كتب اسم التطبيق",
+                "اضغط على التطبيق اللي بغيتي",
+                "اضغط على الزر Add app (أو Install)",
+            ]} />
+            <StepCard num={3} title="التفعيل" items={[
+                "غادي يرجعك للمتجر ديالك — اضغط Install app",
+                "اتبع خطوات الإعداد الخاصة بالتطبيق",
+            ]} />
+
+            <div className="bg-green-500/10 border border-green-500/20 rounded-xl px-5 py-3 mb-6">
+                <span className="text-green-400 font-bold">مبروك! التطبيق مثبت</span>
+            </div>
+
+            <SubSubTitle>نصائح مهمة قبل ما تثبت أي تطبيق:</SubSubTitle>
+            <GreenList items={[
+                "شوف التقييم — ما تثبتش تطبيق أقل من 4 نجوم",
+                "شوف عدد التقييمات — كل ما كانو كثر كل ما كان موثوق",
+                "شوف واش عندو Free plan — ابدأ بالمجاني دائماً",
+            ]} />
+            <RedList items={[
+                "ما تثبتش تطبيقات بزاف — كل تطبيق زائد كيبطئ المتجر",
+                "حيد أي تطبيق ما كتستعملوش",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 2 ═══════ */}
+            <SectionTitle>2. تطبيق العروض المجمعة — Bundle</SectionTitle>
+
+            <SubSubTitle>شنو هو؟</SubSubTitle>
+            <Paragraph>
+                {`تطبيق كيخلي العملاء يشريو أكثر من منتج مع بعض بثمن مخفض. مثال: "اشتري 2 واحصل على الثالث مجاناً" أو "وفر 20% فاش تشري الحزمة الكاملة".`}
+            </Paragraph>
+
+            <SubSubTitle>علاش مهم؟</SubSubTitle>
+            <GreenList items={[
+                "كيزيد متوسط قيمة الطلبية (Average Order Value)",
+                "العميل كيحس أنه كيوفر الفلوس",
+                "كيزيد الأرباح ديالك بدون ما تزيد مصاريف الإعلان",
+            ]} />
+
+            <SubSubTitle>التطبيق المقترح:</SubSubTitle>
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-4">
+                <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
+                    <h4 className="text-lg font-bold text-white">Shopify Bundles</h4>
+                    <span className="text-green-400 font-bold text-sm">مجاني — تطبيق رسمي ديال شوبيفاي</span>
+                </div>
+                <p className="text-gray-500 text-sm">البديل: Bundler - Product Bundles (مجاني + خيارات مدفوعة)</p>
+            </div>
+
+            <SubSubTitle>خطوات التثبيت والإعداد:</SubSubTitle>
+            <BulletList items={[
+                "في App Store قلب على Shopify Bundles",
+                "اضغط Add app > Install app",
+                "من لوحة التحكم ادخل ل Apps > Bundles",
+                "اضغط Create bundle",
+                "اختر نوع العرض:",
+            ]} />
+
+            <SubTitle>النوع 1: Fixed bundle (حزمة ثابتة)</SubTitle>
+            <Paragraph>أنت كتختار المنتجات اللي في الحزمة. مثال: &quot;حزمة العناية بالبشرة = كريم + سيروم + غسول&quot;</Paragraph>
+            <BulletList items={[
+                "اضغط Fixed bundle",
+                'Title: اكتب اسم الحزمة (مثال: "حزمة العناية الكاملة")',
+                "Products: اضغط Add products واختر المنتجات",
+                "Discount: حدد نسبة الخصم (مثال: 20%)",
+                "اضغط Save",
+            ]} />
+
+            <SubTitle>النوع 2: Multipack (نفس المنتج × عدة وحدات)</SubTitle>
+            <Paragraph>{`مثال: "اشتري 3 بثمن 2" أو "وفر 30% على 3 وحدات"`}</Paragraph>
+            <BulletList items={[
+                "اضغط Multipack",
+                "اختر المنتج",
+                "حدد العدد (مثال: 3)",
+                "حدد الخصم (مثال: 30%)",
+                "اضغط Save",
+            ]} />
+
+            <SubSubTitle>عرض العروض في صفحة المنتج:</SubSubTitle>
+            <BulletList items={[
+                "العرض كيبان أوتوماتيكياً في صفحة المنتج",
+                "العميل كيشوف الثمن العادي والثمن المخفض",
+                "تأكد أن العرض باين مزيان على الهاتف",
+            ]} />
+
+            <SubSubTitle>نصائح:</SubSubTitle>
+            <GreenList items={[
+                "ما تديرش خصم أكبر من 30% باش تحافظ على هامش الربح",
+                "جرب عدة عروض وشوف أي واحد كيبيع أكثر",
+                "حط العرض في الصفحة الرئيسية أيضاً",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 3 ═══════ */}
+            <SectionTitle>3. تطبيق تتبع الطرود — Order Tracking</SectionTitle>
+
+            <SubSubTitle>شنو هو؟</SubSubTitle>
+            <Paragraph>
+                تطبيق كيعطي العملاء صفحة تتبع احترافية بالبراند ديالك باش يشوفو فين وصلات الطلبية ديالهم.
+            </Paragraph>
+
+            <SubSubTitle>علاش مهم؟</SubSubTitle>
+            <GreenList items={[
+                'كيقلل أسئلة "فين وصلات الطلبية ديالي؟" بنسبة 80%',
+                "كيبني الثقة عند العميل",
+                "كيقلل طلبات الإرجاع والاسترداد",
+                "صفحة التتبع بالبراند ديالك كتبقي التجربة كاملة عندك",
+            ]} />
+
+            <SubSubTitle>التطبيق المقترح:</SubSubTitle>
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-4">
+                <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
+                    <h4 className="text-lg font-bold text-white">AfterShip Order Tracking</h4>
+                    <span className="text-green-400 font-bold text-sm">مجاني حتى 50 طلبية/شهر</span>
+                </div>
+                <p className="text-gray-500 text-sm">البديل: Parcel Panel Order Tracking (مجاني حتى 20 طلبية/شهر)</p>
+            </div>
+
+            <SubSubTitle>خطوات التثبيت:</SubSubTitle>
+            <BulletList items={[
+                "في App Store قلب على AfterShip Order Tracking",
+                "اضغط Add app > Install app",
+                "أنشئ حساب AfterShip (مجاني)",
+                "غادي يفتح لوحة تحكم AfterShip",
+            ]} />
+
+            <SubTitle>إعداد صفحة التتبع</SubTitle>
+            <BulletList items={[
+                "في قائمة AfterShip اضغط على Tracking Pages",
+                "اضغط Customize tracking page",
+                "Logo: حمل الشعار ديالك",
+                "Colors: غير الألوان باش تتوافق مع البراند ديالك",
+                "Language: اختر العربية أو الفرنسية أو الإنجليزية حسب السوق",
+                "Product recommendations: فعلها — كتعرض منتجات إضافية في صفحة التتبع = مبيعات زائدة",
+                "اضغط Save",
+            ]} />
+
+            <SubTitle>إعداد الإشعارات</SubTitle>
+            <BulletList items={[
+                "اضغط على Notifications",
+                "فعل الإشعارات التالية:",
+            ]} />
+            <GreenList items={[
+                "In transit (في الطريق)",
+                "Out for delivery (خرج للتوصيل)",
+                "Delivered (تم التوصيل)",
+                "Exception (مشكل في التوصيل)",
+            ]} />
+            <BulletList items={[
+                "Channel: اختر Email (وممكن تزيد SMS إلى بغيتي)",
+                "عدل قوالب الإيميل بالبراند ديالك (الشعار + الألوان)",
+                "اضغط Save",
+            ]} />
+
+            <SubTitle>إضافة رابط التتبع في المتجر</SubTitle>
+            <BulletList items={[
+                "ارجع للوحة تحكم شوبيفاي",
+                "Online Store > Navigation > Footer menu",
+                "اضغط Add menu item",
+                'Name: "تتبع طلبيتك"',
+                "Link: الصق رابط صفحة التتبع من AfterShip",
+                "اضغط Save",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 4 ═══════ */}
+            <SectionTitle>4. تطبيق تقييمات العملاء — Reviews</SectionTitle>
+
+            <SubSubTitle>شنو هو؟</SubSubTitle>
+            <Paragraph>
+                تطبيق كيخلي العملاء يحطو تقييمات ونجوم وصور على المنتجات ديالك.
+            </Paragraph>
+
+            <SubSubTitle>علاش مهم؟</SubSubTitle>
+            <GreenList items={[
+                "93% ديال العملاء كيقراو التقييمات قبل ما يشريو",
+                "التقييمات كتبني الثقة بزاف",
+                "المنتج بتقييمات كيبيع 270% أكثر من المنتج بلا تقييمات",
+                "التقييمات بالصور أقوى بزاف",
+            ]} />
+
+            <SubSubTitle>التطبيق المقترح:</SubSubTitle>
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-4">
+                <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
+                    <h4 className="text-lg font-bold text-white">Judge.me Product Reviews</h4>
+                    <span className="text-green-400 font-bold text-sm">مجاني — أفضل تطبيق تقييمات</span>
+                </div>
+                <p className="text-gray-500 text-sm">البديل: Loox Product Reviews (مدفوع — متخصص في تقييمات بالصور)</p>
+            </div>
+
+            <SubSubTitle>خطوات التثبيت:</SubSubTitle>
+            <BulletList items={[
+                "في App Store قلب على Judge.me",
+                "اضغط Add app > Install app",
+                "غادي يفتح معالج الإعداد (Setup Wizard)",
+            ]} />
+
+            <SubTitle>الإعداد الأساسي</SubTitle>
+            <BulletList items={[
+                "Review widget: اضغط Enable — هذا كيضيف النجوم والتقييمات في صفحة المنتج أوتوماتيكياً",
+                "Star rating badge: اضغط Enable — النجوم كيبانو تحت اسم المنتج في صفحة المجموعة",
+            ]} />
+            <SubSubTitle>Review form — عدل الفورمولير:</SubSubTitle>
+            <GreenList items={[
+                "فعل Photo upload — باش العملاء يحملو صور",
+                "فعل Video upload — باش يحملو فيديوهات",
+            ]} />
+
+            <SubTitle>إعداد الإيميلات الأوتوماتيكية</SubTitle>
+            <BulletList items={[
+                "في قائمة Judge.me اضغط على Email settings",
+                "Review request email: فعلو — هذا الإيميل اللي كيتوصل بيه العميل بعد التوصيل كيطلب منو يحط تقييم",
+                "Send after: اختر 14 يوم بعد الطلبية (باش يكون المنتج وصل)",
+                "Reminder email: فعلو — تذكير إلى ما حطش التقييم",
+                "Send reminder after: 7 أيام بعد أول إيميل",
+            ]} />
+            <SubSubTitle>عدل قالب الإيميل:</SubSubTitle>
+            <BulletList items={[
+                "حط الشعار ديالك",
+                "غير الألوان",
+                'عدل النص: "شكراً لشرائك من [اسم المتجر]! نبغيو نسمعو رأيك — حط تقييمك وشاركنا تجربتك"',
+                "اضغط Save",
+            ]} />
+
+            <SubTitle>استيراد تقييمات (للمتاجر الجديدة)</SubTitle>
+            <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-5 py-4 mb-6">
+                <p className="text-red-400 font-bold leading-relaxed">
+                    مهم: متجر جديد بلا تقييمات كيخوف العملاء. الحل:
+                </p>
+            </div>
+            <BulletList items={[
+                "في Judge.me اضغط على Import reviews",
+                "اختر Import from AliExpress",
+                "الصق رابط المنتج على AliExpress",
+                "اختر عدد التقييمات (10-20 كافي للبداية)",
+                "فلتر: اختر غير التقييمات ب 4 و 5 نجوم",
+                "فلتر: اختر غير التقييمات اللي فيها صور",
+                "اضغط Import",
+                "راجع التقييمات المستوردة واحذف أي تقييم ما مناسبش",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 5 ═══════ */}
+            <SectionTitle>5. تطبيق برنامج الولاء — Loyalty Program</SectionTitle>
+
+            <SubSubTitle>شنو هو؟</SubSubTitle>
+            <Paragraph>
+                نظام نقاط ومكافآت كيحفز العملاء يعاودو يشريو من عندك.
+            </Paragraph>
+
+            <SubSubTitle>علاش مهم؟</SubSubTitle>
+            <GreenList items={[
+                "جلب عميل جديد كيكلف 5 أضعاف الحفاظ على عميل قديم",
+                "العملاء المخلصين كيصرفو 67% أكثر من العملاء الجداد",
+                "كيبني علاقة طويلة مع العميل",
+            ]} />
+
+            <SubSubTitle>التطبيق المقترح:</SubSubTitle>
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-4">
+                <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
+                    <h4 className="text-lg font-bold text-white">BON Loyalty Rewards Referrals</h4>
+                    <span className="text-green-400 font-bold text-sm">مجاني حتى 250 عضو</span>
+                </div>
+                <p className="text-gray-500 text-sm">البديل: Smile.io (مجاني حتى 200 عضو)</p>
+            </div>
+
+            <SubTitle>إعداد نظام النقاط</SubTitle>
+            <Paragraph>اضغط على Earning rules (قواعد كسب النقاط) وفعل هاد القواعد:</Paragraph>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10">
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">الفعل</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">النقاط المقترحة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            { action: "إنشاء حساب", points: "100 نقطة" },
+                            { action: "كل $1 مصروفة", points: "10 نقاط" },
+                            { action: "متابعة على إنستغرام", points: "50 نقطة" },
+                            { action: "متابعة على فيسبوك", points: "50 نقطة" },
+                            { action: "مشاركة المتجر مع صديق", points: "200 نقطة" },
+                            { action: "يوم عيد ميلاد العميل", points: "200 نقطة" },
+                            { action: "كتابة تقييم", points: "100 نقطة" },
+                        ].map((row, i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{row.action}</td>
+                                <td className="text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/10">{row.points}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <SubTitle>إعداد المكافآت</SubTitle>
+            <Paragraph>اضغط على Rewards (المكافآت) وأضف:</Paragraph>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10">
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">النقاط المطلوبة</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">المكافأة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            { points: "500 نقطة", reward: "خصم $5" },
+                            { points: "1000 نقطة", reward: "خصم $10" },
+                            { points: "1500 نقطة", reward: "شحن مجاني" },
+                            { points: "2500 نقطة", reward: "خصم $25" },
+                        ].map((row, i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/10" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{row.points}</td>
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{row.reward}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <SubTitle>إعداد المظهر</SubTitle>
+            <BulletList items={[
+                "اضغط على Widget settings",
+                "Widget position: اختر Bottom right",
+                "Colors: غير الألوان باش تتوافق مع البراند",
+                "Language: اختر العربية أو الفرنسية",
+                "Widget icon: اختر أيقونة مناسبة (هدية أو نجمة)",
+                "اضغط Save",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 6 ═══════ */}
+            <SectionTitle>6. تطبيق تحسين محركات البحث — SEO</SectionTitle>
+
+            <SubSubTitle>شنو هو؟</SubSubTitle>
+            <Paragraph>
+                تطبيق كيساعدك تحسن المتجر ديالك باش يظهر في نتائج البحث على Google بلا ما تدفع على الإعلانات.
+            </Paragraph>
+
+            <SubSubTitle>علاش مهم؟</SubSubTitle>
+            <GreenList items={[
+                "زوار مجانيين من Google = مبيعات بلا مصاريف إعلان",
+                "كيبني مصداقية (الناس كيثقو في نتائج Google)",
+                "استثمار طويل المدى — كل ما كبر المحتوى كل ما زادو الزوار",
+            ]} />
+
+            <SubSubTitle>التطبيق المقترح:</SubSubTitle>
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-4">
+                <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
+                    <h4 className="text-lg font-bold text-white">SEO King</h4>
+                    <span className="text-green-400 font-bold text-sm">مجاني + خيارات مدفوعة</span>
+                </div>
+                <p className="text-gray-500 text-sm">البديل: Plug in SEO (مجاني + خيارات مدفوعة)</p>
+            </div>
+
+            <SubTitle>الإعدادات الأساسية</SubTitle>
+            <BulletList items={[
+                "SEO Audit: غادي يوريك المشاكل اللي في المتجر — اتبع التوصيات",
+            ]} />
+            <SubSubTitle>Meta titles — عدل عناوين الصفحات:</SubSubTitle>
+            <BulletList items={[
+                'الصفحة الرئيسية: "[اسم المتجر] — [الوصف]"',
+                'مثال: "GlamBeauty — منتجات العناية بالبشرة الطبيعية | شحن مجاني"',
+            ]} />
+            <SubSubTitle>Meta descriptions — عدل الوصف:</SubSubTitle>
+            <BulletList items={[
+                'مثال: "اكتشف أفضل منتجات العناية بالبشرة الطبيعية. نتائج مضمونة في 7 أيام. شحن مجاني لجميع الطلبيات."',
+            ]} />
+            <GreenList items={[
+                "Image alt text: التطبيق كيضيف أوتوماتيكياً نص بديل للصور (مهم للسيو)",
+                "JSON-LD: فعلو — كيساعد Google يفهم محتوى المتجر (المنتجات، الأثمنة، التقييمات)",
+            ]} />
+
+            <SubTitle>تحسينات يدوية مهمة (بدون تطبيق)</SubTitle>
+            <BulletList items={[
+                "ارجع للوحة التحكم > Products > اختر منتج",
+                "انزل لقسم Search engine listing",
+                "اضغط Edit",
+                "Page title: عنوان مختصر فيه الكلمة المفتاحية (أقل من 60 حرف)",
+                "Meta description: وصف جذاب فيه الكلمة المفتاحية (أقل من 160 حرف)",
+                "URL handle: رابط نظيف وقصير (مثال: products/face-cream بدل products/2024-new-arrival-face-cream-serum)",
+                "اضغط Save",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 7 ═══════ */}
+            <SectionTitle>7. التسويق بالإيميل — Email Marketing</SectionTitle>
+
+            <SubSubTitle>شنو هو؟</SubSubTitle>
+            <Paragraph>إرسال إيميلات أوتوماتيكية ويدوية للعملاء باش تبيع أكثر.</Paragraph>
+
+            <SubSubTitle>علاش مهم؟</SubSubTitle>
+            <GreenList items={[
+                "أعلى عائد استثمار في التسويق: كل $1 كتصرف على الإيميل كيرجع $42",
+                "كيبني علاقة مع العملاء",
+                "كيرجع العملاء اللي شراو مرة ويخليهم يعاودو",
+                "السلات المتروكة (Abandoned Cart) — 70% ديال السلات كيتتركو، الإيميل كيرجع منها نسبة مزيانة",
+            ]} />
+
+            <SubSubTitle>التطبيق المقترح:</SubSubTitle>
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-4">
+                <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
+                    <h4 className="text-lg font-bold text-white">Shopify Email</h4>
+                    <span className="text-green-400 font-bold text-sm">مجاني حتى 10,000 إيميل/شهر — مدمج مع شوبيفاي</span>
+                </div>
+                <p className="text-gray-500 text-sm">البديل: Klaviyo (أقوى — مجاني حتى 250 مشترك)</p>
+            </div>
+
+            <SubSubTitle>خطوات التثبيت:</SubSubTitle>
+            <BulletList items={[
+                "في لوحة التحكم اضغط على Marketing",
+                "اضغط Shopify Email > Create campaign",
+                "إلى ما كانش مثبت، غادي يطلب منك تثبتو — اضغط Install",
+            ]} />
+
+            <SubTitle>الإيميلات الأوتوماتيكية (Automations)</SubTitle>
+            <Paragraph>في Marketing {'>'} Automations {'>'} اضغط Create automation. أنشئ هاد الأوتوماتيكيات:</Paragraph>
+
+            {/* Automation 1 */}
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-4">
+                <div className="flex items-center gap-3 mb-3">
+                    <span className="w-8 h-8 rounded-full bg-[#C5A04E]/20 text-[#C5A04E] font-bold flex items-center justify-center text-sm shrink-0"
+                        style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>1</span>
+                    <h4 className="text-white font-bold">إيميل ترحيبي (Welcome Email)</h4>
+                </div>
+                <BulletList items={[
+                    "Trigger: العميل سجل حسابو (Customer signs up)",
+                    "Delay: فوري",
+                    'العنوان: "مرحباً بك في [اسم المتجر]!"',
+                    "النص: شكر + تقديم البراند + كود خصم 10% على أول طلبية",
+                    "الكود: WELCOME10",
+                    'زر: "تسوق الآن"',
+                ]} />
+            </div>
+
+            {/* Automation 2 */}
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-4">
+                <div className="flex items-center gap-3 mb-3">
+                    <span className="w-8 h-8 rounded-full bg-[#C5A04E]/20 text-[#C5A04E] font-bold flex items-center justify-center text-sm shrink-0"
+                        style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>2</span>
+                    <h4 className="text-white font-bold">استرداد السلة المتروكة (Abandoned Cart)</h4>
+                </div>
+                <BulletList items={[
+                    "Trigger: Checkout abandoned (العميل ترك السلة)",
+                    "Delay: 1 ساعة بعد الترك",
+                    'العنوان: "نسيتي شي حاجة؟"',
+                    '"لاحظنا أنك تركتي منتجات في السلة ديالك. لا تخلي هاد الفرصة تفوتك!"',
+                    "صورة المنتج اللي في السلة",
+                    'زر: "أكمل طلبيتك"',
+                ]} />
+                <SubSubTitle>إيميل تذكير ثاني: 24 ساعة بعد الأول</SubSubTitle>
+                <BulletList items={[
+                    'العنوان: "آخر فرصة! خصم 10% على طلبيتك"',
+                    "أضف كود خصم باش تحفزو يكمل",
+                ]} />
+            </div>
+
+            {/* Automation 3 */}
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-4">
+                <div className="flex items-center gap-3 mb-3">
+                    <span className="w-8 h-8 rounded-full bg-[#C5A04E]/20 text-[#C5A04E] font-bold flex items-center justify-center text-sm shrink-0"
+                        style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>3</span>
+                    <h4 className="text-white font-bold">شكر بعد الشراء (Post-Purchase Thank You)</h4>
+                </div>
+                <BulletList items={[
+                    "Trigger: Order fulfilled (الطلبية تشحنات)",
+                    "Delay: فوري",
+                    'العنوان: "شكراً لطلبيتك!"',
+                    "النص: تأكيد الشحن + رابط التتبع + نصائح استعمال المنتج",
+                    'زر: "تتبع طلبيتك"',
+                ]} />
+            </div>
+
+            {/* Automation 4 */}
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-4">
+                <div className="flex items-center gap-3 mb-3">
+                    <span className="w-8 h-8 rounded-full bg-[#C5A04E]/20 text-[#C5A04E] font-bold flex items-center justify-center text-sm shrink-0"
+                        style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>4</span>
+                    <h4 className="text-white font-bold">طلب التقييم (Review Request)</h4>
+                </div>
+                <BulletList items={[
+                    "Trigger: Order delivered (وصلات الطلبية)",
+                    "Delay: 7 أيام بعد التوصيل",
+                    'العنوان: "كيف كانت تجربتك؟"',
+                    '"نبغيو نسمعو رأيك! شاركنا تقييمك وساعد عملاء آخرين ياخذو القرار"',
+                    'زر: "حط تقييمك" (رابط Judge.me)',
+                ]} />
+            </div>
+
+            {/* Automation 5 */}
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-4">
+                <div className="flex items-center gap-3 mb-3">
+                    <span className="w-8 h-8 rounded-full bg-[#C5A04E]/20 text-[#C5A04E] font-bold flex items-center justify-center text-sm shrink-0"
+                        style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>5</span>
+                    <h4 className="text-white font-bold">إعادة الاستهداف (Win-Back)</h4>
+                </div>
+                <BulletList items={[
+                    "Trigger: Customer hasn't purchased in 60 days",
+                    "Delay: 60 يوم بعد آخر شراء",
+                    'العنوان: "وحشتينا! عرض خاص غير ليك"',
+                    '"فات وقت من آخر مرة تسوقتي عندنا. رجع واستفد من خصم 15%!"',
+                    "كود: COMEBACK15",
+                    'زر: "تسوق الآن"',
+                ]} />
+            </div>
+
+            <SubTitle>إنشاء حملات يدوية</SubTitle>
+            <BulletList items={[
+                "حملة أسبوعية: منتجات جديدة أو عروض خاصة",
+                "حملة موسمية: رمضان / العيد / Black Friday / الصيف",
+                "حملة تعليمية: نصائح ومحتوى مفيد عن النيتش ديالك",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 8 ═══════ */}
+            <SectionTitle>8. أتمتة الفواتير — Invoicing</SectionTitle>
+
+            <SubSubTitle>شنو هو؟</SubSubTitle>
+            <Paragraph>تطبيق كيولد الفواتير أوتوماتيكياً لكل طلبية وكيرسلها للعميل.</Paragraph>
+
+            <SubSubTitle>علاش مهم؟</SubSubTitle>
+            <GreenList items={[
+                "احترافية — العميل كيتوصل بفاتورة رسمية",
+                "قانوني — بعض الدول كتفرض إرسال فاتورة",
+                "محاسبة — كيسهل عليك تتبع المبيعات والضرائب",
+            ]} />
+
+            <SubSubTitle>التطبيق المقترح:</SubSubTitle>
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-4">
+                <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
+                    <h4 className="text-lg font-bold text-white">Order Printer Pro</h4>
+                    <span className="text-green-400 font-bold text-sm">مجاني — تطبيق رسمي ديال شوبيفاي</span>
+                </div>
+                <p className="text-gray-500 text-sm">البديل: Sufio - Professional Invoices (مدفوع — أكثر احترافية)</p>
+            </div>
+
+            <SubTitle>إعداد قالب الفاتورة</SubTitle>
+            <BulletList items={[
+                "في التطبيق اضغط على Templates",
+                "اختر Invoice",
+                "اضغط Customize",
+            ]} />
+            <SubSubTitle>عدل المعلومات:</SubSubTitle>
+            <BulletList items={[
+                "Logo: حمل الشعار ديالك",
+                "Company name: اسم المتجر أو الشركة",
+                "Address: العنوان ديالك",
+                "Email: الإيميل ديال المتجر",
+                "Tax ID: رقم الضريبة (إلى كان عندك)",
+                "Colors: عدل الألوان باش تتوافق مع البراند",
+                "Language: اختر اللغة المناسبة",
+                "اضغط Save",
+            ]} />
+
+            <SubTitle>إعداد الإرسال الأوتوماتيكي</SubTitle>
+            <BulletList items={[
+                "اضغط على Settings > Automation",
+                "فعل Auto-send invoice",
+                'Trigger: اختر "When order is created" (فاش الطلبية تتنشأ)',
+                "الفاتورة غادي تتولد وتتوصل للعميل أوتوماتيكياً بالإيميل",
+                "اضغط Save",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 9 ═══════ */}
+            <SectionTitle>9. تطبيقات إضافية مفيدة</SectionTitle>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10">
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">التطبيق</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">الاستعمال</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">مجاني؟</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            { app: "Vitals", use: "+40 أداة في تطبيق واحد (عداد تنازلي / pop-ups / wishlist)", free: "تجربة مجانية ثم $29.99/شهر" },
+                            { app: "Tidio", use: "شات مباشر مع العملاء", free: "مجاني حتى 50 محادثة/شهر" },
+                            { app: "Privy", use: "Pop-ups لجمع الإيميلات وعروض خاصة", free: "مجاني حتى 100 مشترك" },
+                            { app: "ReConvert", use: "صفحة شكر محسنة مع Upsell", free: "مجاني حتى 49 طلبية/شهر" },
+                            { app: "DSers", use: "استيراد المنتجات من AliExpress", free: "مجاني حتى 3000 منتج" },
+                            { app: "Oberlo/Zendrop", use: "بدائل DSers للاستيراد", free: "خطط مجانية متوفرة" },
+                            { app: "PageFly", use: "بناء صفحات مخصصة (Landing pages)", free: "مجاني لصفحة واحدة" },
+                            { app: "Lucky Orange", use: "تسجيل زيارات العملاء وخرائط الحرارة", free: "تجربة مجانية" },
+                        ].map((row, i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{row.app}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{row.use}</td>
+                                <td className="text-green-400 py-3 px-4 border border-[#C5A04E]/10 text-sm">{row.free}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20 mb-6">
+                <p className="text-[#C5A04E] font-bold leading-relaxed">
+                    نصيحة: ما تثبتش كل هاد التطبيقات مرة وحدة. ابدأ بالأساسيات (Reviews + Tracking + Email) وزيد مع الوقت.
+                </p>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ Section 10 — Checklist ═══════ */}
+            <SectionTitle>10. Checklist النهائي</SectionTitle>
+
+            {[
+                {
+                    category: "التطبيقات الأساسية (ضرورية)",
+                    items: [
+                        "تطبيق العروض المجمعة مثبت ومفعل (Bundle)",
+                        "عرض واحد على الأقل منشئ (مثال: اشتري 2 واحصل على خصم)",
+                        "تطبيق تتبع الطرود مثبت ومفعل (AfterShip)",
+                        "صفحة التتبع مخصصة بالبراند",
+                        "إشعارات التتبع مفعلة",
+                        "رابط التتبع مضاف في الفوتر",
+                        "تطبيق التقييمات مثبت ومفعل (Judge.me)",
+                        "تقييمات مستوردة من AliExpress (10-20)",
+                        "إيميل طلب التقييم الأوتوماتيكي مفعل",
+                    ],
+                },
+                {
+                    category: "التطبيقات المتقدمة (مهمة)",
+                    items: [
+                        "برنامج الولاء مثبت ومفعل",
+                        "قواعد كسب النقاط مضبوطة",
+                        "المكافآت محددة",
+                        "تطبيق SEO مثبت ومفعل",
+                        "عناوين الصفحات محسنة",
+                        "الأوصاف محسنة",
+                    ],
+                },
+                {
+                    category: "التسويق بالإيميل",
+                    items: [
+                        "Shopify Email أو Klaviyo مثبت",
+                        "إيميل ترحيبي مفعل (Welcome)",
+                        "إيميل السلة المتروكة مفعل (Abandoned Cart)",
+                        "إيميل شكر بعد الشراء مفعل (Thank You)",
+                        "إيميل طلب التقييم مفعل (Review Request)",
+                        "إيميل إعادة الاستهداف مفعل (Win-Back)",
+                    ],
+                },
+                {
+                    category: "الفواتير",
+                    items: [
+                        "تطبيق الفواتير مثبت",
+                        "قالب الفاتورة مخصص (الشعار + المعلومات)",
+                        "الإرسال الأوتوماتيكي مفعل",
+                    ],
+                },
+                {
+                    category: "العام",
+                    items: [
+                        "كل التطبيقات خدامة مزيان",
+                        "المتجر مازال سريع (التطبيقات ما بطأتوش)",
+                        "ما كاينش تطبيقات زائدة غير مستعملة",
+                    ],
+                },
+            ].map((section, si) => (
+                <div key={si} className="mb-6">
+                    <SubSubTitle>{section.category}</SubSubTitle>
+                    <div className="space-y-2">
+                        {section.items.map((item, i) => (
+                            <div key={i} className="flex items-center gap-3 bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl px-5 py-3">
+                                <span className="text-[#C5A04E] shrink-0">&#x2610;</span>
+                                <span className="text-gray-300">{item}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            ))}
+
+            <Divider />
+
+            {/* ═══════ Summary ═══════ */}
+            <div className="bg-[#C5A04E]/5 border border-[#C5A04E]/20 rounded-2xl p-6">
+                <h2 className="text-2xl font-bold text-[#C5A04E] mb-5">الخلاصة</h2>
+                <Paragraph>
+                    التطبيقات هي اللي كتحول متجرك من متجر بسيط لمتجر احترافي. ابدأ بالأساسيات: التقييمات والتتبع والإيميل. ثم زيد باقي التطبيقات مع الوقت. والأهم: ما تنساش تتبع النتائج وتشوف أي تطبيق كيجيب ليك أفضل عائد.
+                </Paragraph>
+                <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20">
+                    <p className="text-[#C5A04E] font-bold leading-relaxed text-center">
+                        © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 /* ─── Router ─── */
 const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase5_product_research: Phase5ProductResearch,
     phase11_shopify_guide: Phase11ShopifyGuide,
     phase12_import_product: Phase12ImportProduct,
     phase13_store_design: Phase13StoreDesign,
+    phase14_essential_apps: Phase14EssentialApps,
 };
 
 export default function LessonContentRenderer({ contentKey }: { contentKey: string }) {

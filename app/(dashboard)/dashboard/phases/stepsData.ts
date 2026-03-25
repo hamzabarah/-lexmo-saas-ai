@@ -280,7 +280,7 @@ export const stepsContent: StepContent[] = [
             {
                 title: "الدروس",
                 lessons: [
-                    { id: 1, title: "التطبيقات الأساسية", type: "pdf" },
+                    { id: 1, title: "التطبيقات الأساسية", type: "pdf", content: "phase14_essential_apps" },
                 ],
             },
             {
