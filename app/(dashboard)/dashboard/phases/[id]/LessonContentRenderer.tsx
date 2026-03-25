@@ -1415,11 +1415,629 @@ function Phase12ImportProduct() {
     );
 }
 
+/* ─── Phase 13: Store Design ─── */
+function Phase13StoreDesign() {
+    return (
+        <div className="p-6 lg:p-8 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin" dir="rtl">
+            <h1 className="text-3xl font-bold text-white mb-2">الدليل الكامل — تعديل المتجر وتصميم الصور</h1>
+            <p className="text-[#C5A04E] text-lg mb-8">كل ما تحتاج معرفته لتخصيص متجرك وتصميم صور احترافية</p>
+
+            {/* ═══════ Section 1 ═══════ */}
+            <SectionTitle>1. إعداد الثيم (Theme Settings)</SectionTitle>
+
+            <SubTitle>الدخول للمحرر</SubTitle>
+            <BulletList items={[
+                "ادخل للوحة التحكم admin.shopify.com",
+                "اضغط Online Store > Themes",
+                "اضغط Customize على القالب النشط",
+                "اضغط على Theme settings أسفل القائمة اليسرى",
+            ]} />
+
+            <SubTitle>الألوان (Colors)</SubTitle>
+            <Paragraph>اضغط على Colors وعدل الألوان التالية:</Paragraph>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10">
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">العنصر</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">الوصف</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">النصيحة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            { el: "Primary color", desc: "اللون الرئيسي (الأزرار والروابط)", tip: "اختر لون قوي يمثل البراند ديالك" },
+                            { el: "Secondary color", desc: "اللون الثانوي", tip: "مكمل للون الرئيسي" },
+                            { el: "Background", desc: "خلفية الصفحات", tip: "أبيض أو فاتح جداً" },
+                            { el: "Text color", desc: "لون النصوص", tip: "أسود أو رمادي غامق (#333333)" },
+                            { el: "Sale badge", desc: "علامة التخفيض", tip: "أحمر (#E95460)" },
+                            { el: "Buttons", desc: "لون الأزرار", tip: "لون بارز (أخضر / برتقالي / أحمر)" },
+                        ].map((row, i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{row.el}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{row.desc}</td>
+                                <td className="text-gray-300 py-3 px-4 border border-[#C5A04E]/10">{row.tip}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20 mb-6">
+                <p className="text-[#C5A04E] font-bold leading-relaxed">
+                    نصيحة: استعمل coolors.co باش تختار ألوان متناسقة.
+                </p>
+            </div>
+
+            <SubTitle>الخطوط (Typography)</SubTitle>
+            <BulletList items={[
+                "اضغط على Typography",
+                "Headings font: خط العناوين — اختر خط واضح وقوي",
+                "Body font: خط النصوص — اختر خط سهل القراءة",
+                "للمتاجر بالعربية: تأكد أن الخط كيدعم العربية (خطوط مقترحة: Cairo / Tajawal / IBM Plex Sans Arabic)",
+                "Font size: خلي Body بـ 16px (مريح للقراءة)",
+            ]} />
+
+            <SubTitle>الشعار (Logo)</SubTitle>
+            <BulletList items={[
+                "اضغط على Logo",
+                "اضغط Select image وحمل الشعار ديالك",
+                "Logo width: عادة بين 120 و 200 بيكسل",
+            ]} />
+            <SubSubTitle>Favicon (الأيقونة الصغيرة):</SubSubTitle>
+            <BulletList items={[
+                "الحجم 32 × 32 بيكسل",
+                "صيغة PNG بخلفية شفافة",
+            ]} />
+
+            <SubTitle>إعدادات السلة (Cart)</SubTitle>
+            <BulletList items={[
+                "اضغط على Cart",
+                "Cart type: اختر Drawer (سلة جانبية — أحسن لتجربة المستخدم)",
+                "فعل Enable cart note باش العميل يقدر يكتب ملاحظة",
+            ]} />
+
+            <SubTitle>إعدادات السوشل ميديا</SubTitle>
+            <BulletList items={[
+                "اضغط على Social media",
+                "حط روابط حساباتك: Instagram, Facebook, TikTok, Twitter/X",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 2 ═══════ */}
+            <SectionTitle>2. إنشاء الهيدر (Header)</SectionTitle>
+            <Paragraph>الهيدر هو الشريط العلوي اللي كيبان في كل صفحة.</Paragraph>
+
+            <SubTitle>تعديل الهيدر في المحرر</SubTitle>
+            <BulletList items={[
+                "في Theme Editor، اضغط على قسم Header فوق القائمة اليسرى",
+            ]} />
+
+            <SubSubTitle>الشعار:</SubSubTitle>
+            <BulletList items={[
+                "تأكد أن الشعار محمل (من Theme Settings)",
+                "Logo position: اختر Middle center أو Top left حسب التفضيل",
+            ]} />
+
+            <SubSubTitle>القائمة الرئيسية (Main Menu):</SubSubTitle>
+            <BulletList items={[
+                "Menu: اختر Main menu",
+                "إلى ما عندكش قائمة، أنشئها: ارجع للوحة التحكم > Online Store > Navigation > Add menu",
+                'سميها "Main menu" وأضف الروابط:',
+            ]} />
+            <GreenList items={[
+                "الرئيسية (Home page)",
+                "المتجر (All products)",
+                "من نحن (About Us)",
+                "اتصل بنا (Contact Us)",
+            ]} />
+
+            <SubSubTitle>شريط الإعلان (Announcement Bar):</SubSubTitle>
+            <BulletList items={[
+                "فوق الهيدر، اضغط على Announcement bar وفعلو",
+                'اكتب عرض جذاب — مثال: "شحن مجاني لجميع الطلبيات — لمدة محدودة!"',
+                "اختر لون خلفية بارز وحط رابط إلى صفحة المنتج أو المجموعة",
+            ]} />
+
+            <SubSubTitle>عناصر إضافية في الهيدر:</SubSubTitle>
+            <GreenList items={[
+                "Enable search: فعل البحث",
+                "Enable cart icon: فعل أيقونة السلة",
+                "Sticky header: فعل هذا الخيار باش الهيدر يبقى ثابت فاش العميل كينزل في الصفحة (مهم بزاف)",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 3 ═══════ */}
+            <SectionTitle>3. إنشاء الفوتر (Footer)</SectionTitle>
+            <Paragraph>الفوتر هو الشريط السفلي اللي كيبان في كل صفحة.</Paragraph>
+
+            <SubSubTitle>إضافة القائمة السريعة:</SubSubTitle>
+            <BulletList items={[
+                "اضغط Add block > Menu واختر Footer menu",
+                "أضف الروابط:",
+            ]} />
+            <BulletList items={[
+                "سياسة الإرجاع (Refund policy)",
+                "سياسة الخصوصية (Privacy policy)",
+                "شروط الاستخدام (Terms of service)",
+                "سياسة الشحن (Shipping policy)",
+                "اتصل بنا (Contact)",
+            ]} />
+
+            <SubSubTitle>إضافة نص عن المتجر:</SubSubTitle>
+            <BulletList items={[
+                "اضغط Add block > Rich text",
+                "في Heading اكتب اسم البراند ديالك",
+                "في Text اكتب وصف قصير عن المتجر",
+            ]} />
+
+            <SubSubTitle>إضافة النشرة البريدية (Newsletter):</SubSubTitle>
+            <BulletList items={[
+                "اضغط Add block > Email signup",
+                'Heading: "اشترك في النشرة البريدية"',
+                'Subtext: "توصل بالعروض الحصرية والمنتجات الجديدة"',
+            ]} />
+
+            <SubSubTitle>أيقونات الدفع:</SubSubTitle>
+            <GreenList items={[
+                "فعل Show payment icons — غادي تبان أيقونات Visa / Mastercard / PayPal أوتوماتيكياً",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 4 ═══════ */}
+            <SectionTitle>4. تخصيص الصفحة الرئيسية (Home Page)</SectionTitle>
+
+            <SubTitle>القسم 1: البانر الرئيسي (Image Banner)</SubTitle>
+            <BulletList items={[
+                "اضغط على Image banner أو أضفو: Add section > Image banner",
+                "حمل البانر: الحجم المثالي 1920 × 800 بيكسل",
+                'Heading: العنوان الرئيسي (مثال: "احصل على بشرة صافية في 7 أيام")',
+                'Subheading: النص الفرعي (مثال: "منتج طبيعي 100% — شحن مجاني")',
+                'Button label: نص الزر (مثال: "تسوق الآن")',
+                "Banner height: اختر Medium أو Large",
+                "Show overlay: فعلو إلى كانت الصورة فاتحة باش النص يكون مقروء",
+            ]} />
+
+            <SubTitle>القسم 2: المنتجات المميزة (Featured Collection)</SubTitle>
+            <BulletList items={[
+                "اضغط Add section > Featured collection",
+                'Heading: "منتجاتنا الأكثر مبيعاً"',
+                "Maximum products to show: 4 أو 6 أو 8",
+                'فعل Enable "View all" button',
+            ]} />
+
+            <SubTitle>القسم 3: صورة مع نص (Image with Text)</SubTitle>
+            <BulletList items={[
+                "اضغط Add section > Image with text",
+                "حمل صورة المنتج في الاستعمال (Lifestyle)",
+                'Heading: "علاش هذا المنتج مختلف؟"',
+                "Text: اكتب 3-4 أسطر عن المنتج والفوائد ديالو",
+            ]} />
+
+            <SubTitle>القسم 4: المميزات (Multicolumn)</SubTitle>
+            <BulletList items={[
+                "اضغط Add section > Multicolumn",
+                'Heading: "لماذا تختارنا"',
+                "أضف 4 أعمدة:",
+            ]} />
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10">
+                            <th className="text-center text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">العمود</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">العنوان</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">النص</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            { icon: "🚚", title: "شحن مجاني", text: "توصيل مجاني لجميع الطلبيات" },
+                            { icon: "✅", title: "ضمان 30 يوم", text: "إلى ما عجبكش المنتج نردو ليك فلوسك" },
+                            { icon: "🔒", title: "دفع آمن", text: "معلوماتك محمية بتشفير عالي" },
+                            { icon: "💬", title: "خدمة عملاء", text: "فريق متوفر للإجابة على أسئلتك" },
+                        ].map((row, i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-center py-3 px-4 border border-[#C5A04E]/10 text-2xl">{row.icon}</td>
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{row.title}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{row.text}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <SubTitle>القسم 5: شهادات العملاء (Testimonials)</SubTitle>
+            <BulletList items={[
+                "اضغط Add section > Multicolumn",
+                'Heading: "آراء عملائنا"',
+                "أضف 3 شهادات مع أسماء وتقييمات",
+            ]} />
+
+            <SubTitle>القسم 6: دعوة للشراء (CTA)</SubTitle>
+            <BulletList items={[
+                "اضغط Add section > Rich text",
+                'Heading: "عرض محدود — ما تضيع الفرصة"',
+                'Text: "اطلب الآن واستفد من الشحن المجاني + خصم 20%"',
+                'Button label: "اطلب الآن"',
+            ]} />
+
+            <SubSubTitle>الترتيب النهائي للصفحة الرئيسية (من فوق لتحت):</SubSubTitle>
+            <div className="space-y-2 mb-6">
+                {[
+                    "Announcement Bar",
+                    "Header",
+                    "Image Banner (البانر الرئيسي)",
+                    "Featured Collection (المنتجات المميزة)",
+                    "Image with Text (قصة المنتج)",
+                    "Multicolumn (المميزات)",
+                    "Testimonials (شهادات العملاء)",
+                    "CTA (دعوة للشراء)",
+                    "Newsletter (النشرة البريدية)",
+                    "Footer",
+                ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-3 text-gray-300 leading-relaxed">
+                        <span className="w-7 h-7 rounded-full bg-[#C5A04E]/20 text-[#C5A04E] font-bold flex items-center justify-center text-sm shrink-0"
+                            style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{i + 1}</span>
+                        <span>{item}</span>
+                    </div>
+                ))}
+            </div>
+
+            <Divider />
+
+            {/* ═══════ Section 5 ═══════ */}
+            <SectionTitle>5. تخصيص صفحة المجموعة (Collection Page)</SectionTitle>
+            <BulletList items={[
+                "في القائمة المنسدلة اختر Collections > Default collection",
+                "Products per row: 3 أو 4",
+                "Rows: 4 إلى 8",
+            ]} />
+
+            <SubSubTitle>الإعدادات المهمة:</SubSubTitle>
+            <GreenList items={[
+                "Enable filtering: فعلو — باش العميل يقدر يفلتر حسب الثمن أو اللون",
+                "Enable sorting: فعلو — باش العميل يقدر يرتب",
+                "Show secondary image on hover: فعلو",
+                "Show price: فعلو",
+            ]} />
+            <RedList items={[
+                "Show vendor: أطفيه (ما بغيناش العميل يشوف اسم المورد)",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 6 ═══════ */}
+            <SectionTitle>6. تخصيص صفحة المنتج (Product Page)</SectionTitle>
+
+            <SubTitle>قسم صور المنتج (Media)</SubTitle>
+            <BulletList items={[
+                "Desktop layout: اختر Stacked أو Thumbnail carousel",
+                "Enable image zoom: فعلو",
+                "Enable video looping: فعلو إلى كان عندك فيديو",
+            ]} />
+
+            <SubTitle>قسم معلومات المنتج</SubTitle>
+            <GreenList items={[
+                "Enable sticky add to cart: فعلو — زر \"أضف للسلة\" كيبقى ثابت",
+            ]} />
+            <RedList items={[
+                "Show vendor: أطفيه",
+                "Show SKU: أطفيه",
+            ]} />
+
+            <SubTitle>إضافة أقسام قابلة للطي (Collapsible Content)</SubTitle>
+            <Paragraph>اضغط Add block {'>'} Collapsible row وأضف:</Paragraph>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10">
+                            <th className="text-center text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">الترتيب</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">العنوان</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">المحتوى</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            { num: "1", title: "المميزات", content: "قائمة المميزات والفوائد" },
+                            { num: "2", title: "طريقة الاستعمال", content: "الخطوات بالتفصيل" },
+                            { num: "3", title: "المواصفات", content: "الحجم / الوزن / المادة / اللون" },
+                            { num: "4", title: "معلومات الشحن", content: "مدة التوصيل وثمن الشحن" },
+                            { num: "5", title: "سياسة الإرجاع", content: "شروط الإرجاع والمدة" },
+                        ].map((row, i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-center text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/10" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{row.num}</td>
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{row.title}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{row.content}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <SubTitle>إضافة أقسام تحت المنتج</SubTitle>
+            <BulletList items={[
+                'منتجات مشابهة: Add section > Related products — Heading: "قد يعجبك أيضاً"',
+                "شهادات العملاء: Add section > Multicolumn",
+                "ضمانات الثقة (Trust badges): شحن مجاني / ضمان / دفع آمن",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 7 ═══════ */}
+            <SectionTitle>7. تخصيص صفحة الاتصال (Contact Page)</SectionTitle>
+
+            <SubSubTitle>إنشاء الصفحة:</SubSubTitle>
+            <BulletList items={[
+                "ارجع للوحة التحكم > Online Store > Pages > Add page",
+                'Title: "اتصل بنا"',
+                'Content: "عندك سؤال أو استفسار؟ فريقنا جاهز لمساعدتك!"',
+            ]} />
+
+            <SubSubTitle>أضف معلومات التواصل:</SubSubTitle>
+            <BulletList items={[
+                "الإيميل",
+                "الواتساب",
+                "وقت الرد: أقل من 24 ساعة",
+            ]} />
+
+            <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-5 py-4 mb-6">
+                <p className="text-red-400 font-bold leading-relaxed">
+                    مهم جداً: في قسم Theme template اختر contact — هذا كيضيف فورمولير الاتصال أوتوماتيكياً
+                </p>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ Section 8 ═══════ */}
+            <SectionTitle>8. تخصيص صفحة الدفع وصفحة الشكر</SectionTitle>
+
+            <SubTitle>صفحة الدفع (Checkout)</SubTitle>
+            <Paragraph>ارجع للوحة التحكم {'>'} Settings {'>'} Checkout</Paragraph>
+            <BulletList items={[
+                "Customer contact method: اختر Email أو Both",
+                "Full name: اختر Require first and last name",
+                "Company name: اختر Hidden",
+                "Shipping address phone number: اختر Required",
+            ]} />
+            <GreenList items={[
+                "فعل Show email marketing option at checkout",
+                "فعل Preselect signup option",
+            ]} />
+
+            <SubSubTitle>تخصيص شكل صفحة الدفع:</SubSubTitle>
+            <BulletList items={[
+                "في Theme Editor > القائمة المنسدلة > Checkout",
+                "حمل الشعار، عدل الألوان والخطوط باش تتوافق مع المتجر",
+            ]} />
+
+            <SubTitle>صفحة الشكر (Thank You Page)</SubTitle>
+            <BulletList items={[
+                'أضف Rich text: "شكراً لك على طلبيتك! كنتواصل معاك قريباً"',
+                "أضف Image with text: عرض منتج آخر (Upsell)",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 9 ═══════ */}
+            <SectionTitle>9. تصميم الصور بالذكاء الاصطناعي</SectionTitle>
+
+            <SubSubTitle>أنواع الصور اللي محتاج تصممها:</SubSubTitle>
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10">
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">نوع الصورة</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">الحجم</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">الاستعمال</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">الأداة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            { type: "صورة المنتج (خلفية بيضاء)", size: "1000 × 1000", use: "الصورة الرئيسية", tool: "Remove.bg + Canva" },
+                            { type: "صورة Lifestyle", size: "1000 × 1000", use: "المنتج في الاستعمال", tool: "ChatGPT/DALL-E أو Ideogram" },
+                            { type: "Infographic", size: "1000 × 1000", use: "المميزات على الصورة", tool: "Canva" },
+                            { type: "بانر الصفحة الرئيسية", size: "1920 × 800", use: "Hero Banner", tool: "Canva" },
+                            { type: "بانر المجموعة", size: "1200 × 400", use: "فوق صفحة Collection", tool: "Canva" },
+                            { type: "مقارنة قبل/بعد", size: "1000 × 1000", use: "إعلانات وصفحة المنتج", tool: "Canva" },
+                            { type: "Favicon", size: "32 × 32", use: "أيقونة تبويب المتصفح", tool: "Canva" },
+                        ].map((row, i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{row.type}</td>
+                                <td className="text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/10" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{row.size}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{row.use}</td>
+                                <td className="text-gray-300 py-3 px-4 border border-[#C5A04E]/10">{row.tool}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <SubTitle>الأداة 1: حذف الخلفية (Remove.bg)</SubTitle>
+            <BulletList items={[
+                "ادخل remove.bg وحمل صورة المنتج",
+                "الخلفية كتتحيد في ثواني",
+                "حمل النتيجة بصيغة PNG (خلفية شفافة)",
+            ]} />
+
+            <SubTitle>الأداة 2: تصميم بـ Canva</SubTitle>
+            <SubSubTitle>صورة Infographic:</SubSubTitle>
+            <BulletList items={[
+                "ادخل canva.com > Create a design > Custom: 1000 × 1000",
+                "حط خلفية بيضاء أو فاتحة",
+                "حط صورة المنتج (بدون خلفية) في الوسط",
+                "من Elements أضف أسهم أو خطوط",
+                "أضف نصوص المميزات بجانب كل سهم",
+            ]} />
+
+            <SubSubTitle>بانر الصفحة الرئيسية:</SubSubTitle>
+            <BulletList items={[
+                "Custom: 1920 × 800",
+                "حط خلفية (gradient أو صورة lifestyle)",
+                "على جهة: صورة المنتج كبيرة",
+                "على الجهة الأخرى: العنوان + النص + الزر",
+            ]} />
+
+            <SubTitle>الأداة 3: الذكاء الاصطناعي (ChatGPT/DALL-E)</SubTitle>
+            <SubSubTitle>صور Lifestyle:</SubSubTitle>
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-4 mb-4">
+                <p className="text-gray-400 italic text-sm leading-relaxed">
+                    {`"Product photo of a kitchen vegetable cutter on a marble countertop, modern kitchen background, natural lighting, commercial photography style, 4K quality"`}
+                </p>
+            </div>
+
+            <SubSubTitle>صور المنتج على خلفية بيضاء:</SubSubTitle>
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-4 mb-4">
+                <p className="text-gray-400 italic text-sm leading-relaxed">
+                    {`"Product photo of [المنتج] on pure white background, studio lighting, e-commerce style, high quality, centered"`}
+                </p>
+            </div>
+
+            <SubTitle>الأداة 4: ضغط الصور (TinyPNG)</SubTitle>
+            <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-5 py-4 mb-6">
+                <p className="text-red-400 font-bold leading-relaxed">
+                    مهم جداً باش المتجر يكون سريع:
+                </p>
+            </div>
+            <BulletList items={[
+                "ادخل tinypng.com وحمل الصور ديالك",
+                "الموقع كيضغطهم (كينقص الحجم 50-80% بلا فقدان الجودة)",
+                "هاد الصور هي اللي تحملها في المتجر",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 10 — Final Checklist ═══════ */}
+            <SectionTitle>10. Checklist النهائي</SectionTitle>
+
+            {[
+                {
+                    category: "Theme Settings",
+                    items: [
+                        "الألوان متناسقة (3 ألوان كحد أقصى)",
+                        "الخطوط واضحة وكتدعم العربية",
+                        "الشعار محمل + Favicon",
+                        "إعدادات السلة = Drawer",
+                        "روابط السوشل ميديا مضافة",
+                    ],
+                },
+                {
+                    category: "Header",
+                    items: [
+                        "الشعار باين مزيان",
+                        "القائمة الرئيسية فيها: الرئيسية / المتجر / من نحن / اتصل بنا",
+                        "Announcement bar مفعل مع عرض جذاب",
+                        "البحث والسلة باينين",
+                        "Sticky header مفعل",
+                    ],
+                },
+                {
+                    category: "Footer",
+                    items: [
+                        "روابط السياسات موجودة",
+                        "نص عن المتجر",
+                        "النشرة البريدية مفعلة",
+                        "أيقونات الدفع باينة",
+                    ],
+                },
+                {
+                    category: "الصفحة الرئيسية",
+                    items: [
+                        "بانر رئيسي احترافي مع عنوان وزر",
+                        "منتجات مميزة",
+                        "قسم المميزات (شحن / ضمان / دفع آمن)",
+                        "شهادات العملاء",
+                        "دعوة للشراء (CTA)",
+                    ],
+                },
+                {
+                    category: "صفحة المنتج",
+                    items: [
+                        "على الأقل 5 صور احترافية",
+                        "عنوان جذاب + ثمن واضح + ثمن مشطوب",
+                        "وصف يبيع (مشكلة + حل + مميزات)",
+                        "أقسام قابلة للطي",
+                        "زر شراء بارز + Sticky add to cart",
+                        "منتجات مشابهة + Trust badges",
+                    ],
+                },
+                {
+                    category: "صفحة المجموعة",
+                    items: [
+                        "فلترة وترتيب مفعلين",
+                        "3-4 منتجات في كل صف",
+                        "الصورة الثانية كتبان على Hover",
+                    ],
+                },
+                {
+                    category: "صفحة الاتصال",
+                    items: [
+                        "فورمولير الاتصال موجود",
+                        "الإيميل والواتساب باينين",
+                        "وقت الرد محدد",
+                    ],
+                },
+                {
+                    category: "صفحة الدفع",
+                    items: [
+                        "الشعار موجود",
+                        "الألوان متناسقة مع المتجر",
+                        "التسويق بالإيميل مفعل",
+                    ],
+                },
+                {
+                    category: "الصور",
+                    items: [
+                        "كل الصور عالية الجودة",
+                        "بلا علامات مائية أو كتابة أجنبية",
+                        "مضغوطة بـ TinyPNG",
+                        "المتجر سريع التحميل",
+                    ],
+                },
+            ].map((section, si) => (
+                <div key={si} className="mb-6">
+                    <SubSubTitle>{section.category}</SubSubTitle>
+                    <div className="space-y-2">
+                        {section.items.map((item, i) => (
+                            <div key={i} className="flex items-center gap-3 bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl px-5 py-3">
+                                <span className="text-[#C5A04E] shrink-0">&#x2610;</span>
+                                <span className="text-gray-300">{item}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            ))}
+
+            <Divider />
+
+            {/* ═══════ Summary ═══════ */}
+            <div className="bg-[#C5A04E]/5 border border-[#C5A04E]/20 rounded-2xl p-6">
+                <h2 className="text-2xl font-bold text-[#C5A04E] mb-5">الخلاصة</h2>
+                <Paragraph>
+                    التصميم الاحترافي ماشي رفاهية — هو ضرورة. العميل كيحكم على متجرك في أول 3 ثواني. إلى بان احترافي كيثق ويشري. إلى بان رديء كيخرج وما يرجعش. خذ وقتك في كل خطوة من هاد الدليل وغادي يكون عندك متجر يفتخر بيه.
+                </Paragraph>
+                <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20">
+                    <p className="text-[#C5A04E] font-bold leading-relaxed text-center">
+                        © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 /* ─── Router ─── */
 const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase5_product_research: Phase5ProductResearch,
     phase11_shopify_guide: Phase11ShopifyGuide,
     phase12_import_product: Phase12ImportProduct,
+    phase13_store_design: Phase13StoreDesign,
 };
 
 export default function LessonContentRenderer({ contentKey }: { contentKey: string }) {

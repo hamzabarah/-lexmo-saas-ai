@@ -262,7 +262,7 @@ export const stepsContent: StepContent[] = [
             {
                 title: "الدروس",
                 lessons: [
-                    { id: 1, title: "الدليل الكامل — تعديل المتجر وتصميم الصور", type: "pdf" },
+                    { id: 1, title: "الدليل الكامل — تعديل المتجر وتصميم الصور", type: "pdf", content: "phase13_store_design" },
                 ],
             },
             {
