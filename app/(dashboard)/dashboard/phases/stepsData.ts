@@ -244,7 +244,7 @@ export const stepsContent: StepContent[] = [
             {
                 title: "الدروس",
                 lessons: [
-                    { id: 1, title: "من علي إكسبريس إلى متجرك", type: "pdf" },
+                    { id: 1, title: "من علي إكسبريس إلى متجرك", type: "pdf", content: "phase12_import_product" },
                 ],
             },
             {

@@ -954,10 +954,472 @@ function Phase11ShopifyGuide() {
     );
 }
 
+/* ─── Phase 12: Import Product ─── */
+function Phase12ImportProduct() {
+    return (
+        <div className="p-6 lg:p-8 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin" dir="rtl">
+            <h1 className="text-3xl font-bold text-white mb-2">من AliExpress إلى متجرك — استيراد المنتج وتعديله خطوة بخطوة</h1>
+            <p className="text-[#C5A04E] text-lg mb-8">كل ما تحتاج معرفته لاستيراد المنتجات وتعديلها باحترافية</p>
+
+            {/* ═══════ Section 1 ═══════ */}
+            <SectionTitle>1. تجهيز المتجر لاستقبال المنتجات</SectionTitle>
+            <Paragraph>قبل ما تبدأ تستورد، تأكد من هاد الحاجات:</Paragraph>
+
+            <div className="space-y-3 mb-6">
+                {[
+                    "المتجر مفتوح وخدام",
+                    "الباقة مفعلة (ولو Basic)",
+                    "اسم النطاق مربوط",
+                    "طرق الدفع مفعلة",
+                    "مناطق الشحن مضبوطة",
+                ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-3 bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl px-5 py-3">
+                        <span className="text-[#C5A04E] shrink-0">&#x2610;</span>
+                        <span className="text-gray-300">{item}</span>
+                    </div>
+                ))}
+            </div>
+
+            <SubSubTitle>الخطوات:</SubSubTitle>
+            <BulletList items={[
+                "ادخل لمتجرك على shopify.com",
+                "تأكد أنك في لوحة التحكم (Dashboard)",
+                "في القائمة اليسرى، اضغط على Products",
+                "غادي تلقى الصفحة فارغة — هذا عادي، دابا غادي نضيفو المنتجات",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 2 ═══════ */}
+            <SectionTitle>2. تثبيت تطبيق DSers (الاستيراد الأوتوماتيكي)</SectionTitle>
+            <Paragraph>
+                شنو هو DSers؟ هو تطبيق مجاني كيربط متجرك شوبيفاي مع AliExpress. كيخليك تستورد المنتجات بضغطة زر وكيدير الطلبيات أوتوماتيكياً.
+            </Paragraph>
+
+            <SubSubTitle>خطوات التثبيت:</SubSubTitle>
+            <StepCard num={1} title="فتح App Store" items={[
+                "في لوحة تحكم شوبيفاي، اضغط على Apps في القائمة اليسرى",
+                "اضغط على Shopify App Store (كيفتح في صفحة جديدة)",
+            ]} />
+            <StepCard num={2} title="البحث والتثبيت" items={[
+                "في خانة البحث، كتب: DSers",
+                "غادي يبان ليك DSers‑AliExpress Dropshipping — اضغط عليه",
+                "اضغط على الزر Add app (أخضر)",
+                "غادي يرجعك للمتجر ديالك — اضغط Install app",
+            ]} />
+            <StepCard num={3} title="التسجيل والربط" items={[
+                "غادي يطلب منك تسجل حساب DSers: اضغط Sign up with Shopify (الأسهل)",
+                "بعد التسجيل، غادي يطلب منك تربط حساب AliExpress: اضغط Link AliExpress Account",
+                "سجل دخول بحساب AliExpress ديالك (إلى ما عندكش حساب، أنشئ واحد مجاني على aliexpress.com)",
+                "اضغط Authorize باش تأكد الربط",
+            ]} />
+
+            <div className="bg-green-500/10 border border-green-500/20 rounded-xl px-5 py-3 mb-6">
+                <span className="text-green-400 font-bold">مبروك! DSers مثبت ومربوط</span>
+            </div>
+
+            <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20 mb-6">
+                <p className="text-[#C5A04E] font-bold leading-relaxed">
+                    ملاحظة مهمة: DSers مجاني حتى 3000 منتج. الباقة المجانية كافية تماماً للبداية.
+                </p>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ Section 3 ═══════ */}
+            <SectionTitle>3. البحث عن المنتج على AliExpress</SectionTitle>
+
+            <SubTitle>الطريقة 1: البحث من داخل DSers (الأسهل)</SubTitle>
+            <BulletList items={[
+                "في لوحة تحكم DSers، اضغط على Find Suppliers في القائمة العلوية",
+                'في خانة البحث، كتب اسم المنتج بالإنجليزية (مثال: "kitchen vegetable cutter")',
+                "غادي تظهر ليك قائمة بالمنتجات",
+            ]} />
+            <SubSubTitle>قلب على المنتج اللي عندو:</SubSubTitle>
+            <GreenList items={[
+                "تقييم 4.5 أو أكثر",
+                "أكثر من 1000 طلبية",
+                "شحن ePacket متوفر",
+            ]} />
+
+            <SubTitle>الطريقة 2: البحث على موقع AliExpress + استيراد بالإضافة</SubTitle>
+            <BulletList items={[
+                "افتح aliexpress.com في تبويب جديد",
+                "قلب على المنتج اللي بغيتي",
+                "فاش تلقاه، انسخ رابط المنتج (URL) من شريط العنوان",
+                "ارجع ل DSers",
+                "اضغط على Import from AliExpress URL",
+                "لصق الرابط واضغط Search",
+            ]} />
+
+            <SubSubTitle>نصائح البحث:</SubSubTitle>
+            <GreenList items={[
+                "قلب بالإنجليزية دائماً (النتائج أكثر)",
+                "استعمل كلمات مفتاحية دقيقة",
+                'فلتر بـ "Orders" باش تشوف الأكثر مبيعاً أولاً',
+                "شوف التقييمات بالصور من العملاء الحقيقيين",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 4 ═══════ */}
+            <SectionTitle>4. استيراد المنتج لمتجرك</SectionTitle>
+
+            <SubSubTitle>الخطوات بالتفصيل:</SubSubTitle>
+            <BulletList items={[
+                "فاش تلقى المنتج المناسب في DSers، اضغط على Add to Import List (زر برتقالي)",
+                "غادي يتحول المنتج ل Import List (قائمة الاستيراد)",
+                "اضغط على Import List في القائمة العلوية ديال DSers",
+                "غادي تلقى المنتج كيتسنى — هنا غادي تعدل عليه قبل ما تنشرو",
+                "اضغط على المنتج باش تفتح صفحة التعديل",
+            ]} />
+
+            <SubSubTitle>غادي تشوف 4 تبويبات:</SubSubTitle>
+            <BulletList items={[
+                "Product (العنوان والوصف)",
+                "Variants (المتغيرات والأثمنة)",
+                "Images (الصور)",
+                "Shipping (الشحن)",
+            ]} />
+
+            <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-5 py-4 mb-6">
+                <p className="text-red-400 font-bold leading-relaxed">
+                    {`مهم جداً: ما تضغطش على "Push to Shopify" دابا! عدل أولاً كلشي ثم انشر.`}
+                </p>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ Section 5 ═══════ */}
+            <SectionTitle>5. تعديل عنوان المنتج</SectionTitle>
+            <Paragraph>
+                القاعدة الذهبية: العنوان ديال AliExpress ديما طويل ومعقد وفيه كلمات مفتاح للسيو ديالهم. خاصك تبدلو بعنوان قصير وجذاب.
+            </Paragraph>
+
+            <SubSubTitle>مثال:</SubSubTitle>
+            <div className="space-y-3 mb-6">
+                <div className="flex items-start gap-3 bg-red-500/5 border border-red-500/10 rounded-xl px-5 py-3">
+                    <span className="text-red-400 font-bold shrink-0">عنوان AliExpress:</span>
+                    <span className="text-gray-400">{`"2024 New Arrival Kitchen Vegetable Cutter Slicer Multi-Function Food Chopper Manual Mandoline Slicer with Container"`}</span>
+                </div>
+                <div className="flex items-start gap-3 bg-green-500/5 border border-green-500/10 rounded-xl px-5 py-3">
+                    <span className="text-green-400 font-bold shrink-0">عنوانك:</span>
+                    <span className="text-gray-300">{`"قاطع الخضروات الذكي — حضر أي وجبة في دقائق"`}</span>
+                </div>
+            </div>
+
+            <SubSubTitle>خطوات التعديل:</SubSubTitle>
+            <BulletList items={[
+                "في تبويب Product، غادي تلقى خانة Title",
+                "امسح العنوان القديم كامل",
+                "اكتب عنوان جديد: قصير (5-10 كلمات)، فيه الفائدة الرئيسية، بالعربية إلى كنت كتبيع في سوق عربي",
+            ]} />
+
+            <SubSubTitle>صيغ عناوين ناجحة:</SubSubTitle>
+            <GreenList items={[
+                "[اسم المنتج] — [الفائدة الرئيسية]",
+                '[الفائدة] + [لمن] (مثال: "بشرة صافية بلا مجهود — كريم طبيعي 100%")',
+                '[الحل] + [المشكلة] (مثال: "ودع آلام الظهر — مصحح وضعية الجسم")',
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 6 ═══════ */}
+            <SectionTitle>6. كتابة وصف يبيع</SectionTitle>
+            <Paragraph>
+                امسح الوصف ديال AliExpress نهائياً. دائماً كيكون ضعيف ومترجم ترجمة آلية.
+            </Paragraph>
+
+            <SubSubTitle>هيكل الوصف المثالي:</SubSubTitle>
+
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-4">
+                <h4 className="text-white font-bold mb-2">الجزء 1 — المشكلة (2-3 أسطر)</h4>
+                <Paragraph>ابدأ بالمشكلة اللي كيعاني منها العميل.</Paragraph>
+                <div className="bg-[#0A0A0A] rounded-lg p-3 border border-[#C5A04E]/5">
+                    <p className="text-gray-400 italic">{`مثال: "عياتي وأنت كتقطع الخضرة بالسكين العادي؟ كتاخذ 30 دقيقة باش تحضر سالطة وحدة؟"`}</p>
+                </div>
+            </div>
+
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-4">
+                <h4 className="text-white font-bold mb-2">الجزء 2 — الحل = منتجك (2-3 أسطر)</h4>
+                <Paragraph>قدم المنتج كحل للمشكلة.</Paragraph>
+                <div className="bg-[#0A0A0A] rounded-lg p-3 border border-[#C5A04E]/5">
+                    <p className="text-gray-400 italic">{`مثال: "قاطع الخضروات الذكي غادي يخليك تحضر أي وجبة في أقل من 5 دقائق — بلا مجهود وبلا خطر الجروح."`}</p>
+                </div>
+            </div>
+
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-4">
+                <h4 className="text-white font-bold mb-2">الجزء 3 — المميزات كفوائد</h4>
+                <GreenList items={[
+                    "كيقطع الخضرة في ثواني — وفر 25 دقيقة كل يوم",
+                    "7 أشكال قطع مختلفة — تنوع في الطبخ بلا أدوات إضافية",
+                    "آمن 100% — حماية للأصابع مدمجة",
+                    "سهل التنظيف — كيتغسل في ثواني",
+                    "حجم صغير — ما كياخذش بلاصة في المطبخ",
+                ]} />
+            </div>
+
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-4">
+                <h4 className="text-white font-bold mb-2">الجزء 4 — الدليل الاجتماعي</h4>
+                <div className="bg-[#0A0A0A] rounded-lg p-3 border border-[#C5A04E]/5">
+                    <p className="text-gray-400 italic">{`"أكثر من 10,000 عميل سعيد حول العالم"`}</p>
+                </div>
+            </div>
+
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-4">
+                <h4 className="text-white font-bold mb-2">الجزء 5 — العرض + Call to Action</h4>
+                <div className="bg-[#0A0A0A] rounded-lg p-3 border border-[#C5A04E]/5 space-y-2">
+                    <p className="text-gray-400 italic">{`"🎁 عرض خاص لمدة محدودة — اطلب دابا واستفد من الشحن المجاني!"`}</p>
+                    <p className="text-gray-400 italic">{`"⚠️ الكمية محدودة — اضغط على أضف إلى السلة دابا"`}</p>
+                </div>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ Section 7 ═══════ */}
+            <SectionTitle>7. تعديل الصور</SectionTitle>
+            <Paragraph>
+                القاعدة: صور AliExpress فيها كتابة صينية وعلامات مائية. خاصك تعدلها أو تبدلها.
+            </Paragraph>
+
+            <SubSubTitle>خطوات التعديل:</SubSubTitle>
+            <Paragraph>في تبويب Images في DSers، غادي تشوف كل صور المنتج.</Paragraph>
+
+            <SubSubTitle>احذف الصور اللي فيها:</SubSubTitle>
+            <RedList items={[
+                "كتابة صينية",
+                "علامات مائية",
+                "جودة رديئة",
+                "خلفية خايبة",
+            ]} />
+
+            <SubSubTitle>خلي الصور اللي:</SubSubTitle>
+            <GreenList items={[
+                "واضحة وعالية الجودة",
+                "كتوري المنتج من زوايا مختلفة",
+                "كتوري المنتج في الاستعمال",
+            ]} />
+
+            <SubSubTitle>الترتيب المثالي للصور:</SubSubTitle>
+            <StepCard num={1} title="الصورة الرئيسية" items={["المنتج على خلفية بيضاء"]} />
+            <StepCard num={2} title="صورة الاستعمال" items={["شخص كيستعمل المنتج"]} />
+            <StepCard num={3} title="زاوية أخرى" items={["المنتج من زاوية مختلفة"]} />
+            <StepCard num={4} title="التفاصيل" items={["صورة قريبة للتفاصيل"]} />
+            <StepCard num={5} title="Infographic" items={["المميزات مكتوبة على الصورة"]} />
+            <StepCard num={6} title="الحجم" items={["مقارنة مع يد أو شيء معروف"]} />
+
+            <SubSubTitle>أدوات تعديل الصور:</SubSubTitle>
+            <BulletList items={[
+                "Canva (مجاني): حذف الخلفية، إضافة نصوص، تصميم Infographic",
+                "Remove.bg (مجاني): حذف الخلفية أوتوماتيكياً",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 8 ═══════ */}
+            <SectionTitle>8. التسعير الصحيح</SectionTitle>
+
+            <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20 mb-6">
+                <p className="text-[#C5A04E] font-bold leading-relaxed">
+                    القاعدة الذهبية: ثمن البيع = ثمن الشراء × 2.5 إلى × 4 (على الأقل)
+                </p>
+            </div>
+
+            <SubSubTitle>مثال عملي:</SubSubTitle>
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full border-collapse">
+                    <tbody>
+                        {[
+                            { label: "ثمن المنتج على AliExpress", value: "$5" },
+                            { label: "ثمن الشحن من المورد", value: "$2" },
+                            { label: "التكلفة الإجمالية", value: "$7" },
+                            { label: "ثمن البيع المقترح", value: "$24.99 (هامش 3.5x)" },
+                            { label: "مصاريف الإعلان المتوقعة", value: "$7-10 لكل بيعة" },
+                            { label: "الربح الصافي", value: "≈ $10 لكل بيعة" },
+                        ].map((row, i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{row.label}</td>
+                                <td className="text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/10" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{row.value}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <SubSubTitle>خطوات تعديل الثمن:</SubSubTitle>
+            <BulletList items={[
+                "في تبويب Variants في DSers",
+                "في خانة Price، حط ثمن البيع ديالك",
+                "في خانة Compare at price، حط ثمن أعلى (الثمن القديم المشطوب) — هذا كيعطي إحساس بالخصم",
+                "مثال: Price = $24.99 / Compare at = $49.99",
+            ]} />
+
+            <SubSubTitle>استراتيجيات التسعير:</SubSubTitle>
+            <GreenList items={[
+                "الأثمنة النفسية: $24.99 بدل $25 / $19.97 بدل $20",
+                'ثمن مشطوب: دائماً حط "Compare at price" أعلى من الثمن الحقيقي',
+                'Bundle (حزمة): "اشتري 2 واحصل على خصم 20%"',
+                "شحن مجاني: زيد $5-10 على الثمن وحط شحن مجاني",
+            ]} />
+
+            <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20 mb-6">
+                <p className="text-[#C5A04E] font-bold leading-relaxed">
+                    نصيحة: شوف بشحال المنافسين كيبيعو نفس المنتج. ما تكونش أغلى بزاف ولا أرخص بزاف.
+                </p>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ Section 9 ═══════ */}
+            <SectionTitle>9. إضافة المتغيرات (ألوان، أحجام)</SectionTitle>
+
+            <SubSubTitle>الخطوات:</SubSubTitle>
+            <BulletList items={[
+                "في تبويب Variants في DSers",
+                "احذف المتغيرات اللي ما بغيتيش تبيعها (ألوان ما عندهاش طلب، أحجام ما كاينينش في السوق ديالك)",
+                'عدل أسماء المتغيرات: بدل "Black" ب "أسود" (إلى كنت كتبيع بالعربية)',
+            ]} />
+
+            <SubSubTitle>مثال:</SubSubTitle>
+            <div className="space-y-3 mb-6">
+                <div className="flex items-start gap-3 bg-red-500/5 border border-red-500/10 rounded-xl px-5 py-3">
+                    <span className="text-red-400 font-bold shrink-0">AliExpress:</span>
+                    <span className="text-gray-400">{`"Option A / Option B / Option C"`}</span>
+                </div>
+                <div className="flex items-start gap-3 bg-green-500/5 border border-green-500/10 rounded-xl px-5 py-3">
+                    <span className="text-green-400 font-bold shrink-0">متجرك:</span>
+                    <span className="text-gray-300">{`"أسود / أبيض / أزرق" أو "S / M / L / XL"`}</span>
+                </div>
+            </div>
+
+            <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20 mb-6">
+                <p className="text-[#C5A04E] font-bold leading-relaxed">
+                    نصيحة: ما تخليش بزاف ديال المتغيرات. 3-5 ألوان و 4-5 أحجام كافي. الاختيارات الكثيرة كتشتت العميل.
+                </p>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ Section 10 ═══════ */}
+            <SectionTitle>10. إعدادات الشحن للمنتج</SectionTitle>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10">
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">طريقة الشحن</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">المدة</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">الثمن</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">مناسبة ل</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            { method: "AliExpress Standard", time: "15-25 يوم", price: "رخيص", fit: "أغلب الأسواق" },
+                            { method: "ePacket", time: "10-20 يوم", price: "معقول", fit: "أمريكا وأوروبا" },
+                            { method: "FedEx/DHL", time: "5-10 أيام", price: "غالي", fit: "العملاء اللي بغاو سرعة" },
+                        ].map((row, i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{row.method}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{row.time}</td>
+                                <td className="text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/10">{row.price}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{row.fit}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20 mb-6">
+                <p className="text-[#C5A04E] font-bold leading-relaxed">
+                    نصيحة مهمة: دائماً اختار طريقة شحن عندها رقم تتبع (Tracking number). العملاء كيبغيو يتبعو الطلبية ديالهم.
+                </p>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ Section 11 ═══════ */}
+            <SectionTitle>11. نشر المنتج</SectionTitle>
+
+            <SubSubTitle>الخطوة الأخيرة — راجع كلشي:</SubSubTitle>
+            <GreenList items={[
+                "العنوان مزيان وجذاب",
+                "الوصف مكتوب باحترافية",
+                "الصور نظيفة ومرتبة",
+                "الأثمنة مضبوطة",
+                "المتغيرات معدلة",
+                "الشحن مختار",
+            ]} />
+
+            <SubSubTitle>النشر:</SubSubTitle>
+            <BulletList items={[
+                "اضغط على Push to Shopify (الزر الأزرق الكبير)",
+                "اختر Collection اللي بغيتي تحط فيها المنتج",
+                "اضغط Push",
+            ]} />
+
+            <div className="bg-green-500/10 border border-green-500/20 rounded-xl px-5 py-3 mb-6">
+                <span className="text-green-400 font-bold">المنتج تنشر في متجرك!</span>
+            </div>
+
+            <SubSubTitle>بعد النشر:</SubSubTitle>
+            <BulletList items={[
+                "ارجع لشوبيفاي > Products",
+                "اضغط على المنتج باش تشوف كيف باين",
+                "اضغط Preview باش تشوف الصفحة كما غادي يشوفها العميل",
+                "تأكد أن كلشي باين مزيان على الهاتف والكمبيوتر",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 12 — Checklist ═══════ */}
+            <SectionTitle>12. Checklist قبل ما تنشر</SectionTitle>
+
+            <div className="space-y-3 mb-8">
+                {[
+                    "العنوان قصير وجذاب (ماشي عنوان AliExpress)",
+                    "الوصف مكتوب بأسلوبك (ماشي نسخ من AliExpress)",
+                    "الوصف فيه: المشكلة + الحل + المميزات + العرض",
+                    "على الأقل 5 صور عالية الجودة",
+                    "ما كاينش كتابة صينية أو علامات مائية في الصور",
+                    "الصورة الرئيسية هي الأحسن",
+                    "الثمن مناسب (2.5x إلى 4x من تكلفة الشراء)",
+                    "ثمن مشطوب موجود (Compare at price)",
+                    "المتغيرات معدلة (أسماء واضحة)",
+                    "طريقة الشحن مختارة (مع رقم تتبع)",
+                    "المنتج في Collection مناسبة",
+                    "الصفحة كتبان مزيان على الهاتف",
+                ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-3 bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl px-5 py-3">
+                        <span className="text-[#C5A04E] shrink-0">&#x2610;</span>
+                        <span className="text-gray-300">{item}</span>
+                    </div>
+                ))}
+            </div>
+
+            <Divider />
+
+            {/* ═══════ Summary ═══════ */}
+            <div className="bg-[#C5A04E]/5 border border-[#C5A04E]/20 rounded-2xl p-6">
+                <h2 className="text-2xl font-bold text-[#C5A04E] mb-5">الخلاصة</h2>
+                <Paragraph>
+                    الاستيراد من AliExpress سهل مع DSers، ولكن السر هو التعديل. ما تنشرش المنتج كما هو من AliExpress أبداً. خذ وقتك في تعديل العنوان، الوصف، الصور، والأثمنة. هذا هو الفرق بين متجر كيبيع ومتجر كيفشل.
+                </Paragraph>
+                <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20">
+                    <p className="text-[#C5A04E] font-bold leading-relaxed text-center">
+                        © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 /* ─── Router ─── */
 const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase5_product_research: Phase5ProductResearch,
     phase11_shopify_guide: Phase11ShopifyGuide,
+    phase12_import_product: Phase12ImportProduct,
 };
 
 export default function LessonContentRenderer({ contentKey }: { contentKey: string }) {
