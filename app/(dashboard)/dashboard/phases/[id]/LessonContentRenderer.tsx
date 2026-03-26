@@ -4180,6 +4180,226 @@ function Phase23SuccessFailure() {
     );
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   Phase 23 – Lesson 5 : متى تزيد الميزانية — Scaling بذكاء
+   ═══════════════════════════════════════════════════════════════ */
+function Phase23Scaling() {
+    return (
+        <div className="p-6 lg:p-8 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin" dir="rtl">
+            <h1 className="text-3xl font-bold text-white mb-2">متى تزيد الميزانية — Scaling بذكاء 💰📈</h1>
+            <p className="text-[#C5A04E] text-lg mb-8">تعلم كيفاش تكبّر الحملة ديالك بدون ما تخسر الأداء</p>
+
+            {/* ═══════ شروط الزيادة ═══════ */}
+            <SectionTitle>شروط الزيادة في الميزانية</SectionTitle>
+
+            <div className="bg-[#1A1A1A] border border-red-500/20 rounded-xl p-5 mb-6">
+                <p className="text-red-400 font-bold mb-3">⚠️ ما تزيدش الميزانية حتى تتحقق هاد الشروط الثلاثة كاملين:</p>
+            </div>
+
+            <div className="overflow-x-auto mb-6">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10 text-[#C5A04E]">
+                            <th className="p-3 text-right font-bold">الشرط</th>
+                            <th className="p-3 text-right font-bold">التفاصيل</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-300">
+                        <tr className="bg-[#1A1A1A]">
+                            <td className="p-3 text-green-400 font-bold">✅ ROAS أكثر من 2</td>
+                            <td className="p-3">لمدة <strong className="text-white">3 أيام متتالية</strong> — ماشي يوم واحد</td>
+                        </tr>
+                        <tr className="bg-[#111]">
+                            <td className="p-3 text-green-400 font-bold">✅ CPA أقل من هامش الربح</td>
+                            <td className="p-3">بشكل <strong className="text-white">مستقر</strong> — ماشي مرة فوق مرة تحت</td>
+                        </tr>
+                        <tr className="bg-[#1A1A1A]">
+                            <td className="p-3 text-green-400 font-bold">✅ على الأقل 5 مبيعات</td>
+                            <td className="p-3">خاصك بيانات كافية باش تاخذ قرار</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div className="bg-[#1A1A1A] border border-red-500/20 rounded-xl p-4 mb-6">
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="text-red-400 shrink-0">🔴</span>
+                    <span>إلى ما تحققوش الشروط الثلاثة = <strong className="text-red-400">ما تزيدش الميزانية</strong> — كمل راقب.</span>
+                </div>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ الطريقة 1 ═══════ */}
+            <SectionTitle>الطريقة 1: الزيادة التدريجية (الأكثر أماناً) 🐢</SectionTitle>
+            <Paragraph>هاد الطريقة هي الأحسن للمبتدئين لأنها ما كتأثرش على أداء الحملة.</Paragraph>
+
+            <SubTitle>القاعدة:</SubTitle>
+            <BulletList items={[
+                "📈 زيد الميزانية ب 20-30% كل 48 ساعة",
+                "⏳ انتظر يومين بعد كل زيادة قبل ما تزيد مرة أخرى",
+            ]} />
+
+            <SubTitle>مثال عملي:</SubTitle>
+            <div className="overflow-x-auto mb-6">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10 text-[#C5A04E]">
+                            <th className="p-3 text-right font-bold">اليوم</th>
+                            <th className="p-3 text-right font-bold">الميزانية</th>
+                            <th className="p-3 text-right font-bold">الزيادة</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-300">
+                        {[
+                            ["اليوم 1-2", "$10/يوم", "—"],
+                            ["اليوم 3-4", "$13/يوم", "+30%"],
+                            ["اليوم 5-6", "$17/يوم", "+30%"],
+                            ["اليوم 7-8", "$22/يوم", "+30%"],
+                            ["اليوم 9-10", "$28/يوم", "+30%"],
+                        ].map(([day, budget, increase], i) => (
+                            <tr key={i} className={i % 2 === 0 ? "bg-[#1A1A1A]" : "bg-[#111]"}>
+                                <td className="p-3 font-bold text-white">{day}</td>
+                                <td className="p-3 text-green-400 font-bold">{budget}</td>
+                                <td className="p-3 text-[#C5A04E]">{increase}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <SubTitle>⚠️ الأخطاء اللي خاصك تتجنبها:</SubTitle>
+            <RedList items={[
+                "ما تضعفهاش مرة وحدة ($10 → $20) — فيسبوك كيرجع لمرحلة التعلم وكتخسر الأداء",
+                "ما تزيدش كل يوم — خاصك تعطي فيسبوك 48 ساعة باش يتأقلم",
+                "ما تزيدش إلى الأرقام بداو ينزلو — وقف الزيادة وراقب",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ الطريقة 2 ═══════ */}
+            <SectionTitle>الطريقة 2: إنشاء مجموعة إعلانية جديدة 🔄</SectionTitle>
+            <Paragraph>هاد الطريقة كتعطيك ضعف الميزانية بلا ما تأثر على المجموعة الأصلية.</Paragraph>
+
+            <SubTitle>الخطوات:</SubTitle>
+            <StepCard num={1} title="أنشئ مجموعة إعلانية جديدة" items={["بنفس الإعدادات (نفس الجمهور + نفس الإعلان)"]} />
+            <StepCard num={2} title="حط فيها ميزانية أكبر" items={["مثال: $20/يوم"]} />
+            <StepCard num={3} title="المجموعة القديمة خليها خدامة" items={["ب $10/يوم — ما تقيسهاش"]} />
+
+            <SubTitle>النتيجة:</SubTitle>
+            <div className="overflow-x-auto mb-6">
+                <table className="w-full text-sm border border-green-500/20 rounded-xl overflow-hidden">
+                    <thead>
+                        <tr className="bg-green-500/10 text-green-400">
+                            <th className="p-3 text-right font-bold">المجموعة</th>
+                            <th className="p-3 text-right font-bold">الميزانية</th>
+                            <th className="p-3 text-right font-bold">الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-300">
+                        <tr className="bg-[#1A1A1A]">
+                            <td className="p-3 text-white font-bold">المجموعة الأصلية</td>
+                            <td className="p-3">$10/يوم</td>
+                            <td className="p-3 text-green-400">✅ خدامة — ما تقيسهاش</td>
+                        </tr>
+                        <tr className="bg-[#111]">
+                            <td className="p-3 text-white font-bold">المجموعة الجديدة</td>
+                            <td className="p-3">$20/يوم</td>
+                            <td className="p-3 text-green-400">✅ جديدة — كتزيد الوصول</td>
+                        </tr>
+                        <tr className="bg-[#1A1A1A] font-bold">
+                            <td className="p-3 text-[#C5A04E]">المجموع</td>
+                            <td className="p-3 text-[#C5A04E]">$30/يوم</td>
+                            <td className="p-3 text-[#C5A04E]">ضعف الميزانية بلا مخاطرة</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <SubTitle>متى تستعمل هاد الطريقة:</SubTitle>
+            <GreenList items={[
+                "إلى بغيتي تزيد الميزانية بشكل كبير بسرعة",
+                "إلى خايف تأثر على أداء المجموعة الأصلية",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ الطريقة 3 ═══════ */}
+            <SectionTitle>الطريقة 3: CBO (Campaign Budget Optimization) 🤖</SectionTitle>
+            <Paragraph>هاد الطريقة كتخلي فيسبوك يوزع الميزانية أوتوماتيكياً على أحسن المجموعات.</Paragraph>
+
+            <SubTitle>الخطوات:</SubTitle>
+            <StepCard num={1} title="فعّل CBO على مستوى الحملة" items={["من إعدادات الحملة"]} />
+            <StepCard num={2} title="حط ميزانية كبيرة" items={["مثال: $50/يوم"]} />
+            <StepCard num={3} title="فيسبوك كيوزع أوتوماتيكياً" items={["على أحسن المجموعات"]} />
+
+            <SubTitle>متى تستعمل CBO:</SubTitle>
+            <GreenList items={[
+                "إلى عندك أكثر من مجموعتين إعلانيتين ناجحين في نفس الحملة",
+                "إلى بغيتي فيسبوك يختار أحسن جمهور أوتوماتيكياً",
+            ]} />
+            <RedList items={[
+                "ما تستعملهاش في البداية — خلي التحكم اليدوي حتى تلقى الجمهور الرابح",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ ملخص ═══════ */}
+            <SectionTitle>📋 ملخص — أي طريقة تختار؟</SectionTitle>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10 text-[#C5A04E]">
+                            <th className="p-3 text-right font-bold">الطريقة</th>
+                            <th className="p-3 text-right font-bold">المستوى</th>
+                            <th className="p-3 text-right font-bold">الأمان</th>
+                            <th className="p-3 text-right font-bold">متى تستعملها</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-300">
+                        <tr className="bg-[#1A1A1A]">
+                            <td className="p-3 font-bold text-white">الزيادة التدريجية</td>
+                            <td className="p-3">مبتدئ</td>
+                            <td className="p-3 text-green-400">⭐⭐⭐ الأكثر أماناً</td>
+                            <td className="p-3">ديما — هي الأساس</td>
+                        </tr>
+                        <tr className="bg-[#111]">
+                            <td className="p-3 font-bold text-white">مجموعة جديدة</td>
+                            <td className="p-3">متوسط</td>
+                            <td className="p-3 text-yellow-400">⭐⭐ آمنة</td>
+                            <td className="p-3">إلى بغيتي تضاعف بسرعة</td>
+                        </tr>
+                        <tr className="bg-[#1A1A1A]">
+                            <td className="p-3 font-bold text-white">CBO</td>
+                            <td className="p-3">متقدم</td>
+                            <td className="p-3 text-red-400">⭐ كتحتاج تجربة</td>
+                            <td className="p-3">إلى عندك عدة مجموعات ناجحة</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ الخلاصة ═══════ */}
+            <div className="bg-gradient-to-br from-[#C5A04E]/10 to-transparent border border-[#C5A04E]/20 rounded-2xl p-6">
+                <h3 className="text-xl font-bold text-[#C5A04E] mb-3">📌 الخلاصة</h3>
+                <Paragraph>
+                    الScaling ماشي غير تزيد الفلوس — هو فن. زيد بذكاء وبالتدريج. أكبر خطأ كيديرو المبتدئين هو أنهم كيضاعفو الميزانية مرة وحدة فكيخسرو كلشي. اتبع القاعدة: <strong className="text-white">20-30% كل 48 ساعة</strong> وغادي تشوف النتائج.
+                </Paragraph>
+            </div>
+
+            <Divider />
+            <div className="text-center pt-4">
+                <p className="text-sm text-gray-500">
+                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                </p>
+            </div>
+        </div>
+    );
+}
+
 /* ─── Router ─── */
 const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase5_product_research: Phase5ProductResearch,
@@ -4192,6 +4412,7 @@ const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase23_dashboard_reading: Phase23DashboardReading,
     phase23_customize_columns: Phase23CustomizeColumns,
     phase23_success_failure: Phase23SuccessFailure,
+    phase23_scaling: Phase23Scaling,
 };
 
 export default function LessonContentRenderer({ contentKey }: { contentKey: string }) {
