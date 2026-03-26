@@ -4840,6 +4840,224 @@ function Phase23AdjustCampaign() {
 }
 
 /* ─── Router ─── */
+/* ═══════════════════════════════════════════════════════════════
+   Phase 23 – Lesson 8 : تحليل مسار العميل — Funnel Analysis
+   ═══════════════════════════════════════════════════════════════ */
+function Phase23FunnelAnalysis() {
+    const diagnosisSection = (
+        title: string,
+        subtitle: string,
+        rows: [string, string][]
+    ) => (
+        <>
+            <SubTitle>{title}</SubTitle>
+            <div className="bg-[#1A1A1A] border border-red-500/20 rounded-xl p-4 mb-4">
+                <p className="text-red-400 font-bold text-center">{subtitle}</p>
+            </div>
+            <div className="overflow-x-auto mb-6">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead><tr className="bg-[#C5A04E]/10 text-[#C5A04E]">
+                        <th className="p-3 text-right font-bold">السبب المحتمل</th>
+                        <th className="p-3 text-right font-bold">الحل</th>
+                    </tr></thead>
+                    <tbody className="text-gray-300">
+                        {rows.map(([cause, fix], i) => (
+                            <tr key={i} className={i % 2 === 0 ? "bg-[#1A1A1A]" : "bg-[#111]"}>
+                                <td className="p-3 text-red-400">{cause}</td>
+                                <td className="p-3 text-green-400">{fix}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </>
+    );
+
+    return (
+        <div className="p-6 lg:p-8 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin" dir="rtl">
+            <h1 className="text-3xl font-bold text-white mb-2">تحليل مسار العميل — Funnel Analysis 🔍</h1>
+            <p className="text-[#C5A04E] text-lg mb-8">تعرف فين كيتوقفو العملاء باش تصلح المشكل بالضبط</p>
+
+            {/* ═══════ شنو هو المسار ═══════ */}
+            <SectionTitle>شنو هو مسار العميل؟</SectionTitle>
+            <Paragraph>
+                مسار العميل هو الرحلة اللي كيدوزها العميل من أول مرة كيشوف الإعلان ديالك حتى كيشري. كل مرحلة فيها عدد من الناس — والعدد كينقص كل ما تقدمنا في المسار. الهدف ديالك هو أنك تعرف <strong className="text-white">فين كيتوقفو الناس</strong> باش تصلح المشكل.
+            </Paragraph>
+
+            <SubTitle>المسار الكامل:</SubTitle>
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/20 rounded-xl p-5 mb-6">
+                <div className="flex items-center justify-center flex-wrap gap-2 text-sm">
+                    {["ظهور", "نقرة", "شوف المنتج", "إضافة للسلة", "بداية الدفع", "شراء"].map((step, i, arr) => (
+                        <span key={i} className="flex items-center gap-2">
+                            <span className="bg-[#C5A04E]/20 text-[#C5A04E] font-bold px-3 py-1.5 rounded-lg">{step}</span>
+                            {i < arr.length - 1 && <span className="text-[#C5A04E]">←</span>}
+                        </span>
+                    ))}
+                </div>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ مثال تطبيقي ═══════ */}
+            <SectionTitle>مثال تطبيقي — كيفاش تقرا المسار</SectionTitle>
+
+            <div className="overflow-x-auto mb-6">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10 text-[#C5A04E]">
+                            <th className="p-3 text-right font-bold">المرحلة</th>
+                            <th className="p-3 text-right font-bold">الرقم</th>
+                            <th className="p-3 text-right font-bold">النسبة</th>
+                            <th className="p-3 text-right font-bold">التحليل</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-300">
+                        {[
+                            ["ظهور (Impressions)", "10,000", "—", "كافي ✅"],
+                            ["نقرات (Link Clicks)", "200", "CTR 2%", "مزيان ✅"],
+                            ["إضافة للسلة (ATC)", "20", "10% من النقرات", "مزيان ✅"],
+                            ["بداية الدفع (IC)", "10", "50% من ATC", "مزيان ✅"],
+                            ["شراء (Purchase)", "3", "30% من IC", "مقبول ✅"],
+                        ].map(([stage, num, ratio, analysis], i) => (
+                            <tr key={i} className={i % 2 === 0 ? "bg-[#1A1A1A]" : "bg-[#111]"}>
+                                <td className="p-3 font-bold text-white">{stage}</td>
+                                <td className="p-3 text-[#C5A04E] font-bold">{num}</td>
+                                <td className="p-3">{ratio}</td>
+                                <td className="p-3 text-green-400">{analysis}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <SubTitle>كيفاش تحسب النسب:</SubTitle>
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-6 space-y-3 font-mono text-sm">
+                <p className="text-gray-300"><span className="text-[#C5A04E]">CTR</span> = النقرات ÷ الظهور × 100 → 200 ÷ 10,000 × 100 = <span className="text-green-400 font-bold">%2</span></p>
+                <p className="text-gray-300"><span className="text-[#C5A04E]">نسبة ATC</span> = ATC ÷ النقرات × 100 → 20 ÷ 200 × 100 = <span className="text-green-400 font-bold">%10</span></p>
+                <p className="text-gray-300"><span className="text-[#C5A04E]">نسبة IC</span> = IC ÷ ATC × 100 → 10 ÷ 20 × 100 = <span className="text-green-400 font-bold">%50</span></p>
+                <p className="text-gray-300"><span className="text-[#C5A04E]">نسبة الشراء</span> = Purchase ÷ IC × 100 → 3 ÷ 10 × 100 = <span className="text-green-400 font-bold">%30</span></p>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ النسب المثالية ═══════ */}
+            <SectionTitle>النسب المثالية لكل مرحلة</SectionTitle>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10 text-[#C5A04E]">
+                            <th className="p-3 text-right font-bold">المرحلة</th>
+                            <th className="p-3 text-right font-bold">النسبة المثالية</th>
+                            <th className="p-3 text-right font-bold">أقل من هاد الرقم = مشكل</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-300">
+                        {[
+                            ["CTR (الظهور → النقرة)", "أكثر من %2", "أقل من %1 = الإعلان ضعيف"],
+                            ["النقرة → الإضافة للسلة", "أكثر من %5", "أقل من %3 = صفحة المنتج ضعيفة"],
+                            ["الإضافة للسلة → بداية الدفع", "أكثر من %40", "أقل من %20 = مشكل في السلة"],
+                            ["بداية الدفع → الشراء", "أكثر من %30", "أقل من %15 = مشكل في الدفع"],
+                        ].map(([stage, ideal, problem], i) => (
+                            <tr key={i} className={i % 2 === 0 ? "bg-[#1A1A1A]" : "bg-[#111]"}>
+                                <td className="p-3 font-bold text-white">{stage}</td>
+                                <td className="p-3 text-green-400">{ideal}</td>
+                                <td className="p-3 text-red-400">{problem}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ دليل التشخيص ═══════ */}
+            <SectionTitle>فين المشكل؟ — دليل التشخيص</SectionTitle>
+
+            {diagnosisSection(
+                "🔴 الانخفاض بين النقرة والإضافة للسلة",
+                "المشكل في صفحة المنتج",
+                [
+                    ["الصور ما كافيينش أو ضعاف", "أضف صور احترافية من عدة زوايا"],
+                    ["الوصف ما مقنعش", "اكتب وصف يركز على الفوائد ماشي الميزات"],
+                    ["الثمن غالي مقارنة بالتوقعات", "راجع التسعير أو أضف عرض"],
+                    ["الصفحة كتحمل بالبطء", "حسّن سرعة الموقع"],
+                    ["ما كاينش تقييمات", "أضف آراء وتقييمات العملاء"],
+                ]
+            )}
+
+            {diagnosisSection(
+                "🟡 الانخفاض بين الإضافة للسلة وبداية الدفع",
+                "المشكل في صفحة السلة",
+                [
+                    ["تكاليف الشحن كتبان في السلة", "أضف شحن مجاني أو وضحو من البداية"],
+                    ["الضرائب أو الرسوم مفاجئة", "وضّح التكلفة الإجمالية من البداية"],
+                    ["صفحة السلة معقدة", "بسّط الصفحة — خلي فقط الضروري"],
+                    ["ما كاينش حافز لإكمال الشراء", 'أضف "شحن مجاني" أو "عرض محدود"'],
+                ]
+            )}
+
+            {diagnosisSection(
+                "🔴 الانخفاض بين بداية الدفع والشراء",
+                "المشكل في صفحة الدفع أو طرق الدفع",
+                [
+                    ["طرق الدفع محدودة", "أضف طرق دفع إضافية (COD للمغرب والسعودية)"],
+                    ["صفحة الدفع طويلة ومعقدة", "بسّط — خلي الدفع في خطوة أو خطوتين"],
+                    ["ما كاينش ضمانات أمان", "أضف شعارات SSL + طرق الدفع الآمنة"],
+                    ["ما كاينش ضمان استرجاع", "أضف سياسة إرجاع واضحة"],
+                    ["الناس ما كيثقوش في الموقع", 'أضف "تقييمات العملاء" + "ضمان 30 يوم"'],
+                ]
+            )}
+
+            {/* ═══════ ملخص ═══════ */}
+            <SectionTitle>📋 ملخص — خريطة حل المشاكل</SectionTitle>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10 text-[#C5A04E]">
+                            <th className="p-3 text-right font-bold">فين الانخفاض</th>
+                            <th className="p-3 text-right font-bold">المشكل فين</th>
+                            <th className="p-3 text-right font-bold">أول حاجة ديرها</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-300">
+                        {[
+                            ["الظهور → النقرة", "الإعلان", "بدّل الخطاف (أول 3 ثواني)"],
+                            ["النقرة → الإضافة للسلة", "صفحة المنتج", "حسّن الصور والوصف"],
+                            ["الإضافة للسلة → بداية الدفع", "صفحة السلة", "أضف شحن مجاني ووضّح التكاليف"],
+                            ["بداية الدفع → الشراء", "صفحة الدفع", "بسّط الدفع وأضف طرق دفع"],
+                        ].map(([drop, where, fix], i) => (
+                            <tr key={i} className={i % 2 === 0 ? "bg-[#1A1A1A]" : "bg-[#111]"}>
+                                <td className="p-3 font-bold text-white">{drop}</td>
+                                <td className="p-3 text-red-400">{where}</td>
+                                <td className="p-3 text-green-400">{fix}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ الخلاصة ═══════ */}
+            <div className="bg-gradient-to-br from-[#C5A04E]/10 to-transparent border border-[#C5A04E]/20 rounded-2xl p-6">
+                <h3 className="text-xl font-bold text-[#C5A04E] mb-3">📌 الخلاصة</h3>
+                <Paragraph>
+                    مسار العميل كيوريك بالضبط فين المشكل. ما تقلبش على الحل بالعشوائية — تبع الأرقام من فوق لتحت، لقى فين الانخفاض الكبير، وركز عليه. حل مشكل واحد في المرة والنتائج غادي تتحسن.
+                </Paragraph>
+            </div>
+
+            <Divider />
+            <div className="text-center pt-4">
+                <p className="text-sm text-gray-500">
+                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                </p>
+            </div>
+        </div>
+    );
+}
+
 const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase5_product_research: Phase5ProductResearch,
     phase11_shopify_guide: Phase11ShopifyGuide,
@@ -4854,6 +5072,7 @@ const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase23_scaling: Phase23Scaling,
     phase23_stop_campaign: Phase23StopCampaign,
     phase23_adjust_campaign: Phase23AdjustCampaign,
+    phase23_funnel_analysis: Phase23FunnelAnalysis,
 };
 
 export default function LessonContentRenderer({ contentKey }: { contentKey: string }) {
