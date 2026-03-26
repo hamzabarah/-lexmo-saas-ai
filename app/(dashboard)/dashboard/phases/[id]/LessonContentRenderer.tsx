@@ -3642,6 +3642,167 @@ function Phase23AdMetrics() {
     );
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   Phase 23 – Lesson 2 : كيفاش تقرا لوحة التحكم
+   ═══════════════════════════════════════════════════════════════ */
+function Phase23DashboardReading() {
+    return (
+        <div className="p-6 lg:p-8 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin" dir="rtl">
+            <h1 className="text-3xl font-bold text-white mb-2">كيفاش تقرا لوحة التحكم 🖥️</h1>
+            <p className="text-[#C5A04E] text-lg mb-8">تعلم تقرا الأرقام من الأعلى للأسفل باش تاخد القرارات الصحيحة</p>
+
+            {/* ═══════ Section 1 — الدخول ═══════ */}
+            <SectionTitle>الدخول للوحة التحكم</SectionTitle>
+
+            <StepCard num={1} title="ادخل business.facebook.com" items={["افتح المتصفح وادخل للرابط"]} />
+            <StepCard num={2} title="اضغط على Ads Manager" items={["من القائمة الجانبية اختار مدير الإعلانات"]} />
+            <StepCard num={3} title="غادي تشوف 3 مستويات" items={["الحملات → المجموعات الإعلانية → الإعلانات"]} />
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10 text-[#C5A04E]">
+                            <th className="p-3 text-right font-bold">المستوى</th>
+                            <th className="p-3 text-right font-bold">الاسم</th>
+                            <th className="p-3 text-right font-bold">شنو كيوريك</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-300">
+                        <tr className="bg-[#1A1A1A]">
+                            <td className="p-3 font-bold text-white">المستوى 1</td>
+                            <td className="p-3 font-mono text-[#C5A04E]">Campaigns (الحملات)</td>
+                            <td className="p-3">الصورة الكبيرة — الأداء العام ديال كل حملة</td>
+                        </tr>
+                        <tr className="bg-[#111]">
+                            <td className="p-3 font-bold text-white">المستوى 2</td>
+                            <td className="p-3 font-mono text-[#C5A04E]">Ad Sets (المجموعات الإعلانية)</td>
+                            <td className="p-3">التفاصيل — أداء كل جمهور على حدا</td>
+                        </tr>
+                        <tr className="bg-[#1A1A1A]">
+                            <td className="p-3 font-bold text-white">المستوى 3</td>
+                            <td className="p-3 font-mono text-[#C5A04E]">Ads (الإعلانات)</td>
+                            <td className="p-3">الأداء الفردي — أداء كل إعلان على حدا</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ Section 2 — كيفاش تقرا النتائج ═══════ */}
+            <SectionTitle>كيفاش تقرا النتائج — الترتيب الصحيح</SectionTitle>
+
+            {/* الخطوة 1 */}
+            <SubTitle>الخطوة 1: ابدأ من Campaigns (الحملات) 📊</SubTitle>
+            <Paragraph>هنا كتشوف الصورة الكبيرة:</Paragraph>
+            <BulletList items={[
+                "شحال صرفتي إجمالياً",
+                "شحال من بيعة جابت الحملة",
+                "ROAS ديال الحملة كاملة",
+            ]} />
+            <GreenList items={["إلى الحملة كتربح → نزل للتفاصيل"]} />
+            <RedList items={["إلى الحملة خاسرة بزاف → وقفها ما تضيعش الوقت"]} />
+
+            {/* الخطوة 2 */}
+            <SubTitle>الخطوة 2: انزل ل Ad Sets (المجموعات الإعلانية) 🎯</SubTitle>
+            <Paragraph>هنا كتشوف أي جمهور أحسن. قارن بين المجموعات:</Paragraph>
+            <BulletList items={[
+                "أي جمهور عندو أقل CPA (تكلفة الشراء)؟",
+                "أي جمهور عندو أحسن CTR (نسبة النقر)؟",
+                "أي جمهور عندو أحسن ROAS (العائد على الإنفاق)؟",
+            ]} />
+            <GreenList items={["المجموعة اللي كتجيب نتائج → زيد الميزانية ديالها"]} />
+            <RedList items={["المجموعة اللي ما كتجيبش نتائج → وقفها"]} />
+
+            {/* الخطوة 3 */}
+            <SubTitle>الخطوة 3: انزل ل Ads (الإعلانات) 🎬</SubTitle>
+            <Paragraph>هنا كتشوف أي إعلان أحسن. قارن بين الإعلانات:</Paragraph>
+            <BulletList items={[
+                "أي فيديو/صورة جابت أكثر نقرات؟",
+                "أي نص إعلاني جاب أكثر مبيعات؟",
+                "أي إعلان عندو أحسن CTR؟",
+            ]} />
+            <GreenList items={["الإعلان اللي كيجيب نتائج → خليه خدام"]} />
+            <RedList items={["الإعلان اللي ما كيجيبش نتائج → وقفو وجرب محتوى جديد"]} />
+
+            <Divider />
+
+            {/* ═══════ Section 3 — ملخص ═══════ */}
+            <SectionTitle>📌 ملخص طريقة القراءة</SectionTitle>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10 text-[#C5A04E]">
+                            <th className="p-3 text-right font-bold">الترتيب</th>
+                            <th className="p-3 text-right font-bold">المستوى</th>
+                            <th className="p-3 text-right font-bold">السؤال اللي كتجاوب عليه</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-300">
+                        <tr className="bg-[#1A1A1A]">
+                            <td className="p-3 text-[#C5A04E] font-bold">1️⃣</td>
+                            <td className="p-3 font-mono font-bold text-white">Campaigns</td>
+                            <td className="p-3">واش الحملة ككل رابحة ولا خاسرة؟</td>
+                        </tr>
+                        <tr className="bg-[#111]">
+                            <td className="p-3 text-[#C5A04E] font-bold">2️⃣</td>
+                            <td className="p-3 font-mono font-bold text-white">Ad Sets</td>
+                            <td className="p-3">أي جمهور كيجيب أحسن نتائج؟</td>
+                        </tr>
+                        <tr className="bg-[#1A1A1A]">
+                            <td className="p-3 text-[#C5A04E] font-bold">3️⃣</td>
+                            <td className="p-3 font-mono font-bold text-white">Ads</td>
+                            <td className="p-3">أي إعلان كيجيب أحسن نتائج؟</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ Section 4 — نصائح مهمة ═══════ */}
+            <SectionTitle>⚠️ نصائح مهمة</SectionTitle>
+
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-6 space-y-4">
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="shrink-0">🕐</span>
+                    <span>ما تقيسش النتائج في أول 24 ساعة — فيسبوك كيتعلم</span>
+                </div>
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="shrink-0">📊</span>
+                    <span>أول قراءة حقيقية ديرها بعد 48-72 ساعة</span>
+                </div>
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="shrink-0">🔄</span>
+                    <span>ما تبدلش في الحملة كل يوم — كل تعديل كيرجع فيسبوك لمرحلة التعلم</span>
+                </div>
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="shrink-0">📝</span>
+                    <span>سجل الأرقام كل يوم في ملف Excel أو Google Sheets باش تتبع التطور</span>
+                </div>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ الخلاصة ═══════ */}
+            <div className="bg-gradient-to-br from-[#C5A04E]/10 to-transparent border border-[#C5A04E]/20 rounded-2xl p-6">
+                <h3 className="text-xl font-bold text-[#C5A04E] mb-3">📌 الخلاصة</h3>
+                <Paragraph>
+                    لوحة التحكم هي المرآة ديال الحملة ديالك. تعلم تقراها من الأعلى (الحملة) للأسفل (الإعلانات) باش تعرف فين المشكل وفين الفرصة. القرارات ديالك خاصهم يكونو مبنيين على الأرقام ماشي على الإحساس.
+                </Paragraph>
+            </div>
+
+            <Divider />
+            <div className="text-center pt-4">
+                <p className="text-sm text-gray-500">
+                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                </p>
+            </div>
+        </div>
+    );
+}
+
 /* ─── Router ─── */
 const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase5_product_research: Phase5ProductResearch,
@@ -3651,6 +3812,7 @@ const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase14_essential_apps: Phase14EssentialApps,
     phase22_ad_campaign: Phase22AdCampaign,
     phase23_ad_metrics: Phase23AdMetrics,
+    phase23_dashboard_reading: Phase23DashboardReading,
 };
 
 export default function LessonContentRenderer({ contentKey }: { contentKey: string }) {
