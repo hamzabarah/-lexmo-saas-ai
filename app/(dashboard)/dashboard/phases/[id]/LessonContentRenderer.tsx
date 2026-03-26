@@ -3485,6 +3485,163 @@ function Phase22AdCampaign() {
     );
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   Phase 23 – Lesson 1 : الأرقام الأساسية اللي خاصك تفهمها
+   ═══════════════════════════════════════════════════════════════ */
+function Phase23AdMetrics() {
+    return (
+        <div className="p-6 lg:p-8 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin" dir="rtl">
+            <h1 className="text-3xl font-bold text-white mb-2">الأرقام الأساسية اللي خاصك تفهمها 📊</h1>
+            <p className="text-[#C5A04E] text-lg mb-8">هاد الأرقام هي اللي غادي تعتامد عليها باش تعرف واش الحملة ديالك ناجحة ولا لا</p>
+
+            {/* ═══════ Section 1 — جدول المؤشرات ═══════ */}
+            <SectionTitle>جدول المؤشرات الأساسية</SectionTitle>
+            <Paragraph>كل رقم عندو معنى وقيمة مثالية خاصك تعرفها:</Paragraph>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10 text-[#C5A04E]">
+                            <th className="p-3 text-right font-bold">الرقم</th>
+                            <th className="p-3 text-right font-bold">الاسم</th>
+                            <th className="p-3 text-right font-bold">شنو كيعني</th>
+                            <th className="p-3 text-right font-bold">المثالي</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-300">
+                        {[
+                            ["Impressions", "مرات الظهور", "شحال من مرة بان الإعلان ديالك", "كل ما كثر كل ما كان أحسن"],
+                            ["Reach", "الوصول", "شحال من شخص فريد شاف الإعلان", "كل ما كثر كل ما كان أحسن"],
+                            ["CPM", "تكلفة الألف ظهور", "شحال كتخلص على 1000 ظهور", "أقل من $15 مزيان"],
+                            ["CPC", "تكلفة النقرة", "شحال كتخلص على كل نقرة", "أقل من $1 ممتاز"],
+                            ["CTR", "نسبة النقر", "النسبة المئوية ديال الناس اللي نقرو", "أكثر من %2 مزيان"],
+                            ["Add to Cart", "الإضافة للسلة", "شحال من واحد ضاف المنتج للسلة", "—"],
+                            ["Initiate Checkout", "بداية الدفع", "شحال من واحد بدا عملية الدفع", "—"],
+                            ["Purchase", "الشراء", "شحال من واحد شرى فعلاً", "🎯 الهدف!"],
+                            ["CPA", "تكلفة الشراء الواحد", "شحال صرفتي باش جبتي بيعة وحدة", "أقل من هامش الربح"],
+                            ["ROAS", "العائد على الإنفاق", "شحال رجع ليك مقابل كل دولار صرفتيه", "أكثر من 2 = رابح"],
+                            ["Frequency", "التكرار", "شحال من مرة نفس الشخص شاف الإعلان", "أقل من 3 مزيان"],
+                        ].map(([key, name, meaning, ideal], i) => (
+                            <tr key={i} className={i % 2 === 0 ? "bg-[#1A1A1A]" : "bg-[#111]"}>
+                                <td className="p-3 font-mono text-[#C5A04E] font-bold">{key}</td>
+                                <td className="p-3 font-bold text-white">{name}</td>
+                                <td className="p-3">{meaning}</td>
+                                <td className="p-3 text-green-400">{ideal}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ Section 2 — شرح المؤشرات المهمة ═══════ */}
+            <SectionTitle>📌 شرح المؤشرات المهمة</SectionTitle>
+
+            {/* 1 — Impressions */}
+            <SubTitle>1️⃣ Impressions — مرات الظهور</SubTitle>
+            <BulletList items={[
+                "شحال من مرة بان الإعلان ديالك للناس",
+                "شخص واحد يقدر يشوف الإعلان أكثر من مرة",
+                "كل ما كثر العدد كل ما كان أحسن",
+            ]} />
+
+            {/* 2 — Reach */}
+            <SubTitle>2️⃣ Reach — الوصول</SubTitle>
+            <BulletList items={[
+                "شحال من شخص فريد شاف الإعلان ديالك",
+                "الفرق مع Impressions: الوصول كيحسب كل شخص مرة وحدة فقط",
+                "كل ما كثر كل ما كان أحسن",
+            ]} />
+
+            {/* 3 — CPM */}
+            <SubTitle>3️⃣ CPM — تكلفة الألف ظهور</SubTitle>
+            <Paragraph>شحال كتخلص على كل 1000 ظهور</Paragraph>
+            <GreenList items={["أقل من $15 = مزيان"]} />
+            <RedList items={["أكثر من $15 = غالي — خاصك تراجع الاستهداف"]} />
+
+            {/* 4 — CPC */}
+            <SubTitle>4️⃣ CPC — تكلفة النقرة</SubTitle>
+            <Paragraph>شحال كتخلص على كل نقرة على الإعلان</Paragraph>
+            <GreenList items={["أقل من $1 = ممتاز"]} />
+            <RedList items={["أكثر من $2 = غالي — خاصك تحسن الإعلان"]} />
+
+            {/* 5 — CTR */}
+            <SubTitle>5️⃣ CTR — نسبة النقر</SubTitle>
+            <Paragraph>النسبة المئوية ديال الناس اللي نقرو على الإعلان من بين اللي شافوه</Paragraph>
+            <GreenList items={["أكثر من %2 = مزيان"]} />
+            <RedList items={["أقل من %1 = الإعلان ما كيجذبش — خاصك تبدل المحتوى"]} />
+
+            {/* 6 — Add to Cart */}
+            <SubTitle>6️⃣ Add to Cart — الإضافة للسلة</SubTitle>
+            <BulletList items={[
+                "شحال من واحد ضاف المنتج للسلة",
+                "هذا كيعني عندو اهتمام بالمنتج",
+            ]} />
+
+            {/* 7 — Initiate Checkout */}
+            <SubTitle>7️⃣ Initiate Checkout — بداية الدفع</SubTitle>
+            <BulletList items={[
+                "شحال من واحد بدا عملية الدفع",
+                "إلى كان هاد الرقم مزيان ولكن ما كيشريوش = مشكل في صفحة الدفع",
+            ]} />
+
+            {/* 8 — Purchase */}
+            <SubTitle>8️⃣ Purchase — الشراء 🎯</SubTitle>
+            <BulletList items={[
+                "شحال من واحد شرى فعلاً",
+                "هذا هو الهدف النهائي ديال أي حملة",
+            ]} />
+
+            {/* 9 — CPA */}
+            <SubTitle>9️⃣ CPA (Cost per Purchase) — تكلفة الشراء الواحد</SubTitle>
+            <Paragraph>شحال صرفتي باش جبتي بيعة وحدة</Paragraph>
+            <GreenList items={["خاصو يكون أقل من هامش الربح ديالك"]} />
+
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-6 space-y-3">
+                <p className="text-sm font-bold text-[#C5A04E] mb-2">أمثلة عملية:</p>
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="text-green-400 mt-1 shrink-0">✅</span>
+                    <span>إلى هامش الربح ديالك 20$ و CPA = 15$ → رابح 5$ على كل بيعة</span>
+                </div>
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="text-red-400 mt-1 shrink-0">❌</span>
+                    <span>إلى هامش الربح ديالك 20$ و CPA = 25$ → خاسر 5$ على كل بيعة</span>
+                </div>
+            </div>
+
+            {/* 10 — ROAS */}
+            <SubTitle>🔟 ROAS — العائد على الإنفاق</SubTitle>
+            <Paragraph>شحال رجع ليك مقابل كل دولار صرفتيه في الإعلانات</Paragraph>
+            <GreenList items={["أكثر من 2 = رابح (كل دولار صرفتيه رجع ليك 2 دولار أو أكثر)"]} />
+            <RedList items={["أقل من 1 = خاسر (كتصرف أكثر من اللي كتربح)"]} />
+
+            {/* 11 — Frequency */}
+            <SubTitle>1️⃣1️⃣ Frequency — التكرار</SubTitle>
+            <Paragraph>شحال من مرة نفس الشخص شاف الإعلان ديالك</Paragraph>
+            <GreenList items={["أقل من 3 = مزيان"]} />
+            <RedList items={["أكثر من 4 = الناس بداو يملو من الإعلان — خاصك تبدل المحتوى أو توسع الجمهور"]} />
+
+            <Divider />
+
+            {/* ═══════ الخلاصة ═══════ */}
+            <div className="bg-gradient-to-br from-[#C5A04E]/10 to-transparent border border-[#C5A04E]/20 rounded-2xl p-6">
+                <h3 className="text-xl font-bold text-[#C5A04E] mb-3">📌 الخلاصة</h3>
+                <Paragraph>
+                    هاد الأرقام هي البوصلة ديالك. ما تطلقش حملة إعلانية بلا ما تفهمهم. كل رقم كيعطيك معلومة مهمة على شنو خاصك تصلح باش تحسن النتائج ديالك.
+                </Paragraph>
+            </div>
+
+            <Divider />
+            <div className="text-center pt-4">
+                <p className="text-sm text-gray-500">
+                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                </p>
+            </div>
+        </div>
+    );
+}
+
 /* ─── Router ─── */
 const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase5_product_research: Phase5ProductResearch,
@@ -3493,6 +3650,7 @@ const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase13_store_design: Phase13StoreDesign,
     phase14_essential_apps: Phase14EssentialApps,
     phase22_ad_campaign: Phase22AdCampaign,
+    phase23_ad_metrics: Phase23AdMetrics,
 };
 
 export default function LessonContentRenderer({ contentKey }: { contentKey: string }) {

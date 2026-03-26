@@ -476,7 +476,7 @@ export const stepsContent: StepContent[] = [
             {
                 title: "الدروس",
                 lessons: [
-                    { id: 1, title: "الأرقام الأساسية", type: "pdf" },
+                    { id: 1, title: "الأرقام الأساسية", type: "pdf", content: "phase23_ad_metrics" },
                     { id: 2, title: "كيفاش تقرا لوحة التحكم", type: "pdf" },
                     { id: 3, title: "تخصيص الأعمدة Customize Columns", type: "pdf" },
                     { id: 4, title: "مؤشرات النجاح والفشل", type: "pdf" },
