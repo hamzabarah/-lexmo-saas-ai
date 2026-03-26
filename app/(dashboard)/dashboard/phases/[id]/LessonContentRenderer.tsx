@@ -4620,6 +4620,225 @@ function Phase23StopCampaign() {
     );
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   Phase 23 – Lesson 7 : متى تعدل الحملة — حل كل مشكل
+   ═══════════════════════════════════════════════════════════════ */
+function Phase23AdjustCampaign() {
+    const problemSection = (
+        title: string,
+        emoji: string,
+        diagRows: [string, string, string][],
+        cause: string[],
+        solutions: [string, string, string][]
+    ) => (
+        <>
+            <SectionTitle>{title} {emoji}</SectionTitle>
+            <SubTitle>التشخيص:</SubTitle>
+            <div className="overflow-x-auto mb-4">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead><tr className="bg-[#C5A04E]/10 text-[#C5A04E]">
+                        <th className="p-3 text-right font-bold">المؤشر</th>
+                        <th className="p-3 text-right font-bold">القيمة</th>
+                        <th className="p-3 text-right font-bold">المعنى</th>
+                    </tr></thead>
+                    <tbody className="text-gray-300">
+                        {diagRows.map(([m, v, meaning], i) => (
+                            <tr key={i} className="bg-[#1A1A1A]">
+                                <td className="p-3 font-bold text-white">{m}</td>
+                                <td className="p-3 text-red-400">{v}</td>
+                                <td className="p-3">{meaning}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <SubTitle>السبب:</SubTitle>
+            <BulletList items={cause} />
+            <SubTitle>الحلول (جرب واحد في المرة):</SubTitle>
+            <div className="overflow-x-auto mb-6">
+                <table className="w-full text-sm border border-green-500/20 rounded-xl overflow-hidden">
+                    <thead><tr className="bg-green-500/10 text-green-400">
+                        <th className="p-3 text-right font-bold">الأولوية</th>
+                        <th className="p-3 text-right font-bold">الحل</th>
+                        <th className="p-3 text-right font-bold">التفاصيل</th>
+                    </tr></thead>
+                    <tbody className="text-gray-300">
+                        {solutions.map(([priority, sol, details], i) => (
+                            <tr key={i} className={i % 2 === 0 ? "bg-[#1A1A1A]" : "bg-[#111]"}>
+                                <td className="p-3 text-[#C5A04E] font-bold">{priority}</td>
+                                <td className="p-3 font-bold text-white">{sol}</td>
+                                <td className="p-3">{details}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <Divider />
+        </>
+    );
+
+    return (
+        <div className="p-6 lg:p-8 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin" dir="rtl">
+            <h1 className="text-3xl font-bold text-white mb-2">متى تعدل الحملة — حل كل مشكل 🔧</h1>
+            <p className="text-[#C5A04E] text-lg mb-8">دليل عملي لتشخيص المشاكل وإصلاحها واحد بواحد</p>
+
+            {/* ═══════ القاعدة الذهبية ═══════ */}
+            <SectionTitle>⚠️ القاعدة الذهبية قبل أي تعديل</SectionTitle>
+
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/20 rounded-xl p-5 mb-6">
+                <p className="text-[#C5A04E] font-bold text-lg text-center mb-4">
+                    ما تبدلش أكثر من حاجة وحدة في نفس الوقت.
+                </p>
+                <p className="text-gray-400 text-center">
+                    إلى بدلتي الجمهور والإعلان مع بعض ما غاديش تعرف شنو اللي خدم.
+                </p>
+            </div>
+
+            <SubTitle>الطريقة الصحيحة:</SubTitle>
+            <StepCard num={1} title="بدّل حاجة وحدة فقط" items={["🔧 تعديل واحد في المرة"]} />
+            <StepCard num={2} title="انتظر 48 ساعة" items={["⏳ عطي فيسبوك وقت باش يتأقلم"]} />
+            <StepCard num={3} title="شوف النتائج" items={["📊 قارن الأرقام قبل وبعد"]} />
+            <StepCard num={4} title="إلى ما تحسنش — بدّل حاجة أخرى" items={["🔧 جرب الحل الموالي في القائمة"]} />
+
+            <Divider />
+
+            {/* ═══════ المشكل 1 ═══════ */}
+            {problemSection(
+                "المشكل 1: CTR ضعيف (أقل من %1)", "📉",
+                [["CTR", "أقل من %1", "الإعلان ما كيجذبش الانتباه"]],
+                [
+                    "الناس كيشوفو الإعلان ولكن ما كينقروش عليه",
+                    "المحتوى الإعلاني (الفيديو/الصورة/النص) ما كيثيرش الاهتمام",
+                ],
+                [
+                    ["1️⃣", "بدّل الخطاف (Hook)", "غيّر أول 3 ثواني من الفيديو — هنا العميل كيقرر"],
+                    ["2️⃣", "جرب فيديو جديد", "محتوى مختلف تماماً — زاوية جديدة"],
+                    ["3️⃣", "جرب صورة بدل فيديو", "بعض المنتجات كتخدم أحسن بالصور"],
+                    ["4️⃣", "بدّل النص الإعلاني", "جرب مشكلة مختلفة أو عرض مختلف"],
+                ]
+            )}
+
+            {/* ═══════ المشكل 2 ═══════ */}
+            {problemSection(
+                "المشكل 2: CPC غالي (أكثر من $2)", "💸",
+                [["CPC", "أكثر من $2", "الناس ما مهتمينش أو الجمهور غلط"]],
+                [
+                    "الجمهور المستهدف ما مناسبش للمنتج",
+                    "الجمهور مشبع (كاينين بزاف ديال المعلنين كيستهدفو نفس الناس)",
+                ],
+                [
+                    ["1️⃣", "وسّع الجمهور", "زيد الفئة العمرية أو أضف اهتمامات جديدة"],
+                    ["2️⃣", "جرب اهتمامات جديدة", "قلّب على اهتمامات قريبة ولكن مختلفة"],
+                    ["3️⃣", "جرب بلد آخر", "بعض الأسواق أرخص من أخرى"],
+                ]
+            )}
+
+            {/* ═══════ المشكل 3 ═══════ */}
+            {problemSection(
+                "المشكل 3: إضافات للسلة بلا شراء", "🛒❌",
+                [
+                    ["Add to Cart", "كاين", "الناس مهتمين بالمنتج ✅"],
+                    ["Purchase", "0", "ما حدش كيكمل الشراء ❌"],
+                ],
+                [
+                    "مشكل في صفحة الدفع أو الثقة",
+                    "الإعلان والمنتج خدامين — المشكل في آخر خطوة",
+                ],
+                [
+                    ["1️⃣", "بسّط صفحة الدفع", "حيّد أي خطوة زائدة — خلي الدفع سهل"],
+                    ["2️⃣", "أضف ضمانات الثقة", "ضمان استرجاع الأموال + شعارات الأمان"],
+                    ["3️⃣", "أضف شحن مجاني", "السبب رقم 1 اللي كيخلي الناس يتراجعو"],
+                    ["4️⃣", "أضف طرق دفع إضافية", "الدفع عند الاستلام (COD) للمغرب والسعودية"],
+                ]
+            )}
+
+            {/* ═══════ المشكل 4 ═══════ */}
+            {problemSection(
+                "المشكل 4: Frequency عالية (أكثر من 3)", "🔄",
+                [["Frequency", "أكثر من 3", "نفس الناس كيشوفو الإعلان مراراً — ملّو منه"]],
+                [
+                    "الجمهور صغير بزاف",
+                    "الإعلان قديم — الناس شافوه بزاف ديال المرات",
+                ],
+                [
+                    ["1️⃣", "وسّع الجمهور", "زيد اهتمامات أو وسّع الفئة العمرية أو أضف بلد"],
+                    ["2️⃣", "أنشئ إعلان جديد", "محتوى جديد باش الناس ما يحسوش بالتكرار"],
+                    ["3️⃣", "أوقف المجموعة", "إلى الFrequency فاتت 5 — أوقف وأنشئ مجموعة جديدة"],
+                ]
+            )}
+
+            {/* ═══════ ملخص ═══════ */}
+            <SectionTitle>📋 ملخص سريع — دليل حل المشاكل</SectionTitle>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10 text-[#C5A04E]">
+                            <th className="p-3 text-right font-bold">المشكل</th>
+                            <th className="p-3 text-right font-bold">المؤشر</th>
+                            <th className="p-3 text-right font-bold">أول حاجة ديرها</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-300">
+                        {[
+                            ["ما حدش كينقر", "CTR أقل من %1", "بدّل الخطاف (أول 3 ثواني)"],
+                            ["النقرة غالية", "CPC أكثر من $2", "وسّع الجمهور"],
+                            ["كيضيفو بلا ما يشريو", "Add to Cart بلا Purchase", "بسّط صفحة الدفع"],
+                            ["الإعلان تكرر بزاف", "Frequency أكثر من 3", "وسّع الجمهور أو بدّل الإعلان"],
+                        ].map(([problem, metric, fix], i) => (
+                            <tr key={i} className={i % 2 === 0 ? "bg-[#1A1A1A]" : "bg-[#111]"}>
+                                <td className="p-3 font-bold text-white">{problem}</td>
+                                <td className="p-3 text-red-400">{metric}</td>
+                                <td className="p-3 text-green-400">{fix}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ تذكير ═══════ */}
+            <SectionTitle>⚠️ تذكير مهم</SectionTitle>
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-6 space-y-3">
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="shrink-0">🔧</span>
+                    <span>بدّل حاجة <strong className="text-white">وحدة</strong> فقط في كل مرة</span>
+                </div>
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="shrink-0">⏳</span>
+                    <span>انتظر <strong className="text-white">48 ساعة</strong> بعد كل تعديل</span>
+                </div>
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="shrink-0">📊</span>
+                    <span>قارن الأرقام <strong className="text-white">قبل وبعد</strong> التعديل</span>
+                </div>
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="shrink-0">📝</span>
+                    <span>سجّل كلشي في ملف باش تتعلم من التجارب ديالك</span>
+                </div>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ الخلاصة ═══════ */}
+            <div className="bg-gradient-to-br from-[#C5A04E]/10 to-transparent border border-[#C5A04E]/20 rounded-2xl p-6">
+                <h3 className="text-xl font-bold text-[#C5A04E] mb-3">📌 الخلاصة</h3>
+                <Paragraph>
+                    التعديل هو فن. ماشي كل مشكل كيتحل بنفس الطريقة — خاصك تعرف فين المشكل باش تطبق الحل المناسب. والقاعدة الذهبية: <strong className="text-white">حاجة وحدة في المرة + 48 ساعة انتظار = قرارات ذكية</strong>.
+                </Paragraph>
+            </div>
+
+            <Divider />
+            <div className="text-center pt-4">
+                <p className="text-sm text-gray-500">
+                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                </p>
+            </div>
+        </div>
+    );
+}
+
 /* ─── Router ─── */
 const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase5_product_research: Phase5ProductResearch,
@@ -4634,6 +4853,7 @@ const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase23_success_failure: Phase23SuccessFailure,
     phase23_scaling: Phase23Scaling,
     phase23_stop_campaign: Phase23StopCampaign,
+    phase23_adjust_campaign: Phase23AdjustCampaign,
 };
 
 export default function LessonContentRenderer({ contentKey }: { contentKey: string }) {
