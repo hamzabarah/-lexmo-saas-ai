@@ -485,7 +485,7 @@ export const stepsContent: StepContent[] = [
                     { id: 7, title: "متى تعدل الحملة", type: "pdf", content: "phase23_adjust_campaign" },
                     { id: 8, title: "تحليل مسار العميل Funnel Analysis", type: "pdf", content: "phase23_funnel_analysis" },
                     { id: 9, title: "حساب الربحية الحقيقية", type: "pdf", content: "phase23_profitability" },
-                    { id: 10, title: "أخطاء التحليل الشائعة", type: "pdf" },
+                    { id: 10, title: "أخطاء التحليل الشائعة", type: "pdf", content: "phase23_common_mistakes" },
                     { id: 11, title: "مثال تطبيقي كامل", type: "pdf" },
                     { id: 12, title: "Checklist التحليل اليومي", type: "pdf" },
                 ],

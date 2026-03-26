@@ -5287,6 +5287,173 @@ function Phase23Profitability() {
     );
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   Phase 23 – Lesson 10 : أخطاء التحليل الشائعة
+   ═══════════════════════════════════════════════════════════════ */
+function Phase23CommonMistakes() {
+    const mistakeBlock = (
+        num: number,
+        title: string,
+        wrong: string,
+        right: string,
+        why: string[],
+    ) => (
+        <>
+            <SectionTitle>❌ الخطأ {num}: {title}</SectionTitle>
+            <div className="overflow-x-auto mb-4">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead><tr className="bg-[#C5A04E]/10 text-[#C5A04E]">
+                        <th className="p-3 text-right font-bold">الخطأ</th>
+                        <th className="p-3 text-right font-bold">الصواب</th>
+                    </tr></thead>
+                    <tbody>
+                        <tr className="bg-[#1A1A1A]">
+                            <td className="p-3 text-red-400">{wrong}</td>
+                            <td className="p-3 text-green-400">{right}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <SubTitle>علاش؟</SubTitle>
+            <BulletList items={why} />
+            <Divider />
+        </>
+    );
+
+    return (
+        <div className="p-6 lg:p-8 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin" dir="rtl">
+            <h1 className="text-3xl font-bold text-white mb-2">أخطاء التحليل الشائعة ⚠️</h1>
+            <p className="text-[#C5A04E] text-lg mb-8">8 أخطاء كيديرها كل مبتدئ — تجنبها وغادي توفر فلوسك ووقتك</p>
+
+            {mistakeBlock(1, "كتحلل بسرعة بزاف",
+                "كتحكم على الحملة في أول 24-48 ساعة",
+                "صبر على الأقل 48-72 ساعة قبل ما تاخذ أي قرار",
+                [
+                    "فيسبوك كيحتاج وقت باش يتعلم — كيجرب جمهورات مختلفة في البداية",
+                    "الأرقام ديال أول يوم ما كتمثلش الواقع",
+                    "📊 القراءة الحقيقية كتبدا من اليوم الثالث",
+                ]
+            )}
+
+            {mistakeBlock(2, "كتبدل كل يوم",
+                "كتغير الجمهور أو الإعلان كل يوم",
+                "صبر 48-72 ساعة بين كل تعديل",
+                [
+                    "كل تعديل كيرجع الحملة لمرحلة التعلم من الصفر",
+                    "فيسبوك كيحتاج بيانات كافية باش يحسّن الأداء",
+                    "⏳ القاعدة: تعديل واحد → انتظر 48 ساعة → شوف النتائج → بعدها قرر",
+                ]
+            )}
+
+            {mistakeBlock(3, "كتركز على اللايكات والتعليقات",
+                "كتفرح بالتفاعل (لايكات + تعليقات + مشاركات)",
+                "ركز على المبيعات فقط",
+                [
+                    "التفاعل ماشي هو الهدف — الهدف هو المبيعات",
+                    "ممكن يكون عندك 500 لايك و 0 مبيعات",
+                    "🎯 الأرقام اللي مهمة: Purchase + CPA + ROAS — باقي كلشي ثانوي",
+                ]
+            )}
+
+            {mistakeBlock(4, "كتنسى تحسب كل المصاريف",
+                "كتحسب: الإيرادات - تكلفة الإعلان = الربح",
+                "كتحسب: الإيرادات - المنتج - الشحن - الإعلان - الرسوم - الإرجاعات = الربح",
+                [
+                    "بزاف ديال الناس كيفكرو أنهم رابحين وهم خاسرين",
+                    "⚠️ ما تنساش: تكلفة المنتج + الشحن + رسوم المنصة (%5) + الإرجاعات",
+                    "📝 ارجع للدرس 9 (حساب الربحية) وطبق الصيغة الكاملة",
+                ]
+            )}
+
+            {mistakeBlock(5, "كتقارن بين حملات بميزانيات مختلفة",
+                "كتقارن حملة ب $100 مع حملة ب $10",
+                "قارن حملات بنفس الميزانية أو استعمل النسب (CTR, ROAS, CPA)",
+                [
+                    "حملة ب $100 عندها بيانات أكثر بكثير من حملة ب $10",
+                    "المقارنة العادلة كتكون بالنسب ماشي بالأرقام المطلقة",
+                    "📊 قارن CTR مع CTR و ROAS مع ROAS — ماشي عدد المبيعات مع عدد المبيعات",
+                ]
+            )}
+
+            {mistakeBlock(6, "كتطفي الحملة الرابحة باش تبدل فيها",
+                "كتوقف حملة ناجحة باش تعدل عليها",
+                "خلي الحملة الناجحة خدامة وأنشئ نسخة جديدة للتعديل",
+                [
+                    "إلى كانت الحملة خدامة ما تقيسش عليها",
+                    "لو وقفتيها وعاودتي شغلتيها ممكن ما ترجعش بنفس الأداء",
+                    "🔄 الحل: أنشئ نسخة جديدة (Duplicate) وجرب التعديلات فيها",
+                ]
+            )}
+
+            {mistakeBlock(7, "ما كتتبعش الأرقام يومياً",
+                "كتشوف الأرقام مرة في الأسبوع أو ما كتشوفهمش",
+                "سجّل الأرقام كل يوم في ملف",
+                [
+                    "بلا تتبع يومي ما غاديش تشوف التطور — واش الأرقام كتتحسن ولا كتنزل",
+                    "📝 أنشئ ملف Excel أو Google Sheets وسجل فيه كل يوم: المبلغ المصروف، عدد المبيعات، CPA، ROAS، CTR",
+                ]
+            )}
+
+            {mistakeBlock(8, "كتستسلم بسرعة",
+                "أول حملة ما نجحاتش → كتقول الإعلانات ما كتخدمش",
+                "أول حملة = تعلم. التيست الثاني والثالث هما اللي كيجيبو النتائج",
+                [
+                    "أول حملة نادراً ما كتنجح — وهذا عادي",
+                    "الهدف من أول حملة هو جمع البيانات ماشي الأرباح",
+                    "💡 كل حملة فاشلة كتعلمك شي حاجة جديدة",
+                    "🔄 عادةً التيست الثاني أو الثالث هو اللي كيجيب النتائج",
+                ]
+            )}
+
+            {/* ═══════ ملخص ═══════ */}
+            <SectionTitle>📋 ملخص — الأخطاء والحلول</SectionTitle>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead><tr className="bg-[#C5A04E]/10 text-[#C5A04E]">
+                        <th className="p-3 text-right font-bold">الخطأ</th>
+                        <th className="p-3 text-right font-bold">الحل السريع</th>
+                    </tr></thead>
+                    <tbody className="text-gray-300">
+                        {[
+                            ["تحليل سريع بزاف", "صبر 48-72 ساعة"],
+                            ["تعديلات كل يوم", "تعديل واحد + انتظر 48 ساعة"],
+                            ["التركيز على اللايكات", "ركز على Purchase + CPA + ROAS"],
+                            ["نسيان المصاريف", "طبق الصيغة الكاملة (درس 9)"],
+                            ["مقارنة ميزانيات مختلفة", "قارن بالنسب ماشي بالأرقام"],
+                            ["إطفاء الحملة الرابحة", "أنشئ نسخة جديدة للتعديل"],
+                            ["ما كتتبعش الأرقام", "سجلها كل يوم في ملف"],
+                            ["الاستسلام بسرعة", "أول حملة = تعلم. كمّل جرب"],
+                        ].map(([mistake, fix], i) => (
+                            <tr key={i} className={i % 2 === 0 ? "bg-[#1A1A1A]" : "bg-[#111]"}>
+                                <td className="p-3 text-red-400">{mistake}</td>
+                                <td className="p-3 text-green-400">{fix}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ الخلاصة ═══════ */}
+            <div className="bg-gradient-to-br from-[#C5A04E]/10 to-transparent border border-[#C5A04E]/20 rounded-2xl p-6">
+                <h3 className="text-xl font-bold text-[#C5A04E] mb-3">📌 الخلاصة</h3>
+                <Paragraph>
+                    النجاح في الإعلانات ماشي حظ — هو منهجية. تجنب هاد الأخطاء الثمانية وغادي توفر على راسك بزاف ديال الفلوس والوقت. تذكر: <strong className="text-white">الصبر + التتبع + القرارات المبنية على الأرقام = النجاح</strong>.
+                </Paragraph>
+            </div>
+
+            <Divider />
+            <div className="text-center pt-4">
+                <p className="text-sm text-gray-500">
+                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                </p>
+            </div>
+        </div>
+    );
+}
+
 const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase5_product_research: Phase5ProductResearch,
     phase11_shopify_guide: Phase11ShopifyGuide,
@@ -5303,6 +5470,7 @@ const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase23_adjust_campaign: Phase23AdjustCampaign,
     phase23_funnel_analysis: Phase23FunnelAnalysis,
     phase23_profitability: Phase23Profitability,
+    phase23_common_mistakes: Phase23CommonMistakes,
 };
 
 export default function LessonContentRenderer({ contentKey }: { contentKey: string }) {
