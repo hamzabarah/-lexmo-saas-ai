@@ -3803,6 +3803,166 @@ function Phase23DashboardReading() {
     );
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   Phase 23 – Lesson 3 : تخصيص الأعمدة (Customize Columns)
+   ═══════════════════════════════════════════════════════════════ */
+function Phase23CustomizeColumns() {
+    return (
+        <div className="p-6 lg:p-8 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin" dir="rtl">
+            <h1 className="text-3xl font-bold text-white mb-2">تخصيص الأعمدة (Customize Columns) ⚙️</h1>
+            <p className="text-[#C5A04E] text-lg mb-8">خصص لوحة التحكم ديالك باش تشوف غير الأرقام اللي كتحتاج</p>
+
+            {/* ═══════ Section 1 — علاش ═══════ */}
+            <SectionTitle>علاش خاصك تخصص الأعمدة؟</SectionTitle>
+            <Paragraph>
+                الأعمدة الافتراضية في Ads Manager ما كتكفيش. ما كتوريكش الأرقام المهمة اللي خاصك تراقبها. خاصك تضيف الأعمدة اللي كتعطيك الصورة الكاملة على أداء الحملة ديالك.
+            </Paragraph>
+
+            <Divider />
+
+            {/* ═══════ Section 2 — خطوات التخصيص ═══════ */}
+            <SectionTitle>خطوات التخصيص</SectionTitle>
+
+            <SubTitle>الخطوة 1: الوصول للإعدادات</SubTitle>
+            <StepCard num={1} title="ادخل Ads Manager" items={["افتح مدير الإعلانات من business.facebook.com"]} />
+            <StepCard num={2} title="اضغط على Columns" items={["فوق الجدول على اليمين"]} />
+            <StepCard num={3} title="اضغط على Customize columns" items={["غادي تفتح ليك نافذة التخصيص"]} />
+
+            <SubTitle>الخطوة 2: إضافة الأعمدة بالترتيب</SubTitle>
+            <Paragraph>ابحث وأضف هاد الأعمدة بهاد الترتيب بالضبط:</Paragraph>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10 text-[#C5A04E]">
+                            <th className="p-3 text-right font-bold">الترتيب</th>
+                            <th className="p-3 text-right font-bold">العمود</th>
+                            <th className="p-3 text-right font-bold">علاش مهم</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-300">
+                        {[
+                            ["1", "Amount spent", "شحال صرفتي"],
+                            ["2", "Impressions", "شحال من ظهور"],
+                            ["3", "Reach", "شحال من شخص وصلتيه"],
+                            ["4", "Frequency", "شحال من مرة نفس الشخص شاف الإعلان"],
+                            ["5", "CPM", "تكلفة 1000 ظهور"],
+                            ["6", "Link clicks", "عدد النقرات على الرابط"],
+                            ["7", "CPC (cost per link click)", "تكلفة النقرة"],
+                            ["8", "CTR (link click-through rate)", "نسبة النقر"],
+                            ["9", "Add to cart", "عدد الإضافات للسلة"],
+                            ["10", "Cost per add to cart", "تكلفة كل إضافة للسلة"],
+                            ["11", "Initiate checkout", "عدد بدايات الدفع"],
+                            ["12", "Purchases", "عدد المبيعات"],
+                            ["13", "Cost per purchase", "تكلفة البيعة الوحدة"],
+                            ["14", "Purchase conversion value", "قيمة المبيعات"],
+                            ["15", "ROAS", "العائد على الإنفاق"],
+                        ].map(([num, col, why], i) => (
+                            <tr key={i} className={i % 2 === 0 ? "bg-[#1A1A1A]" : "bg-[#111]"}>
+                                <td className="p-3 text-[#C5A04E] font-bold text-center">{num}</td>
+                                <td className="p-3 font-mono font-bold text-white">{col}</td>
+                                <td className="p-3">{why}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <SubTitle>الخطوة 3: حفظ الإعدادات</SubTitle>
+            <StepCard num={1} title='اضغط Save as preset' items={["باش تحفظ الأعمدة ديالك"]} />
+            <StepCard num={2} title='سميها "My Dashboard"' items={["اختار اسم سهل تتعرف عليه"]} />
+            <StepCard num={3} title="اضغط Apply" items={["غادي يتطبق التخصيص مباشرة"]} />
+
+            <div className="bg-[#1A1A1A] border border-green-500/20 rounded-xl p-5 mb-6">
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="text-green-400 mt-1 shrink-0">✅</span>
+                    <span>دابا كل مرة تدخل Ads Manager غادي تلقى الأعمدة ديالك جاهزة — ما خاصكش تعاود تضيفها كل مرة.</span>
+                </div>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ Section 3 — شنو كتوريك كل مجموعة ═══════ */}
+            <SectionTitle>📌 شنو كتوريك كل مجموعة ديال الأعمدة</SectionTitle>
+
+            {/* أعمدة الوصول */}
+            <SubTitle>🔵 أعمدة الوصول (1-5)</SubTitle>
+            <Paragraph>كتوريك شحال من ناس شافو الإعلان وبشحال:</Paragraph>
+            <BulletList items={[
+                "Amount spent → الميزانية اللي صرفتي",
+                "Impressions + Reach → الانتشار ديال الإعلان",
+                "Frequency → واش الناس بداو يملو من الإعلان",
+                "CPM → واش كتخلص بزاف على الظهور",
+            ]} />
+
+            {/* أعمدة التفاعل */}
+            <SubTitle>🟢 أعمدة التفاعل (6-8)</SubTitle>
+            <Paragraph>كتوريك واش الناس كينقرو على الإعلان:</Paragraph>
+            <BulletList items={[
+                "Link clicks → شحال نقرو",
+                "CPC → شحال كتخلص على كل نقرة",
+                "CTR → واش الإعلان كيجذب الناس",
+            ]} />
+
+            {/* أعمدة التحويل */}
+            <SubTitle>🟡 أعمدة التحويل (9-11)</SubTitle>
+            <Paragraph>كتوريك واش الناس كيكملو مسار الشراء:</Paragraph>
+            <BulletList items={[
+                "Add to cart → كاينين ناس مهتمين",
+                "Cost per add to cart → بشحال كتجيب كل واحد مهتم",
+                "Initiate checkout → كاينين ناس قراب يشريو",
+            ]} />
+
+            {/* أعمدة المبيعات */}
+            <SubTitle>🔴 أعمدة المبيعات (12-15)</SubTitle>
+            <Paragraph>كتوريك النتيجة النهائية — الفلوس:</Paragraph>
+            <BulletList items={[
+                "Purchases → شحال من بيعة",
+                "Cost per purchase → تكلفة كل بيعة",
+                "Purchase conversion value → مجموع المبيعات",
+                "ROAS → واش رابح ولا خاسر",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ Section 4 — نصيحة مهمة ═══════ */}
+            <SectionTitle>⚠️ نصيحة مهمة</SectionTitle>
+
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-6 space-y-4">
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="shrink-0">💡</span>
+                    <span>هاد الترتيب ديال الأعمدة ماشي عشوائي — كيتبع مسار العميل من الظهور حتى الشراء</span>
+                </div>
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="shrink-0">📊</span>
+                    <span>كل مرة كتحلل حملة، قراها من اليمين لليسار (من Amount spent حتى ROAS)</span>
+                </div>
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="shrink-0">🔄</span>
+                    <span>هاد الأعمدة كتبقى محفوظة — ما خاصكش تعاودها كل مرة</span>
+                </div>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ الخلاصة ═══════ */}
+            <div className="bg-gradient-to-br from-[#C5A04E]/10 to-transparent border border-[#C5A04E]/20 rounded-2xl p-6">
+                <h3 className="text-xl font-bold text-[#C5A04E] mb-3">📌 الخلاصة</h3>
+                <Paragraph>
+                    تخصيص الأعمدة هو أول حاجة خاصك ديرها قبل ما تبدا تحلل أي حملة. بلا هاد الأعمدة غادي تكون كتشوف أرقام ما كتنفعكش. حفظها مرة وحدة واستعملها ديما.
+                </Paragraph>
+            </div>
+
+            <Divider />
+            <div className="text-center pt-4">
+                <p className="text-sm text-gray-500">
+                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                </p>
+            </div>
+        </div>
+    );
+}
+
 /* ─── Router ─── */
 const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase5_product_research: Phase5ProductResearch,
@@ -3813,6 +3973,7 @@ const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase22_ad_campaign: Phase22AdCampaign,
     phase23_ad_metrics: Phase23AdMetrics,
     phase23_dashboard_reading: Phase23DashboardReading,
+    phase23_customize_columns: Phase23CustomizeColumns,
 };
 
 export default function LessonContentRenderer({ contentKey }: { contentKey: string }) {
