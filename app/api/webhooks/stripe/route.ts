@@ -48,27 +48,51 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     const plan: string = amountTotal === 9700 ? 'diagnostic' : 'ecommerce';
     console.log('🔍 [STEP 3] amount_total:', amountTotal, '→ plan:', plan);
 
-    console.log('🔍 [STEP 3.5] === SUPABASE INIT ===');
-    let supabase;
+    // ===== STEP 4: SEND EMAIL FIRST (highest priority) =====
+    // Email is sent BEFORE Supabase to ensure client always gets their registration email
+    // even if the database operation fails (e.g. CHECK constraint issue)
+    console.log('🔍 [STEP 4] === SENDING EMAIL (PRIORITY) ===');
+    console.log('🔍 [STEP 4] RESEND_API_KEY defined:', !!process.env.RESEND_API_KEY);
+    console.log('🔍 [STEP 4] RESEND_FROM_EMAIL:', process.env.RESEND_FROM_EMAIL || 'noreply@lexmo.ai (default)');
+    console.log('🔍 [STEP 4] Sending to:', email, '| Plan:', plan);
+
+    let emailSent = false;
+    try {
+        const result = await sendActivationEmail(email, plan);
+        emailSent = true;
+        console.log('✅ [STEP 4] Email sent successfully! Resend response:', JSON.stringify(result));
+    } catch (emailError: any) {
+        console.error('❌ [STEP 4] EMAIL SENDING FAILED!');
+        console.error('❌ [STEP 4] Error message:', emailError?.message);
+        console.error('❌ [STEP 4] Error name:', emailError?.name);
+        console.error('❌ [STEP 4] Error statusCode:', emailError?.statusCode);
+        console.error('❌ [STEP 4] Full error:', JSON.stringify(emailError, Object.getOwnPropertyNames(emailError)));
+    }
+
+    // ===== STEP 5: SUPABASE REGISTRATION (non-blocking) =====
+    // Even if this fails, the webhook returns 200 so Stripe doesn't retry
+    console.log('🔍 [STEP 5] === SUPABASE REGISTRATION ===');
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let supabase: any = null;
     try {
         supabase = getSupabaseAdmin();
     } catch (err: any) {
-        console.error('❌ [STEP 3.5] Supabase init FAILED:', err.message);
-        throw err;
+        console.error('❌ [STEP 5] Supabase init FAILED:', err.message);
+        console.log('⚠️ [STEP 5] Skipping DB registration. Email sent:', emailSent);
+        return;
     }
 
     // Try to find user_id from auth.users by email
     let userId: string | null = null;
     try {
         const { data: usersData } = await supabase.auth.admin.listUsers();
-        const authUser = usersData?.users?.find(u => u.email === email);
+        const authUser = usersData?.users?.find((u: any) => u.email === email);
         userId = authUser?.id || null;
-        console.log('🔍 [STEP 3.5] user_id from auth.users:', userId || '(not registered yet)');
+        console.log('🔍 [STEP 5] user_id from auth.users:', userId || '(not registered yet)');
     } catch (err: any) {
-        console.log('⚠️ [STEP 3.5] Could not lookup user_id (non-blocking):', err?.message);
+        console.log('⚠️ [STEP 5] Could not lookup user_id (non-blocking):', err?.message);
     }
-
-    console.log('🔍 [STEP 4] === SUPABASE UPSERT ===');
 
     const { data: existing, error: fetchError } = await supabase
         .from('user_subscriptions')
@@ -76,69 +100,69 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         .eq('email', email)
         .single();
 
-    console.log('🔍 [STEP 4] Existing record:', JSON.stringify(existing));
+    console.log('🔍 [STEP 5] Existing record:', JSON.stringify(existing));
     if (fetchError && fetchError.code !== 'PGRST116') {
-        console.error('❌ [STEP 4] Fetch error:', JSON.stringify(fetchError));
+        console.error('❌ [STEP 5] Fetch error:', JSON.stringify(fetchError));
     }
 
-    if (existing) {
-        const updateData: Record<string, any> = {
-            status: 'active',
-            activated_at: new Date().toISOString(),
-            plan,
-        };
-        if (userId) updateData.user_id = userId;
+    // Helper: try upsert with a given plan value, fallback to 'spark' if constraint fails
+    async function upsertSubscription(targetPlan: string): Promise<boolean> {
+        if (existing) {
+            const updateData: Record<string, any> = {
+                status: 'active',
+                activated_at: new Date().toISOString(),
+                plan: targetPlan,
+            };
+            if (userId) updateData.user_id = userId;
+            console.log('🔍 [STEP 5] Updating with plan:', targetPlan, JSON.stringify(updateData));
 
-        console.log('🔍 [STEP 4] Updating existing record with:', JSON.stringify(updateData));
+            const { error } = await supabase
+                .from('user_subscriptions')
+                .update(updateData)
+                .eq('email', email);
 
-        const { error } = await supabase
-            .from('user_subscriptions')
-            .update(updateData)
-            .eq('email', email);
+            if (error) {
+                console.error('❌ [STEP 5] Update error (plan=' + targetPlan + '):', JSON.stringify(error));
+                return false;
+            }
+            console.log('✅ [STEP 5] Subscription updated for:', email, '(plan=' + targetPlan + ')');
+            return true;
+        } else {
+            const insertData: Record<string, any> = {
+                email,
+                plan: targetPlan,
+                status: 'active',
+                activated_at: new Date().toISOString(),
+                created_at: new Date().toISOString(),
+            };
+            if (userId) insertData.user_id = userId;
+            console.log('🔍 [STEP 5] Inserting with plan:', targetPlan, JSON.stringify(insertData));
 
-        if (error) {
-            console.error('❌ [STEP 4] Error updating subscription:', JSON.stringify(error));
-            throw error;
+            const { error } = await supabase
+                .from('user_subscriptions')
+                .insert(insertData);
+
+            if (error) {
+                console.error('❌ [STEP 5] Insert error (plan=' + targetPlan + '):', JSON.stringify(error));
+                return false;
+            }
+            console.log('✅ [STEP 5] New subscription created for:', email, '(plan=' + targetPlan + ')');
+            return true;
         }
-        console.log('✅ [STEP 4] Subscription updated for:', email);
-    } else {
-        const insertData: Record<string, any> = {
-            email,
-            plan,
-            status: 'active',
-            activated_at: new Date().toISOString(),
-            created_at: new Date().toISOString(),
-        };
-        if (userId) insertData.user_id = userId;
-
-        console.log('🔍 [STEP 4] Inserting new record:', JSON.stringify(insertData));
-
-        const { error } = await supabase
-            .from('user_subscriptions')
-            .insert(insertData);
-
-        if (error) {
-            console.error('❌ [STEP 4] Error creating subscription:', JSON.stringify(error));
-            throw error;
-        }
-        console.log('✅ [STEP 4] New subscription created for:', email);
     }
 
-    console.log('🔍 [STEP 5] === SENDING EMAIL ===');
-    console.log('🔍 [STEP 5] RESEND_API_KEY defined:', !!process.env.RESEND_API_KEY);
-    console.log('🔍 [STEP 5] RESEND_FROM_EMAIL:', process.env.RESEND_FROM_EMAIL || 'noreply@lexmo.ai (default)');
-    console.log('🔍 [STEP 5] Sending to:', email, '| Plan:', plan);
-
-    try {
-        const result = await sendActivationEmail(email, plan);
-        console.log('✅ [STEP 5] Email sent successfully! Resend response:', JSON.stringify(result));
-    } catch (emailError: any) {
-        console.error('❌ [STEP 5] EMAIL SENDING FAILED!');
-        console.error('❌ [STEP 5] Error message:', emailError?.message);
-        console.error('❌ [STEP 5] Error details:', JSON.stringify(emailError));
+    // Try with the correct plan first, then fallback to 'spark' if CHECK constraint rejects it
+    let dbSuccess = await upsertSubscription(plan);
+    if (!dbSuccess && plan === 'ecommerce') {
+        console.log('⚠️ [STEP 5] Retrying with plan=spark (CHECK constraint fallback)...');
+        dbSuccess = await upsertSubscription('spark');
     }
 
-    console.log('✅ [DONE] handleCheckoutCompleted finished for:', email);
+    if (!dbSuccess) {
+        console.error('❌ [STEP 5] ALL DB attempts failed for:', email, '- Email sent:', emailSent);
+    }
+
+    console.log('✅ [DONE] handleCheckoutCompleted finished for:', email, '| emailSent:', emailSent, '| dbSuccess:', dbSuccess);
 }
 
 export async function POST(req: NextRequest) {
@@ -197,17 +221,16 @@ export async function POST(req: NextRequest) {
         try {
             await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
         } catch (error: any) {
+            // Log but NEVER return 500 — we don't want Stripe to retry and cause duplicate emails
             console.error('❌ [FATAL] handleCheckoutCompleted crashed:', error?.message || error);
             console.error('❌ [FATAL] Stack:', error?.stack);
-            return NextResponse.json(
-                { error: 'Webhook handler failed' },
-                { status: 500 }
-            );
         }
     } else {
         console.log('ℹ️ Event type ignored:', event.type);
     }
 
-    console.log('✅ [DONE] Webhook processed successfully at', new Date().toISOString());
+    // ALWAYS return 200 after successful signature verification
+    // This prevents Stripe from retrying and causing duplicate operations
+    console.log('✅ [DONE] Webhook processed at', new Date().toISOString());
     return NextResponse.json({ received: true });
 }
