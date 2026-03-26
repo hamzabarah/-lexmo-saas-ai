@@ -487,7 +487,7 @@ export const stepsContent: StepContent[] = [
                     { id: 9, title: "حساب الربحية الحقيقية", type: "pdf", content: "phase23_profitability" },
                     { id: 10, title: "أخطاء التحليل الشائعة", type: "pdf", content: "phase23_common_mistakes" },
                     { id: 11, title: "مثال تطبيقي كامل", type: "pdf", content: "phase23_practical_example" },
-                    { id: 12, title: "Checklist التحليل اليومي", type: "pdf" },
+                    { id: 12, title: "Checklist التحليل اليومي", type: "pdf", content: "phase23_daily_checklist" },
                 ],
             },
             {

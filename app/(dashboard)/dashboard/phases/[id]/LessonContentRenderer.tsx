@@ -5720,6 +5720,210 @@ function Phase23PracticalExample() {
     );
 }
 
+function Phase23DailyChecklist() {
+    function checkStep(
+        num: number,
+        title: string,
+        checks: string[],
+        tips: { icon: string; text: string; color?: string }[],
+    ) {
+        return (
+            <div className="space-y-2">
+                <h3 className="text-lg font-bold text-white">الخطوة {num}: {title}</h3>
+                <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-4 space-y-2">
+                    {checks.map((c, i) => (
+                        <div key={i} className="flex items-start gap-3 text-gray-300 text-sm">
+                            <span className="text-[#C5A04E] mt-0.5 shrink-0">☐</span>
+                            <span>{c}</span>
+                        </div>
+                    ))}
+                    {tips.map((t, i) => (
+                        <div key={i} className={`flex items-start gap-3 text-sm ${t.color || 'text-gray-400'}`}>
+                            <span className="shrink-0">{t.icon}</span>
+                            <span>{t.text}</span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="p-6 lg:p-8 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin" dir="rtl">
+            <SectionTitle>✅ Checklist التحليل اليومي</SectionTitle>
+
+            <SubTitle>علاش خاصك تحلل كل يوم؟</SubTitle>
+            <Paragraph>
+                التحليل اليومي هو اللي كيفرق بين المعلن اللي كيربح واللي كيخسر. بلا تتبع يومي ما غاديش تعرف واش الحملة كتتحسن ولا كتنزل. هاد الChecklist طبقها <strong className="text-white">كل يوم</strong> في نفس الوقت (مثلاً كل صباح).
+            </Paragraph>
+
+            <Divider />
+
+            <SectionTitle>📋 الChecklist اليومية — 10 خطوات</SectionTitle>
+
+            <div className="space-y-4">
+                {checkStep(1, 'فتح Ads Manager', [
+                    'دخلت Ads Manager وشفت الأرقام',
+                ], [
+                    { icon: '💡', text: 'خصص 10-15 دقيقة كل يوم لهاد المهمة' },
+                ])}
+
+                {checkStep(2, 'تأكد من الأعمدة', [
+                    'الأعمدة مخصصة (استعملت My Dashboard اللي أنشأتيها في الدرس 3)',
+                ], [
+                    { icon: '💡', text: 'إلى ما لقيتيهاش: Columns → My Dashboard' },
+                ])}
+
+                {checkStep(3, 'تسجيل الأرقام', [
+                    'سجلت الأرقام في ملف (Excel أو Google Sheets أو ورقة)',
+                ], [
+                    { icon: '💡', text: 'سجل كل يوم: المصروف + النقرات + CTR + إضافات السلة + المبيعات + CPA + ROAS' },
+                ])}
+
+                {checkStep(4, 'حساب المؤشرات', [
+                    'حسبت CPA (المصروف ÷ عدد المبيعات)',
+                    'حسبت ROAS (الإيرادات ÷ المصروف على الإعلان)',
+                ], [])}
+
+                {checkStep(5, 'المقارنة مع أمس', [
+                    'قارنت الأرقام مع أمس — واش كيتحسن ولا كينزل؟',
+                ], [
+                    { icon: '📈', text: 'إلى كيتحسن → خبر مزيان — خلي الحملة تكمل', color: 'text-green-400' },
+                    { icon: '📉', text: 'إلى كينزل → راقب يوم آخر قبل ما تاخذ قرار', color: 'text-yellow-400' },
+                ])}
+
+                {checkStep(6, 'مراقبة التكرار', [
+                    'شفت Frequency — واش أقل من 3؟',
+                ], [
+                    { icon: '✅', text: 'أقل من 3 = مزيان', color: 'text-green-400' },
+                    { icon: '⚠️', text: 'بين 2 و 3 = بدا يتكرر — راقب', color: 'text-yellow-400' },
+                    { icon: '❌', text: 'أكثر من 3 = وسّع الجمهور أو بدّل الإعلان', color: 'text-red-400' },
+                ])}
+
+                {checkStep(7, 'مقارنة المجموعات الإعلانية', [
+                    'شفت أي مجموعة إعلانية أحسن (إلى كان عندك أكثر من وحدة)',
+                ], [
+                    { icon: '💡', text: 'قارن بين: CPA + CTR + ROAS لكل مجموعة' },
+                ])}
+
+                {checkStep(8, 'مقارنة الإعلانات', [
+                    'شفت أي إعلان أحسن (إلى كان عندك أكثر من واحد)',
+                ], [
+                    { icon: '💡', text: 'قارن بين: CTR + النقرات + المبيعات لكل إعلان' },
+                ])}
+
+                {checkStep(9, 'احترام قاعدة 48 ساعة', [
+                    'ما بدلت والو إلى كان مازال أقل من 48 ساعة من آخر تعديل',
+                ], [
+                    { icon: '⚠️', text: 'الصبر هو المفتاح — كل تعديل كيرجع فيسبوك لمرحلة التعلم', color: 'text-yellow-400' },
+                ])}
+            </div>
+
+            <Divider />
+
+            <div className="space-y-2">
+                <h3 className="text-lg font-bold text-white">الخطوة 10: القرار اليومي</h3>
+                <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-4">
+                    <div className="flex items-start gap-3 text-gray-300 text-sm mb-3">
+                        <span className="text-[#C5A04E] mt-0.5 shrink-0">☐</span>
+                        <span>أخذت القرار:</span>
+                    </div>
+                    <div className="overflow-x-auto">
+                        <table className="w-full border-collapse text-sm">
+                            <thead>
+                                <tr className="bg-[#C5A04E]/10">
+                                    <th className="border border-[#C5A04E]/20 px-4 py-2 text-[#C5A04E] text-right">القرار</th>
+                                    <th className="border border-[#C5A04E]/20 px-4 py-2 text-[#C5A04E] text-right">متى</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {[
+                                    ['✅ كمّل', 'الأرقام مستقرة ومقبولة', 'text-green-400'],
+                                    ['📈 زيد الميزانية', 'ROAS أكثر من 2 + CPA أقل من الهامش لمدة 3 أيام', 'text-green-400'],
+                                    ['🔧 عدّل', 'مؤشر واحد ضعيف — بدّل حاجة وحدة فقط', 'text-yellow-400'],
+                                    ['🛑 أوقف', 'صرفتي ضعف الثمن بلا بيعة أو ROAS أقل من 1', 'text-red-400'],
+                                ].map(([decision, when, color], i) => (
+                                    <tr key={i} className={i % 2 === 0 ? 'bg-[#0A0A0A]' : 'bg-[#111]'}>
+                                        <td className={`border border-[#C5A04E]/10 px-4 py-2 font-bold ${color}`}>{decision}</td>
+                                        <td className="border border-[#C5A04E]/10 px-4 py-2 text-gray-300">{when}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <Divider />
+
+            <SectionTitle>📊 نموذج جدول التتبع اليومي</SectionTitle>
+            <div className="overflow-x-auto">
+                <table className="w-full border-collapse text-sm">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10">
+                            {['اليوم', 'المصروف', 'النقرات', 'CTR', 'ATC', 'المبيعات', 'CPA', 'ROAS', 'Frequency', 'القرار'].map((h) => (
+                                <th key={h} className="border border-[#C5A04E]/20 px-2 py-2 text-[#C5A04E] text-right text-xs whitespace-nowrap">{h}</th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[1, 2, 3, 4, 5].map((day) => (
+                            <tr key={day} className={day % 2 === 0 ? 'bg-[#111]' : 'bg-[#1A1A1A]'}>
+                                <td className="border border-[#C5A04E]/10 px-2 py-2 text-white text-xs font-medium">يوم {day}</td>
+                                {Array.from({ length: 8 }).map((_, j) => (
+                                    <td key={j} className="border border-[#C5A04E]/10 px-2 py-2 text-gray-500 text-xs text-center">___</td>
+                                ))}
+                                <td className="border border-[#C5A04E]/10 px-2 py-2 text-gray-400 text-xs text-center">كمل / عدل / وقف</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <Divider />
+
+            <SectionTitle>⏰ الروتين المثالي</SectionTitle>
+            <div className="overflow-x-auto">
+                <table className="w-full border-collapse text-sm">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10">
+                            <th className="border border-[#C5A04E]/20 px-4 py-2 text-[#C5A04E] text-right">الوقت</th>
+                            <th className="border border-[#C5A04E]/20 px-4 py-2 text-[#C5A04E] text-right">المهمة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            ['الصباح (10 دقائق)', 'افتح Ads Manager + سجل الأرقام + قارن مع أمس'],
+                            ['بعد 48 ساعة من آخر تعديل', 'قيّم النتائج وقرر: كمل / زيد / عدل / وقف'],
+                            ['نهاية الأسبوع (30 دقيقة)', 'مراجعة شاملة للأسبوع + حساب الربحية الحقيقية'],
+                        ].map(([time, task], i) => (
+                            <tr key={i} className={i % 2 === 0 ? 'bg-[#1A1A1A]' : 'bg-[#111]'}>
+                                <td className="border border-[#C5A04E]/10 px-4 py-2 text-[#C5A04E] font-medium">{time}</td>
+                                <td className="border border-[#C5A04E]/10 px-4 py-2 text-gray-300">{task}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <Divider />
+
+            <div className="bg-gradient-to-l from-[#C5A04E]/10 to-transparent border border-[#C5A04E]/20 rounded-xl p-5">
+                <p className="text-[#C5A04E] font-bold mb-2">📌 الخلاصة:</p>
+                <p className="text-gray-300 text-sm leading-relaxed">
+                    هاد الChecklist هي الروتين ديالك كمعلن. 10 دقائق كل يوم كافية باش تكون عارف بالضبط شنو كيوقع في الحملة ديالك وتاخذ القرار الصحيح. <strong className="text-white">سجل الأرقام، قارن، واحترم قاعدة 48 ساعة. هادشي هو سر النجاح.</strong>
+                </p>
+            </div>
+
+            <div className="mt-6 pt-4 border-t border-[#C5A04E]/10 text-center">
+                <p className="text-[#C5A04E]/40 text-xs">
+                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                </p>
+            </div>
+        </div>
+    );
+}
+
 const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase5_product_research: Phase5ProductResearch,
     phase11_shopify_guide: Phase11ShopifyGuide,
@@ -5738,6 +5942,7 @@ const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase23_profitability: Phase23Profitability,
     phase23_common_mistakes: Phase23CommonMistakes,
     phase23_practical_example: Phase23PracticalExample,
+    phase23_daily_checklist: Phase23DailyChecklist,
 };
 
 export default function LessonContentRenderer({ contentKey }: { contentKey: string }) {
