@@ -479,7 +479,7 @@ export const stepsContent: StepContent[] = [
                     { id: 1, title: "الأرقام الأساسية", type: "pdf", content: "phase23_ad_metrics" },
                     { id: 2, title: "كيفاش تقرا لوحة التحكم", type: "pdf", content: "phase23_dashboard_reading" },
                     { id: 3, title: "تخصيص الأعمدة Customize Columns", type: "pdf", content: "phase23_customize_columns" },
-                    { id: 4, title: "مؤشرات النجاح والفشل", type: "pdf" },
+                    { id: 4, title: "مؤشرات النجاح والفشل", type: "pdf", content: "phase23_success_failure" },
                     { id: 5, title: "متى تزيد الميزانية Scaling", type: "pdf" },
                     { id: 6, title: "متى توقف الحملة", type: "pdf" },
                     { id: 7, title: "متى تعدل الحملة", type: "pdf" },

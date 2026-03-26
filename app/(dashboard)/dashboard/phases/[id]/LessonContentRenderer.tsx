@@ -3963,6 +3963,223 @@ function Phase23CustomizeColumns() {
     );
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   Phase 23 – Lesson 4 : مؤشرات النجاح والفشل
+   ═══════════════════════════════════════════════════════════════ */
+function Phase23SuccessFailure() {
+    return (
+        <div className="p-6 lg:p-8 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin" dir="rtl">
+            <h1 className="text-3xl font-bold text-white mb-2">مؤشرات النجاح والفشل 📈📉</h1>
+            <p className="text-[#C5A04E] text-lg mb-8">كيفاش تعرف واش الحملة ناجحة ولا فاشلة وشنو تدير في كل حالة</p>
+
+            {/* ═══════ المقدمة ═══════ */}
+            <SectionTitle>كيفاش تعرف واش الحملة ناجحة ولا فاشلة؟</SectionTitle>
+            <Paragraph>
+                ماشي كل حملة غادي تنجح من أول مرة. المهم هو أنك تعرف تقرا المؤشرات باش تاخذ القرار الصحيح: <strong className="text-white">كمل ولا وقف ولا عدل</strong>.
+            </Paragraph>
+
+            <Divider />
+
+            {/* ═══════ مؤشرات النجاح ═══════ */}
+            <SectionTitle>✅ مؤشرات النجاح (كمل وزيد الميزانية)</SectionTitle>
+            <Paragraph>إلى شفتي هاد الأرقام، الحملة ديالك ماشية مزيان — زيد الميزانية ب 20-30% كل يومين:</Paragraph>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full text-sm border border-green-500/20 rounded-xl overflow-hidden">
+                    <thead>
+                        <tr className="bg-green-500/10 text-green-400">
+                            <th className="p-3 text-right font-bold">المؤشر</th>
+                            <th className="p-3 text-right font-bold">القيمة المثالية</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-300">
+                        {[
+                            ["CTR (نسبة النقر)", "أكثر من %2"],
+                            ["CPC (تكلفة النقرة)", "أقل من $1"],
+                            ["تكلفة الإضافة للسلة", "أقل من $5"],
+                            ["تكلفة الشراء (CPA)", "أقل من هامش الربح"],
+                            ["ROAS", "أكثر من 2 (كل $1 صرفتيه رجع $2 أو أكثر)"],
+                            ["Frequency", "أقل من 2"],
+                        ].map(([metric, value], i) => (
+                            <tr key={i} className={i % 2 === 0 ? "bg-[#1A1A1A]" : "bg-[#111]"}>
+                                <td className="p-3 font-bold text-white">{metric}</td>
+                                <td className="p-3 text-green-400">{value}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <SubTitle>شنو تدير:</SubTitle>
+            <div className="bg-[#1A1A1A] border border-green-500/20 rounded-xl p-5 mb-6 space-y-3">
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="shrink-0">📈</span>
+                    <span>زيد الميزانية تدريجياً (20-30% كل يومين)</span>
+                </div>
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="shrink-0">🔄</span>
+                    <span>ما تبدلش في الإعلان — خليه خدام</span>
+                </div>
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="shrink-0">📊</span>
+                    <span>كمل راقب الأرقام كل يوم</span>
+                </div>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ مؤشرات الفشل ═══════ */}
+            <SectionTitle>❌ مؤشرات الفشل (وقف أو عدل)</SectionTitle>
+            <Paragraph>إلى شفتي هاد الأرقام، <strong className="text-red-400">وقف الحملة فوراً</strong> وعدل قبل ما تصرف أكثر:</Paragraph>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full text-sm border border-red-500/20 rounded-xl overflow-hidden">
+                    <thead>
+                        <tr className="bg-red-500/10 text-red-400">
+                            <th className="p-3 text-right font-bold">المؤشر</th>
+                            <th className="p-3 text-right font-bold">القيمة</th>
+                            <th className="p-3 text-right font-bold">المعنى</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-300">
+                        {[
+                            ["CTR", "أقل من %1", "الإعلان ما كيجذبش — المحتوى ضعيف"],
+                            ["CPC", "أكثر من $2", "الناس ما مهتمينش — الاستهداف غالط"],
+                            ["الإنفاق بلا بيعة", "صرفتي 2× ثمن المنتج بلا بيعة", "مثال: صرفتي $60 والمنتج ب $30 وما بعتي والو"],
+                            ["Frequency", "أكثر من 3", "نفس الناس كيشوفو الإعلان بزاف — ملّو منه"],
+                            ["ROAS", "أقل من 1", "كتخسر فلوس — كتصرف أكثر من اللي كتربح"],
+                            ["إضافات للسلة بزاف بلا شراء", "كاين اهتمام ولكن ما كاينش شراء", "مشكل في صفحة الدفع أو الثقة"],
+                        ].map(([metric, value, meaning], i) => (
+                            <tr key={i} className={i % 2 === 0 ? "bg-[#1A1A1A]" : "bg-[#111]"}>
+                                <td className="p-3 font-bold text-white">{metric}</td>
+                                <td className="p-3 text-red-400">{value}</td>
+                                <td className="p-3">{meaning}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <SubTitle>شنو تدير:</SubTitle>
+            <div className="bg-[#1A1A1A] border border-red-500/20 rounded-xl p-5 mb-6 space-y-3">
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="shrink-0">🛑</span>
+                    <span>وقف الحملة</span>
+                </div>
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="shrink-0">🔍</span>
+                    <span>حدد المشكل (المحتوى؟ الاستهداف؟ صفحة الدفع؟)</span>
+                </div>
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="shrink-0">🔄</span>
+                    <span>صلح المشكل وأطلق حملة جديدة</span>
+                </div>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ مؤشرات خاصها انتباه ═══════ */}
+            <SectionTitle>⚠️ مؤشرات خاصها انتباه (راقب وعدل)</SectionTitle>
+            <Paragraph>هاد المؤشرات ماشي كارثة ولكن خاصها انتباه — عدل قبل ما توصل للفشل:</Paragraph>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full text-sm border border-yellow-500/20 rounded-xl overflow-hidden">
+                    <thead>
+                        <tr className="bg-yellow-500/10 text-yellow-400">
+                            <th className="p-3 text-right font-bold">المؤشر</th>
+                            <th className="p-3 text-right font-bold">القيمة</th>
+                            <th className="p-3 text-right font-bold">المعنى</th>
+                            <th className="p-3 text-right font-bold">الحل</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-300">
+                        {[
+                            ["CTR", "بين %1 و %2", "متوسط — الإعلان ماشي قوي بزاف", "جرب إعلان جديد (خطاف مختلف)"],
+                            ["إضافات للسلة بلا شراء", "كاينين ناس كيضيفو ولكن ما كيشريوش", "مشكل في صفحة الدفع", "بسّط صفحة الدفع / أضف ضمانات / شحن مجاني"],
+                            ["CPA", "قريب من هامش الربح", "ما كاينش ربح كافي", "حسّن الإعلان أو زيد الثمن أو نقص التكاليف"],
+                            ["Frequency", "بين 2 و 3", "بدات تتكرر", "وسّع الجمهور أو بدّل الإعلان"],
+                        ].map(([metric, value, meaning, solution], i) => (
+                            <tr key={i} className={i % 2 === 0 ? "bg-[#1A1A1A]" : "bg-[#111]"}>
+                                <td className="p-3 font-bold text-white">{metric}</td>
+                                <td className="p-3 text-yellow-400">{value}</td>
+                                <td className="p-3">{meaning}</td>
+                                <td className="p-3 text-[#C5A04E]">{solution}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <SubTitle>شنو تدير:</SubTitle>
+            <div className="bg-[#1A1A1A] border border-yellow-500/20 rounded-xl p-5 mb-6 space-y-3">
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="shrink-0">👀</span>
+                    <span>راقب الأرقام كل يوم</span>
+                </div>
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="shrink-0">🔧</span>
+                    <span>دير تعديلات صغيرة (واحد في المرة)</span>
+                </div>
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="shrink-0">⏳</span>
+                    <span>عطي 48 ساعة بعد كل تعديل قبل ما تحكم</span>
+                </div>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ ملخص القرارات ═══════ */}
+            <SectionTitle>📋 ملخص القرارات</SectionTitle>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10 text-[#C5A04E]">
+                            <th className="p-3 text-right font-bold">الحالة</th>
+                            <th className="p-3 text-right font-bold">الأرقام</th>
+                            <th className="p-3 text-right font-bold">القرار</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-300">
+                        <tr className="bg-[#1A1A1A]">
+                            <td className="p-3 text-green-400 font-bold">✅ ناجحة</td>
+                            <td className="p-3">CTR أكثر من %2 + ROAS أكثر من 2 + CPA أقل من الهامش</td>
+                            <td className="p-3 text-green-400">زيد الميزانية تدريجياً</td>
+                        </tr>
+                        <tr className="bg-[#111]">
+                            <td className="p-3 text-yellow-400 font-bold">⚠️ متوسطة</td>
+                            <td className="p-3">CTR بين %1 و %2 + CPA قريب من الهامش</td>
+                            <td className="p-3 text-yellow-400">عدّل وراقب</td>
+                        </tr>
+                        <tr className="bg-[#1A1A1A]">
+                            <td className="p-3 text-red-400 font-bold">❌ فاشلة</td>
+                            <td className="p-3">CTR أقل من %1 + ROAS أقل من 1 + بلا مبيعات</td>
+                            <td className="p-3 text-red-400">وقف فوراً وعدّل</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ الخلاصة ═══════ */}
+            <div className="bg-gradient-to-br from-[#C5A04E]/10 to-transparent border border-[#C5A04E]/20 rounded-2xl p-6">
+                <h3 className="text-xl font-bold text-[#C5A04E] mb-3">📌 الخلاصة</h3>
+                <Paragraph>
+                    القرارات ديالك خاصهم يكونو مبنيين على الأرقام ماشي على الإحساس. شوف المؤشرات، قارنها مع القيم المثالية، وأخذ القرار المناسب: كمّل، عدّل، أو وقف. هادشي هو الفرق بين اللي كيربح واللي كيخسر في الإعلانات.
+                </Paragraph>
+            </div>
+
+            <Divider />
+            <div className="text-center pt-4">
+                <p className="text-sm text-gray-500">
+                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                </p>
+            </div>
+        </div>
+    );
+}
+
 /* ─── Router ─── */
 const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase5_product_research: Phase5ProductResearch,
@@ -3974,6 +4191,7 @@ const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase23_ad_metrics: Phase23AdMetrics,
     phase23_dashboard_reading: Phase23DashboardReading,
     phase23_customize_columns: Phase23CustomizeColumns,
+    phase23_success_failure: Phase23SuccessFailure,
 };
 
 export default function LessonContentRenderer({ contentKey }: { contentKey: string }) {
