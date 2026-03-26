@@ -5058,6 +5058,235 @@ function Phase23FunnelAnalysis() {
     );
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   Phase 23 – Lesson 9 : حساب الربحية الحقيقية
+   ═══════════════════════════════════════════════════════════════ */
+function Phase23Profitability() {
+    const levelTable = (title: string, rows: [string, string, string][]) => (
+        <>
+            <SubTitle>{title}</SubTitle>
+            <div className="overflow-x-auto mb-6">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead><tr className="bg-[#C5A04E]/10 text-[#C5A04E]">
+                        <th className="p-3 text-right font-bold">المستوى</th>
+                        <th className="p-3 text-right font-bold">القيمة</th>
+                        <th className="p-3 text-right font-bold">المعنى</th>
+                    </tr></thead>
+                    <tbody className="text-gray-300">
+                        {rows.map(([level, value, meaning], i) => (
+                            <tr key={i} className={i % 2 === 0 ? "bg-[#1A1A1A]" : "bg-[#111]"}>
+                                <td className="p-3 font-bold text-white">{level}</td>
+                                <td className="p-3 text-[#C5A04E] font-bold">{value}</td>
+                                <td className="p-3">{meaning}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </>
+    );
+
+    return (
+        <div className="p-6 lg:p-8 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin" dir="rtl">
+            <h1 className="text-3xl font-bold text-white mb-2">حساب الربحية الحقيقية — الأرقام ما كتكذبش 💰</h1>
+            <p className="text-[#C5A04E] text-lg mb-8">احسب الربح الصافي ديالك بالصيغة الكاملة بلا ما تنسى أي تكلفة</p>
+
+            {/* ═══════ الصيغة ═══════ */}
+            <SectionTitle>صيغة الربح الصافي</SectionTitle>
+
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/20 rounded-xl p-5 mb-6">
+                <p className="text-[#C5A04E] font-bold text-lg text-center font-mono">
+                    الربح الصافي = إيرادات المبيعات - تكلفة المنتج - تكلفة الشحن - تكلفة الإعلان - رسوم المنصة
+                </p>
+            </div>
+
+            <div className="bg-[#1A1A1A] border border-red-500/20 rounded-xl p-4 mb-6">
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="text-red-400 shrink-0">⚠️</span>
+                    <span>بزاف ديال المبتدئين كيحسبو غير إيرادات المبيعات ناقص تكلفة الإعلان وكيفكرو أنهم رابحين — ولكن كينساو تكلفة المنتج والشحن والرسوم. الصيغة الكاملة هي اللي كتعطيك الصورة الحقيقية.</span>
+                </div>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ مثال تطبيقي ═══════ */}
+            <SectionTitle>مثال تطبيقي كامل</SectionTitle>
+
+            <div className="overflow-x-auto mb-6">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead><tr className="bg-[#C5A04E]/10 text-[#C5A04E]">
+                        <th className="p-3 text-right font-bold">العنصر</th>
+                        <th className="p-3 text-right font-bold">القيمة</th>
+                    </tr></thead>
+                    <tbody className="text-gray-300">
+                        <tr className="bg-[#1A1A1A]"><td className="p-3">عدد المبيعات</td><td className="p-3 font-bold text-white">10</td></tr>
+                        <tr className="bg-[#111]"><td className="p-3">ثمن البيع</td><td className="p-3 font-bold text-white">$29.99</td></tr>
+                        <tr className="bg-[#1A1A1A]"><td className="p-3 font-bold text-white">إيرادات المبيعات</td><td className="p-3 font-bold text-green-400">$299.90</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <SubTitle>التكاليف:</SubTitle>
+            <div className="overflow-x-auto mb-6">
+                <table className="w-full text-sm border border-red-500/20 rounded-xl overflow-hidden">
+                    <thead><tr className="bg-red-500/10 text-red-400">
+                        <th className="p-3 text-right font-bold">التكلفة</th>
+                        <th className="p-3 text-right font-bold">الحساب</th>
+                        <th className="p-3 text-right font-bold">القيمة</th>
+                    </tr></thead>
+                    <tbody className="text-gray-300">
+                        {[
+                            ["تكلفة المنتج", "10 × $5", "-$50"],
+                            ["تكلفة الشحن", "10 × $2", "-$20"],
+                            ["تكلفة الإعلان", "5 أيام × $20", "-$100"],
+                            ["رسوم شوبيفاي + بوابة الدفع (≈%5)", "%5 × $299.90", "-$15"],
+                        ].map(([name, calc, val], i) => (
+                            <tr key={i} className={i % 2 === 0 ? "bg-[#1A1A1A]" : "bg-[#111]"}>
+                                <td className="p-3 text-white">{name}</td>
+                                <td className="p-3 font-mono">{calc}</td>
+                                <td className="p-3 text-red-400 font-bold">{val}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <SubTitle>النتيجة:</SubTitle>
+            <div className="overflow-x-auto mb-6">
+                <table className="w-full text-sm border border-green-500/20 rounded-xl overflow-hidden">
+                    <thead><tr className="bg-green-500/10 text-green-400">
+                        <th className="p-3 text-right font-bold">المؤشر</th>
+                        <th className="p-3 text-right font-bold">القيمة</th>
+                    </tr></thead>
+                    <tbody className="text-gray-300">
+                        <tr className="bg-[#1A1A1A]"><td className="p-3 font-bold text-white">💰 الربح الصافي</td><td className="p-3 font-bold text-green-400 text-lg">$114.90</td></tr>
+                        <tr className="bg-[#111]"><td className="p-3 font-bold text-white">📊 ROAS</td><td className="p-3 font-bold text-green-400 text-lg">2.99</td></tr>
+                        <tr className="bg-[#1A1A1A]"><td className="p-3 font-bold text-white">📈 هامش الربح الصافي</td><td className="p-3 font-bold text-green-400 text-lg">%38</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-6 space-y-3 font-mono text-sm">
+                <p className="text-gray-300"><span className="text-[#C5A04E] font-bold">ROAS</span> = إيرادات المبيعات ÷ تكلفة الإعلان → $299.90 ÷ $100 = <span className="text-green-400 font-bold">2.99</span></p>
+                <p className="text-gray-400 text-xs">يعني: كل $1 صرفتيه في الإعلان رجع ليك $2.99 ✅</p>
+                <p className="text-gray-300 mt-2"><span className="text-[#C5A04E] font-bold">هامش الربح</span> = الربح الصافي ÷ إيرادات المبيعات × 100 → $114.90 ÷ $299.90 × 100 = <span className="text-green-400 font-bold">%38</span></p>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ الأرقام المستهدفة ═══════ */}
+            <SectionTitle>الأرقام المستهدفة</SectionTitle>
+
+            {levelTable("ROAS — العائد على الإنفاق:", [
+                ["🔴 الحد الأدنى", "1.5", "كترجع الفلوس ديالك مع ربح صغير"],
+                ["🟢 الجيد", "2 - 3", "كتربح مزيان — كمّل وزيد الميزانية"],
+                ["⭐ الممتاز", "أكثر من 3", "أداء ممتاز — Scaling بذكاء"],
+            ])}
+
+            {levelTable("هامش الربح الصافي:", [
+                ["🔴 الحد الأدنى", "%15", "كاين ربح ولكن قليل — حسّن التكاليف"],
+                ["🟢 الجيد", "%25 - %35", "هامش صحي — البزنس كيمشي مزيان"],
+                ["⭐ الممتاز", "أكثر من %35", "هامش ممتاز — وسّع ونوّع"],
+            ])}
+
+            {levelTable("CPA — تكلفة الشراء الواحد:", [
+                ["🔴 الحد الأدنى", "أقل من هامش الربح", "كل بيعة كتخليك تربح شوية"],
+                ["🟢 الجيد", "أقل من نصف هامش الربح", "كل بيعة كتخليك تربح مزيان"],
+                ["⭐ الممتاز", "أقل من ثلث هامش الربح", "أداء استثنائي"],
+            ])}
+
+            <Divider />
+
+            {/* ═══════ ورقة العمل ═══════ */}
+            <SectionTitle>📋 حسب أرقامك — ورقة العمل</SectionTitle>
+            <Paragraph>استعمل هاد الجدول باش تحسب الربحية ديال المنتج ديالك:</Paragraph>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead><tr className="bg-[#C5A04E]/10 text-[#C5A04E]">
+                        <th className="p-3 text-right font-bold">العنصر</th>
+                        <th className="p-3 text-right font-bold">أكتب الرقم ديالك</th>
+                    </tr></thead>
+                    <tbody className="text-gray-300">
+                        {[
+                            "عدد المبيعات",
+                            "ثمن البيع",
+                            "إيرادات المبيعات (العدد × الثمن)",
+                            "تكلفة المنتج (العدد × ثمن الشراء)",
+                            "تكلفة الشحن (العدد × ثمن الشحن)",
+                            "تكلفة الإعلان",
+                            "رسوم المنصة (%5 من الإيرادات)",
+                        ].map((item, i) => (
+                            <tr key={i} className={i % 2 === 0 ? "bg-[#1A1A1A]" : "bg-[#111]"}>
+                                <td className="p-3 text-white">{item}</td>
+                                <td className="p-3 text-gray-500">$___</td>
+                            </tr>
+                        ))}
+                        <tr className="bg-[#1A1A1A] border-t-2 border-[#C5A04E]/20">
+                            <td className="p-3 font-bold text-[#C5A04E]">الربح الصافي</td>
+                            <td className="p-3 font-bold text-[#C5A04E]">$___</td>
+                        </tr>
+                        <tr className="bg-[#111]">
+                            <td className="p-3 font-bold text-[#C5A04E]">ROAS (الإيرادات ÷ تكلفة الإعلان)</td>
+                            <td className="p-3 font-bold text-[#C5A04E]">___</td>
+                        </tr>
+                        <tr className="bg-[#1A1A1A]">
+                            <td className="p-3 font-bold text-[#C5A04E]">هامش الربح (الربح ÷ الإيرادات × 100)</td>
+                            <td className="p-3 font-bold text-[#C5A04E]">___%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ أخطاء شائعة ═══════ */}
+            <SectionTitle>⚠️ أخطاء شائعة في حساب الربحية</SectionTitle>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full text-sm border border-red-500/20 rounded-xl overflow-hidden">
+                    <thead><tr className="bg-red-500/10 text-red-400">
+                        <th className="p-3 text-right font-bold">الخطأ</th>
+                        <th className="p-3 text-right font-bold">النتيجة</th>
+                        <th className="p-3 text-right font-bold">الصواب</th>
+                    </tr></thead>
+                    <tbody className="text-gray-300">
+                        {[
+                            ["نسيان تكلفة الشحن", "كتفكر أنك رابح وأنت خاسر", "ديما حسب الشحن"],
+                            ["نسيان رسوم المنصة (%5)", "الربح الحقيقي أقل من اللي كتفكر", "ديما حسب %5 رسوم"],
+                            ["حساب ROAS بلا التكاليف", "ROAS وهمي", "ROAS = الإيرادات ÷ تكلفة الإعلان فقط"],
+                            ["خلط الإيرادات مع الربح", "كتفكر رقم الأعمال هو الربح", "الربح = الإيرادات - كل التكاليف"],
+                        ].map(([mistake, result, correct], i) => (
+                            <tr key={i} className={i % 2 === 0 ? "bg-[#1A1A1A]" : "bg-[#111]"}>
+                                <td className="p-3 text-red-400 font-bold">{mistake}</td>
+                                <td className="p-3">{result}</td>
+                                <td className="p-3 text-green-400">{correct}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ الخلاصة ═══════ */}
+            <div className="bg-gradient-to-br from-[#C5A04E]/10 to-transparent border border-[#C5A04E]/20 rounded-2xl p-6">
+                <h3 className="text-xl font-bold text-[#C5A04E] mb-3">📌 الخلاصة</h3>
+                <Paragraph>
+                    الأرقام ما كتكذبش. قبل ما تقول &quot;أنا رابح&quot; حسب كلشي: المنتج + الشحن + الإعلان + الرسوم. الربح الحقيقي هو اللي كيبقى بعد ما تحيّد كل التكاليف. احسب بالصيغة الكاملة وما تنساش ولا تكلفة.
+                </Paragraph>
+            </div>
+
+            <Divider />
+            <div className="text-center pt-4">
+                <p className="text-sm text-gray-500">
+                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                </p>
+            </div>
+        </div>
+    );
+}
+
 const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase5_product_research: Phase5ProductResearch,
     phase11_shopify_guide: Phase11ShopifyGuide,
@@ -5073,6 +5302,7 @@ const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase23_stop_campaign: Phase23StopCampaign,
     phase23_adjust_campaign: Phase23AdjustCampaign,
     phase23_funnel_analysis: Phase23FunnelAnalysis,
+    phase23_profitability: Phase23Profitability,
 };
 
 export default function LessonContentRenderer({ contentKey }: { contentKey: string }) {
