@@ -4400,6 +4400,226 @@ function Phase23Scaling() {
     );
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   Phase 23 – Lesson 6 : متى توقف الحملة — القواعد الذهبية
+   ═══════════════════════════════════════════════════════════════ */
+function Phase23StopCampaign() {
+    return (
+        <div className="p-6 lg:p-8 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin" dir="rtl">
+            <h1 className="text-3xl font-bold text-white mb-2">متى توقف الحملة — القواعد الذهبية 🛑</h1>
+            <p className="text-[#C5A04E] text-lg mb-8">4 قواعد واضحة باش تعرف إمتى توقف وما تخسرش فلوسك</p>
+
+            {/* ═══════ المقدمة ═══════ */}
+            <SectionTitle>القواعد الذهبية لإيقاف الحملة</SectionTitle>
+            <Paragraph>
+                ماشي كل حملة خاصها تكمل. المهم هو أنك تعرف <strong className="text-white">إمتى توقف</strong> باش ما تخسرش فلوس على حملة ما عندها مستقبل. هاد القواعد الأربعة هي اللي خاصك تتبعها:
+            </Paragraph>
+
+            <Divider />
+
+            {/* ═══════ القاعدة 1 ═══════ */}
+            <SectionTitle>القاعدة 1: قاعدة الضعف ✖️2️⃣</SectionTitle>
+
+            <div className="bg-[#1A1A1A] border border-red-500/20 rounded-xl p-5 mb-6">
+                <p className="text-red-400 font-bold text-lg text-center">
+                    إلى صرفتي <span className="text-white">ضعف ثمن المنتج</span> بلا ولا بيعة = ❌ أوقف فوراً
+                </p>
+            </div>
+
+            <SubTitle>مثال عملي:</SubTitle>
+            <div className="overflow-x-auto mb-6">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10 text-[#C5A04E]">
+                            <th className="p-3 text-right font-bold">المنتج</th>
+                            <th className="p-3 text-right font-bold">ثمن البيع</th>
+                            <th className="p-3 text-right font-bold">الحد الأقصى للإنفاق</th>
+                            <th className="p-3 text-right font-bold">القرار</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-300">
+                        {[
+                            ["قاطع الخضروات", "$30", "$60", "إلى صرفتي $60 وما بعتي والو → ❌ أوقف"],
+                            ["أداة المطبخ", "$25", "$50", "إلى صرفتي $50 وما بعتي والو → ❌ أوقف"],
+                            ["جهاز التجميل", "$45", "$90", "إلى صرفتي $90 وما بعتي والو → ❌ أوقف"],
+                        ].map(([product, price, max, decision], i) => (
+                            <tr key={i} className={i % 2 === 0 ? "bg-[#1A1A1A]" : "bg-[#111]"}>
+                                <td className="p-3 font-bold text-white">{product}</td>
+                                <td className="p-3 text-green-400">{price}</td>
+                                <td className="p-3 text-red-400 font-bold">{max}</td>
+                                <td className="p-3">{decision}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <SubTitle>شنو تدير بعد الإيقاف:</SubTitle>
+            <BulletList items={[
+                "🔍 راجع المنتج — واش فعلاً عندو طلب؟",
+                "🔍 راجع الإعلان — واش المحتوى جذاب؟",
+                "🔍 راجع الاستهداف — واش الجمهور مناسب؟",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ القاعدة 2 ═══════ */}
+            <SectionTitle>القاعدة 2: لا نقرات 🚫🖱️</SectionTitle>
+
+            <div className="bg-[#1A1A1A] border border-red-500/20 rounded-xl p-5 mb-6">
+                <p className="text-red-400 font-bold text-lg text-center">
+                    إلى صرفتي <span className="text-white">$10</span> وما حصلتيش على <span className="text-white">10 نقرات</span> على الأقل = ❌ الإعلان ما كيجذبش
+                </p>
+            </div>
+
+            <SubTitle>المعنى:</SubTitle>
+            <BulletList items={[
+                "الناس كيشوفو الإعلان ولكن ما كينقروش عليه",
+                "المشكل في المحتوى الإعلاني (الفيديو أو الصورة أو النص)",
+            ]} />
+
+            <SubTitle>شنو تدير:</SubTitle>
+            <RedList items={["أوقف الإعلان"]} />
+            <Paragraph>🔄 بدّل المحتوى بالكامل:</Paragraph>
+            <BulletList items={[
+                "جرب خطاف (Hook) مختلف في أول 3 ثواني",
+                "جرب فيديو بدل صورة (أو العكس)",
+                "جرب نص إعلاني مختلف",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ القاعدة 3 ═══════ */}
+            <SectionTitle>القاعدة 3: نقرات بلا إضافة للسلة 🖱️➡️🛒❌</SectionTitle>
+
+            <div className="bg-[#1A1A1A] border border-red-500/20 rounded-xl p-5 mb-6">
+                <p className="text-red-400 font-bold text-lg text-center">
+                    إلى عندك أكثر من <span className="text-white">50 نقرة</span> وما كاينش <span className="text-white">ولا إضافة للسلة</span> = ❌ مشكل في صفحة المنتج
+                </p>
+            </div>
+
+            <SubTitle>المعنى:</SubTitle>
+            <GreenList items={["الإعلان خدام مزيان — الناس كينقرو"]} />
+            <RedList items={["ولكن لما كيوصلو لصفحة المنتج كيخرجو بلا ما يضيفو للسلة"]} />
+            <Paragraph>المشكل في <strong className="text-white">صفحة المنتج</strong> ماشي في الإعلان.</Paragraph>
+
+            <SubTitle>شنو تدير:</SubTitle>
+            <RedList items={["أوقف الحملة"]} />
+            <Paragraph>🔧 حسّن صفحة المنتج:</Paragraph>
+            <BulletList items={[
+                "حسّن الصور — خاصها تكون احترافية وواضحة",
+                "حسّن الوصف — خاصو يكون مقنع ويجاوب على الأسئلة",
+                "أضف تقييمات وآراء العملاء",
+                "تأكد أن الثمن معقول",
+                "تأكد أن الصفحة كتحمل بسرعة",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ القاعدة 4 ═══════ */}
+            <SectionTitle>القاعدة 4: إضافات بلا شراء 🛒➡️💳❌</SectionTitle>
+
+            <div className="bg-[#1A1A1A] border border-red-500/20 rounded-xl p-5 mb-6">
+                <p className="text-red-400 font-bold text-lg text-center">
+                    إلى عندك أكثر من <span className="text-white">10 إضافات للسلة</span> وما كاينش <span className="text-white">ولا شراء</span> = ❌ مشكل في صفحة الدفع أو الثقة
+                </p>
+            </div>
+
+            <SubTitle>المعنى:</SubTitle>
+            <GreenList items={[
+                "الإعلان خدام",
+                "صفحة المنتج خدامة",
+            ]} />
+            <RedList items={["ولكن الناس كيتوقفو عند صفحة الدفع"]} />
+            <Paragraph>المشكل في الدفع أو الثقة.</Paragraph>
+
+            <SubTitle>شنو تدير:</SubTitle>
+            <RedList items={["أوقف الحملة"]} />
+            <Paragraph>🔧 حسّن صفحة الدفع والثقة:</Paragraph>
+            <BulletList items={[
+                "بسّط صفحة الدفع — حيّد أي خطوة زائدة",
+                "أضف شحن مجاني",
+                "أضف ضمان استرجاع الأموال",
+                "أضف شعارات الأمان (SSL + طرق الدفع)",
+                "أضف سياسة الإرجاع بشكل واضح",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ ملخص القواعد ═══════ */}
+            <SectionTitle>📋 ملخص القواعد الأربعة</SectionTitle>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10 text-[#C5A04E]">
+                            <th className="p-3 text-right font-bold">القاعدة</th>
+                            <th className="p-3 text-right font-bold">المشكل</th>
+                            <th className="p-3 text-right font-bold">الحل</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-300">
+                        {[
+                            ["قاعدة الضعف", "صرفتي 2× الثمن بلا بيعة", "راجع المنتج + الإعلان + الاستهداف"],
+                            ["لا نقرات", "$10 إنفاق و أقل من 10 نقرات", "بدّل المحتوى الإعلاني"],
+                            ["نقرات بلا سلة", "+50 نقرة و 0 إضافة للسلة", "حسّن صفحة المنتج"],
+                            ["سلة بلا شراء", "+10 إضافة و 0 شراء", "حسّن صفحة الدفع والثقة"],
+                        ].map(([rule, problem, solution], i) => (
+                            <tr key={i} className={i % 2 === 0 ? "bg-[#1A1A1A]" : "bg-[#111]"}>
+                                <td className="p-3 font-bold text-[#C5A04E]">{rule}</td>
+                                <td className="p-3 text-red-400">{problem}</td>
+                                <td className="p-3 text-green-400">{solution}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ كيفاش توقف عملياً ═══════ */}
+            <SectionTitle>كيفاش توقف الحملة عملياً</SectionTitle>
+
+            <StepCard num={1} title="ادخل Ads Manager" items={["من business.facebook.com"]} />
+            <StepCard num={2} title="اضغط على زر التشغيل/الإيقاف 🔘" items={["بجانب المجموعة الإعلانية أو الحملة"]} />
+            <StepCard num={3} title='الحالة كتولي Off' items={["الحملة متوقفة ولكن البيانات محفوظة"]} />
+
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-6 space-y-3">
+                <p className="text-sm font-bold text-[#C5A04E] mb-2">⚠️ نصيحة مهمة:</p>
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="shrink-0">🚫</span>
+                    <span><strong className="text-white">ما تحذفهاش</strong> — خليها متوقفة فقط</span>
+                </div>
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="shrink-0">📊</span>
+                    <span>باش ترجع ليها لو احتجتي تشوف الأرقام أو تعاود تشغلها</span>
+                </div>
+                <div className="flex items-start gap-3 text-gray-300">
+                    <span className="shrink-0">📝</span>
+                    <span>البيانات ديالها كتبقى محفوظة وكتفيدك في التحليل</span>
+                </div>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ الخلاصة ═══════ */}
+            <div className="bg-gradient-to-br from-[#C5A04E]/10 to-transparent border border-[#C5A04E]/20 rounded-2xl p-6">
+                <h3 className="text-xl font-bold text-[#C5A04E] mb-3">📌 الخلاصة</h3>
+                <Paragraph>
+                    معرفة إمتى توقف لا تقل أهمية عن معرفة إمتى تبدأ. ما تخليش العاطفة تتحكم فيك — إلى الأرقام كيقولو وقف، وقف. الفلوس اللي كتوفرها من حملة فاشلة تقدر تستثمرها في حملة جديدة أحسن.
+                </Paragraph>
+            </div>
+
+            <Divider />
+            <div className="text-center pt-4">
+                <p className="text-sm text-gray-500">
+                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                </p>
+            </div>
+        </div>
+    );
+}
+
 /* ─── Router ─── */
 const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase5_product_research: Phase5ProductResearch,
@@ -4413,6 +4633,7 @@ const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase23_customize_columns: Phase23CustomizeColumns,
     phase23_success_failure: Phase23SuccessFailure,
     phase23_scaling: Phase23Scaling,
+    phase23_stop_campaign: Phase23StopCampaign,
 };
 
 export default function LessonContentRenderer({ contentKey }: { contentKey: string }) {

@@ -481,7 +481,7 @@ export const stepsContent: StepContent[] = [
                     { id: 3, title: "تخصيص الأعمدة Customize Columns", type: "pdf", content: "phase23_customize_columns" },
                     { id: 4, title: "مؤشرات النجاح والفشل", type: "pdf", content: "phase23_success_failure" },
                     { id: 5, title: "متى تزيد الميزانية Scaling", type: "pdf", content: "phase23_scaling" },
-                    { id: 6, title: "متى توقف الحملة", type: "pdf" },
+                    { id: 6, title: "متى توقف الحملة", type: "pdf", content: "phase23_stop_campaign" },
                     { id: 7, title: "متى تعدل الحملة", type: "pdf" },
                     { id: 8, title: "تحليل مسار العميل Funnel Analysis", type: "pdf" },
                     { id: 9, title: "حساب الربحية الحقيقية", type: "pdf" },
