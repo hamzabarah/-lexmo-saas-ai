@@ -20,12 +20,29 @@ export async function POST(req: NextRequest) {
         // 2. Parse Data
         const body = await req.json();
 
-        // 3. Update Supabase
+        // 3. Read current data to preserve settings
+        const { data: current } = await supabaseAdmin
+            .from('live_dashboard_state')
+            .select('data')
+            .eq('id', 1)
+            .single();
+
+        const existingSettings = current?.data?.settings || {};
+
+        // 4. Update Supabase — merge to preserve settings
+        const mergedData = {
+            ...body,
+            settings: {
+                ...existingSettings,
+                ...(body.settings || {}),
+            },
+        };
+
         const { error } = await supabaseAdmin
             .from('live_dashboard_state')
             .upsert({
                 id: 1,
-                data: body,
+                data: mergedData,
                 updated_at: new Date().toISOString()
             });
 

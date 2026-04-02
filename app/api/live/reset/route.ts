@@ -29,9 +29,23 @@ export async function GET() {
             ]
         };
 
+        // Read current data to preserve settings
+        const { data: current } = await supabaseAdmin
+            .from('live_dashboard_state')
+            .select('data')
+            .eq('id', 1)
+            .single();
+
+        const existingSettings = current?.data?.settings || {};
+
+        const mergedData = {
+            ...resetData,
+            settings: existingSettings,
+        };
+
         const { error } = await supabaseAdmin
             .from('live_dashboard_state')
-            .update({ data: resetData })
+            .update({ data: mergedData })
             .eq('id', 1);
 
         if (error) throw error;
