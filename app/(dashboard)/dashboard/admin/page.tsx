@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js';
-import { Shield, Mail, AlertCircle, UserPlus, TrendingUp, Copy, Check, Settings, Eye, EyeOff, Calendar, Trash2, ChevronLeft, ChevronRight, X, MessageSquare, FileText, Send } from 'lucide-react';
+import { Shield, Mail, AlertCircle, UserPlus, TrendingUp, Copy, Check, Settings, Eye, EyeOff, Calendar, Trash2, ChevronLeft, ChevronRight, X, MessageSquare, FileText, Send, Lock } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 interface UserData {
@@ -105,6 +105,8 @@ export default function AdminPage() {
     // Settings
     const [showCompanyInfo, setShowCompanyInfo] = useState(true);
     const [togglingCompanyInfo, setTogglingCompanyInfo] = useState(false);
+    const [registrationsOpen, setRegistrationsOpen] = useState(true);
+    const [togglingRegistrations, setTogglingRegistrations] = useState(false);
 
     // Calendar availability
     const [blockedSlots, setBlockedSlots] = useState<Set<string>>(new Set());
@@ -168,6 +170,7 @@ export default function AdminPage() {
             const res = await fetch('/api/admin/settings');
             const data = await res.json();
             setShowCompanyInfo(data.settings?.show_company_info ?? true);
+            setRegistrationsOpen(data.settings?.registrations_open ?? true);
         } catch (error) {
             console.error('Error loading settings:', error);
         }
@@ -196,6 +199,43 @@ export default function AdminPage() {
             alert('حدث خطأ أثناء تحديث الإعداد');
         } finally {
             setTogglingCompanyInfo(false);
+        }
+    };
+
+    const toggleRegistrations = async () => {
+        setTogglingRegistrations(true);
+        const newValue = !registrationsOpen;
+        try {
+            const { data: { session } } = await supabase.auth.getSession();
+            const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session?.access_token}`,
+            };
+            // Save registrations_open
+            const res = await fetch('/api/admin/settings', {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({ key: 'registrations_open', value: newValue }),
+            });
+            if (res.ok) {
+                // Save closed_at timestamp
+                await fetch('/api/admin/settings', {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify({
+                        key: 'registrations_closed_at',
+                        value: newValue ? null : new Date().toISOString(),
+                    }),
+                });
+                setRegistrationsOpen(newValue);
+            } else {
+                alert('حدث خطأ أثناء تحديث الإعداد');
+            }
+        } catch (error) {
+            console.error('Error toggling registrations:', error);
+            alert('حدث خطأ أثناء تحديث الإعداد');
+        } finally {
+            setTogglingRegistrations(false);
         }
     };
 
@@ -694,6 +734,39 @@ ${LOGIN_URL}
                                 }`}
                             />
                         </button>
+                    </div>
+
+                    {/* Registrations Toggle */}
+                    <div className="flex items-center justify-between bg-[#1A1A1A] rounded-lg px-5 py-4 mt-3">
+                        <div className="flex items-center gap-3">
+                            {registrationsOpen ? (
+                                <Eye className="w-5 h-5 text-green-500" />
+                            ) : (
+                                <Lock className="w-5 h-5 text-red-500" />
+                            )}
+                            <div>
+                                <p className="text-white font-semibold text-sm">التسجيلات</p>
+                                <p className="text-gray-500 text-xs mt-0.5">فتح أو إغلاق التسجيلات في الصفحة الرئيسية</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <span className={`text-xs font-bold ${registrationsOpen ? 'text-green-400' : 'text-red-400'}`}>
+                                {registrationsOpen ? 'مفتوحة ✅' : 'مغلقة ❌'}
+                            </span>
+                            <button
+                                onClick={toggleRegistrations}
+                                disabled={togglingRegistrations}
+                                className={`relative w-14 h-7 rounded-full transition-colors duration-200 ${
+                                    registrationsOpen ? 'bg-green-500' : 'bg-red-500'
+                                } ${togglingRegistrations ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                            >
+                                <span
+                                    className={`absolute top-0.5 w-6 h-6 bg-white rounded-full shadow transition-transform duration-200 ${
+                                        registrationsOpen ? 'left-0.5 translate-x-7' : 'left-0.5 translate-x-0'
+                                    }`}
+                                />
+                            </button>
+                        </div>
                     </div>
                 </div>
 
