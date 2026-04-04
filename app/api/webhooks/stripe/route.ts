@@ -42,7 +42,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     }
 
     // Determine product type by amount
-    // 19700 = 197€ = formation (plan: 'ecommerce')
+    // 49700 = 497€ = formation (plan: 'ecommerce')
     // 9700  = 97€  = diagnostic (plan: 'diagnostic')
     const amountTotal = session.amount_total;
     const plan: string = amountTotal === 9700 ? 'diagnostic' : 'ecommerce';

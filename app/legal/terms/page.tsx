@@ -59,7 +59,7 @@ export default async function TermsPage() {
               <li>Assessment exercises and interactive quizzes</li>
               <li>Access to the online learning platform</li>
             </ul>
-            <p className="mt-3">The selling price of the training is one hundred and ninety-seven euros (€197.00) including all taxes, payable in a single installment at the time of purchase.</p>
+            <p className="mt-3">The selling price of the training is four hundred and ninety-seven euros (€497.00) including all taxes, payable in a single installment at the time of purchase.</p>
             <p className="mt-3">The product is an intangible digital good. In accordance with Article L.221-28 of the French Consumer Code and Article 16(m) of European Directive 2011/83/EU, access to this digital content is activated immediately and automatically upon payment confirmation, after the Customer&apos;s express consent. This immediate activation carries the consequences described in Article 5 herein.</p>
           </section>
 
@@ -181,7 +181,7 @@ export default async function TermsPage() {
               <li>The training does not constitute financial, tax, legal or accounting advice</li>
               <li>Results vary significantly from one individual to another</li>
             </ul>
-            <p className="mt-3">The Seller&apos;s liability, for any reason whatsoever, is expressly limited to the amount paid by the Customer for the training (€197). The Seller shall not be liable for indirect, consequential, special or exemplary damages.</p>
+            <p className="mt-3">The Seller&apos;s liability, for any reason whatsoever, is expressly limited to the amount paid by the Customer for the training (€497). The Seller shall not be liable for indirect, consequential, special or exemplary damages.</p>
           </section>
 
           {/* Article 10 */}

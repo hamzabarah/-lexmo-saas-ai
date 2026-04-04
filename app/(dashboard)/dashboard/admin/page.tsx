@@ -810,7 +810,7 @@ ${LOGIN_URL}
                                 onChange={(e) => setNewStudentPlan(e.target.value)}
                                 className="w-full bg-[#1A1A1A] border border-[#C5A04E]/10 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
-                                <option value="ecommerce">🛒 التجارة الإلكترونية (197€)</option>
+                                <option value="ecommerce">🛒 التجارة الإلكترونية (497€)</option>
                                 <option value="diagnostic">🔍 تشخيص بزنس (97€)</option>
                             </select>
                         </div>
