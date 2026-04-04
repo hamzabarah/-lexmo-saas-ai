@@ -2,7 +2,7 @@
 // Force Deploy: 2026-01-29 21:05 - Fix Mixed Chart Crash (Reg Controllers)
 
 import { useEffect, useState, useRef } from 'react';
-import { Wallet, ShoppingBag, TrendingUp, CheckCircle, Clock, AlertTriangle, PlayCircle, Lock } from 'lucide-react';
+import { Wallet, ShoppingBag, TrendingUp, CheckCircle, Clock, AlertTriangle, PlayCircle } from 'lucide-react';
 import CountUp from 'react-countup';
 import { Bar } from 'react-chartjs-2';
 import {
@@ -54,34 +54,26 @@ const TIMER_ANIMATIONS = `
   0%, 49%, 100% { opacity: 1; }
   50%, 99% { opacity: 0; }
 }
-@keyframes slot-taken {
-  0% { transform: scale(1); }
-  30% { transform: scale(1.15); }
-  50% { transform: scale(0.95); }
-  70% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-}
-@keyframes slot-glow-gold {
-  0%, 100% { box-shadow: 0 0 8px rgba(255, 215, 0, 0.15), inset 0 0 8px rgba(255, 215, 0, 0.05); }
-  50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.3), inset 0 0 15px rgba(255, 215, 0, 0.1); }
+@keyframes slot-breathe {
+  0%, 100% { box-shadow: 0 0 8px rgba(255, 215, 0, 0.1), inset 0 1px 0 rgba(255, 215, 0, 0.08); }
+  50% { box-shadow: 0 0 22px rgba(255, 215, 0, 0.25), inset 0 1px 0 rgba(255, 215, 0, 0.15); }
 }
 @keyframes slot-pulse-last {
-  0%, 100% { box-shadow: 0 0 10px rgba(255, 165, 0, 0.2); border-color: rgba(255, 165, 0, 0.4); }
-  50% { box-shadow: 0 0 25px rgba(255, 165, 0, 0.5); border-color: rgba(255, 165, 0, 0.8); }
+  0%, 100% { box-shadow: 0 0 10px rgba(255, 165, 0, 0.15); border-color: rgba(255, 165, 0, 0.3); }
+  50% { box-shadow: 0 0 28px rgba(255, 165, 0, 0.45); border-color: rgba(255, 165, 0, 0.7); }
 }
-@keyframes slot-flash-red {
-  0% { background: rgba(220, 38, 38, 0.6); }
-  50% { background: rgba(220, 38, 38, 0.3); }
-  100% { background: rgba(220, 38, 38, 0.15); }
-}
-@keyframes slot-lock-spin {
-  0% { transform: rotate(0deg) scale(0); opacity: 0; }
-  50% { transform: rotate(180deg) scale(1.2); opacity: 1; }
-  100% { transform: rotate(360deg) scale(1); opacity: 1; }
+@keyframes slot-flash-close {
+  0% { background: rgba(239, 68, 68, 0.7); transform: scale(1.08); }
+  40% { background: rgba(239, 68, 68, 0.4); transform: scale(0.97); }
+  100% { background: rgba(127, 29, 29, 0.35); transform: scale(1); }
 }
 @keyframes complete-overlay-pulse {
-  0%, 100% { opacity: 0.85; }
-  50% { opacity: 0.95; }
+  0%, 100% { opacity: 0.88; }
+  50% { opacity: 0.96; }
+}
+@keyframes countdown-glow {
+  0%, 100% { text-shadow: 0 0 10px currentColor; }
+  50% { text-shadow: 0 0 30px currentColor, 0 0 60px currentColor; }
 }
 `;
 
@@ -540,10 +532,12 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                     const taken = live.places_prises;
                     const remaining = live.places_restantes;
                     const allTaken = remaining <= 0;
+                    const timerExpired = timeLeft === "00:00:00";
+                    const isFinished = allTaken || timerExpired;
 
-                    // Dynamic message below slots
+                    // Dynamic message
                     const getMessage = () => {
-                        if (allTaken) return { text: "اكتمل العدد بالكامل 🔒", color: "text-red-500", animate: "animate-pulse" };
+                        if (isFinished) return { text: "⛔ انتهى الوقت", color: "text-red-500", animate: "animate-pulse" };
                         if (remaining === 1) return { text: "🚨 آخر مكان متبقي — لا تضيّع الفرصة!", color: "text-red-400", animate: "animate-pulse" };
                         if (remaining === 2) return { text: "🔴 مكانان فقط — أسرع قبل فوات الأوان!", color: "text-orange-400", animate: "animate-pulse" };
                         if (remaining <= 4) return { text: `⚠️ باقي ${remaining} أماكن فقط — الأماكن تنفذ بسرعة!`, color: "text-yellow-400", animate: "" };
@@ -551,81 +545,97 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                     };
                     const msg = getMessage();
 
+                    // Timer color
+                    const timerColor = (() => {
+                        if (!timeLeft || timerExpired) return "text-red-500";
+                        const [th, tm] = timeLeft.split(':').map(Number);
+                        const totalMin = th * 60 + tm;
+                        if (totalMin < 10) return "text-red-500";
+                        return "text-orange-400";
+                    })();
+
                     return (
-                        <div className="w-full rounded-3xl border border-[#C5A04E]/20 bg-[#111111] p-6 lg:p-8 relative overflow-hidden shadow-2xl" dir="rtl">
+                        <div className="w-full rounded-3xl bg-[#0A0A0A] border border-[#C5A04E]/15 p-8 lg:p-12 relative overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.8)]" dir="rtl">
+
+                            {/* Subtle top gold line */}
+                            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#FFD700]/30 to-transparent" />
+
                             {/* Header */}
-                            <div className="flex justify-between items-center mb-6">
-                                <div className="flex items-center gap-3">
-                                    <span className="text-2xl lg:text-3xl">🔥</span>
+                            <div className="flex justify-between items-center mb-8 lg:mb-10">
+                                <div className="flex items-center gap-4">
+                                    <span className="text-3xl lg:text-4xl">🔥</span>
                                     <div>
-                                        <h2 className="text-lg lg:text-2xl font-black font-cairo text-white">الأماكن المتاحة</h2>
-                                        <p className="text-gray-500 font-mono text-[10px] lg:text-xs uppercase tracking-widest">
+                                        <h2 className="text-xl lg:text-3xl font-black font-cairo text-white">الأماكن المتاحة</h2>
+                                        <p className="text-gray-600 font-mono text-[10px] lg:text-xs uppercase tracking-[0.2em] mt-1">
                                             LIVE SLOTS • {taken}/{total} TAKEN
                                         </p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-2 bg-[#1A1A1A] px-3 py-1.5 rounded-full border border-red-500/20">
                                     <span className="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
-                                    <span className="text-xs font-bold text-gray-500 uppercase tracking-widest font-orbitron">LIVE</span>
+                                    <span className="text-[10px] font-bold text-red-400 uppercase tracking-widest font-orbitron">LIVE</span>
                                 </div>
                             </div>
 
-                            {/* Slots Grid */}
-                            <div className={`grid gap-3 ${total <= 10 ? 'grid-cols-5 lg:grid-cols-10' : total <= 15 ? 'grid-cols-5 lg:grid-cols-10' : 'grid-cols-5 lg:grid-cols-10'}`}>
+                            {/* Slots Grid — bigger, more spaced */}
+                            <div className={`grid gap-3 lg:gap-4 justify-center mx-auto ${
+                                total <= 5 ? 'grid-cols-5 max-w-[500px]' :
+                                total <= 10 ? 'grid-cols-5 lg:grid-cols-10 max-w-[900px]' :
+                                'grid-cols-5 lg:grid-cols-10 max-w-[900px]'
+                            }`}>
                                 {Array.from({ length: total }, (_, i) => {
                                     const slotNumber = i + 1;
                                     const isTaken = i < taken;
-                                    const isLastPlaces = !isTaken && remaining <= 4;
+                                    const isLastPlaces = !isTaken && remaining <= 4 && !isFinished;
                                     const isAnimating = animatingSlots.has(i);
 
                                     return (
                                         <div
                                             key={i}
                                             className={`
-                                                relative flex flex-col items-center justify-center
-                                                aspect-square rounded-xl border-2 transition-all duration-500
+                                                relative flex items-center justify-center
+                                                aspect-square rounded-2xl border transition-all duration-500
+                                                min-h-[56px] lg:min-h-[72px]
                                                 ${isTaken
-                                                    ? 'bg-red-900/30 border-red-600/50'
+                                                    ? 'bg-[#1a0a0a] border-red-900/40'
                                                     : isLastPlaces
-                                                        ? 'bg-[#1A1A1A] border-orange-500/40'
-                                                        : 'bg-[#1A1A1A] border-[#FFD700]/20'
+                                                        ? 'bg-[#141414] border-orange-500/30'
+                                                        : 'bg-[#141414] border-[#FFD700]/15'
                                                 }
                                             `}
                                             style={{
                                                 animation: isAnimating
-                                                    ? 'slot-taken 0.8s ease-out, slot-flash-red 1s ease-out'
+                                                    ? 'slot-flash-close 0.8s ease-out'
                                                     : isTaken
                                                         ? 'none'
                                                         : isLastPlaces
                                                             ? 'slot-pulse-last 2s ease-in-out infinite'
-                                                            : 'slot-glow-gold 3s ease-in-out infinite',
+                                                            : 'slot-breathe 3s ease-in-out infinite',
                                             }}
                                         >
-                                            {/* Slot Number */}
+                                            {/* Slot Number — always visible */}
                                             <span className={`
-                                                font-orbitron font-black text-sm lg:text-lg
-                                                ${isTaken ? 'text-red-500/40' : isLastPlaces ? 'text-orange-400' : 'text-[#FFD700]'}
+                                                font-orbitron font-black text-base lg:text-xl select-none
+                                                ${isTaken
+                                                    ? 'text-gray-700 line-through decoration-red-800/60 decoration-2'
+                                                    : isLastPlaces
+                                                        ? 'text-orange-400'
+                                                        : 'text-[#FFD700]'
+                                                }
                                             `}>
                                                 {String(slotNumber).padStart(2, '0')}
                                             </span>
 
-                                            {/* Taken overlay */}
+                                            {/* Small ❌ in top-left corner for taken slots */}
                                             {isTaken && (
-                                                <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-red-900/20">
-                                                    <Lock
-                                                        className="w-4 h-4 lg:w-5 lg:h-5 text-red-500/70"
-                                                        style={{
-                                                            animation: isAnimating ? 'slot-lock-spin 0.8s ease-out forwards' : 'none'
-                                                        }}
-                                                    />
-                                                </div>
+                                                <span className="absolute top-1 left-1 text-[8px] lg:text-[10px] opacity-60">❌</span>
                                             )}
 
-                                            {/* Available dot indicator */}
+                                            {/* Subtle glow dot for available */}
                                             {!isTaken && (
                                                 <span className={`
-                                                    w-1.5 h-1.5 rounded-full mt-1
-                                                    ${isLastPlaces ? 'bg-orange-400 animate-pulse' : 'bg-[#FFD700]/60'}
+                                                    absolute bottom-1.5 w-1 h-1 rounded-full
+                                                    ${isLastPlaces ? 'bg-orange-400 animate-pulse' : 'bg-[#FFD700]/40'}
                                                 `} />
                                             )}
                                         </div>
@@ -634,11 +644,11 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                             </div>
 
                             {/* Progress bar */}
-                            <div className="mt-6 mb-4">
-                                <div className="w-full h-2 bg-[#1A1A1A] rounded-full overflow-hidden border border-[#C5A04E]/10">
+                            <div className="mt-8 mb-2 max-w-[900px] mx-auto">
+                                <div className="w-full h-1.5 bg-[#1A1A1A] rounded-full overflow-hidden">
                                     <div
                                         className={`h-full transition-all duration-1000 ease-out rounded-full ${
-                                            allTaken
+                                            isFinished
                                                 ? 'bg-gradient-to-l from-red-600 to-red-500'
                                                 : remaining <= 3
                                                     ? 'bg-gradient-to-l from-orange-500 to-red-500'
@@ -649,30 +659,48 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                                 </div>
                             </div>
 
+                            {/* COUNTDOWN TIMER */}
+                            <div className="mt-10 flex flex-col items-center">
+                                <p className="text-gray-500 text-sm lg:text-base font-cairo font-bold mb-3 tracking-wide">
+                                    {isFinished ? '⛔ انتهى الوقت' : '⏳ الوقت المتبقي للتسجيل'}
+                                </p>
+                                {timeLeft && (
+                                    <div
+                                        className={`font-orbitron font-black text-4xl lg:text-6xl tracking-[0.15em] ${timerColor}`}
+                                        style={{
+                                            animation: !isFinished ? 'countdown-glow 2s ease-in-out infinite' : 'none',
+                                            opacity: isFinished ? 0.5 : 1,
+                                        }}
+                                    >
+                                        {timeLeft}
+                                    </div>
+                                )}
+                            </div>
+
                             {/* Dynamic message */}
-                            <div className="text-center">
-                                <p className={`text-base lg:text-xl font-black font-cairo ${msg.color} ${msg.animate}`}>
+                            <div className="text-center mt-6">
+                                <p className={`text-sm lg:text-lg font-black font-cairo ${msg.color} ${msg.animate}`}>
                                     {msg.text}
                                 </p>
                             </div>
 
                             {/* Full overlay when all taken */}
-                            {allTaken && (
+                            {isFinished && (
                                 <div
                                     className="absolute inset-0 rounded-3xl flex flex-col items-center justify-center z-20"
                                     style={{
-                                        background: 'linear-gradient(135deg, rgba(10,5,5,0.92) 0%, rgba(40,10,10,0.92) 100%)',
+                                        background: 'linear-gradient(135deg, rgba(8,3,3,0.93) 0%, rgba(35,8,8,0.93) 100%)',
                                         animation: 'complete-overlay-pulse 3s ease-in-out infinite'
                                     }}
                                 >
-                                    <span className="text-5xl lg:text-7xl mb-4">🔒</span>
-                                    <h3 className="text-2xl lg:text-4xl font-black font-cairo text-red-500 mb-2">
-                                        اكتمل العدد بالكامل
+                                    <span className="text-6xl lg:text-8xl mb-6">⛔</span>
+                                    <h3 className="text-2xl lg:text-4xl font-black font-cairo text-red-500 mb-3">
+                                        انتهى الوقت
                                     </h3>
-                                    <p className="text-gray-400 text-sm lg:text-base font-cairo">
+                                    <p className="text-gray-500 text-sm lg:text-base font-cairo mb-4">
                                         نراكم في البث القادم إن شاء الله
                                     </p>
-                                    <div className="flex items-center gap-2 mt-4 text-gray-600 font-orbitron text-xs uppercase tracking-widest">
+                                    <div className="flex items-center gap-2 text-gray-700 font-orbitron text-xs uppercase tracking-widest">
                                         <CheckCircle className="w-4 h-4" />
                                         <span>{taken}/{total} SLOTS FILLED</span>
                                     </div>
