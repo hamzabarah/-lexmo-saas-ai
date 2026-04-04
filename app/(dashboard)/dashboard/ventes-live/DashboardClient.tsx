@@ -532,12 +532,11 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                     const taken = live.places_prises;
                     const remaining = live.places_restantes;
                     const allTaken = remaining <= 0;
-                    const timerExpired = timeLeft === "00:00:00";
-                    const isFinished = allTaken || timerExpired;
+                    const isFinished = allTaken; // Only when ALL slots are taken
 
                     // Dynamic message
                     const getMessage = () => {
-                        if (isFinished) return { text: "⛔ انتهى الوقت", color: "text-red-500", animate: "animate-pulse" };
+                        if (isFinished) return { text: "🔒 اكتمل العدد بالكامل", color: "text-red-500", animate: "animate-pulse" };
                         if (remaining === 1) return { text: "🚨 آخر مكان متبقي — لا تضيّع الفرصة!", color: "text-red-400", animate: "animate-pulse" };
                         if (remaining === 2) return { text: "🔴 مكانان فقط — أسرع قبل فوات الأوان!", color: "text-orange-400", animate: "animate-pulse" };
                         if (remaining <= 4) return { text: `⚠️ باقي ${remaining} أماكن فقط — الأماكن تنفذ بسرعة!`, color: "text-yellow-400", animate: "" };
@@ -547,12 +546,13 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
 
                     // Timer color
                     const timerColor = (() => {
-                        if (!timeLeft || timerExpired) return "text-red-500";
+                        if (!timeLeft) return "text-red-500";
                         const [th, tm] = timeLeft.split(':').map(Number);
                         const totalMin = th * 60 + tm;
                         if (totalMin < 10) return "text-red-500";
                         return "text-orange-400";
                     })();
+                    const timerAtZero = timeLeft === "00:00:00";
 
                     return (
                         <div className="w-full rounded-3xl bg-[#0A0A0A] border border-[#C5A04E]/15 p-8 lg:p-12 relative overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.8)]" dir="rtl">
@@ -660,22 +660,23 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                             </div>
 
                             {/* COUNTDOWN TIMER */}
-                            <div className="mt-10 flex flex-col items-center">
-                                <p className="text-gray-500 text-sm lg:text-base font-cairo font-bold mb-3 tracking-wide">
-                                    {isFinished ? '⛔ انتهى الوقت' : '⏳ الوقت المتبقي للتسجيل'}
-                                </p>
-                                {timeLeft && (
-                                    <div
-                                        className={`font-orbitron font-black text-4xl lg:text-6xl tracking-[0.15em] ${timerColor}`}
-                                        style={{
-                                            animation: !isFinished ? 'countdown-glow 2s ease-in-out infinite' : 'none',
-                                            opacity: isFinished ? 0.5 : 1,
-                                        }}
-                                    >
-                                        {timeLeft}
-                                    </div>
-                                )}
-                            </div>
+                            {!isFinished && (
+                                <div className="mt-10 flex flex-col items-center">
+                                    <p className="text-gray-500 text-sm lg:text-base font-cairo font-bold mb-3 tracking-wide">
+                                        ⏳ الوقت المتبقي للتسجيل
+                                    </p>
+                                    {timeLeft && (
+                                        <div
+                                            className={`font-orbitron font-black text-4xl lg:text-6xl tracking-[0.15em] ${timerColor} ${timerAtZero ? 'animate-pulse' : ''}`}
+                                            style={{
+                                                animation: timerAtZero ? 'none' : 'countdown-glow 2s ease-in-out infinite',
+                                            }}
+                                        >
+                                            {timeLeft}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
 
                             {/* Dynamic message */}
                             <div className="text-center mt-6">
@@ -693,9 +694,9 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                                         animation: 'complete-overlay-pulse 3s ease-in-out infinite'
                                     }}
                                 >
-                                    <span className="text-6xl lg:text-8xl mb-6">⛔</span>
+                                    <span className="text-6xl lg:text-8xl mb-6">🔒</span>
                                     <h3 className="text-2xl lg:text-4xl font-black font-cairo text-red-500 mb-3">
-                                        انتهى الوقت
+                                        اكتمل العدد بالكامل
                                     </h3>
                                     <p className="text-gray-500 text-sm lg:text-base font-cairo mb-4">
                                         نراكم في البث القادم إن شاء الله
