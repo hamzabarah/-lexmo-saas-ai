@@ -1,8 +1,8 @@
 "use client";
 // Force Deploy: 2026-01-29 21:05 - Fix Mixed Chart Crash (Reg Controllers)
 
-import { useEffect, useState } from 'react';
-import { Wallet, ShoppingBag, TrendingUp, CheckCircle, Clock, AlertTriangle, PlayCircle } from 'lucide-react';
+import { useEffect, useState, useRef } from 'react';
+import { Wallet, ShoppingBag, TrendingUp, CheckCircle, Clock, AlertTriangle, PlayCircle, Lock } from 'lucide-react';
 import CountUp from 'react-countup';
 import { Bar } from 'react-chartjs-2';
 import {
@@ -53,6 +53,35 @@ const TIMER_ANIMATIONS = `
 @keyframes timer-blink-dots {
   0%, 49%, 100% { opacity: 1; }
   50%, 99% { opacity: 0; }
+}
+@keyframes slot-taken {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.15); }
+  50% { transform: scale(0.95); }
+  70% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+@keyframes slot-glow-gold {
+  0%, 100% { box-shadow: 0 0 8px rgba(255, 215, 0, 0.15), inset 0 0 8px rgba(255, 215, 0, 0.05); }
+  50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.3), inset 0 0 15px rgba(255, 215, 0, 0.1); }
+}
+@keyframes slot-pulse-last {
+  0%, 100% { box-shadow: 0 0 10px rgba(255, 165, 0, 0.2); border-color: rgba(255, 165, 0, 0.4); }
+  50% { box-shadow: 0 0 25px rgba(255, 165, 0, 0.5); border-color: rgba(255, 165, 0, 0.8); }
+}
+@keyframes slot-flash-red {
+  0% { background: rgba(220, 38, 38, 0.6); }
+  50% { background: rgba(220, 38, 38, 0.3); }
+  100% { background: rgba(220, 38, 38, 0.15); }
+}
+@keyframes slot-lock-spin {
+  0% { transform: rotate(0deg) scale(0); opacity: 0; }
+  50% { transform: rotate(180deg) scale(1.2); opacity: 1; }
+  100% { transform: rotate(360deg) scale(1); opacity: 1; }
+}
+@keyframes complete-overlay-pulse {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 0.95; }
 }
 `;
 
@@ -112,6 +141,30 @@ const PACK_CONFIG: Record<string, { icon: string; nameAr: string; color: string;
 export default function DashboardClient({ initialData }: { initialData: VentesData }) {
     // Initialize with SERVER DATA to avoid flash of 0
     const [data, setData] = useState<VentesData>(initialData);
+
+    // Track newly taken slots for animation
+    const prevPlacesPrises = useRef(initialData.live_actuel?.places_prises || 0);
+    const [animatingSlots, setAnimatingSlots] = useState<Set<number>>(new Set());
+
+    useEffect(() => {
+        const currentPrises = data.live_actuel?.places_prises || 0;
+        const prevPrises = prevPlacesPrises.current;
+
+        if (currentPrises > prevPrises) {
+            // New slots were taken — animate them
+            const newSlots = new Set<number>();
+            for (let i = prevPrises; i < currentPrises; i++) {
+                newSlots.add(i); // 0-indexed slot numbers
+            }
+            setAnimatingSlots(newSlots);
+
+            // Clear animation after 1.5s
+            const timer = setTimeout(() => setAnimatingSlots(new Set()), 1500);
+            prevPlacesPrises.current = currentPrises;
+            return () => clearTimeout(timer);
+        }
+        prevPlacesPrises.current = currentPrises;
+    }, [data.live_actuel?.places_prises]);
 
     // Generate chart data: Aggregating REAL SALES data from JSON
     const generateChartData = (ventes: Vente[]) => {
@@ -481,50 +534,153 @@ export default function DashboardClient({ initialData }: { initialData: VentesDa
                     </div>
                 </div>
 
-                {/* URGENCY BANNER (REHAPED) */}
-                {live && live.places_disponibles > 0 && (
-                    <div
-                        className={`w-full rounded-2xl border-2 p-6 lg:p-8 transition-all duration-300 relative overflow-hidden ${urgenceStyle.bg} ${urgenceStyle.border} ${urgenceStyle.animate ? 'animate-pulse shadow-[0_0_40px_rgba(239,68,68,0.2)]' : ''}`}
-                        dir="rtl"
-                    >
-                        <div className="flex flex-col lg:flex-row justify-between items-center gap-6 relative z-10">
-                            {/* Left Side: Title and Session Info */}
-                            <div className="flex items-center gap-4 text-center lg:text-right">
-                                <span className="text-3xl lg:text-5xl animate-bounce">🔥</span>
-                                <div>
-                                    <h2 className={`text-xl lg:text-3xl font-black font-cairo ${urgenceStyle.text}`}>
-                                        أماكن محدودة اليوم
-                                    </h2>
-                                    <p className="text-gray-400 font-mono text-[10px] lg:text-xs mt-1 uppercase tracking-widest">
-                                        Live Session #30295
-                                    </p>
-                                </div>
-                            </div>
+                {/* CINEMATIC SLOTS GRID */}
+                {live && live.places_disponibles > 0 && (() => {
+                    const total = live.places_disponibles;
+                    const taken = live.places_prises;
+                    const remaining = live.places_restantes;
+                    const allTaken = remaining <= 0;
 
-                            {/* Right Side: Participants Progress */}
-                            <div className="flex flex-col items-center lg:items-end w-full lg:w-auto">
-                                <div className="flex items-center gap-2 mb-2">
-                                    <span className="text-[10px] lg:text-sm font-black text-gray-400 uppercase tracking-widest font-orbitron">
-                                        PARTICIPANTS {live.places_prises} / {live.places_disponibles}
-                                    </span>
+                    // Dynamic message below slots
+                    const getMessage = () => {
+                        if (allTaken) return { text: "اكتمل العدد بالكامل 🔒", color: "text-red-500", animate: "animate-pulse" };
+                        if (remaining === 1) return { text: "🚨 آخر مكان متبقي — لا تضيّع الفرصة!", color: "text-red-400", animate: "animate-pulse" };
+                        if (remaining === 2) return { text: "🔴 مكانان فقط — أسرع قبل فوات الأوان!", color: "text-orange-400", animate: "animate-pulse" };
+                        if (remaining <= 4) return { text: `⚠️ باقي ${remaining} أماكن فقط — الأماكن تنفذ بسرعة!`, color: "text-yellow-400", animate: "" };
+                        return { text: `🟢 ${remaining} أماكن متاحة — سجّل الآن`, color: "text-green-400", animate: "" };
+                    };
+                    const msg = getMessage();
+
+                    return (
+                        <div className="w-full rounded-3xl border border-[#C5A04E]/20 bg-[#111111] p-6 lg:p-8 relative overflow-hidden shadow-2xl" dir="rtl">
+                            {/* Header */}
+                            <div className="flex justify-between items-center mb-6">
+                                <div className="flex items-center gap-3">
+                                    <span className="text-2xl lg:text-3xl">🔥</span>
+                                    <div>
+                                        <h2 className="text-lg lg:text-2xl font-black font-cairo text-white">الأماكن المتاحة</h2>
+                                        <p className="text-gray-500 font-mono text-[10px] lg:text-xs uppercase tracking-widest">
+                                            LIVE SLOTS • {taken}/{total} TAKEN
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
                                     <span className="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                                    <span className="text-xs font-bold text-gray-500 uppercase tracking-widest font-orbitron">LIVE</span>
                                 </div>
-                                <div className="w-full lg:w-72 h-3 bg-[#1A1A1A]/40 rounded-full overflow-hidden border border-[#C5A04E]/10 relative shadow-inner">
-                                    <div
-                                        className={`h-full transition-all duration-1000 ease-out ${urgenceStyle.progressColor}`}
-                                        style={{ width: `${progressPercent}%` }}
-                                    ></div>
-                                </div>
-                                <span className={`text-sm lg:text-lg font-black mt-3 animate-pulse bg-[#1A1A1A] px-4 py-1 rounded-full ${urgenceStyle.text}`}>
-                                    ⚠️ {live.places_restantes < 5 ? `باقي ${live.places_restantes} أماكن فقط` : `باقي ${live.places_restantes} متبقية`} ⚠️
-                                </span>
                             </div>
-                        </div>
 
-                        {/* Shimmer Effect */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[timer-shimmer_2s_infinite]"></div>
-                    </div>
-                )}
+                            {/* Slots Grid */}
+                            <div className={`grid gap-3 ${total <= 10 ? 'grid-cols-5 lg:grid-cols-10' : total <= 15 ? 'grid-cols-5 lg:grid-cols-10' : 'grid-cols-5 lg:grid-cols-10'}`}>
+                                {Array.from({ length: total }, (_, i) => {
+                                    const slotNumber = i + 1;
+                                    const isTaken = i < taken;
+                                    const isLastPlaces = !isTaken && remaining <= 4;
+                                    const isAnimating = animatingSlots.has(i);
+
+                                    return (
+                                        <div
+                                            key={i}
+                                            className={`
+                                                relative flex flex-col items-center justify-center
+                                                aspect-square rounded-xl border-2 transition-all duration-500
+                                                ${isTaken
+                                                    ? 'bg-red-900/30 border-red-600/50'
+                                                    : isLastPlaces
+                                                        ? 'bg-[#1A1A1A] border-orange-500/40'
+                                                        : 'bg-[#1A1A1A] border-[#FFD700]/20'
+                                                }
+                                            `}
+                                            style={{
+                                                animation: isAnimating
+                                                    ? 'slot-taken 0.8s ease-out, slot-flash-red 1s ease-out'
+                                                    : isTaken
+                                                        ? 'none'
+                                                        : isLastPlaces
+                                                            ? 'slot-pulse-last 2s ease-in-out infinite'
+                                                            : 'slot-glow-gold 3s ease-in-out infinite',
+                                            }}
+                                        >
+                                            {/* Slot Number */}
+                                            <span className={`
+                                                font-orbitron font-black text-sm lg:text-lg
+                                                ${isTaken ? 'text-red-500/40' : isLastPlaces ? 'text-orange-400' : 'text-[#FFD700]'}
+                                            `}>
+                                                {String(slotNumber).padStart(2, '0')}
+                                            </span>
+
+                                            {/* Taken overlay */}
+                                            {isTaken && (
+                                                <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-red-900/20">
+                                                    <Lock
+                                                        className="w-4 h-4 lg:w-5 lg:h-5 text-red-500/70"
+                                                        style={{
+                                                            animation: isAnimating ? 'slot-lock-spin 0.8s ease-out forwards' : 'none'
+                                                        }}
+                                                    />
+                                                </div>
+                                            )}
+
+                                            {/* Available dot indicator */}
+                                            {!isTaken && (
+                                                <span className={`
+                                                    w-1.5 h-1.5 rounded-full mt-1
+                                                    ${isLastPlaces ? 'bg-orange-400 animate-pulse' : 'bg-[#FFD700]/60'}
+                                                `} />
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            {/* Progress bar */}
+                            <div className="mt-6 mb-4">
+                                <div className="w-full h-2 bg-[#1A1A1A] rounded-full overflow-hidden border border-[#C5A04E]/10">
+                                    <div
+                                        className={`h-full transition-all duration-1000 ease-out rounded-full ${
+                                            allTaken
+                                                ? 'bg-gradient-to-l from-red-600 to-red-500'
+                                                : remaining <= 3
+                                                    ? 'bg-gradient-to-l from-orange-500 to-red-500'
+                                                    : 'bg-gradient-to-l from-[#FFD700] to-[#FDB931]'
+                                        }`}
+                                        style={{ width: `${progressPercent}%` }}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Dynamic message */}
+                            <div className="text-center">
+                                <p className={`text-base lg:text-xl font-black font-cairo ${msg.color} ${msg.animate}`}>
+                                    {msg.text}
+                                </p>
+                            </div>
+
+                            {/* Full overlay when all taken */}
+                            {allTaken && (
+                                <div
+                                    className="absolute inset-0 rounded-3xl flex flex-col items-center justify-center z-20"
+                                    style={{
+                                        background: 'linear-gradient(135deg, rgba(10,5,5,0.92) 0%, rgba(40,10,10,0.92) 100%)',
+                                        animation: 'complete-overlay-pulse 3s ease-in-out infinite'
+                                    }}
+                                >
+                                    <span className="text-5xl lg:text-7xl mb-4">🔒</span>
+                                    <h3 className="text-2xl lg:text-4xl font-black font-cairo text-red-500 mb-2">
+                                        اكتمل العدد بالكامل
+                                    </h3>
+                                    <p className="text-gray-400 text-sm lg:text-base font-cairo">
+                                        نراكم في البث القادم إن شاء الله
+                                    </p>
+                                    <div className="flex items-center gap-2 mt-4 text-gray-600 font-orbitron text-xs uppercase tracking-widest">
+                                        <CheckCircle className="w-4 h-4" />
+                                        <span>{taken}/{total} SLOTS FILLED</span>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    );
+                })()}
 
 
                 {/* MAIN GRID: 65% Graph / 35% Stats */}
