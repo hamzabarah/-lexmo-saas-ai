@@ -118,6 +118,12 @@ export const stepsContent: StepContent[] = [
                     { id: 1, title: "الدليل الكامل للبحث عن المنتج الرابح", type: "pdf", content: "phase5_product_research" },
                 ],
             },
+            {
+                title: "اختبار المرحلة 5",
+                lessons: [
+                    { id: 2, title: "اختبر معلوماتك", type: "quiz" },
+                ],
+            },
         ],
     },
     {
@@ -233,6 +239,12 @@ export const stepsContent: StepContent[] = [
                 title: "الدروس",
                 lessons: [
                     { id: 1, title: "دليل شوبيفاي الكامل", type: "pdf", content: "phase11_shopify_guide" },
+                ],
+            },
+            {
+                title: "اختبار المرحلة 11",
+                lessons: [
+                    { id: 2, title: "اختبر معلوماتك", type: "quiz" },
                 ],
             },
         ],
