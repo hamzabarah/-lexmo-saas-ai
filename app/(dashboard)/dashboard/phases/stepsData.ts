@@ -529,8 +529,8 @@ export const stepsContent: StepContent[] = [
                     { id: 2, title: "إنشاء حملة إعلانية — المرحلة 2", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=mn7rfIssdpc") },
                     { id: 3, title: "إنشاء حملة إعلانية — المرحلة 3", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=PJjqGYmRg58") },
                     { id: 4, title: "إنشاء حملة إعلانية — المرحلة 4", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=p5Cx_07Kw9Y") },
-                    { id: 5, title: "صناعة فيديو إعلاني يوقف السكرول", type: "pdf" },
-                    { id: 6, title: "جرب قبل ما تصرف — استراتيجيات ذكية", type: "pdf" },
+                    { id: 5, title: "صناعة فيديو إعلاني يوقف السكرول", type: "pdf", content: "phase25_video_ad" },
+                    { id: 6, title: "جرب قبل ما تصرف — استراتيجيات ذكية", type: "pdf", content: "phase25_test_strategies" },
                 ],
             },
             {

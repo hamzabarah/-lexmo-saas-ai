@@ -5924,6 +5924,773 @@ function Phase23DailyChecklist() {
     );
 }
 
+// ═══════════════════════════════════════════════════════════
+// PHASE 25 — LESSON 1: صناعة فيديو إعلاني يوقف السكرول
+// ═══════════════════════════════════════════════════════════
+function Phase25VideoAd() {
+
+    const toolRow = (name: string, usage: string, free: string, link: string) => (
+        <tr key={name} className="hover:bg-[#1A1A1A] transition-colors">
+            <td className="text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/10">{name}</td>
+            <td className="text-gray-300 py-3 px-4 border border-[#C5A04E]/10">{usage}</td>
+            <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{free}</td>
+            <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{link}</td>
+        </tr>
+    );
+
+    return (
+        <div className="p-6 lg:p-8 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin" dir="rtl">
+            <h1 className="text-3xl font-bold text-white mb-2">صناعة فيديو إعلاني يوقف السكرول 🎬</h1>
+            <p className="text-[#C5A04E] text-lg mb-8">كل ما تحتاج لإنشاء فيديو إعلاني احترافي — بالذكاء الاصطناعي أو بالهاتف</p>
+
+            {/* جدول المحتويات */}
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-8">
+                <h3 className="text-[#C5A04E] font-bold mb-3">جدول المحتويات</h3>
+                <BulletList items={[
+                    "الفرق بين فيديو عادي وفيديو يبيع",
+                    "هيكل الفيديو الإعلاني المثالي",
+                    "أنواع الخطافات اللي كتوقف السكرول",
+                    "صناعة فيديو بالذكاء الاصطناعي — بلا تصوير بلا كاميرا",
+                    "أدوات الذكاء الاصطناعي لصناعة الفيديو",
+                    "صناعة فيديو إعلاني كامل خطوة بخطوة",
+                    "التصوير بالهاتف (الطريقة التقليدية)",
+                    "المونتاج بCapCut",
+                    "المواصفات التقنية",
+                    "أخطاء قاتلة خاصك تتجنبها",
+                ]} />
+            </div>
+
+            <Divider />
+
+            {/* ═══════ SECTION 1 ═══════ */}
+            <SectionTitle>1️⃣ الفرق بين فيديو عادي وفيديو يبيع</SectionTitle>
+
+            <SubTitle>الفيديو العادي:</SubTitle>
+            <RedList items={[
+                "كيبدأ بالشعار والمقدمة",
+                "كيحكي على المنتج بشكل ممل",
+                "طويل ومفصل بزاف",
+                "ما فيهش دعوة واضحة للشراء",
+            ]} />
+
+            <SubTitle>الفيديو اللي يبيع:</SubTitle>
+            <GreenList items={[
+                "كيبدأ بخطاف قوي كيوقف السكرول في أول ثانية",
+                "كيحكي على مشكلة العميل ماشي على المنتج",
+                "قصير ومباشر (15-30 ثانية)",
+                "كيبان كمحتوى عادي ماشي كإعلان",
+                "فيه دعوة واضحة للشراء في الآخر",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ SECTION 2 ═══════ */}
+            <SectionTitle>2️⃣ هيكل الفيديو الإعلاني المثالي</SectionTitle>
+
+            <SubTitle>فيديو 15 ثانية:</SubTitle>
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10">
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">الثواني</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">المحتوى</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">المثال</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            { t: "0-2", c: "الخطاف — وقف السكرول", e: "\"عمرك شفتي خضرة كتتقطع هكذا؟\"" },
+                            { t: "3-7", c: "المشكلة أو العرض", e: "مشهد تقطيع بطيء بالسكين العادي" },
+                            { t: "8-12", c: "الحل — المنتج في الاستعمال", e: "المنتج كيقطع الخضرة في ثواني" },
+                            { t: "13-15", c: "الدعوة للشراء", e: "\"اطلبو دابا — الرابط في البيو\"" },
+                        ].map((row, i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/10">{row.t}</td>
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{row.c}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{row.e}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <SubTitle>فيديو 30 ثانية:</SubTitle>
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10">
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">الثواني</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">المحتوى</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">المثال</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            { t: "0-3", c: "الخطاف القوي", e: "\"هاد الأداة غادي توفر عليك 30 دقيقة كل يوم\"" },
+                            { t: "4-8", c: "المشكلة", e: "\"كل يوم نفس المعاناة — السكين والتقطيع...\"" },
+                            { t: "9-18", c: "الحل + المميزات", e: "المنتج في الاستعمال + 3 مميزات على الشاشة" },
+                            { t: "19-24", c: "الدليل الاجتماعي", e: "\"أكثر من 5000 شخص طلبوه\"" },
+                            { t: "25-30", c: "العرض + الدعوة", e: "\"شحن مجاني اليوم فقط — اطلب دابا!\"" },
+                        ].map((row, i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/10">{row.t}</td>
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{row.c}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{row.e}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ SECTION 3 ═══════ */}
+            <SectionTitle>3️⃣ أنواع الخطافات اللي كتوقف السكرول</SectionTitle>
+
+            <SubTitle>النوع 1: السؤال</SubTitle>
+            <BulletList items={[
+                "\"واش عمرك جربتي هذا؟\"",
+                "\"علاش كلشي كيتكلم على هاد المنتج؟\"",
+            ]} />
+
+            <SubTitle>النوع 2: الصدمة</SubTitle>
+            <BulletList items={[
+                "\"هاد المنتج ب 30 درهم غادي يبدل حياتك\"",
+                "\"ما تشريش هاد المنتج حتى تشوف هذا\"",
+            ]} />
+
+            <SubTitle>النوع 3: النتيجة أولاً</SubTitle>
+            <Paragraph>ابدأ بنتيجة مبهرة — العميل كيبغي يعرف كيفاش</Paragraph>
+
+            <SubTitle>النوع 4: المشكلة</SubTitle>
+            <BulletList items={["\"عياتي وأنت كتقطع الخضرة بالسكين؟\""]} />
+
+            <SubTitle>النوع 5: القصة</SubTitle>
+            <BulletList items={["\"قبل شهر كنت كنعاني من...\" + النتيجة"]} />
+
+            <SubTitle>النوع 6: الحركة السريعة</SubTitle>
+            <Paragraph>حركة مفاجئة (فتح العلبة / رمي المنتج / تقطيع سريع)</Paragraph>
+
+            <Divider />
+
+            {/* ═══════ SECTION 4 ═══════ */}
+            <SectionTitle>4️⃣ صناعة فيديو بالذكاء الاصطناعي — بلا تصوير بلا كاميرا</SectionTitle>
+
+            <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20 mb-6">
+                <p className="text-[#C5A04E] font-bold leading-relaxed">
+                    هذا هو السر اللي كيخلي أي واحد يقدر يدير إعلانات احترافية بلا ما يصور ولا يشري كاميرا ولا يخلص مصور.
+                </p>
+            </div>
+
+            <SubTitle>شنو تقدر تدير بالذكاء الاصطناعي:</SubTitle>
+            <GreenList items={[
+                "إنشاء فيديو كامل من الصفر بالنص فقط",
+                "تحويل صور المنتج لفيديو متحرك",
+                "إضافة صوت بشري واقعي (بأي لغة)",
+                "إنشاء شخصية واقعية كتحكي على المنتج",
+                "إنشاء مشاهد Lifestyle بدون تصوير",
+                "ترجمة الفيديو لأي لغة بالصوت",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ SECTION 5 ═══════ */}
+            <SectionTitle>5️⃣ أدوات الذكاء الاصطناعي لصناعة الفيديو</SectionTitle>
+
+            {/* HeyGen */}
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-6 mb-6">
+                <h3 className="text-xl font-bold text-[#C5A04E] mb-2">الأداة 1: HeyGen — إنشاء شخصية تتكلم على المنتج</h3>
+                <Paragraph>كتختار شخصية واقعية (Avatar) وكتكتب ليها النص وهي كتحكيه كأنها شخص حقيقي.</Paragraph>
+                <p className="text-green-400 font-bold mb-4">مثالية ل: فيديو شخص كيوصي بالمنتج (Talking head / Testimonial)</p>
+                <SubTitle>كيفاش تستعملها:</SubTitle>
+                <BulletList items={[
+                    "ادخل heygen.com وسجل مجاناً (عندك رصيد مجاني للبداية)",
+                    "اضغط Create video",
+                    "اختر Avatar — عندك مئات الشخصيات (رجال / نساء / أعمار مختلفة)",
+                    "اختر شخصية تشبه الجمهور المستهدف ديالك",
+                    "اضغط على الشخصية ثم Script",
+                    "اكتب النص اللي بغيتي تقولو",
+                    "Language: اختر Arabic",
+                    "Voice: اختر صوت مناسب واسمعو قبل",
+                    "اضغط Submit — استنى دقيقتين — الفيديو جاهز!",
+                    "حملو واستعملو في الإعلان",
+                ]} />
+                <div className="bg-[#0A0A0A] rounded-lg p-4 border border-[#C5A04E]/10 mt-4 mb-4">
+                    <p className="text-[#C5A04E] font-bold mb-2">مثال على النص:</p>
+                    <p className="text-gray-300 leading-relaxed italic">
+                        &quot;هاد المنتج غير حياتي! كنت كنعاني من مشاكل البشرة وجربت كلشي.
+                        صاحبتي نصحتني بهذا الكريم وفي أسبوع واحد فقط شفت الفرق.
+                        بشرتي والت صافية وناعمة. أنصحكم بيه بزاف!
+                        الرابط في الوصف — جربوه وشكرني من بعد!&quot;
+                    </p>
+                </div>
+                <SubTitle>نصائح:</SubTitle>
+                <BulletList items={[
+                    "💡 النص خاصو يكون قصير (15-30 ثانية كلام)",
+                    "💡 استعمل لغة عادية كأنك كتحكي مع صاحبك",
+                    "💡 اختر شخصية كتبتسم وعندها طاقة إيجابية",
+                ]} />
+            </div>
+
+            {/* InVideo AI */}
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-6 mb-6">
+                <h3 className="text-xl font-bold text-[#C5A04E] mb-2">الأداة 2: InVideo AI — فيديو كامل من نص</h3>
+                <Paragraph>كتكتب وصف الفيديو اللي بغيتي والذكاء الاصطناعي كيولد فيديو كامل بالمقاطع والموسيقى والنص والصوت.</Paragraph>
+                <p className="text-green-400 font-bold mb-4">مثالية ل: فيديو إعلاني كامل بلا ما تصور والو</p>
+                <SubTitle>كيفاش تستعملها:</SubTitle>
+                <BulletList items={[
+                    "ادخل invideo.io وسجل مجاناً",
+                    "اضغط AI Video Generator",
+                    "في خانة النص اكتب وصف الفيديو بالتفصيل (بالإنجليزية)",
+                    "اختر Vertical 9:16",
+                    "اضغط Generate",
+                    "الذكاء الاصطناعي غادي يختار مقاطع فيديو مناسبة ويركبهم مع النص والموسيقى",
+                    "عدل إلى لزم (بدل مقطع / غير النص / غير الموسيقى)",
+                    "حمل الفيديو",
+                ]} />
+                <div className="bg-[#0A0A0A] rounded-lg p-4 border border-[#C5A04E]/10 mt-4">
+                    <p className="text-[#C5A04E] font-bold mb-2">مثال على الوصف:</p>
+                    <p className="text-gray-300 leading-relaxed italic text-sm">
+                        Create a 20-second vertical product ad video for a kitchen vegetable cutter.
+                        Scene 1 (3s): Hook - Someone struggling to cut vegetables. Scene 2 (7s): The cutter in action.
+                        Scene 3 (5s): Beautiful cut vegetables on a plate. Scene 4 (5s): CTA &quot;Free shipping today only!&quot;
+                    </p>
+                </div>
+            </div>
+
+            {/* Synthesia */}
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-6 mb-6">
+                <h3 className="text-xl font-bold text-[#C5A04E] mb-2">الأداة 3: Synthesia — فيديو احترافي بشخصية واقعية</h3>
+                <Paragraph>بحال HeyGen ولكن أكثر احترافية — شخصيات واقعية بزاف كتحكي بأي لغة.</Paragraph>
+                <BulletList items={[
+                    "ادخل synthesia.io وسجل (عندك فيديو تجريبي مجاني)",
+                    "اضغط Create video",
+                    "اختر Template أو ابدأ من الصفر",
+                    "اختر Avatar (الشخصية) → اكتب Script (النص)",
+                    "اختر Language و Voice → اضغط Generate",
+                ]} />
+            </div>
+
+            {/* Pictory */}
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-6 mb-6">
+                <h3 className="text-xl font-bold text-[#C5A04E] mb-2">الأداة 4: Pictory — تحويل النص لفيديو</h3>
+                <Paragraph>كتعطيه نص أو مقال وكيحولو لفيديو قصير بالصور والمقاطع والموسيقى.</Paragraph>
+                <p className="text-green-400 font-bold mb-4">مثالية ل: تحويل وصف المنتج لفيديو سريع</p>
+                <BulletList items={[
+                    "ادخل pictory.ai → اختر Script to Video",
+                    "الصق النص الإعلاني ديالك",
+                    "الأداة كتختار مقاطع فيديو وصور مناسبة أوتوماتيكياً",
+                    "عدل وحمل",
+                ]} />
+            </div>
+
+            {/* Runway ML */}
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-6 mb-6">
+                <h3 className="text-xl font-bold text-[#C5A04E] mb-2">الأداة 5: Runway ML — إنشاء مقاطع فيديو من الصفر</h3>
+                <Paragraph>كتولد مقاطع فيديو من نص أو صورة بالذكاء الاصطناعي.</Paragraph>
+                <p className="text-green-400 font-bold mb-4">مثالية ل: إنشاء مشاهد Lifestyle مبهرة</p>
+                <BulletList items={[
+                    "ادخل runwayml.com → اختر Gen-3 Alpha (أو أحدث نسخة)",
+                    "اكتب وصف المشهد بالإنجليزية",
+                    "أو حمل صورة المنتج واطلب تحويلها لفيديو",
+                    "الأداة كتولد مقطع 4-10 ثواني",
+                    "ركب عدة مقاطع مع بعض في CapCut",
+                ]} />
+            </div>
+
+            {/* ElevenLabs */}
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-6 mb-6">
+                <h3 className="text-xl font-bold text-[#C5A04E] mb-2">الأداة 6: ElevenLabs — صوت بشري واقعي بأي لغة</h3>
+                <Paragraph>كتحول النص لصوت بشري واقعي بزاف — بالعربية والدارجة والفرنسية والإنجليزية.</Paragraph>
+                <p className="text-green-400 font-bold mb-4">مثالية ل: إضافة تعليق صوتي (Voiceover) على الفيديو</p>
+                <BulletList items={[
+                    "ادخل elevenlabs.io وسجل مجاناً",
+                    "اضغط Text to Speech",
+                    "اكتب النص بالدارجة أو بالعربية",
+                    "اختر Language: Arabic → اختر Voice مناسب",
+                    "اضغط Generate → حمل الملف الصوتي (MP3)",
+                    "أضفو على الفيديو في CapCut",
+                ]} />
+            </div>
+
+            <Divider />
+
+            {/* ═══════ SECTION 6 ═══════ */}
+            <SectionTitle>6️⃣ صناعة فيديو إعلاني كامل خطوة بخطوة — بالذكاء الاصطناعي فقط</SectionTitle>
+
+            <Paragraph>غادي نصنعو فيديو إعلاني 20 ثانية لقاطع الخضروات بلا ما نصورو والو:</Paragraph>
+
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-6 mb-6">
+                <h3 className="text-lg font-bold text-[#C5A04E] mb-4">الخطوة 1: كتابة السيناريو</h3>
+                <BulletList items={[
+                    "⏱️ ثانية 1-3: خطاف — \"واش مازال كتقطع الخضرة بالسكين؟\"",
+                    "⏱️ ثانية 4-8: مشهد — امرأة في مطبخ عصري كتستعمل القاطع",
+                    "⏱️ ثانية 9-14: مميزات — \"7 أشكال قطع / آمن 100% / سهل التنظيف\"",
+                    "⏱️ ثانية 15-18: نتيجة — خضرة مقطعة باحترافية في طبق",
+                    "⏱️ ثانية 19-20: دعوة — \"شحن مجاني — اطلب دابا!\"",
+                ]} />
+            </div>
+
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-6 mb-6">
+                <h3 className="text-lg font-bold text-[#C5A04E] mb-4">الخطوة 2: إنشاء الصوت (ElevenLabs)</h3>
+                <BulletList items={[
+                    "ادخل elevenlabs.io",
+                    "اكتب النص بالدارجة: \"واش مازال كتقطع الخضرة بالسكين؟ قاطع الخضروات الذكي عندو 7 أشكال قطع، آمن 100%، وسهل التنظيف. شحن مجاني — اطلب دابا!\"",
+                    "اختر صوت أنثوي نشيط",
+                    "حمل الصوت",
+                ]} />
+            </div>
+
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-6 mb-6">
+                <h3 className="text-lg font-bold text-[#C5A04E] mb-4">الخطوة 3: إنشاء مقاطع الفيديو (Runway أو InVideo)</h3>
+                <p className="text-white font-bold mb-3">الطريقة 1 — بRunway:</p>
+                <BulletList items={[
+                    "🎬 مقطع 1: Close up of hands struggling to cut vegetables with a regular knife",
+                    "🎬 مقطع 2: Woman happily using a modern vegetable cutter in a bright kitchen",
+                    "🎬 مقطع 3: Different vegetables being perfectly sliced in various shapes",
+                    "🎬 مقطع 4: Beautiful plate of perfectly cut vegetables on marble countertop",
+                ]} />
+                <p className="text-white font-bold mb-3 mt-4">الطريقة 2 — بInVideo AI:</p>
+                <Paragraph>اكتب الوصف الكامل في InVideo وخليه يولد الفيديو كامل.</Paragraph>
+            </div>
+
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-6 mb-6">
+                <h3 className="text-lg font-bold text-[#C5A04E] mb-4">الخطوة 4: التركيب في CapCut</h3>
+                <BulletList items={[
+                    "افتح CapCut → أنشئ مشروع جديد عمودي (9:16)",
+                    "أضف المقاطع بالترتيب + الملف الصوتي من ElevenLabs",
+                    "زامن الصوت مع المقاطع",
+                    "أضف النصوص: ثانية 1 → \"واش مازال كتقطع بالسكين؟ 🔪\"",
+                    "ثانية 9 → \"✅ 7 أشكال قطع\" | ثانية 11 → \"✅ آمن 100%\" | ثانية 13 → \"✅ سهل التنظيف\"",
+                    "ثانية 19 → \"🔥 شحن مجاني — اطلب دابا!\" (خط كبير أصفر)",
+                    "أضف موسيقى خفيفة + انتقالات سريعة → Export بأعلى جودة",
+                ]} />
+            </div>
+
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-6 mb-6">
+                <h3 className="text-lg font-bold text-[#C5A04E] mb-4">الخطوة 5: فيديو ثاني بشخصية تتكلم (HeyGen)</h3>
+                <BulletList items={[
+                    "ادخل HeyGen → اختر شخصية أنثوية عربية",
+                    "اكتب النص: \"لازم نوريكم هاد المنتج اللي غير حياتي في المطبخ! قبل كنت كنقضي 30 دقيقة كنقطع الخضرة. دابا في 5 دقائق كلشي جاهز! 7 أشكال قطع مختلفة وسهل التنظيف بزاف. جربوه — الرابط في الوصف!\"",
+                    "ولد الفيديو → أضف عليه لقطات المنتج في CapCut",
+                ]} />
+                <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20 mt-4">
+                    <p className="text-[#C5A04E] font-bold leading-relaxed">
+                        🎯 النتيجة: عندك فيديوهين مختلفين تقدر تجربهم في الإعلان وتشوف أي واحد أحسن!
+                    </p>
+                </div>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ SECTION 7 ═══════ */}
+            <SectionTitle>7️⃣ التصوير بالهاتف (الطريقة التقليدية)</SectionTitle>
+            <Paragraph>إلى بغيتي تصور بنفسك — هاك كيفاش:</Paragraph>
+
+            <SubTitle>إعدادات التصوير:</SubTitle>
+            <BulletList items={[
+                "📱 الكاميرا الخلفية (الجودة أحسن)",
+                "📺 دقة 1080p أو 4K",
+                "📐 عمودي (9:16)",
+                "☀️ إضاءة طبيعية (قدام الشباك)",
+                "🧹 خلفية نظيفة وبسيطة",
+            ]} />
+
+            <SubTitle>نصائح:</SubTitle>
+            <BulletList items={[
+                "📌 ثبت الهاتف (ترايبود أو سندو على كتب)",
+                "📌 صور من قريب — المنتج خاصو يمأل الشاشة",
+                "📌 صور عدة مقاطع قصيرة (3-5 ثواني) ثم ركبهم",
+                "📌 صور المنتج في الاستعمال الحقيقي",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ SECTION 8 ═══════ */}
+            <SectionTitle>8️⃣ المونتاج بCapCut</SectionTitle>
+            <Paragraph>CapCut هو أحسن أداة مونتاج مجانية:</Paragraph>
+            <BulletList items={[
+                "حمل CapCut من App Store أو Google Play أو capcut.com",
+                "افتح واضغط New project",
+                "اختر المقاطع → رتبهم: خطاف > مشكلة > حل > دعوة",
+                "قص الأجزاء الزائدة",
+                "أضف نصوص على الشاشة (خط كبير وواضح)",
+                "أضف موسيقى ترند + انتقالات سريعة",
+                "Export بأعلى جودة",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ SECTION 9 ═══════ */}
+            <SectionTitle>9️⃣ المواصفات التقنية</SectionTitle>
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10">
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">العنصر</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">المواصفة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            { k: "النسبة", v: "9:16 (عمودي) — ضروري" },
+                            { k: "الدقة", v: "1080 × 1920 بيكسل (الحد الأدنى)" },
+                            { k: "المدة", v: "15-30 ثانية (الأفضل)" },
+                            { k: "حجم الملف", v: "أقل من 500 ميغا" },
+                            { k: "الصيغة", v: "MP4 أو MOV" },
+                            { k: "الصوت", v: "ضروري" },
+                            { k: "النص على الشاشة", v: "ضروري" },
+                            { k: "Safe zone", v: "خلي الثلث السفلي فارغ" },
+                        ].map((row, i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{row.k}</td>
+                                <td className="text-gray-300 py-3 px-4 border border-[#C5A04E]/10">{row.v}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ SECTION 10 ═══════ */}
+            <SectionTitle>🔟 أخطاء قاتلة خاصك تتجنبها</SectionTitle>
+            <RedList items={[
+                "بداية بطيئة: إلى ما جذبتيش في أول ثانية ضاع الفيديو",
+                "فيديو أفقي: هاد المنصات عمودية",
+                "بلا صوت: الصوت مهم بزاف",
+                "فيديو طويل بلا فائدة: معلومة جديدة كل 3 ثواني",
+                "كيبان كإعلان: كل ما بان طبيعي كل ما خدم أحسن",
+                "جودة رديئة: صورة مضببة = ما حدش كيوقف",
+                "بلا نص على الشاشة: النص ضروري",
+                "دعوة ضعيفة: \"اطلب دابا قبل ما يسالي — شحن مجاني!\" أحسن من \"شوفو الرابط\"",
+                "فيديو ذكاء اصطناعي واضح بزاف: خلط بين مقاطع حقيقية ومقاطع ذكاء اصطناعي",
+                "صوت روبوتي: اختر صوت واقعي وجربو قبل ما تستعملو",
+            ]} />
+
+            <SubTitle>ملخص الأدوات:</SubTitle>
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10">
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">الأداة</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">الاستعمال</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">مجاني؟</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">الرابط</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {toolRow("HeyGen", "شخصية واقعية كتحكي", "رصيد مجاني للبداية", "heygen.com")}
+                        {toolRow("InVideo AI", "فيديو كامل من نص", "مجاني مع علامة مائية", "invideo.io")}
+                        {toolRow("Synthesia", "شخصية احترافية", "فيديو تجريبي مجاني", "synthesia.io")}
+                        {toolRow("Pictory", "تحويل نص لفيديو", "تجربة مجانية", "pictory.ai")}
+                        {toolRow("Runway ML", "مقاطع فيديو من نص/صورة", "رصيد مجاني", "runwayml.com")}
+                        {toolRow("ElevenLabs", "صوت بشري واقعي", "مجاني (حد شهري)", "elevenlabs.io")}
+                        {toolRow("CapCut", "مونتاج ومركب", "مجاني 100%", "capcut.com")}
+                        {toolRow("Canva", "تصميم صور وInfographic", "مجاني", "canva.com")}
+                    </tbody>
+                </table>
+            </div>
+
+            <div className="bg-[#C5A04E]/10 rounded-xl p-5 border border-[#C5A04E]/20 mb-6">
+                <p className="text-[#C5A04E] font-bold leading-relaxed text-lg">
+                    📌 الخلاصة: ما عندكش كاميرا؟ ما عندكش مصور؟ ما عندكش ميزانية للإنتاج؟ ما كاين حتى عذر. بالذكاء الاصطناعي تقدر تصنع فيديوهات إعلانية احترافية بلا ما تصور ولا ثانية. جرب عدة أدوات وعدة أنواع فيديو وشوف شنو كيخدم أحسن مع الجمهور ديالك.
+                </p>
+            </div>
+
+            <div className="text-center mt-10 pt-6 border-t border-[#C5A04E]/10">
+                <p className="text-gray-600 text-sm">
+                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                </p>
+            </div>
+        </div>
+    );
+}
+
+// ═══════════════════════════════════════════════════════════
+// PHASE 25 — LESSON 2: جرب قبل ما تصرف — استراتيجيات ذكية
+// ═══════════════════════════════════════════════════════════
+function Phase25TestStrategies() {
+    return (
+        <div className="p-6 lg:p-8 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin" dir="rtl">
+            <h1 className="text-3xl font-bold text-white mb-2">جرب قبل ما تصرف — استراتيجيات ذكية 🧪</h1>
+            <p className="text-[#C5A04E] text-lg mb-8">كيفاش تجرب بذكاء وتلقى الإعلان والجمهور والسوق الرابح</p>
+
+            {/* جدول المحتويات */}
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-8">
+                <h3 className="text-[#C5A04E] font-bold mb-3">جدول المحتويات</h3>
+                <BulletList items={[
+                    "علاش التيست مهم",
+                    "شحال خاصك تصرف على التيست",
+                    "استراتيجية تيست المحتوى",
+                    "استراتيجية تيست الجمهور",
+                    "استراتيجية تيست البلدان",
+                    "القواعد الذهبية للتيست",
+                    "قراءة نتائج التيست",
+                ]} />
+            </div>
+
+            <Divider />
+
+            {/* ═══════ SECTION 1 ═══════ */}
+            <SectionTitle>1️⃣ علاش التيست مهم</SectionTitle>
+            <Paragraph>ما تصرفش ميزانية كبيرة على حاجة ما جربتيهاش.</Paragraph>
+
+            <SubTitle>التيست كيجاوبك على هاد الأسئلة:</SubTitle>
+            <BulletList items={[
+                "🎬 أي فيديو كيجذب أكثر؟",
+                "👥 أي جمهور كيشري أكثر؟",
+                "🌍 أي بلد كيجيب أحسن نتائج؟",
+                "📝 أي نص إعلاني كيبيع أكثر؟",
+            ]} />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4">
+                    <p className="text-red-400 font-bold text-lg">🔴 بلا تيست = كتقمر بفلوسك</p>
+                </div>
+                <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-4">
+                    <p className="text-green-400 font-bold text-lg">🟢 مع تيست = كتستثمر بذكاء</p>
+                </div>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ SECTION 2 ═══════ */}
+            <SectionTitle>2️⃣ شحال خاصك تصرف على التيست</SectionTitle>
+
+            <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20 mb-6">
+                <p className="text-[#C5A04E] font-bold leading-relaxed">
+                    💡 القاعدة: 20-30 دولار في اليوم لمدة 3-5 أيام
+                </p>
+            </div>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10">
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">الميزانية</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">التقسيم</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">المناسب ل</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            { b: "50$", d: "10$/يوم × 5 أيام × مجموعة وحدة", f: "ميزانية محدودة" },
+                            { b: "100$", d: "10$/يوم × 5 أيام × مجموعتين", f: "مقبول" },
+                            { b: "150$", d: "10$/يوم × 5 أيام × 3 مجموعات", f: "مثالي" },
+                        ].map((row, i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/10">{row.b}</td>
+                                <td className="text-white py-3 px-4 border border-[#C5A04E]/10">{row.d}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{row.f}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ SECTION 3 ═══════ */}
+            <SectionTitle>3️⃣ استراتيجية تيست المحتوى</SectionTitle>
+            <Paragraph>🎯 الهدف: تلقى أحسن فيديو</Paragraph>
+            <Paragraph>أنشئ حملة وحدة فيها مجموعة إعلانية وحدة فيها 3-4 إعلانات مختلفة:</Paragraph>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10">
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">الإعلان</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">نوع الخطاف</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">المدة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            { a: "إعلان 1", h: "السؤال — \"واش عمرك جربتي هذا؟\"", d: "15 ثانية" },
+                            { a: "إعلان 2", h: "النتيجة أولاً — مشهد مبهر من البداية", d: "15 ثانية" },
+                            { a: "إعلان 3", h: "المشكلة — \"عياتي من...\"", d: "30 ثانية" },
+                            { a: "إعلان 4", h: "Unboxing — فتح العلبة", d: "20 ثانية" },
+                        ].map((row, i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{row.a}</td>
+                                <td className="text-gray-300 py-3 px-4 border border-[#C5A04E]/10">{row.h}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{row.d}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20 mb-6">
+                <p className="text-[#C5A04E] font-bold leading-relaxed">
+                    📊 النتيجة: بعد 3-5 أيام المنصة غادي توريك أي فيديو جاب أحسن نتائج. أوقف الباقي وكمل بالرابح.
+                </p>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ SECTION 4 ═══════ */}
+            <SectionTitle>4️⃣ استراتيجية تيست الجمهور</SectionTitle>
+            <Paragraph>🎯 الهدف: تلقى أحسن جمهور</Paragraph>
+            <Paragraph>أنشئ حملة فيها 3 مجموعات إعلانية بنفس الإعلان ولكن جمهور مختلف:</Paragraph>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10">
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">المجموعة</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">الجمهور</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            { g: "مجموعة 1", a: "نساء 25-40 — اهتمام: الطبخ" },
+                            { g: "مجموعة 2", a: "نساء 25-40 — اهتمام: أدوات المطبخ" },
+                            { g: "مجموعة 3", a: "نساء 30-55 — اهتمام: ربات البيوت" },
+                        ].map((row, i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{row.g}</td>
+                                <td className="text-gray-300 py-3 px-4 border border-[#C5A04E]/10">{row.a}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-6">
+                <p className="text-red-400 font-bold leading-relaxed">
+                    ⚠️ مهم: استعمل نفس الإعلان في كل المجموعات باش تقارن الجمهور فقط. إلى بدلتي الإعلان والجمهور مع بعض ما غاديش تعرف شنو اللي خدم.
+                </p>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ SECTION 5 ═══════ */}
+            <SectionTitle>5️⃣ استراتيجية تيست البلدان</SectionTitle>
+            <Paragraph>🎯 الهدف: تلقى أحسن سوق</Paragraph>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10">
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">المجموعة</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">البلد</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">الملاحظة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            { g: "مجموعة 1", c: "المغرب", n: "سوق كبير — الدفع عند الاستلام مهم" },
+                            { g: "مجموعة 2", c: "السعودية", n: "قدرة شرائية عالية" },
+                            { g: "مجموعة 3", c: "الإمارات", n: "سوق صغير ولكن كيشري بزاف" },
+                            { g: "مجموعة 4", c: "فرنسا", n: "جالية مغربية كبيرة" },
+                        ].map((row, i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{row.g}</td>
+                                <td className="text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/10">{row.c}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{row.n}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <Divider />
+
+            {/* ═══════ SECTION 6 ═══════ */}
+            <SectionTitle>6️⃣ القواعد الذهبية للتيست</SectionTitle>
+            <GreenList items={[
+                "جرب حاجة وحدة في كل مرة: إما المحتوى أو الجمهور أو البلد — ماشي كلشي مرة وحدة",
+                "صبر 3-5 أيام: ما تحكمش قبل 72 ساعة",
+                "ما تبدلش في التيست: حتى يكمل المدة",
+                "سجل كل شيء: في ملف سجل الأرقام باش تقارن",
+                "أوقف الخاسر بسرعة: إلى صرفتي ضعف ثمن المنتج بلا بيعة = أوقف",
+                "كبر الرابح بهدوء: زيد 20-30% كل 48 ساعة",
+                "ما توقفش الرابح: إلى كان خدام خليه — أنشئ نسخة باش تجرب فيها",
+            ]} />
+
+            <Divider />
+
+            {/* ═══════ SECTION 7 ═══════ */}
+            <SectionTitle>7️⃣ قراءة نتائج التيست</SectionTitle>
+            <Paragraph>بعد 3-5 أيام شوف هاد الأرقام:</Paragraph>
+
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10">
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">المؤشر</th>
+                            <th className="text-right text-green-400 font-bold py-3 px-4 border border-[#C5A04E]/20">رابح 🟢</th>
+                            <th className="text-right text-red-400 font-bold py-3 px-4 border border-[#C5A04E]/20">خاسر 🔴</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            { m: "نسبة النقر", w: "أكثر من 2%", l: "أقل من 1%" },
+                            { m: "تكلفة النقرة", w: "أقل من $0.50", l: "أكثر من $1.50" },
+                            { m: "تكلفة الشراء", w: "أقل من هامش الربح", l: "أكثر من هامش الربح" },
+                            { m: "العائد على الإنفاق", w: "أكثر من 2", l: "أقل من 1" },
+                        ].map((row, i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{row.m}</td>
+                                <td className="text-green-400 py-3 px-4 border border-[#C5A04E]/10">{row.w}</td>
+                                <td className="text-red-400 py-3 px-4 border border-[#C5A04E]/10">{row.l}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <SubTitle>مثال عملي:</SubTitle>
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="bg-[#C5A04E]/10">
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">المجموعة</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">المصروف</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">المبيعات</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">تكلفة الشراء</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">العائد</th>
+                            <th className="text-right text-[#C5A04E] font-bold py-3 px-4 border border-[#C5A04E]/20">القرار</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            { g: "مجموعة 1", s: "50$", v: "4", c: "12.5$", r: "2.4", d: "🟢 كبرها", dc: "text-green-400" },
+                            { g: "مجموعة 2", s: "50$", v: "1", c: "50$", r: "0.6", d: "🔴 أوقفها", dc: "text-red-400" },
+                            { g: "مجموعة 3", s: "50$", v: "2", c: "25$", r: "1.2", d: "🟡 حسنها", dc: "text-yellow-400" },
+                        ].map((row, i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{row.g}</td>
+                                <td className="text-gray-300 py-3 px-4 border border-[#C5A04E]/10">{row.s}</td>
+                                <td className="text-gray-300 py-3 px-4 border border-[#C5A04E]/10">{row.v}</td>
+                                <td className="text-gray-300 py-3 px-4 border border-[#C5A04E]/10">{row.c}</td>
+                                <td className="text-gray-300 py-3 px-4 border border-[#C5A04E]/10">{row.r}</td>
+                                <td className={`${row.dc} font-bold py-3 px-4 border border-[#C5A04E]/10`}>{row.d}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <Divider />
+
+            <div className="bg-[#C5A04E]/10 rounded-xl p-5 border border-[#C5A04E]/20 mb-6">
+                <p className="text-[#C5A04E] font-bold leading-relaxed text-lg">
+                    📌 الخلاصة: التيست ماشي مصروف — التيست استثمار. كل درهم كتصرفو على التيست كيعلمك شي حاجة جديدة. الناجحين في الإعلانات ماشي اللي عندهم أكبر ميزانية — هم اللي كيجربو بذكاء ويتعلمو بسرعة.
+                </p>
+            </div>
+
+            <div className="text-center mt-10 pt-6 border-t border-[#C5A04E]/10">
+                <p className="text-gray-600 text-sm">
+                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                </p>
+            </div>
+        </div>
+    );
+}
+
 const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase5_product_research: Phase5ProductResearch,
     phase11_shopify_guide: Phase11ShopifyGuide,
@@ -5943,6 +6710,8 @@ const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase23_common_mistakes: Phase23CommonMistakes,
     phase23_practical_example: Phase23PracticalExample,
     phase23_daily_checklist: Phase23DailyChecklist,
+    phase25_video_ad: Phase25VideoAd,
+    phase25_test_strategies: Phase25TestStrategies,
 };
 
 export default function LessonContentRenderer({ contentKey }: { contentKey: string }) {
