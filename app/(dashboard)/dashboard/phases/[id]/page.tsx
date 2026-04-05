@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { ArrowRight, ArrowLeft, BookOpen, Play, FileText, HelpCircle, CheckCircle2, Circle, Clock } from "lucide-react";
 import { getStepContent, Lesson } from "../stepsData";
 import LessonContentRenderer from "./LessonContentRenderer";
+import QuizRenderer from "./QuizRenderer";
 
 export default function StepDetailPage() {
     const params = useParams();
@@ -136,15 +137,13 @@ export default function StepDetailPage() {
                                 {/* Bottom full width: blocks "Watch on YouTube", subtitles, settings, YouTube logo */}
                                 <div className="absolute bottom-0 left-0 right-0 h-[42px] z-10 cursor-default" onContextMenu={(e) => e.preventDefault()} />
                             </div>
+                        ) : activeLesson?.type === 'quiz' ? (
+                            <QuizRenderer phaseNumber={stepNumber} />
                         ) : activeLesson?.content ? (
                             <LessonContentRenderer contentKey={activeLesson.content} />
                         ) : (
                             <div className="flex flex-col items-center justify-center py-20 text-center">
-                                {activeLesson?.type === 'quiz' ? (
-                                    <HelpCircle className="w-16 h-16 text-[#C5A04E]/30 mb-4" />
-                                ) : (
-                                    <FileText className="w-16 h-16 text-[#C5A04E]/30 mb-4" />
-                                )}
+                                <FileText className="w-16 h-16 text-[#C5A04E]/30 mb-4" />
                                 <p className="text-xl text-gray-500">قريباً — سيتم الإضافة قريباً</p>
                             </div>
                         )}
