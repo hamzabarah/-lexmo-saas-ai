@@ -120,6 +120,15 @@ export default function QuizRenderer({ phaseNumber }: { phaseNumber: number }) {
         );
     }
 
+    /* ─── loading (useEffect hasn't populated questions yet) ─── */
+    if (total === 0 || !q) {
+        return (
+            <div className="p-8 text-center" dir="rtl">
+                <p className="text-xl text-gray-500">جاري التحميل...</p>
+            </div>
+        );
+    }
+
     /* ─── score screen ─── */
     if (finished) {
         return (
