@@ -548,12 +548,12 @@ export const stepsContent: StepContent[] = [
             {
                 title: "الدروس",
                 lessons: [
-                    { id: 1, title: "شنو هي الأرقام اللي خاصك تراقبها", type: "pdf" },
-                    { id: 2, title: "كيفاش تعرف واش رابح ولا خاسر", type: "pdf" },
-                    { id: 3, title: "الحملة ناجحة — دابا كبرها", type: "pdf" },
-                    { id: 4, title: "الحملة فاشلة — شنو كتدير", type: "pdf" },
-                    { id: 5, title: "احسب أرباحك الحقيقية", type: "pdf" },
-                    { id: 6, title: "تطبيق عملي — 5 أيام يوم بيوم", type: "pdf" },
+                    { id: 1, title: "شنو هي الأرقام اللي خاصك تراقبها", type: "pdf", content: "phase26_metrics" },
+                    { id: 2, title: "كيفاش تعرف واش رابح ولا خاسر", type: "pdf", content: "phase26_profit_loss" },
+                    { id: 3, title: "الحملة ناجحة — دابا كبرها", type: "pdf", content: "phase26_scale_up" },
+                    { id: 4, title: "الحملة فاشلة — شنو كتدير", type: "pdf", content: "phase26_failed_campaign" },
+                    { id: 5, title: "احسب أرباحك الحقيقية", type: "pdf", content: "phase26_real_profit" },
+                    { id: 6, title: "تطبيق عملي — 5 أيام يوم بيوم", type: "pdf", content: "phase26_practical_5days" },
                 ],
             },
             {

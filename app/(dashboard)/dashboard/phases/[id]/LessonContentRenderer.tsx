@@ -6691,6 +6691,655 @@ function Phase25TestStrategies() {
     );
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   المرحلة 26 — اربح أكثر
+   ═══════════════════════════════════════════════════════════════ */
+
+function Phase26Metrics() {
+    return (
+        <div className="p-6 lg:p-8 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin" dir="rtl">
+            <h1 className="text-3xl font-bold text-white mb-2">شنو هي الأرقام اللي خاصك تراقبها 📊</h1>
+            <p className="text-[#C5A04E] text-lg mb-8">الأرقام الأساسية اللي كل بائع خاصو يعرفها ويراقبها يومياً</p>
+
+            <SectionTitle>الأرقام الأساسية</SectionTitle>
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead className="bg-[#C5A04E]/10">
+                        <tr>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">الرقم</th>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">شنو كيعني بالدارجة</th>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">كيفاش كيتحسب</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            ["مرات الظهور", "شحال من مرة بان الإعلان ديالك", "أوتوماتيكي"],
+                            ["الوصول", "شحال من شخص فريد شاف الإعلان", "أوتوماتيكي"],
+                            ["تكلفة الألف ظهور", "شحال كتخلص باش 1000 شخص يشوفو الإعلان", "المصروف ÷ الظهور × 1000"],
+                            ["النقرات", "شحال من واحد ضغط على الإعلان", "أوتوماتيكي"],
+                            ["تكلفة النقرة", "شحال كتخلص على كل نقرة", "المصروف ÷ النقرات"],
+                            ["نسبة النقر", "شحال من واحد ضغط من كل 100 شخص شاف", "(النقرات ÷ الظهور) × 100"],
+                            ["الإضافة للسلة", "شحال من واحد ضاف المنتج للسلة", "أوتوماتيكي (بالبيكسل)"],
+                            ["بداية الدفع", "شحال من واحد بدا عملية الدفع", "أوتوماتيكي (بالبيكسل)"],
+                            ["الشراء", "شحال من واحد شرى فعلاً", "أوتوماتيكي (بالبيكسل)"],
+                            ["تكلفة الشراء", "شحال صرفتي باش جبتي بيعة وحدة", "المصروف ÷ عدد المبيعات"],
+                            ["العائد على الإنفاق", "شحال رجع ليك مقابل كل دولار صرفتيه", "قيمة المبيعات ÷ المصروف"],
+                            ["التكرار", "شحال من مرة نفس الشخص شاف الإعلان", "الظهور ÷ الوصول"],
+                        ].map(([metric, meaning, calc], i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{metric}</td>
+                                <td className="text-gray-300 py-3 px-4 border border-[#C5A04E]/10">{meaning}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{calc}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <SectionTitle>أي أرقام هي الأهم؟</SectionTitle>
+            <Paragraph>إلى كان عندك وقت تشوف غير 3 أرقام:</Paragraph>
+            <div className="space-y-4 mb-6">
+                <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5">
+                    <span className="text-2xl ml-3">🥇</span>
+                    <span className="text-[#C5A04E] font-bold text-lg">تكلفة الشراء</span>
+                    <span className="text-gray-300 mr-2">— كيقولك واش رابح ولا خاسر</span>
+                </div>
+                <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5">
+                    <span className="text-2xl ml-3">🥈</span>
+                    <span className="text-white font-bold text-lg">العائد على الإنفاق</span>
+                    <span className="text-gray-300 mr-2">— كيقولك شحال كتربح</span>
+                </div>
+                <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5">
+                    <span className="text-2xl ml-3">🥉</span>
+                    <span className="text-white font-bold text-lg">نسبة النقر</span>
+                    <span className="text-gray-300 mr-2">— كتقولك واش الإعلان كيجذب ولا لا</span>
+                </div>
+            </div>
+
+            <Divider />
+            <p className="text-center text-gray-600 text-sm mt-8">© Lexmo Academy 2026 — جميع الحقوق محفوظة</p>
+        </div>
+    );
+}
+
+function Phase26ProfitLoss() {
+    return (
+        <div className="p-6 lg:p-8 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin" dir="rtl">
+            <h1 className="text-3xl font-bold text-white mb-2">كيفاش تعرف واش رابح ولا خاسر ✅❌</h1>
+            <p className="text-[#C5A04E] text-lg mb-8">القواعد البسيطة باش تعرف واش الحملة ديالك رابحة ولا خاسرة</p>
+
+            <SectionTitle>القاعدة البسيطة</SectionTitle>
+            <div className="space-y-3 mb-6">
+                <div className="bg-green-900/20 border border-green-500/20 rounded-xl p-4">
+                    <span className="text-green-400 font-bold">🟢 إلى تكلفة الشراء أقل من هامش الربح = رابح ✅</span>
+                </div>
+                <div className="bg-red-900/20 border border-red-500/20 rounded-xl p-4">
+                    <span className="text-red-400 font-bold">🔴 إلى تكلفة الشراء أكبر من هامش الربح = خاسر ❌</span>
+                </div>
+            </div>
+
+            <SectionTitle>مثال</SectionTitle>
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-6">
+                <BulletList items={[
+                    "ثمن البيع: 30$",
+                    "تكلفة المنتج + الشحن: 8$",
+                    "هامش الربح قبل الإعلان: 22$",
+                    "تكلفة الشراء من الإعلان: 10$",
+                ]} />
+                <div className="bg-green-900/20 border border-green-500/20 rounded-xl p-4 mt-3">
+                    <span className="text-green-400 font-bold text-lg">💰 الربح الصافي: 22$ - 10$ = 12$ على كل بيعة ✅</span>
+                </div>
+            </div>
+
+            <SectionTitle>جدول القرارات</SectionTitle>
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead className="bg-[#C5A04E]/10">
+                        <tr>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">تكلفة الشراء</th>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">مقارنة بالهامش</th>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">القرار</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            ["5$", "22% من الهامش", "🟢 ممتاز — كبر بسرعة"],
+                            ["10$", "45% من الهامش", "🟢 مزيان — كبر تدريجياً"],
+                            ["15$", "68% من الهامش", "🟡 مقبول — حسن الإعلان"],
+                            ["20$", "91% من الهامش", "🟠 خطر — الربح ضعيف بزاف"],
+                            ["25$", "أكثر من الهامش", "🔴 خاسر — أوقف فوراً"],
+                        ].map(([cost, margin, decision], i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{cost}</td>
+                                <td className="text-gray-300 py-3 px-4 border border-[#C5A04E]/10">{margin}</td>
+                                <td className="text-gray-300 py-3 px-4 border border-[#C5A04E]/10">{decision}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <SectionTitle>العائد على الإنفاق (ROAS)</SectionTitle>
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead className="bg-[#C5A04E]/10">
+                        <tr>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">القيمة</th>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">المعنى</th>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">القرار</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            ["أكثر من 3", "كل $1 كيرجع $3 أو أكثر", "🟢 ممتاز — كبر"],
+                            ["بين 2 و 3", "رابح بشكل مريح", "🟢 مزيان — كمل"],
+                            ["بين 1.5 و 2", "رابح ولكن الهامش ضعيف", "🟡 حسن"],
+                            ["بين 1 و 1.5", "كيرجع ليك فلوسك فقط", "🟠 خطر — عدل"],
+                            ["أقل من 1", "كتخسر فلوس", "🔴 أوقف"],
+                        ].map(([value, meaning, decision], i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{value}</td>
+                                <td className="text-gray-300 py-3 px-4 border border-[#C5A04E]/10">{meaning}</td>
+                                <td className="text-gray-300 py-3 px-4 border border-[#C5A04E]/10">{decision}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <Divider />
+            <p className="text-center text-gray-600 text-sm mt-8">© Lexmo Academy 2026 — جميع الحقوق محفوظة</p>
+        </div>
+    );
+}
+
+function Phase26ScaleUp() {
+    return (
+        <div className="p-6 lg:p-8 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin" dir="rtl">
+            <h1 className="text-3xl font-bold text-white mb-2">الحملة ناجحة — دابا كبرها 🚀</h1>
+            <p className="text-[#C5A04E] text-lg mb-8">الطرق الآمنة لتكبير حملة رابحة بلا ما تخرب النتائج</p>
+
+            <SectionTitle>الشروط باش تكبر</SectionTitle>
+            <GreenList items={[
+                "العائد على الإنفاق أكثر من 2 لمدة 3 أيام متتالية",
+                "تكلفة الشراء مستقرة وأقل من نصف هامش الربح",
+                "على الأقل 5 مبيعات",
+            ]} />
+
+            <SectionTitle>الطريقة 1: الزيادة التدريجية (الأكثر أماناً)</SectionTitle>
+            <div className="overflow-x-auto mb-6">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead className="bg-[#C5A04E]/10">
+                        <tr>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">اليوم</th>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">الميزانية</th>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">الزيادة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            ["اليوم 1", "10$", "—"],
+                            ["اليوم 3", "13$", "+30%"],
+                            ["اليوم 5", "17$", "+30%"],
+                            ["اليوم 7", "22$", "+30%"],
+                            ["اليوم 9", "28$", "+30%"],
+                            ["اليوم 11", "36$", "+30%"],
+                            ["اليوم 13", "47$", "+30%"],
+                        ].map(([day, budget, increase], i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{day}</td>
+                                <td className="text-green-400 font-bold py-3 px-4 border border-[#C5A04E]/10">{budget}</td>
+                                <td className="text-gray-300 py-3 px-4 border border-[#C5A04E]/10">{increase}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-4 mb-6">
+                <Paragraph>💡 القاعدة: زيد 20-30% كل 48 ساعة. ما تضعفش مرة وحدة — المنصة كترجع لمرحلة التعلم.</Paragraph>
+            </div>
+
+            <SectionTitle>الطريقة 2: مجموعة إعلانية جديدة</SectionTitle>
+            <StepCard num={1} title="أنشئ مجموعة إعلانية جديدة" items={["بنفس الإعدادات بالضبط"]} />
+            <StepCard num={2} title="حط ميزانية أكبر" items={["مثال: 20$/يوم"]} />
+            <StepCard num={3} title="خلي المجموعة القديمة خدامة" items={["ما توقفهاش"]} />
+            <StepCard num={4} title="النتيجة" items={["دابا عندك 30$/يوم (10 + 20) بلا ما تأثر على المجموعة الأصلية"]} />
+
+            <SectionTitle>الطريقة 3: نسخ الحملة لبلد جديد</SectionTitle>
+            <Paragraph>إلى الحملة ناجحة في المغرب:</Paragraph>
+            <BulletList items={[
+                "🌍 أنشئ نسخة لسوق السعودية",
+                "📝 نفس الإعلان ولكن عدل النص حسب اللهجة",
+                "💰 جرب ب 10$/يوم",
+            ]} />
+
+            <SectionTitle>أخطاء التكبير</SectionTitle>
+            <RedList items={[
+                "تضعف الميزانية مرة وحدة (10$ → 50$) — المنصة كتتخربق",
+                "تبدل الجمهور أو الإعلان فاش كتكبر — خلي كلشي كما هو",
+                "توقف الحملة الرابحة باش \"تحسنها\" — أنشئ نسخة وجرب فيها",
+                "تكبر بسرعة بزاف — الصبر هو المفتاح",
+            ]} />
+
+            <Divider />
+            <p className="text-center text-gray-600 text-sm mt-8">© Lexmo Academy 2026 — جميع الحقوق محفوظة</p>
+        </div>
+    );
+}
+
+function Phase26FailedCampaign() {
+    return (
+        <div className="p-6 lg:p-8 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin" dir="rtl">
+            <h1 className="text-3xl font-bold text-white mb-2">الحملة فاشلة — شنو كتدير 🛑</h1>
+            <p className="text-[#C5A04E] text-lg mb-8">القواعد الذهبية لمعرفة متى توقف ومتى تعدل</p>
+
+            <SectionTitle>القواعد الذهبية للإيقاف</SectionTitle>
+
+            <SubTitle>القاعدة 1: قاعدة الضعف</SubTitle>
+            <Paragraph>صرفتي ضعف ثمن المنتج بلا ولا بيعة = <strong className="text-red-400">أوقف فوراً</strong></Paragraph>
+            <div className="bg-red-900/20 border border-red-500/20 rounded-xl p-4 mb-6">
+                <span className="text-red-400">مثال: المنتج ب 30$ → صرفتي 60$ بلا بيعة → ❌</span>
+            </div>
+
+            <SubTitle>القاعدة 2: لا نقرات</SubTitle>
+            <Paragraph>صرفتي 10$ وما حصلتيش على 10 نقرات = <strong className="text-red-400">الإعلان ما كيجذبش</strong></Paragraph>
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-4 mb-6">
+                <span className="text-[#C5A04E]">💡 الحل: بدل الفيديو — خصوصاً أول 3 ثواني</span>
+            </div>
+
+            <SubTitle>القاعدة 3: نقرات بلا سلة</SubTitle>
+            <Paragraph>أكثر من 50 نقرة وحتى إضافة للسلة = <strong className="text-red-400">مشكل في صفحة المنتج</strong></Paragraph>
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-4 mb-6">
+                <span className="text-[#C5A04E]">💡 الحل: حسن صفحة المنتج (صور / وصف / ثمن / تقييمات)</span>
+            </div>
+
+            <SubTitle>القاعدة 4: سلة بلا شراء</SubTitle>
+            <Paragraph>أكثر من 10 إضافات للسلة وحتى شراء = <strong className="text-red-400">مشكل في الدفع</strong></Paragraph>
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-4 mb-6">
+                <span className="text-[#C5A04E]">💡 الحل: بسط صفحة الدفع / أضف طرق دفع / أضف ضمانات / شحن مجاني</span>
+            </div>
+
+            <SectionTitle>شنو كتدير بعد الإيقاف</SectionTitle>
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead className="bg-[#C5A04E]/10">
+                        <tr>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">المشكل</th>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">الحل</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            ["الإعلان ما كيجذبش (نسبة النقر أقل من 1%)", "صور فيديو جديد بخطاف مختلف"],
+                            ["الجمهور غلط (نقرات بلا اهتمام)", "جرب اهتمامات جديدة أو فئة عمرية مختلفة"],
+                            ["صفحة المنتج ضعيفة (نقرات بلا سلة)", "حسن الصور والوصف والتقييمات"],
+                            ["صفحة الدفع معقدة (سلة بلا شراء)", "بسط الدفع وأضف ضمانات"],
+                            ["الثمن غالي (الناس كتشوف وكتمشي)", "نقص الثمن أو زيد القيمة (عرض / هدية)"],
+                            ["المنتج ما عندوش طلب", "بدل المنتج — ماشي كل منتج كينجح"],
+                        ].map(([problem, solution], i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white py-3 px-4 border border-[#C5A04E]/10">{problem}</td>
+                                <td className="text-gray-300 py-3 px-4 border border-[#C5A04E]/10">{solution}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-6">
+                <SubTitle>القاعدة المهمة</SubTitle>
+                <Paragraph>💡 ما تحكمش على نفسك — حكم على الإعلان. أول حملة فاشلة عادي. حتى المحترفين كيجربو 5-10 إعلانات قبل ما يلقاو اللي خدام.</Paragraph>
+            </div>
+
+            <Divider />
+            <p className="text-center text-gray-600 text-sm mt-8">© Lexmo Academy 2026 — جميع الحقوق محفوظة</p>
+        </div>
+    );
+}
+
+function Phase26RealProfit() {
+    return (
+        <div className="p-6 lg:p-8 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin" dir="rtl">
+            <h1 className="text-3xl font-bold text-white mb-2">احسب أرباحك الحقيقية 💰</h1>
+            <p className="text-[#C5A04E] text-lg mb-8">الصيغة الكاملة لحساب الربح الصافي الحقيقي — بلا أوهام</p>
+
+            <SectionTitle>الصيغة الكاملة</SectionTitle>
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-8">
+                <p className="text-[#C5A04E] font-bold text-lg leading-relaxed">💡 الربح الصافي = إيرادات المبيعات − تكلفة المنتج − تكلفة الشحن − تكلفة الإعلان − رسوم المنصة − الإرجاعات</p>
+            </div>
+
+            <SectionTitle>مثال عملي</SectionTitle>
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead className="bg-[#C5A04E]/10">
+                        <tr>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">العنصر</th>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">الحساب</th>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">القيمة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            ["عدد المبيعات", "—", "20 بيعة"],
+                            ["ثمن البيع", "—", "29.99$"],
+                            ["إيرادات المبيعات", "20 × 29.99$", "599.80$"],
+                            ["تكلفة المنتجات", "20 × 5$", "−100$"],
+                            ["تكلفة الشحن من المورد", "20 × 2$", "−40$"],
+                            ["تكلفة الإعلان", "5 أيام × 20$", "−100$"],
+                            ["رسوم المنصة (5%)", "599.80 × 5%", "−30$"],
+                            ["الإرجاعات (10%)", "2 إرجاعات × 29.99$", "−60$"],
+                        ].map(([item, calc, value], i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white py-3 px-4 border border-[#C5A04E]/10">{item}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{calc}</td>
+                                <td className={`py-3 px-4 border border-[#C5A04E]/10 font-bold ${value.startsWith("−") ? "text-red-400" : "text-gray-300"}`}>{value}</td>
+                            </tr>
+                        ))}
+                        <tr className="bg-green-900/20">
+                            <td className="text-green-400 font-bold py-3 px-4 border border-[#C5A04E]/10">الربح الصافي</td>
+                            <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">—</td>
+                            <td className="text-green-400 font-bold text-lg py-3 px-4 border border-[#C5A04E]/10">269.80$</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <SectionTitle>المؤشرات</SectionTitle>
+            <div className="overflow-x-auto mb-8">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead className="bg-[#C5A04E]/10">
+                        <tr>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">المؤشر</th>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">الحساب</th>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">القيمة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            ["العائد على الإنفاق", "599.80 ÷ 100", "5.99 ✅"],
+                            ["تكلفة الشراء", "100 ÷ 20", "5$ ✅"],
+                            ["هامش الربح الصافي", "269.80 ÷ 599.80 × 100", "45% ✅"],
+                            ["الربح لكل بيعة", "269.80 ÷ 20", "13.49$"],
+                        ].map(([indicator, calc, value], i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white font-bold py-3 px-4 border border-[#C5A04E]/10">{indicator}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{calc}</td>
+                                <td className="text-green-400 font-bold py-3 px-4 border border-[#C5A04E]/10">{value}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <SectionTitle>ما تنساش تحسب</SectionTitle>
+            <RedList items={[
+                "بزاف ديال المبتدئين كينساو رسوم المنصة (شوبيفاي + بوابة الدفع = حوالي 5%)",
+                "كينساو الإرجاعات (احسب 5-15% كمعدل)",
+                "كينساو ثمن الشحن من المورد",
+                "كيحسبو ثمن البيع ناقص الإعلان فقط وكيحسبو راسهم رابحين",
+            ]} />
+
+            <Divider />
+            <p className="text-center text-gray-600 text-sm mt-8">© Lexmo Academy 2026 — جميع الحقوق محفوظة</p>
+        </div>
+    );
+}
+
+function Phase26Practical5Days() {
+    return (
+        <div className="p-6 lg:p-8 space-y-2 max-h-[70vh] overflow-y-auto scrollbar-thin" dir="rtl">
+            <h1 className="text-3xl font-bold text-white mb-2">تطبيق عملي — 5 أيام يوم بيوم 📅</h1>
+            <p className="text-[#C5A04E] text-lg mb-8">سيناريو واقعي كامل لتتبع حملة إعلانية من اليوم 1 حتى القرار النهائي</p>
+
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-8">
+                <SubTitle>السيناريو</SubTitle>
+                <BulletList items={[
+                    "🛍️ المنتج: أداة تنظيف البشرة",
+                    "💵 ثمن البيع: 34.99$",
+                    "📦 تكلفة المنتج + الشحن: 9$",
+                    "📊 هامش الربح قبل الإعلان: 25.99$",
+                    "💰 الميزانية: 15$/يوم",
+                    "👥 الجمهور: نساء 20-45 — اهتمام: العناية بالبشرة — المغرب + السعودية",
+                ]} />
+            </div>
+
+            {/* اليوم 1 */}
+            <SectionTitle>اليوم 1</SectionTitle>
+            <div className="overflow-x-auto mb-4">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead className="bg-[#C5A04E]/10">
+                        <tr>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">المؤشر</th>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">القيمة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            ["المصروف", "15$"],
+                            ["الظهور", "4,200"],
+                            ["النقرات", "65"],
+                            ["نسبة النقر", "1.5%"],
+                            ["تكلفة النقرة", "0.23$"],
+                            ["إضافة للسلة", "3"],
+                            ["شراء", "0"],
+                        ].map(([metric, val], i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white py-3 px-4 border border-[#C5A04E]/10">{metric}</td>
+                                <td className="text-gray-300 py-3 px-4 border border-[#C5A04E]/10">{val}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-4 mb-2">
+                <Paragraph><strong className="text-white">التحليل:</strong> المنصة مازال كتتعلم. نسبة النقر 1.5% مقبولة. تكلفة النقرة رخيصة. 3 إضافات للسلة علامة مزيانة. صبر.</Paragraph>
+            </div>
+            <div className="bg-yellow-900/20 border border-yellow-500/20 rounded-xl p-4 mb-8">
+                <span className="text-yellow-400 font-bold">⏳ القرار: ما تبدلش والو — استنى.</span>
+            </div>
+
+            {/* اليوم 2 */}
+            <SectionTitle>اليوم 2</SectionTitle>
+            <div className="overflow-x-auto mb-4">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead className="bg-[#C5A04E]/10">
+                        <tr>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">المؤشر</th>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">القيمة (اليوم)</th>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">القيمة (إجمالي)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            ["المصروف", "15$", "30$"],
+                            ["الظهور", "5,100", "9,300"],
+                            ["النقرات", "90", "155"],
+                            ["نسبة النقر", "1.8%", "1.7%"],
+                            ["إضافة للسلة", "6", "9"],
+                            ["بداية الدفع", "2", "2"],
+                            ["شراء", "1", "1"],
+                        ].map(([metric, daily, total], i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white py-3 px-4 border border-[#C5A04E]/10">{metric}</td>
+                                <td className="text-gray-300 py-3 px-4 border border-[#C5A04E]/10">{daily}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{total}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-4 mb-2">
+                <Paragraph><strong className="text-white">التحليل:</strong> أول بيعة! تكلفة الشراء = 30$ وهامش الربح = 25.99$ — تقنياً خاسر شوية ولكن عادي في البداية. المنصة بدات تتعلم.</Paragraph>
+            </div>
+            <div className="bg-yellow-900/20 border border-yellow-500/20 rounded-xl p-4 mb-8">
+                <span className="text-yellow-400 font-bold">⏳ القرار: كمل — علامات إيجابية.</span>
+            </div>
+
+            {/* اليوم 3 */}
+            <SectionTitle>اليوم 3</SectionTitle>
+            <div className="overflow-x-auto mb-4">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead className="bg-[#C5A04E]/10">
+                        <tr>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">المؤشر</th>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">القيمة (اليوم)</th>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">القيمة (إجمالي)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            ["المصروف", "15$", "45$"],
+                            ["النقرات", "110", "265"],
+                            ["نسبة النقر", "2.2% ✅", "1.9%"],
+                            ["إضافة للسلة", "9", "18"],
+                            ["شراء", "3", "4"],
+                            ["تكلفة الشراء", "5$ ✅", "11.25$"],
+                        ].map(([metric, daily, total], i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white py-3 px-4 border border-[#C5A04E]/10">{metric}</td>
+                                <td className="text-gray-300 py-3 px-4 border border-[#C5A04E]/10">{daily}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{total}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-4 mb-2">
+                <Paragraph><strong className="text-white">التحليل:</strong> يوم ممتاز! 3 مبيعات بتكلفة 5$ لكل وحدة. نسبة النقر فاتت 2%. المنصة لقات الجمهور المناسب.</Paragraph>
+            </div>
+            <div className="bg-green-900/20 border border-green-500/20 rounded-xl p-4 mb-8">
+                <span className="text-green-400 font-bold">✅ القرار: إشارات قوية — كمل.</span>
+            </div>
+
+            {/* اليوم 4 */}
+            <SectionTitle>اليوم 4</SectionTitle>
+            <div className="overflow-x-auto mb-4">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead className="bg-[#C5A04E]/10">
+                        <tr>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">المؤشر</th>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">القيمة (اليوم)</th>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">القيمة (إجمالي)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            ["المصروف", "15$", "60$"],
+                            ["النقرات", "125", "390"],
+                            ["نسبة النقر", "2.5% ✅", "2.1% ✅"],
+                            ["إضافة للسلة", "12", "30"],
+                            ["شراء", "4", "8"],
+                            ["تكلفة الشراء", "3.75$ ✅", "7.50$ ✅"],
+                            ["العائد على الإنفاق", "—", "4.66 ✅"],
+                        ].map(([metric, daily, total], i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white py-3 px-4 border border-[#C5A04E]/10">{metric}</td>
+                                <td className="text-gray-300 py-3 px-4 border border-[#C5A04E]/10">{daily}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{total}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-4 mb-2">
+                <Paragraph><strong className="text-white">التحليل:</strong> ممتاز! الأرقام كلها خضراء. تكلفة الشراء 7.50$ وهامش الربح 25.99$ = ربح صافي حوالي 18$ لكل بيعة.</Paragraph>
+            </div>
+            <div className="bg-green-900/20 border border-green-500/20 rounded-xl p-4 mb-8">
+                <span className="text-green-400 font-bold">✅ القرار: جهز نفسك باش تكبر غداً.</span>
+            </div>
+
+            {/* اليوم 5 */}
+            <SectionTitle>اليوم 5</SectionTitle>
+            <div className="overflow-x-auto mb-4">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead className="bg-[#C5A04E]/10">
+                        <tr>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">المؤشر</th>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">القيمة (اليوم)</th>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">القيمة (إجمالي)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            ["المصروف", "15$", "75$"],
+                            ["النقرات", "130", "520"],
+                            ["نسبة النقر", "2.6% ✅", "2.2% ✅"],
+                            ["إضافة للسلة", "14", "44"],
+                            ["شراء", "5", "13"],
+                            ["تكلفة الشراء (إجمالي)", "—", "5.77$ ✅"],
+                            ["العائد على الإنفاق", "—", "6.06 ✅"],
+                        ].map(([metric, daily, total], i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white py-3 px-4 border border-[#C5A04E]/10">{metric}</td>
+                                <td className="text-gray-300 py-3 px-4 border border-[#C5A04E]/10">{daily}</td>
+                                <td className="text-gray-400 py-3 px-4 border border-[#C5A04E]/10">{total}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            {/* النتيجة النهائية */}
+            <SectionTitle>النتيجة النهائية</SectionTitle>
+            <div className="overflow-x-auto mb-6">
+                <table className="w-full text-sm border border-[#C5A04E]/10 rounded-xl overflow-hidden">
+                    <thead className="bg-[#C5A04E]/10">
+                        <tr>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">العنصر</th>
+                            <th className="text-[#C5A04E] font-bold py-3 px-4 text-right border border-[#C5A04E]/10">القيمة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {[
+                            ["إجمالي المصروف", "75$"],
+                            ["إجمالي المبيعات", "13 بيعة"],
+                            ["إجمالي الإيرادات", "454.87$"],
+                            ["تكلفة المنتجات", "−117$ (13 × 9$)"],
+                            ["تكلفة الإعلان", "−75$"],
+                            ["رسوم المنصة (5%)", "−22.74$"],
+                            ["إرجاع واحد (تقدير)", "−34.99$"],
+                        ].map(([item, value], i) => (
+                            <tr key={i} className="hover:bg-[#1A1A1A] transition-colors">
+                                <td className="text-white py-3 px-4 border border-[#C5A04E]/10">{item}</td>
+                                <td className={`py-3 px-4 border border-[#C5A04E]/10 font-bold ${value.startsWith("−") ? "text-red-400" : "text-gray-300"}`}>{value}</td>
+                            </tr>
+                        ))}
+                        <tr className="bg-green-900/20">
+                            <td className="text-green-400 font-bold py-3 px-4 border border-[#C5A04E]/10">الربح الصافي</td>
+                            <td className="text-green-400 font-bold text-lg py-3 px-4 border border-[#C5A04E]/10">205.14$</td>
+                        </tr>
+                        <tr className="hover:bg-[#1A1A1A] transition-colors">
+                            <td className="text-white py-3 px-4 border border-[#C5A04E]/10">العائد على الإنفاق</td>
+                            <td className="text-green-400 font-bold py-3 px-4 border border-[#C5A04E]/10">6.06 ✅</td>
+                        </tr>
+                        <tr className="hover:bg-[#1A1A1A] transition-colors">
+                            <td className="text-white py-3 px-4 border border-[#C5A04E]/10">الربح لكل بيعة</td>
+                            <td className="text-green-400 font-bold py-3 px-4 border border-[#C5A04E]/10">15.78$</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            {/* القرار النهائي */}
+            <div className="bg-green-900/20 border border-green-500/20 rounded-xl p-6 mb-6">
+                <h3 className="text-2xl font-bold text-green-400 mb-4">🚀 القرار النهائي: كبر الحملة!</h3>
+                <BulletList items={[
+                    "📈 زيد الميزانية من 15$ إلى 20$ (زيادة 30%)",
+                    "⏳ بعد 48 ساعة إلى بقات النتائج مزيانة: زيد ل 26$",
+                    "🌍 أنشئ مجموعة إعلانية جديدة لسوق جديد",
+                ]} />
+            </div>
+
+            <div className="bg-[#1A1A1A] border border-[#C5A04E]/10 rounded-xl p-5 mb-6">
+                <Paragraph>📌 <strong className="text-[#C5A04E]">الخلاصة:</strong> هاد المثال واقعي. اليوم 1 و 2 كانو صعاب — ما كاينش نتائج واضحة. ولكن الصبر هو اللي خلى الحملة تنجح. ما تحكمش قبل 3-5 أيام أبداً.</Paragraph>
+            </div>
+
+            <Divider />
+            <p className="text-center text-gray-600 text-sm mt-8">© Lexmo Academy 2026 — جميع الحقوق محفوظة</p>
+        </div>
+    );
+}
+
 const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase5_product_research: Phase5ProductResearch,
     phase11_shopify_guide: Phase11ShopifyGuide,
@@ -6712,6 +7361,12 @@ const CONTENT_MAP: Record<string, () => React.ReactElement> = {
     phase23_daily_checklist: Phase23DailyChecklist,
     phase25_video_ad: Phase25VideoAd,
     phase25_test_strategies: Phase25TestStrategies,
+    phase26_metrics: Phase26Metrics,
+    phase26_profit_loss: Phase26ProfitLoss,
+    phase26_scale_up: Phase26ScaleUp,
+    phase26_failed_campaign: Phase26FailedCampaign,
+    phase26_real_profit: Phase26RealProfit,
+    phase26_practical_5days: Phase26Practical5Days,
 };
 
 export default function LessonContentRenderer({ contentKey }: { contentKey: string }) {
