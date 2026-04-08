@@ -194,6 +194,22 @@ export default function StepDetailPage() {
                             </button>
                         </div>
                     </div>
+
+                    {/* Telegram Help Block */}
+                    <div className="bg-[#111111] border border-[#C5A04E]/10 rounded-2xl p-5 text-center" dir="rtl">
+                        <p className="text-lg font-bold text-white mb-2">💬 محتاج مساعدة؟</p>
+                        <p className="text-gray-400 text-sm mb-4 leading-relaxed">إذا واجهت أي مشكلة في هذه المرحلة، تواصل معي مباشرة وأنا أساعدك</p>
+                        <a
+                            href="https://t.me/ecomyyy"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white font-bold transition-colors hover:opacity-90"
+                            style={{ backgroundColor: '#0088cc' }}
+                        >
+                            <span>تواصل معي على تلغرام</span>
+                            <span>📩</span>
+                        </a>
+                    </div>
                 </div>
 
                 {/* Lesson Sidebar (left in RTL) */}
