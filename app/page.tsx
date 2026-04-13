@@ -50,113 +50,10 @@ function ClosedTimer({ closedAt }: { closedAt: string }) {
 }
 
 /* ═══════════════════════════════════════════════
-   PROMO COUNTDOWN TIMER
+   COMPACT PROMO INFO (counter + inline timer)
+   Shows inside the formation card, above CTA
    ═══════════════════════════════════════════════ */
-function PromoCountdown({ startedAt, dureeHeures }: { startedAt: string; dureeHeures: number }) {
-  const [time, setTime] = useState({ hours: 0, minutes: 0, seconds: 0 });
-  const [expired, setExpired] = useState(false);
-
-  useEffect(() => {
-    const endTime = new Date(startedAt).getTime() + dureeHeures * 3600000;
-
-    function tick() {
-      const remaining = endTime - Date.now();
-      if (remaining <= 0) {
-        setExpired(true);
-        setTime({ hours: 0, minutes: 0, seconds: 0 });
-        return;
-      }
-      setTime({
-        hours: Math.floor(remaining / 3600000),
-        minutes: Math.floor((remaining % 3600000) / 60000),
-        seconds: Math.floor((remaining % 60000) / 1000),
-      });
-    }
-
-    tick();
-    const interval = setInterval(tick, 1000);
-    return () => clearInterval(interval);
-  }, [startedAt, dureeHeures]);
-
-  if (expired) return null;
-
-  const isUrgent = time.hours === 0 && time.minutes < 60;
-  const color = isUrgent ? 'text-red-500' : 'text-[#ffd700]';
-  const borderColor = isUrgent ? 'border-red-500/30' : 'border-[#C5A04E]/20';
-
-  return (
-    <div className="text-center space-y-3">
-      <p className="text-gray-400 text-sm font-bold">⏳ ينتهي العرض خلال</p>
-      <div className="flex justify-center gap-3" dir="ltr">
-        {[
-          { val: time.hours, label: 'ساعات' },
-          { val: time.minutes, label: 'دقائق' },
-          { val: time.seconds, label: 'ثواني' },
-        ].map((item, i) => (
-          <div key={i} className="text-center">
-            <div className={`bg-[#0A0A0A] border ${borderColor} rounded-xl px-4 py-3 min-w-[70px] md:min-w-[90px]`}>
-              <span className={`text-3xl md:text-4xl font-bold ${color}`} style={{ fontFamily: 'Orbitron, monospace' }}>
-                {String(item.val).padStart(2, '0')}
-              </span>
-            </div>
-            <span className="text-[10px] text-gray-500 mt-1 block font-cairo">{item.label}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════
-   PROMO SLOTS GRID
-   ═══════════════════════════════════════════════ */
-function PromoSlots({ total, taken, newlyTaken }: { total: number; taken: number; newlyTaken: number | null }) {
-  const remaining = total - taken;
-  const isAlmostFull = remaining <= 3 && remaining > 0;
-
-  return (
-    <div className="flex flex-wrap justify-center gap-2 md:gap-3">
-      {Array.from({ length: total }, (_, i) => {
-        const slotNum = i + 1;
-        const isTaken = slotNum <= taken;
-        const isJustTaken = slotNum === newlyTaken;
-        const isLastFew = !isTaken && isAlmostFull;
-
-        return (
-          <div
-            key={slotNum}
-            className={`
-              relative w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center transition-all duration-500
-              ${isTaken
-                ? `bg-red-950/80 border border-red-800/50 ${isJustTaken ? 'animate-slot-flash' : ''}`
-                : isLastFew
-                  ? 'bg-[#0A0A0A] border border-red-500/40 animate-pulse-urgent'
-                  : 'bg-[#0A0A0A] border border-[#C5A04E]/30 shadow-[0_0_8px_rgba(197,160,78,0.15)]'
-              }
-            `}
-          >
-            <span
-              className={`text-sm md:text-base font-bold ${
-                isTaken ? 'text-gray-600 line-through' : isLastFew ? 'text-red-400' : 'text-[#C5A04E]'
-              }`}
-              style={{ fontFamily: 'Orbitron, monospace' }}
-            >
-              {slotNum}
-            </span>
-            {isTaken && (
-              <span className="absolute -top-1 -left-1 text-[10px]">❌</span>
-            )}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════
-   PROMO SECTION (cases + timer + texte)
-   ═══════════════════════════════════════════════ */
-function PromoSection({ settings }: { settings: any }) {
+function CompactPromoInfo({ settings }: { settings: any }) {
   const {
     promo_places_total: total = 12,
     promo_places_prises: serverTaken = 0,
@@ -166,87 +63,273 @@ function PromoSection({ settings }: { settings: any }) {
   } = settings;
 
   const [simulatedExtra, setSimulatedExtra] = useState(0);
-  const [newlyTaken, setNewlyTaken] = useState<number | null>(null);
-  const prevTakenRef = useRef(0);
+  const [timer, setTimer] = useState({ h: 0, m: 0, s: 0 });
+  const [expired, setExpired] = useState(false);
 
-  // Calculate simulated count based on elapsed time since start
+  // Simulated slots
   useEffect(() => {
     if (!startedAt || !intervalMinutes) return;
-
-    function calcSimulated() {
+    function calc() {
       const elapsed = Date.now() - new Date(startedAt).getTime();
-      const simCount = Math.floor(elapsed / (intervalMinutes * 60000));
-      return Math.max(0, simCount);
+      return Math.max(0, Math.floor(elapsed / (intervalMinutes * 60000)));
     }
-
-    setSimulatedExtra(calcSimulated());
-
-    const interval = setInterval(() => {
-      const newSim = calcSimulated();
-      setSimulatedExtra(prev => {
-        if (newSim > prev) return newSim;
-        return prev;
-      });
-    }, 10000); // Check every 10s
-
-    return () => clearInterval(interval);
+    setSimulatedExtra(calc());
+    const iv = setInterval(() => setSimulatedExtra(calc()), 10000);
+    return () => clearInterval(iv);
   }, [startedAt, intervalMinutes]);
+
+  // Countdown timer
+  useEffect(() => {
+    if (!startedAt) return;
+    const endTime = new Date(startedAt).getTime() + dureeHeures * 3600000;
+    function tick() {
+      const rem = endTime - Date.now();
+      if (rem <= 0) { setExpired(true); setTimer({ h: 0, m: 0, s: 0 }); return; }
+      setTimer({
+        h: Math.floor(rem / 3600000),
+        m: Math.floor((rem % 3600000) / 60000),
+        s: Math.floor((rem % 60000) / 1000),
+      });
+    }
+    tick();
+    const iv = setInterval(tick, 1000);
+    return () => clearInterval(iv);
+  }, [startedAt, dureeHeures]);
 
   const taken = Math.min(serverTaken + simulatedExtra, total);
   const remaining = total - taken;
+  if (remaining <= 0 || expired) return null;
 
-  // Flash animation when a new slot is taken
-  useEffect(() => {
-    if (taken > prevTakenRef.current && prevTakenRef.current > 0) {
-      setNewlyTaken(taken);
-      const timer = setTimeout(() => setNewlyTaken(null), 1500);
-      return () => clearTimeout(timer);
-    }
-    prevTakenRef.current = taken;
-  }, [taken]);
-
-  // Dynamic text
-  let statusText = '';
-  let statusColor = 'text-[#C5A04E]';
-  if (remaining <= 0) {
-    statusText = '⛔ نفذت جميع الأماكن';
-    statusColor = 'text-red-500';
-  } else if (remaining <= 3) {
-    statusText = `🔴 آخر ${remaining} أماكن — لا تضيع الفرصة`;
-    statusColor = 'text-red-400 animate-pulse';
-  } else {
-    statusText = '🔥 سجّل الآن قبل نفاذ الأماكن';
-    statusColor = 'text-[#C5A04E]';
-  }
+  const isUrgent = remaining <= 3;
+  const pad = (n: number) => String(n).padStart(2, '0');
 
   return (
-    <section className="w-full px-4 pb-6">
-      <div className="max-w-[1050px] mx-auto rounded-2xl border border-[#C5A04E]/20 bg-[#0A0A0A] p-6 md:p-8 space-y-6">
+    <div className="space-y-2 mb-2">
+      {/* Places counter */}
+      <div className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg ${isUrgent ? 'bg-red-950/60 border border-red-800/40' : 'bg-[#C5A04E]/10 border border-[#C5A04E]/20'}`}>
+        <span className="text-base">🔥</span>
+        <span className={`font-bold text-sm ${isUrgent ? 'text-red-400 animate-pulse' : 'text-[#C5A04E]'}`}>
+          باقي {remaining} أماكن فقط
+        </span>
+      </div>
+      {/* Inline timer */}
+      <div className="flex items-center justify-center gap-1.5 text-gray-400 text-xs">
+        <span>⏳</span>
+        <span>ينتهي العرض خلال</span>
+        <span className={`font-bold ${isUrgent ? 'text-red-400' : 'text-[#ffd700]'}`} style={{ fontFamily: 'Inter, monospace' }}>
+          {pad(timer.h)}:{pad(timer.m)}:{pad(timer.s)}
+        </span>
+      </div>
+    </div>
+  );
+}
 
-        {/* Counter */}
-        <div className="text-center">
-          <p className="text-gray-400 text-sm mb-2">الأماكن المتبقية</p>
-          <p className="text-4xl md:text-5xl font-black text-white" style={{ fontFamily: 'Orbitron, monospace' }}>
-            <span className={remaining <= 3 ? 'text-red-500' : 'text-[#C5A04E]'}>{remaining}</span>
-            <span className="text-gray-600 text-2xl md:text-3xl mx-2">/</span>
-            <span className="text-gray-500 text-2xl md:text-3xl">{total}</span>
-          </p>
+/* ═══════════════════════════════════════════════
+   SOCIAL PROOF NOTIFICATIONS
+   Toast popup with 100 Arabic names
+   Two modes: promo active (interval from admin) / inactive (30-45s)
+   ═══════════════════════════════════════════════ */
+const SOCIAL_PROOF_NAMES: { name: string; gender: 'm' | 'f'; flag: string }[] = [
+  // Western names (80)
+  { name: 'أحمد', gender: 'm', flag: '🇫🇷' },
+  { name: 'محمد', gender: 'm', flag: '🇧🇪' },
+  { name: 'يوسف', gender: 'm', flag: '🇩🇪' },
+  { name: 'إبراهيم', gender: 'm', flag: '🇮🇹' },
+  { name: 'عمر', gender: 'm', flag: '🇪🇸' },
+  { name: 'علي', gender: 'm', flag: '🇫🇷' },
+  { name: 'حسن', gender: 'm', flag: '🇬🇧' },
+  { name: 'خالد', gender: 'm', flag: '🇳🇱' },
+  { name: 'طارق', gender: 'm', flag: '🇫🇷' },
+  { name: 'سمير', gender: 'm', flag: '🇧🇪' },
+  { name: 'كريم', gender: 'm', flag: '🇫🇷' },
+  { name: 'ياسين', gender: 'm', flag: '🇩🇪' },
+  { name: 'نور الدين', gender: 'm', flag: '🇮🇹' },
+  { name: 'مراد', gender: 'm', flag: '🇫🇷' },
+  { name: 'رشيد', gender: 'm', flag: '🇪🇸' },
+  { name: 'بلال', gender: 'm', flag: '🇬🇧' },
+  { name: 'أنس', gender: 'm', flag: '🇫🇷' },
+  { name: 'أيوب', gender: 'm', flag: '🇳🇱' },
+  { name: 'زكريا', gender: 'm', flag: '🇧🇪' },
+  { name: 'سعيد', gender: 'm', flag: '🇫🇷' },
+  { name: 'عبد الله', gender: 'm', flag: '🇩🇪' },
+  { name: 'حمزة', gender: 'm', flag: '🇫🇷' },
+  { name: 'إلياس', gender: 'm', flag: '🇮🇹' },
+  { name: 'آدم', gender: 'm', flag: '🇫🇷' },
+  { name: 'رامي', gender: 'm', flag: '🇪🇸' },
+  { name: 'فيصل', gender: 'm', flag: '🇬🇧' },
+  { name: 'هشام', gender: 'm', flag: '🇫🇷' },
+  { name: 'وليد', gender: 'm', flag: '🇳🇱' },
+  { name: 'منير', gender: 'm', flag: '🇧🇪' },
+  { name: 'جمال', gender: 'm', flag: '🇫🇷' },
+  { name: 'عادل', gender: 'm', flag: '🇩🇪' },
+  { name: 'نبيل', gender: 'm', flag: '🇫🇷' },
+  { name: 'صلاح', gender: 'm', flag: '🇮🇹' },
+  { name: 'مصطفى', gender: 'm', flag: '🇫🇷' },
+  { name: 'عماد', gender: 'm', flag: '🇪🇸' },
+  { name: 'رياض', gender: 'm', flag: '🇬🇧' },
+  { name: 'سفيان', gender: 'm', flag: '🇫🇷' },
+  { name: 'حاتم', gender: 'm', flag: '🇳🇱' },
+  { name: 'توفيق', gender: 'm', flag: '🇧🇪' },
+  { name: 'ماجد', gender: 'm', flag: '🇫🇷' },
+  { name: 'فاروق', gender: 'm', flag: '🇩🇪' },
+  { name: 'عزيز', gender: 'm', flag: '🇫🇷' },
+  { name: 'سامي', gender: 'm', flag: '🇮🇹' },
+  { name: 'باسم', gender: 'm', flag: '🇫🇷' },
+  { name: 'رضا', gender: 'm', flag: '🇪🇸' },
+  { name: 'عثمان', gender: 'm', flag: '🇬🇧' },
+  { name: 'لطفي', gender: 'm', flag: '🇫🇷' },
+  { name: 'نادر', gender: 'm', flag: '🇳🇱' },
+  { name: 'شريف', gender: 'm', flag: '🇧🇪' },
+  { name: 'زياد', gender: 'm', flag: '🇫🇷' },
+  // Female Western
+  { name: 'فاطمة', gender: 'f', flag: '🇫🇷' },
+  { name: 'مريم', gender: 'f', flag: '🇧🇪' },
+  { name: 'سارة', gender: 'f', flag: '🇩🇪' },
+  { name: 'نور', gender: 'f', flag: '🇫🇷' },
+  { name: 'ليلى', gender: 'f', flag: '🇮🇹' },
+  { name: 'أمينة', gender: 'f', flag: '🇫🇷' },
+  { name: 'حنان', gender: 'f', flag: '🇪🇸' },
+  { name: 'سلمى', gender: 'f', flag: '🇬🇧' },
+  { name: 'ياسمين', gender: 'f', flag: '🇫🇷' },
+  { name: 'إيمان', gender: 'f', flag: '🇳🇱' },
+  { name: 'هاجر', gender: 'f', flag: '🇧🇪' },
+  { name: 'خديجة', gender: 'f', flag: '🇫🇷' },
+  { name: 'سناء', gender: 'f', flag: '🇩🇪' },
+  { name: 'رانيا', gender: 'f', flag: '🇫🇷' },
+  { name: 'لينا', gender: 'f', flag: '🇮🇹' },
+  { name: 'دنيا', gender: 'f', flag: '🇫🇷' },
+  { name: 'غزلان', gender: 'f', flag: '🇪🇸' },
+  { name: 'سميرة', gender: 'f', flag: '🇬🇧' },
+  { name: 'نجاة', gender: 'f', flag: '🇫🇷' },
+  { name: 'وفاء', gender: 'f', flag: '🇳🇱' },
+  // Maghreb (10)
+  { name: 'عبد الرحمن', gender: 'm', flag: '🇲🇦' },
+  { name: 'أيمن', gender: 'm', flag: '🇩🇿' },
+  { name: 'حمدي', gender: 'm', flag: '🇹🇳' },
+  { name: 'عصام', gender: 'm', flag: '🇲🇦' },
+  { name: 'وسيم', gender: 'm', flag: '🇩🇿' },
+  { name: 'عبد الكريم', gender: 'm', flag: '🇹🇳' },
+  { name: 'مهدي', gender: 'm', flag: '🇲🇦' },
+  { name: 'أشرف', gender: 'm', flag: '🇩🇿' },
+  { name: 'هيثم', gender: 'm', flag: '🇹🇳' },
+  { name: 'سيف الدين', gender: 'm', flag: '🇲🇦' },
+  // Gulf (10)
+  { name: 'فهد', gender: 'm', flag: '🇸🇦' },
+  { name: 'سلطان', gender: 'm', flag: '🇦🇪' },
+  { name: 'تركي', gender: 'm', flag: '🇸🇦' },
+  { name: 'ناصر', gender: 'm', flag: '🇰🇼' },
+  { name: 'بندر', gender: 'm', flag: '🇸🇦' },
+  { name: 'عبد العزيز', gender: 'm', flag: '🇶🇦' },
+  { name: 'مشاري', gender: 'm', flag: '🇰🇼' },
+  { name: 'راشد', gender: 'm', flag: '🇦🇪' },
+  { name: 'حمد', gender: 'm', flag: '🇧🇭' },
+  { name: 'خليفة', gender: 'm', flag: '🇴🇲' },
+];
+
+function SocialProofNotification({ promoActive, intervalMinutes }: { promoActive: boolean; intervalMinutes: number }) {
+  const [visible, setVisible] = useState(false);
+  const [currentPerson, setCurrentPerson] = useState<typeof SOCIAL_PROOF_NAMES[0] | null>(null);
+  const shuffledRef = useRef<typeof SOCIAL_PROOF_NAMES>([]);
+  const indexRef = useRef(0);
+
+  // Fisher-Yates shuffle — no repeat until all used
+  const getNextPerson = useCallback(() => {
+    if (indexRef.current >= shuffledRef.current.length) {
+      // Reshuffle
+      const arr = [...SOCIAL_PROOF_NAMES];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      shuffledRef.current = arr;
+      indexRef.current = 0;
+    }
+    const person = shuffledRef.current[indexRef.current];
+    indexRef.current++;
+    return person;
+  }, []);
+
+  useEffect(() => {
+    // Initial shuffle
+    const arr = [...SOCIAL_PROOF_NAMES];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    shuffledRef.current = arr;
+
+    // First notification after a short delay
+    const firstDelay = setTimeout(() => {
+      showNotification();
+    }, promoActive ? 8000 : 15000);
+
+    function showNotification() {
+      const person = getNextPerson();
+      setCurrentPerson(person);
+      setVisible(true);
+
+      // Hide after 5s
+      setTimeout(() => {
+        setVisible(false);
+      }, 5000);
+    }
+
+    // Recurring interval
+    const intervalMs = promoActive
+      ? (intervalMinutes * 60000) / 3 // Show 3x per promo interval
+      : (30 + Math.random() * 15) * 1000; // 30-45s when inactive
+
+    const recurring = setInterval(() => {
+      showNotification();
+    }, intervalMs);
+
+    return () => {
+      clearTimeout(firstDelay);
+      clearInterval(recurring);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [promoActive, intervalMinutes]);
+
+  if (!currentPerson) return null;
+
+  const verb = currentPerson.gender === 'f' ? 'انضمت' : 'انضم';
+
+  return (
+    <div
+      className={`fixed z-[9999] transition-all duration-500 ease-out ${
+        visible ? 'translate-y-0 opacity-100' : 'translate-y-[120%] opacity-0'
+      }`}
+      style={{
+        bottom: '24px',
+        left: '50%',
+        transform: `translateX(-50%) ${visible ? 'translateY(0)' : 'translateY(120%)'}`,
+        width: '90%',
+        maxWidth: '350px',
+      }}
+    >
+      <div
+        className="bg-[#111111] border border-[#C5A04E]/30 rounded-2xl px-4 py-3 flex items-center gap-3"
+        style={{ boxShadow: '0 8px 30px rgba(0,0,0,0.5), 0 0 15px rgba(197,160,78,0.15)' }}
+        dir="rtl"
+      >
+        {/* Avatar with flag */}
+        <div className="relative shrink-0">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#C5A04E]/30 to-[#C5A04E]/10 flex items-center justify-center border border-[#C5A04E]/20">
+            <span className="text-[#C5A04E] text-sm font-bold">{currentPerson.name.charAt(0)}</span>
+          </div>
+          <span className="absolute -bottom-0.5 -left-0.5 text-xs" style={{ fontSize: '14px', lineHeight: 1 }}>{currentPerson.flag}</span>
         </div>
 
-        {/* Slots grid */}
-        <PromoSlots total={total} taken={taken} newlyTaken={newlyTaken} />
-
-        {/* Dynamic text */}
-        <p className={`text-center text-lg font-bold ${statusColor}`}>
-          {statusText}
-        </p>
-
-        {/* Countdown */}
-        {startedAt && remaining > 0 && (
-          <PromoCountdown startedAt={startedAt} dureeHeures={dureeHeures} />
-        )}
+        {/* Text */}
+        <div className="flex-1 min-w-0">
+          <p className="text-white text-sm font-bold truncate">
+            <span className="text-green-400">✅</span>{' '}
+            {currentPerson.name} {currentPerson.flag} {verb} للتو
+          </p>
+          <p className="text-gray-500 text-xs">منذ لحظات</p>
+        </div>
       </div>
-    </section>
+    </div>
   );
 }
 
@@ -274,7 +357,7 @@ export default function HomePage() {
       .catch(() => setLoaded(true));
   }, []);
 
-  // Poll promo data every 15s when promo is active (for real-time slot updates)
+  // Poll promo data every 15s when promo is active
   useEffect(() => {
     if (!promoActive) return;
     const interval = setInterval(() => {
@@ -285,7 +368,6 @@ export default function HomePage() {
           setPromoSettings(s);
           setRegistrationsOpen(s.registrations_open ?? true);
           setClosedAt(s.registrations_closed_at || null);
-          // Check if promo was stopped by admin or auto-closed
           if (!s.promo_active) setPromoActive(false);
         })
         .catch(() => {});
@@ -306,18 +388,6 @@ export default function HomePage() {
           50% { box-shadow: 0 0 25px rgba(0,136,204,0.6); }
         }
         .animate-glow-telegram { animation: glow-telegram 2s ease-in-out infinite; }
-
-        @keyframes slot-flash {
-          0% { background-color: rgba(239,68,68,0.6); transform: scale(1.15); }
-          100% { background-color: rgba(69,10,10,0.8); transform: scale(1); }
-        }
-        .animate-slot-flash { animation: slot-flash 0.6s ease-out; }
-
-        @keyframes pulse-urgent {
-          0%, 100% { border-color: rgba(239,68,68,0.2); box-shadow: 0 0 4px rgba(239,68,68,0.1); }
-          50% { border-color: rgba(239,68,68,0.6); box-shadow: 0 0 12px rgba(239,68,68,0.3); }
-        }
-        .animate-pulse-urgent { animation: pulse-urgent 1.2s ease-in-out infinite; }
       `}</style>
 
       {/* Header — ECOMY logo */}
@@ -327,10 +397,7 @@ export default function HomePage() {
         </h1>
       </header>
 
-      {/* PROMO SECTION — only when active */}
-      {showPromo && <PromoSection settings={promoSettings} />}
-
-      {/* 3-Card Grid — ALWAYS same layout */}
+      {/* 3-Card Grid */}
       <section className="flex-1 flex items-center justify-center w-full px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-[1050px] w-full md:auto-rows-[1fr]">
 
@@ -352,7 +419,6 @@ export default function HomePage() {
                     ابدأ الآن
                   </div>
                 </div>
-                {/* Dark overlay + badge */}
                 <div className="absolute inset-0 bg-black/80 flex items-center justify-center rounded-2xl">
                   <span className="bg-red-900/90 text-red-200 font-bold text-lg px-6 py-3 rounded-xl border border-red-700/50">
                     نفذت الأماكن
@@ -371,6 +437,8 @@ export default function HomePage() {
                     <span className="inline-block bg-[#C5A04E]/10 text-[#C5A04E] text-[11px] font-bold px-2.5 py-0.5 rounded-full">تخفيض %75</span>
                   </div>
                   <div className="flex-1" />
+                  {/* Compact promo info — only when promo active */}
+                  {showPromo && <CompactPromoInfo settings={promoSettings} />}
                   <div className="w-full text-center bg-[#10B981] group-hover:bg-[#0D9668] text-white text-[15px] font-bold py-3.5 rounded-xl transition-colors">
                     ابدأ الآن
                   </div>
@@ -397,7 +465,6 @@ export default function HomePage() {
                     احجز موعدك
                   </div>
                 </div>
-                {/* Dark overlay + badge */}
                 <div className="absolute inset-0 bg-black/80 flex items-center justify-center rounded-2xl">
                   <span className="bg-red-900/90 text-red-200 font-bold text-lg px-6 py-3 rounded-xl border border-red-700/50">
                     نفذت الأماكن
@@ -459,7 +526,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Closed registrations banner — BELOW the 3 cards */}
+      {/* Closed registrations banner */}
       {showClosed && (
         <section className="w-full px-4 pb-6">
           <div className="max-w-[1050px] mx-auto rounded-2xl border border-red-900/30 bg-[#0A0A0A] p-8 text-center space-y-4">
@@ -510,6 +577,14 @@ export default function HomePage() {
           Terms & Conditions
         </a>
       </footer>
+
+      {/* Social Proof Notifications — always active (two modes) */}
+      {loaded && registrationsOpen && (
+        <SocialProofNotification
+          promoActive={promoActive}
+          intervalMinutes={promoSettings.promo_interval_minutes || 20}
+        />
+      )}
     </main>
   );
 }
