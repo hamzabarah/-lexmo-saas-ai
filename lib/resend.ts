@@ -2,7 +2,7 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'noreply@lexmo.ai';
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'noreply@ecomy.ai';
 
 export async function sendActivationEmail(toEmail: string, plan: string = 'spark') {
     const isFormation = plan !== 'diagnostic';
@@ -60,7 +60,7 @@ export async function sendActivationEmail(toEmail: string, plan: string = 'spark
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td align="center" style="padding:10px 0 30px;">
-                                        <a href="https://lexmo.ai/register?email=${encodeURIComponent(toEmail)}" style="display:inline-block;background-color:${ctaColor};color:#ffffff;text-decoration:none;padding:16px 40px;border-radius:8px;font-size:18px;font-weight:bold;">
+                                        <a href="https://ecomy.ai/register?email=${encodeURIComponent(toEmail)}" style="display:inline-block;background-color:${ctaColor};color:#ffffff;text-decoration:none;padding:16px 40px;border-radius:8px;font-size:18px;font-weight:bold;">
                                             ${ctaText}
                                         </a>
                                     </td>
@@ -71,7 +71,7 @@ export async function sendActivationEmail(toEmail: string, plan: string = 'spark
 
                             <p style="margin:0;font-size:14px;color:#999999;text-align:center;line-height:1.8;">
                                 إذا كان لديك أي سؤال، تواصل معنا على
-                                <a href="mailto:lexmoacadmy@gmail.com" style="color:${ctaColor};text-decoration:none;">lexmoacadmy@gmail.com</a>
+                                <a href="mailto:academyfrance75@gmail.com" style="color:${ctaColor};text-decoration:none;">academyfrance75@gmail.com</a>
                             </p>
                         </td>
                     </tr>
@@ -152,7 +152,7 @@ export async function sendBookingConfirmationEmail(toEmail: string, bookingDate:
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td align="center" style="padding:10px 0 30px;">
-                                        <a href="https://lexmo.ai/dashboard/coaching" style="display:inline-block;background-color:#E8600A;color:#ffffff;text-decoration:none;padding:16px 40px;border-radius:8px;font-size:18px;font-weight:bold;">
+                                        <a href="https://ecomy.ai/dashboard/coaching" style="display:inline-block;background-color:#E8600A;color:#ffffff;text-decoration:none;padding:16px 40px;border-radius:8px;font-size:18px;font-weight:bold;">
                                             عرض تفاصيل الجلسة
                                         </a>
                                     </td>
@@ -161,7 +161,7 @@ export async function sendBookingConfirmationEmail(toEmail: string, bookingDate:
                             <hr style="border:none;border-top:1px solid #eeeeee;margin:20px 0;" />
                             <p style="margin:0;font-size:14px;color:#999999;text-align:center;line-height:1.8;">
                                 إذا كان لديك أي سؤال، تواصل معنا على
-                                <a href="mailto:lexmoacadmy@gmail.com" style="color:#E8600A;text-decoration:none;">lexmoacadmy@gmail.com</a>
+                                <a href="mailto:academyfrance75@gmail.com" style="color:#E8600A;text-decoration:none;">academyfrance75@gmail.com</a>
                             </p>
                         </td>
                     </tr>

@@ -301,7 +301,7 @@ export default function CoachingPage() {
     // =============================================
     if (isAdmin) {
         const DEMO_VISUAL_STEPS = [
-            { icon: "💳", text: "ادفع 97€ على lexmo.ai" },
+            { icon: "💳", text: "ادفع 97€ على ecomy.ai" },
             { icon: "📧", text: "توصلك رسالة على الإيميل ديالك" },
             { icon: "📝", text: "سجل حسابك في المنصة" },
             { icon: "📅", text: "اختار الموعد اللي يناسبك أنت" },

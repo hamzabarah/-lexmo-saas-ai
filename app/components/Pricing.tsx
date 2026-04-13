@@ -46,7 +46,7 @@ function PricingContent() {
                         price={hasAmbassadorCode ? "697" : "997"}
                         original={hasAmbassadorCode ? "997" : "1,997"}
                         features={[
-                            "نظام Lexmo.AI الأساسي",
+                            "نظام ECOMY الأساسي",
                             "دورة التجارة الإلكترونية الشاملة (10 وحدات)",
                             "قوالب صفحات المنتج الجاهزة",
                             "قائمة 100+ منتج رابح",

@@ -53,7 +53,7 @@ export default function Hero() {
                         transition={{ delay: 0.8 }}
                         className="text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed"
                     >
-                        وحقق استقلالك المالي مثل الآلاف غيرك باتباع منهجية Lexmo الجديدة
+                        وحقق استقلالك المالي مثل الآلاف غيرك باتباع منهجية ECOMY الجديدة
                     </motion.p>
 
                     <motion.div

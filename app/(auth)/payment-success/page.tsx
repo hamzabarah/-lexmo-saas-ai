@@ -35,8 +35,8 @@ export default function PaymentSuccessPage() {
             {/* Support */}
             <p className="mt-8 text-gray-500 text-sm">
                 إذا كان لديك أي سؤال، تواصل معنا على{" "}
-                <a href="mailto:lexmoacadmy@gmail.com" className="text-[#C5A04E] hover:underline">
-                    lexmoacadmy@gmail.com
+                <a href="mailto:academyfrance75@gmail.com" className="text-[#C5A04E] hover:underline">
+                    academyfrance75@gmail.com
                 </a>
             </p>
         </div>

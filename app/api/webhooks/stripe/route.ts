@@ -53,7 +53,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     // even if the database operation fails (e.g. CHECK constraint issue)
     console.log('🔍 [STEP 4] === SENDING EMAIL (PRIORITY) ===');
     console.log('🔍 [STEP 4] RESEND_API_KEY defined:', !!process.env.RESEND_API_KEY);
-    console.log('🔍 [STEP 4] RESEND_FROM_EMAIL:', process.env.RESEND_FROM_EMAIL || 'noreply@lexmo.ai (default)');
+    console.log('🔍 [STEP 4] RESEND_FROM_EMAIL:', process.env.RESEND_FROM_EMAIL || 'noreply@ecomy.ai (default)');
     console.log('🔍 [STEP 4] Sending to:', email, '| Plan:', plan);
 
     let emailSent = false;

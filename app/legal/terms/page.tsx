@@ -42,7 +42,7 @@ export default async function TermsPage() {
           {/* Article 1 */}
           <section>
             <h2 className="text-xl font-bold text-[#C5A04E] mb-3">Article 1 — Seller Identification and Scope</h2>
-            <p>These Terms and Conditions of Sale and Use (hereinafter &quot;T&amp;C&quot;) govern all contractual relationships between HAMZA SHOP (hereinafter &quot;the Seller&quot; or &quot;ECOMY&quot;) and any individual or legal entity purchasing a digital product or service through the platform accessible at lexmo.ai (hereinafter &quot;the Platform&quot;).</p>
+            <p>These Terms and Conditions of Sale and Use (hereinafter &quot;T&amp;C&quot;) govern all contractual relationships between HAMZA SHOP (hereinafter &quot;the Seller&quot; or &quot;ECOMY&quot;) and any individual or legal entity purchasing a digital product or service through the platform accessible at ecomy.ai (hereinafter &quot;the Platform&quot;).</p>
             <p className="mt-3">By completing any purchase on the Platform, the Customer fully, unconditionally and unreservedly accepts these T&amp;C in their entirety. The Customer declares having read these T&amp;C prior to any purchase. If the Customer disagrees with any provision herein, they are advised not to proceed with the purchase.</p>
             <p className="mt-3">These T&amp;C supersede all other documents, including any Customer purchase terms. The Seller reserves the right to modify these T&amp;C at any time. The applicable T&amp;C are those in force at the time of purchase.</p>
             <p className="mt-3">The Seller&apos;s full contact details are available in the Legal Notice section of the Platform.</p>
@@ -223,8 +223,8 @@ export default async function TermsPage() {
             <p><strong className="text-gray-500">Company name:</strong> HAMZA SHOP</p>
             <p><strong className="text-gray-500">Registered office:</strong> 808 Boulevard La Grand Delle, 14200 Hérouville-Saint-Clair, France</p>
             <p><strong className="text-gray-500">RCS number:</strong> 842 966 145 R.C.S. Caen</p>
-            <p><strong className="text-gray-500">Contact:</strong> lexmoacadmy@gmail.com</p>
-            <p><strong className="text-gray-500">Platform:</strong> lexmo.ai</p>
+            <p><strong className="text-gray-500">Contact:</strong> academyfrance75@gmail.com</p>
+            <p><strong className="text-gray-500">Platform:</strong> ecomy.ai</p>
             <p className="mt-4 text-gray-700">© 2026 ECOMY — HAMZA SHOP. All rights reserved.</p>
           </div>
         )}

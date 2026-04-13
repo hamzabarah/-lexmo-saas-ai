@@ -946,7 +946,7 @@ function Phase11ShopifyGuide() {
                 </Paragraph>
                 <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20">
                     <p className="text-[#C5A04E] font-bold leading-relaxed text-center">
-                        © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                        © ECOMY Academy 2026 — جميع الحقوق محفوظة
                     </p>
                 </div>
             </div>
@@ -1407,7 +1407,7 @@ function Phase12ImportProduct() {
                 </Paragraph>
                 <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20">
                     <p className="text-[#C5A04E] font-bold leading-relaxed text-center">
-                        © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                        © ECOMY Academy 2026 — جميع الحقوق محفوظة
                     </p>
                 </div>
             </div>
@@ -2024,7 +2024,7 @@ function Phase13StoreDesign() {
                 </Paragraph>
                 <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20">
                     <p className="text-[#C5A04E] font-bold leading-relaxed text-center">
-                        © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                        © ECOMY Academy 2026 — جميع الحقوق محفوظة
                     </p>
                 </div>
             </div>
@@ -2770,7 +2770,7 @@ function Phase14EssentialApps() {
                 </Paragraph>
                 <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20">
                     <p className="text-[#C5A04E] font-bold leading-relaxed text-center">
-                        © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                        © ECOMY Academy 2026 — جميع الحقوق محفوظة
                     </p>
                 </div>
             </div>
@@ -3477,7 +3477,7 @@ function Phase22AdCampaign() {
                 </Paragraph>
                 <div className="bg-[#C5A04E]/10 rounded-xl p-4 border border-[#C5A04E]/20">
                     <p className="text-[#C5A04E] font-bold leading-relaxed text-center">
-                        © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                        © ECOMY Academy 2026 — جميع الحقوق محفوظة
                     </p>
                 </div>
             </div>
@@ -3635,7 +3635,7 @@ function Phase23AdMetrics() {
             <Divider />
             <div className="text-center pt-4">
                 <p className="text-sm text-gray-500">
-                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                    © ECOMY Academy 2026 — جميع الحقوق محفوظة
                 </p>
             </div>
         </div>
@@ -3796,7 +3796,7 @@ function Phase23DashboardReading() {
             <Divider />
             <div className="text-center pt-4">
                 <p className="text-sm text-gray-500">
-                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                    © ECOMY Academy 2026 — جميع الحقوق محفوظة
                 </p>
             </div>
         </div>
@@ -3956,7 +3956,7 @@ function Phase23CustomizeColumns() {
             <Divider />
             <div className="text-center pt-4">
                 <p className="text-sm text-gray-500">
-                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                    © ECOMY Academy 2026 — جميع الحقوق محفوظة
                 </p>
             </div>
         </div>
@@ -4173,7 +4173,7 @@ function Phase23SuccessFailure() {
             <Divider />
             <div className="text-center pt-4">
                 <p className="text-sm text-gray-500">
-                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                    © ECOMY Academy 2026 — جميع الحقوق محفوظة
                 </p>
             </div>
         </div>
@@ -4393,7 +4393,7 @@ function Phase23Scaling() {
             <Divider />
             <div className="text-center pt-4">
                 <p className="text-sm text-gray-500">
-                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                    © ECOMY Academy 2026 — جميع الحقوق محفوظة
                 </p>
             </div>
         </div>
@@ -4613,7 +4613,7 @@ function Phase23StopCampaign() {
             <Divider />
             <div className="text-center pt-4">
                 <p className="text-sm text-gray-500">
-                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                    © ECOMY Academy 2026 — جميع الحقوق محفوظة
                 </p>
             </div>
         </div>
@@ -4832,7 +4832,7 @@ function Phase23AdjustCampaign() {
             <Divider />
             <div className="text-center pt-4">
                 <p className="text-sm text-gray-500">
-                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                    © ECOMY Academy 2026 — جميع الحقوق محفوظة
                 </p>
             </div>
         </div>
@@ -5051,7 +5051,7 @@ function Phase23FunnelAnalysis() {
             <Divider />
             <div className="text-center pt-4">
                 <p className="text-sm text-gray-500">
-                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                    © ECOMY Academy 2026 — جميع الحقوق محفوظة
                 </p>
             </div>
         </div>
@@ -5280,7 +5280,7 @@ function Phase23Profitability() {
             <Divider />
             <div className="text-center pt-4">
                 <p className="text-sm text-gray-500">
-                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                    © ECOMY Academy 2026 — جميع الحقوق محفوظة
                 </p>
             </div>
         </div>
@@ -5447,7 +5447,7 @@ function Phase23CommonMistakes() {
             <Divider />
             <div className="text-center pt-4">
                 <p className="text-sm text-gray-500">
-                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                    © ECOMY Academy 2026 — جميع الحقوق محفوظة
                 </p>
             </div>
         </div>
@@ -5713,7 +5713,7 @@ function Phase23PracticalExample() {
 
             <div className="mt-6 pt-4 border-t border-[#C5A04E]/10 text-center">
                 <p className="text-[#C5A04E]/40 text-xs">
-                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                    © ECOMY Academy 2026 — جميع الحقوق محفوظة
                 </p>
             </div>
         </div>
@@ -5917,7 +5917,7 @@ function Phase23DailyChecklist() {
 
             <div className="mt-6 pt-4 border-t border-[#C5A04E]/10 text-center">
                 <p className="text-[#C5A04E]/40 text-xs">
-                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                    © ECOMY Academy 2026 — جميع الحقوق محفوظة
                 </p>
             </div>
         </div>
@@ -6400,7 +6400,7 @@ function Phase25VideoAd() {
 
             <div className="text-center mt-10 pt-6 border-t border-[#C5A04E]/10">
                 <p className="text-gray-600 text-sm">
-                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                    © ECOMY Academy 2026 — جميع الحقوق محفوظة
                 </p>
             </div>
         </div>
@@ -6684,7 +6684,7 @@ function Phase25TestStrategies() {
 
             <div className="text-center mt-10 pt-6 border-t border-[#C5A04E]/10">
                 <p className="text-gray-600 text-sm">
-                    © Lexmo Academy 2026 — جميع الحقوق محفوظة
+                    © ECOMY Academy 2026 — جميع الحقوق محفوظة
                 </p>
             </div>
         </div>
@@ -6757,7 +6757,7 @@ function Phase26Metrics() {
             </div>
 
             <Divider />
-            <p className="text-center text-gray-600 text-sm mt-8">© Lexmo Academy 2026 — جميع الحقوق محفوظة</p>
+            <p className="text-center text-gray-600 text-sm mt-8">© ECOMY Academy 2026 — جميع الحقوق محفوظة</p>
         </div>
     );
 }
@@ -6848,7 +6848,7 @@ function Phase26ProfitLoss() {
             </div>
 
             <Divider />
-            <p className="text-center text-gray-600 text-sm mt-8">© Lexmo Academy 2026 — جميع الحقوق محفوظة</p>
+            <p className="text-center text-gray-600 text-sm mt-8">© ECOMY Academy 2026 — جميع الحقوق محفوظة</p>
         </div>
     );
 }
@@ -6922,7 +6922,7 @@ function Phase26ScaleUp() {
             ]} />
 
             <Divider />
-            <p className="text-center text-gray-600 text-sm mt-8">© Lexmo Academy 2026 — جميع الحقوق محفوظة</p>
+            <p className="text-center text-gray-600 text-sm mt-8">© ECOMY Academy 2026 — جميع الحقوق محفوظة</p>
         </div>
     );
 }
@@ -6992,7 +6992,7 @@ function Phase26FailedCampaign() {
             </div>
 
             <Divider />
-            <p className="text-center text-gray-600 text-sm mt-8">© Lexmo Academy 2026 — جميع الحقوق محفوظة</p>
+            <p className="text-center text-gray-600 text-sm mt-8">© ECOMY Academy 2026 — جميع الحقوق محفوظة</p>
         </div>
     );
 }
@@ -7080,7 +7080,7 @@ function Phase26RealProfit() {
             ]} />
 
             <Divider />
-            <p className="text-center text-gray-600 text-sm mt-8">© Lexmo Academy 2026 — جميع الحقوق محفوظة</p>
+            <p className="text-center text-gray-600 text-sm mt-8">© ECOMY Academy 2026 — جميع الحقوق محفوظة</p>
         </div>
     );
 }
@@ -7335,7 +7335,7 @@ function Phase26Practical5Days() {
             </div>
 
             <Divider />
-            <p className="text-center text-gray-600 text-sm mt-8">© Lexmo Academy 2026 — جميع الحقوق محفوظة</p>
+            <p className="text-center text-gray-600 text-sm mt-8">© ECOMY Academy 2026 — جميع الحقوق محفوظة</p>
         </div>
     );
 }

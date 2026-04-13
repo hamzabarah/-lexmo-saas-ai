@@ -151,7 +151,7 @@ export default function AdminPage() {
     const router = useRouter();
 
     const ADMIN_EMAIL = 'academyfrance75@gmail.com';
-    const LOGIN_URL = 'https://ecomy.vercel.app/#login';
+    const LOGIN_URL = 'https://ecomy.ai/#login';
 
     useEffect(() => {
         checkUser();
