@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 function StarRating({ count, total }: { count: number; total: string }) {
   return (
@@ -50,78 +50,7 @@ function ClosedTimer({ closedAt }: { closedAt: string }) {
 }
 
 /* ═══════════════════════════════════════════════
-   COMPACT PROMO INFO (counter + inline timer)
-   Shows inside the formation card, above CTA
-   ═══════════════════════════════════════════════ */
-function CompactPromoInfo({ settings }: { settings: any }) {
-  const {
-    promo_places_total: total = 12,
-    promo_places_prises: serverTaken = 0,
-    promo_duree_heures: dureeHeures = 48,
-    promo_interval_minutes: intervalMinutes = 20,
-    promo_started_at: startedAt,
-  } = settings;
-
-  const [simulatedExtra, setSimulatedExtra] = useState(0);
-  const [timer, setTimer] = useState({ h: 0, m: 0, s: 0 });
-  const [expired, setExpired] = useState(false);
-
-  useEffect(() => {
-    if (!startedAt || !intervalMinutes) return;
-    function calc() {
-      const elapsed = Date.now() - new Date(startedAt).getTime();
-      return Math.max(0, Math.floor(elapsed / (intervalMinutes * 60000)));
-    }
-    setSimulatedExtra(calc());
-    const iv = setInterval(() => setSimulatedExtra(calc()), 10000);
-    return () => clearInterval(iv);
-  }, [startedAt, intervalMinutes]);
-
-  useEffect(() => {
-    if (!startedAt) return;
-    const endTime = new Date(startedAt).getTime() + dureeHeures * 3600000;
-    function tick() {
-      const rem = endTime - Date.now();
-      if (rem <= 0) { setExpired(true); setTimer({ h: 0, m: 0, s: 0 }); return; }
-      setTimer({
-        h: Math.floor(rem / 3600000),
-        m: Math.floor((rem % 3600000) / 60000),
-        s: Math.floor((rem % 60000) / 1000),
-      });
-    }
-    tick();
-    const iv = setInterval(tick, 1000);
-    return () => clearInterval(iv);
-  }, [startedAt, dureeHeures]);
-
-  const taken = Math.min(serverTaken + simulatedExtra, total);
-  const remaining = total - taken;
-  if (remaining <= 0 || expired) return null;
-
-  const isUrgent = remaining <= 3;
-  const pad = (n: number) => String(n).padStart(2, '0');
-
-  return (
-    <div className="space-y-2 mb-2">
-      <div className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg ${isUrgent ? 'bg-red-950/60 border border-red-800/40' : 'bg-[#C5A04E]/10 border border-[#C5A04E]/20'}`}>
-        <span className="text-base">🔥</span>
-        <span className={`font-bold text-sm ${isUrgent ? 'text-red-400 animate-pulse' : 'text-[#C5A04E]'}`}>
-          باقي {remaining} أماكن فقط
-        </span>
-      </div>
-      <div className="flex items-center justify-center gap-1.5 text-gray-400 text-xs">
-        <span>⏳</span>
-        <span>ينتهي العرض خلال</span>
-        <span className={`font-bold ${isUrgent ? 'text-red-400' : 'text-[#ffd700]'}`} style={{ fontFamily: 'Inter, monospace' }}>
-          {pad(timer.h)}:{pad(timer.m)}:{pad(timer.s)}
-        </span>
-      </div>
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════
-   NAMES LIST + COUNTRY MAP (shared data)
+   NAMES + COUNTRY MAP (for last registration)
    ═══════════════════════════════════════════════ */
 const NAMES: { name: string; gender: 'm' | 'f'; flag: string }[] = [
   { name: 'أحمد', gender: 'm', flag: '🇫🇷' },
@@ -223,107 +152,39 @@ const FLAG_TO_COUNTRY: Record<string, string> = {
   '🇰🇼': 'الكويت', '🇶🇦': 'قطر', '🇧🇭': 'البحرين', '🇴🇲': 'عُمان',
 };
 
-function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-function formatEntry(p: typeof NAMES[0]) {
-  const verb = p.gender === 'f' ? 'انضمت' : 'انضم';
-  const country = FLAG_TO_COUNTRY[p.flag] || '';
-  return `✅ ${p.name} من ${country} ${p.flag} ${verb}`;
-}
-
 /* ═══════════════════════════════════════════════
-   ACTIVITY TICKER — scrolling band at top
+   PROMO CARD INFO — all promo elements inside
+   the formation card (places, timer, viewers,
+   last registration)
    ═══════════════════════════════════════════════ */
-function ActivityTicker() {
-  const tickerText = useMemo(() => {
-    const shuffled = shuffle(NAMES);
-    // Take 30 names for a good-length ticker, repeat set for seamless loop
-    const entries = shuffled.slice(0, 30).map(p => formatEntry(p));
-    return entries.join('  •  ');
-  }, []);
+function PromoCardInfo({ settings }: { settings: any }) {
+  const {
+    promo_places_total: total = 12,
+    promo_places_prises: serverTaken = 0,
+    promo_duree_heures: dureeHeures = 48,
+    promo_interval_minutes: intervalMinutes = 20,
+    promo_started_at: startedAt,
+  } = settings;
 
-  return (
-    <div className="w-full bg-[#111111] border-b border-[#C5A04E]/10 overflow-hidden" style={{ height: '42px' }}>
-      <div className="ticker-track flex items-center h-full whitespace-nowrap">
-        <span className="ticker-content text-gray-300 text-sm px-4" style={{ fontFamily: 'Cairo, sans-serif' }}>
-          {tickerText}  •
-        </span>
-        <span className="ticker-content text-gray-300 text-sm px-4" style={{ fontFamily: 'Cairo, sans-serif' }}>
-          {tickerText}  •
-        </span>
-      </div>
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════
-   VIEWER COUNT BADGE — live viewers pill
-   ═══════════════════════════════════════════════ */
-function ViewerCountBadge({ promoActive, placesRemaining }: { promoActive: boolean; placesRemaining?: number }) {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    const min = promoActive ? 30 : 5;
-    const max = promoActive ? 85 : 20;
-    // Initial value
-    setCount(min + Math.floor(Math.random() * (max - min)));
-
-    const iv = setInterval(() => {
-      setCount(prev => {
-        const delta = Math.floor(Math.random() * 5) + 1;
-        const direction = Math.random() > 0.5 ? 1 : -1;
-        let next = prev + delta * direction;
-
-        // When few places remain, bias upward
-        if (promoActive && placesRemaining !== undefined && placesRemaining <= 5) {
-          next = prev + Math.floor(Math.random() * 4) + 1;
-        }
-
-        // Clamp
-        if (next < min) next = min + Math.floor(Math.random() * 3);
-        if (next > max) next = max - Math.floor(Math.random() * 3);
-        return next;
-      });
-    }, (8 + Math.random() * 7) * 1000); // 8-15s
-
-    return () => clearInterval(iv);
-  }, [promoActive, placesRemaining]);
-
-  if (count === 0) return null;
-
-  return (
-    <div className="flex items-center justify-center">
-      <div className="inline-flex items-center gap-2 bg-[#111111] border border-white/10 rounded-full px-4 py-1.5">
-        <span className="relative flex h-2.5 w-2.5">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500" />
-        </span>
-        <span className="text-white text-[13px] font-semibold" style={{ fontFamily: 'Cairo, sans-serif' }}>
-          {count} شخص يشاهد الآن
-        </span>
-      </div>
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════
-   LIVE REGISTRATIONS LIST — last 5 entries
-   ═══════════════════════════════════════════════ */
-function LiveRegistrationsList({ promoActive, promoSettings }: { promoActive: boolean; promoSettings: any }) {
-  const [entries, setEntries] = useState<{ person: typeof NAMES[0]; time: number }[]>([]);
+  const [simulatedExtra, setSimulatedExtra] = useState(0);
+  const [timer, setTimer] = useState({ h: 0, m: 0, s: 0 });
+  const [expired, setExpired] = useState(false);
+  const [viewerCount, setViewerCount] = useState(0);
+  const [lastPerson, setLastPerson] = useState<typeof NAMES[0] | null>(null);
+  const [lastTime, setLastTime] = useState(0);
   const shuffledRef = useRef<typeof NAMES>([]);
   const indexRef = useRef(0);
+  const [, setTick] = useState(0);
 
+  // Shuffle helper
   const getNext = useCallback(() => {
     if (indexRef.current >= shuffledRef.current.length) {
-      shuffledRef.current = shuffle(NAMES);
+      const a = [...NAMES];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      shuffledRef.current = a;
       indexRef.current = 0;
     }
     const p = shuffledRef.current[indexRef.current];
@@ -331,68 +192,119 @@ function LiveRegistrationsList({ promoActive, promoSettings }: { promoActive: bo
     return p;
   }, []);
 
+  // Initial shuffle
   useEffect(() => {
-    shuffledRef.current = shuffle(NAMES);
+    const a = [...NAMES];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    shuffledRef.current = a;
+  }, []);
 
-    if (promoActive && promoSettings.promo_started_at && promoSettings.promo_interval_minutes) {
-      // Promo mode: calculate simulated registrations from start time
-      const startMs = new Date(promoSettings.promo_started_at).getTime();
-      const intervalMs = promoSettings.promo_interval_minutes * 60000;
+  // Simulated slots
+  useEffect(() => {
+    if (!startedAt || !intervalMinutes) return;
+    function calc() {
+      const elapsed = Date.now() - new Date(startedAt).getTime();
+      return Math.max(0, Math.floor(elapsed / (intervalMinutes * 60000)));
+    }
+    setSimulatedExtra(calc());
+    const iv = setInterval(() => setSimulatedExtra(calc()), 10000);
+    return () => clearInterval(iv);
+  }, [startedAt, intervalMinutes]);
+
+  // Countdown timer
+  useEffect(() => {
+    if (!startedAt) return;
+    const endTime = new Date(startedAt).getTime() + dureeHeures * 3600000;
+    function tick() {
+      const rem = endTime - Date.now();
+      if (rem <= 0) { setExpired(true); setTimer({ h: 0, m: 0, s: 0 }); return; }
+      setTimer({
+        h: Math.floor(rem / 3600000),
+        m: Math.floor((rem % 3600000) / 60000),
+        s: Math.floor((rem % 60000) / 1000),
+      });
+    }
+    tick();
+    const iv = setInterval(tick, 1000);
+    return () => clearInterval(iv);
+  }, [startedAt, dureeHeures]);
+
+  // Viewer count (30-85, varies ±1-5 every 8-15s)
+  useEffect(() => {
+    setViewerCount(30 + Math.floor(Math.random() * 55));
+    const iv = setInterval(() => {
+      setViewerCount(prev => {
+        const delta = Math.floor(Math.random() * 5) + 1;
+        const dir = Math.random() > 0.45 ? 1 : -1;
+        let next = prev + delta * dir;
+        if (next < 30) next = 30 + Math.floor(Math.random() * 3);
+        if (next > 85) next = 85 - Math.floor(Math.random() * 3);
+        return next;
+      });
+    }, (8 + Math.random() * 7) * 1000);
+    return () => clearInterval(iv);
+  }, []);
+
+  // Last registration: show the most recent simulated one
+  useEffect(() => {
+    if (!startedAt || !intervalMinutes) return;
+    const startMs = new Date(startedAt).getTime();
+    const intervalMs = intervalMinutes * 60000;
+
+    function updateLast() {
       const elapsed = Date.now() - startMs;
-      const totalSimulated = Math.max(0, Math.floor(elapsed / intervalMs));
-
-      // Generate last 5 entries with real timings
-      const initial: { person: typeof NAMES[0]; time: number }[] = [];
-      for (let i = Math.max(0, totalSimulated - 5); i < totalSimulated; i++) {
-        const entryTime = startMs + i * intervalMs;
-        initial.push({ person: getNext(), time: entryTime });
-      }
-      setEntries(initial.reverse()); // newest first
-
-      // Check for new simulated entries periodically
-      const iv = setInterval(() => {
-        const now = Date.now();
-        const currentCount = Math.floor((now - startMs) / intervalMs);
-        setEntries(prev => {
-          const newestTime = prev.length > 0 ? prev[0].time : 0;
-          const expectedNewestTime = startMs + (currentCount - 1) * intervalMs;
-          if (expectedNewestTime > newestTime && currentCount > 0) {
-            const newEntry = { person: getNext(), time: expectedNewestTime };
-            return [newEntry, ...prev].slice(0, 5);
-          }
+      const count = Math.floor(elapsed / intervalMs);
+      if (count > 0) {
+        const entryTime = startMs + (count - 1) * intervalMs;
+        setLastTime(entryTime);
+        // Only change person when count changes
+        setLastPerson(prev => {
+          if (!prev) return getNext();
           return prev;
         });
-      }, 10000);
-
-      return () => clearInterval(iv);
-    } else {
-      // Inactive mode: show 5 entries with fictional times
-      const now = Date.now();
-      const gaps = [2, 5, 12, 18, 25]; // minutes ago
-      const initial = gaps.map(g => ({
-        person: getNext(),
-        time: now - g * 60000,
-      }));
-      setEntries(initial);
-
-      // Add a new one every 30-45s
-      const iv = setInterval(() => {
-        setEntries(prev => {
-          const newEntry = { person: getNext(), time: Date.now() };
-          return [newEntry, ...prev].slice(0, 5);
-        });
-      }, (30 + Math.random() * 15) * 1000);
-
-      return () => clearInterval(iv);
+      }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [promoActive, promoSettings.promo_started_at, promoSettings.promo_interval_minutes]);
 
-  const [, setTick] = useState(0);
+    // Set initial person
+    const elapsed = Date.now() - startMs;
+    const count = Math.floor(elapsed / intervalMs);
+    if (count > 0) {
+      setLastPerson(getNext());
+      setLastTime(startMs + (count - 1) * intervalMs);
+    }
+
+    const iv = setInterval(() => {
+      const now = Date.now();
+      const currentCount = Math.floor((now - startMs) / intervalMs);
+      const currentEntryTime = startMs + (currentCount - 1) * intervalMs;
+      setLastTime(prev => {
+        if (currentEntryTime > prev && currentCount > 0) {
+          setLastPerson(getNext());
+          return currentEntryTime;
+        }
+        return prev;
+      });
+    }, 10000);
+
+    return () => clearInterval(iv);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [startedAt, intervalMinutes]);
+
+  // Re-render every 30s for time-ago updates
   useEffect(() => {
     const iv = setInterval(() => setTick(t => t + 1), 30000);
     return () => clearInterval(iv);
   }, []);
+
+  const taken = Math.min(serverTaken + simulatedExtra, total);
+  const remaining = total - taken;
+  if (remaining <= 0 || expired) return null;
+
+  const isUrgent = remaining <= 3;
+  const pad = (n: number) => String(n).padStart(2, '0');
 
   function timeAgo(ts: number) {
     const diff = Math.max(0, Math.floor((Date.now() - ts) / 60000));
@@ -403,34 +315,35 @@ function LiveRegistrationsList({ promoActive, promoSettings }: { promoActive: bo
     return `منذ ${diff} دقيقة`;
   }
 
-  if (entries.length === 0) return null;
-
   return (
-    <section className="w-full px-4 pb-6">
-      <div className="max-w-[500px] mx-auto">
-        <h3 className="text-white text-base font-bold mb-3 text-center">📋 آخر التسجيلات</h3>
-        <div className="bg-[#111111] border border-[#C5A04E]/15 rounded-2xl overflow-hidden">
-          {entries.map((entry, i) => {
-            const verb = entry.person.gender === 'f' ? 'انضمت' : 'انضم';
-            const country = FLAG_TO_COUNTRY[entry.person.flag] || '';
-            return (
-              <div
-                key={`${entry.person.name}-${entry.time}-${i}`}
-                className={`flex items-center justify-between px-4 py-3 ${i < entries.length - 1 ? 'border-b border-white/5' : ''} ${i === 0 ? 'animate-fade-in' : ''}`}
-              >
-                <div className="flex items-center gap-2 min-w-0">
-                  <span className="text-green-400 text-sm shrink-0">✅</span>
-                  <span className="text-white text-sm truncate">
-                    {entry.person.name} من {country} {entry.person.flag}
-                  </span>
-                </div>
-                <span className="text-gray-500 text-xs shrink-0 mr-3">{timeAgo(entry.time)}</span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
+    <div className="space-y-2.5 mb-3 pt-1">
+      {/* 1. Places counter */}
+      <p className={`text-center font-bold text-[13px] ${isUrgent ? 'text-red-400' : 'text-[#E8600A]'}`}>
+        🔥 باقي {remaining} أماكن فقط
+      </p>
+
+      {/* 2. Timer */}
+      <p className="text-center text-gray-500 text-xs">
+        ⏳ ينتهي العرض خلال{' '}
+        <span className={`font-bold ${isUrgent ? 'text-red-400' : 'text-gray-300'}`} style={{ fontFamily: 'Inter, monospace' }}>
+          {pad(timer.h)}:{pad(timer.m)}:{pad(timer.s)}
+        </span>
+      </p>
+
+      {/* 3. Viewers */}
+      {viewerCount > 0 && (
+        <p className="text-center text-gray-500 text-xs">
+          👁 {viewerCount} شخص يشاهد هذا العرض الآن
+        </p>
+      )}
+
+      {/* 4. Last registration */}
+      {lastPerson && lastTime > 0 && (
+        <p className="text-center text-gray-500 text-xs">
+          ✅ آخر تسجيل : {lastPerson.name} من {FLAG_TO_COUNTRY[lastPerson.flag] || ''} {lastPerson.flag} — {timeAgo(lastTime)}
+        </p>
+      )}
+    </div>
   );
 }
 
@@ -479,17 +392,6 @@ export default function HomePage() {
   const showClosed = loaded && !registrationsOpen;
   const showPromo = loaded && promoActive && registrationsOpen;
 
-  // Calculate remaining places for viewer badge pressure
-  const placesRemaining = useMemo(() => {
-    if (!promoActive || !promoSettings.promo_started_at) return undefined;
-    const total = promoSettings.promo_places_total || 12;
-    const serverTaken = promoSettings.promo_places_prises || 0;
-    const intervalMin = promoSettings.promo_interval_minutes || 20;
-    const elapsed = Date.now() - new Date(promoSettings.promo_started_at).getTime();
-    const simulated = Math.floor(elapsed / (intervalMin * 60000));
-    return Math.max(0, total - Math.min(serverTaken + simulated, total));
-  }, [promoActive, promoSettings]);
-
   return (
     <main className="min-h-screen bg-[#0A0A0A] font-cairo flex flex-col items-center" dir="rtl">
 
@@ -500,41 +402,16 @@ export default function HomePage() {
           50% { box-shadow: 0 0 25px rgba(0,136,204,0.6); }
         }
         .animate-glow-telegram { animation: glow-telegram 2s ease-in-out infinite; }
-
-        @keyframes ticker-scroll {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .ticker-track {
-          animation: ticker-scroll 60s linear infinite;
-          width: max-content;
-        }
-
-        @keyframes fade-in {
-          from { opacity: 0; transform: translateY(-8px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in { animation: fade-in 0.4s ease-out; }
       `}</style>
 
-      {/* 1. Activity Ticker — scrolling band */}
-      {loaded && <ActivityTicker />}
-
-      {/* 2. Header — ECOMY logo */}
+      {/* Header — ECOMY logo */}
       <header className="w-full py-10 flex justify-center">
         <h1 className="text-3xl font-bold font-orbitron tracking-tighter text-[#C5A04E]">
           ECOMY
         </h1>
       </header>
 
-      {/* 3. Viewer Count Badge */}
-      {loaded && (
-        <div className="pb-4">
-          <ViewerCountBadge promoActive={promoActive} placesRemaining={placesRemaining} />
-        </div>
-      )}
-
-      {/* 4. 3-Card Grid */}
+      {/* 3-Card Grid */}
       <section className="flex-1 flex items-center justify-center w-full px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-[1050px] w-full md:auto-rows-[1fr]">
 
@@ -574,7 +451,8 @@ export default function HomePage() {
                     <span className="inline-block bg-[#C5A04E]/10 text-[#C5A04E] text-[11px] font-bold px-2.5 py-0.5 rounded-full">تخفيض %75</span>
                   </div>
                   <div className="flex-1" />
-                  {showPromo && <CompactPromoInfo settings={promoSettings} />}
+                  {/* Promo info — only when promo active */}
+                  {showPromo && <PromoCardInfo settings={promoSettings} />}
                   <div className="w-full text-center bg-[#10B981] group-hover:bg-[#0D9668] text-white text-[15px] font-bold py-3.5 rounded-xl transition-colors">
                     ابدأ الآن
                   </div>
@@ -690,11 +568,6 @@ export default function HomePage() {
             </a>
           </div>
         </section>
-      )}
-
-      {/* 5. Live Registrations List */}
-      {loaded && registrationsOpen && (
-        <LiveRegistrationsList promoActive={promoActive} promoSettings={promoSettings} />
       )}
 
       {/* Telegram Community Banner */}
