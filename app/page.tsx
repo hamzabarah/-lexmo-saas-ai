@@ -635,6 +635,42 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Shopify Affiliate Banner — always visible */}
+      <section className="w-full px-4 pb-6">
+        <a
+          href="https://shopify.pxf.io/WO4qKJ"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group relative max-w-[1050px] mx-auto flex flex-col md:flex-row items-center gap-5 bg-[#0A0A0A] border border-[#95BF47]/20 rounded-2xl p-6 hover:border-[#95BF47]/50 transition-all duration-300"
+          style={{ boxShadow: '0 4px 20px rgba(149,191,71,0.08)' }}
+        >
+          {/* Badge */}
+          <div className="absolute -top-3 right-6 bg-[#95BF47] text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-lg">
+            🎁 مجاني
+          </div>
+
+          {/* Shopify Icon */}
+          <div className="shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-[#95BF47]/10 border border-[#95BF47]/20 flex items-center justify-center">
+            <svg className="w-10 h-10 md:w-12 md:h-12 text-[#95BF47]" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M15.337 23.979l7.216-1.561s-2.604-17.613-2.625-17.73c-.018-.116-.138-.192-.233-.192s-1.963-.135-1.963-.135-1.301-1.3-1.446-1.445c-.039-.04-.078-.06-.118-.073l-.955 21.136zM11.727 7.236l-.693 2.391s-.77-.366-1.7-.366c-1.378 0-1.446.865-1.446 1.083 0 1.188 3.096 1.644 3.096 4.428 0 2.19-1.39 3.6-3.263 3.6-2.248 0-3.394-1.398-3.394-1.398l.6-1.983s1.183.997 2.178.997c.65 0 .916-.512.916-.886 0-1.55-2.54-1.617-2.54-4.168 0-2.143 1.539-4.218 4.64-4.218.793 0 1.606.362 1.606.362v.158z"/>
+            </svg>
+          </div>
+
+          {/* Text content */}
+          <div className="flex-1 text-center md:text-right">
+            <h3 className="text-white font-bold text-[17px] mb-1">🛒 ابدأ متجرك الإلكتروني مجاناً</h3>
+            <p className="text-gray-400 text-sm">جرّب شوبيفاي مجاناً — 1€ فقط لمدة 3 أشهر</p>
+          </div>
+
+          {/* CTA Button */}
+          <div className="shrink-0">
+            <div className="bg-[#95BF47] group-hover:bg-[#7AB55C] text-white font-bold text-[15px] px-8 py-3.5 rounded-xl transition-colors whitespace-nowrap">
+              🚀 ابدأ الآن مجاناً
+            </div>
+          </div>
+        </a>
+      </section>
+
       {/* Closed registrations banner */}
       {showClosed && (
         <section className="w-full px-4 pb-6">
