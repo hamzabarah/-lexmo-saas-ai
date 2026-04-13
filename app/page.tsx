@@ -316,33 +316,49 @@ function PromoCardInfo({ settings }: { settings: any }) {
   }
 
   return (
-    <div className="space-y-2.5 mb-3 pt-1">
-      {/* 1. Places counter */}
-      <p className={`text-center font-bold text-[13px] ${isUrgent ? 'text-red-400' : 'text-[#E8600A]'}`}>
-        🔥 باقي {remaining} أماكن فقط
-      </p>
-
-      {/* 2. Timer */}
-      <p className="text-center text-gray-500 text-xs">
-        ⏳ ينتهي العرض خلال{' '}
-        <span className={`font-bold ${isUrgent ? 'text-red-400' : 'text-gray-300'}`} style={{ fontFamily: 'Inter, monospace' }}>
-          {pad(timer.h)}:{pad(timer.m)}:{pad(timer.s)}
+    <div className="rounded-xl bg-[#111111]/60 border border-[#C5A04E]/10 p-3.5 mb-3 space-y-3">
+      {/* 1. Places counter — with pulse glow */}
+      <div className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg animate-promo-pulse ${isUrgent ? 'bg-red-950/60 border border-red-800/40' : 'bg-[#E8600A]/10 border border-[#E8600A]/25'}`}>
+        <span className="text-sm">🔥</span>
+        <span className={`font-bold text-[13px] ${isUrgent ? 'text-red-400' : 'text-[#E8600A]'}`}>
+          باقي {remaining} أماكن فقط
         </span>
-      </p>
+      </div>
 
-      {/* 3. Viewers */}
-      {viewerCount > 0 && (
-        <p className="text-center text-gray-500 text-xs">
-          👁 {viewerCount} شخص يشاهد هذا العرض الآن
-        </p>
-      )}
+      {/* 2. Timer — block digits */}
+      <div className="text-center">
+        <p className="text-gray-500 text-[11px] mb-1.5">⏳ ينتهي العرض خلال</p>
+        <div className="flex justify-center gap-1.5" dir="ltr">
+          {[
+            { val: timer.h, label: 'ساعات' },
+            { val: timer.m, label: 'دقائق' },
+            { val: timer.s, label: 'ثواني' },
+          ].map((item, i) => (
+            <div key={i} className="text-center">
+              <div className="bg-[#1A1A1A] border border-white/5 rounded-lg px-2.5 py-1.5 min-w-[42px]">
+                <span className={`text-lg font-bold ${isUrgent ? 'text-red-400' : 'text-white'}`} style={{ fontFamily: 'Inter, monospace' }}>
+                  {pad(item.val)}
+                </span>
+              </div>
+              <span className="text-[9px] text-gray-600 mt-0.5 block">{item.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
 
-      {/* 4. Last registration */}
-      {lastPerson && lastTime > 0 && (
-        <p className="text-center text-gray-500 text-xs">
-          ✅ آخر تسجيل : {lastPerson.name} من {FLAG_TO_COUNTRY[lastPerson.flag] || ''} {lastPerson.flag} — {timeAgo(lastTime)}
-        </p>
-      )}
+      {/* 3. Viewers + Last registration — subtle */}
+      <div className="space-y-1 pt-0.5">
+        {viewerCount > 0 && (
+          <p className="text-center text-gray-500 text-[11px]">
+            👁 {viewerCount} شخص يشاهد هذا العرض الآن
+          </p>
+        )}
+        {lastPerson && lastTime > 0 && (
+          <p className="text-center text-gray-500 text-[11px]">
+            ✅ آخر تسجيل : {lastPerson.name} من {FLAG_TO_COUNTRY[lastPerson.flag] || ''} {lastPerson.flag} — {timeAgo(lastTime)}
+          </p>
+        )}
+      </div>
     </div>
   );
 }
@@ -402,6 +418,12 @@ export default function HomePage() {
           50% { box-shadow: 0 0 25px rgba(0,136,204,0.6); }
         }
         .animate-glow-telegram { animation: glow-telegram 2s ease-in-out infinite; }
+
+        @keyframes promo-pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.85; }
+        }
+        .animate-promo-pulse { animation: promo-pulse 2s ease-in-out infinite; }
       `}</style>
 
       {/* Header — ECOMY logo */}
