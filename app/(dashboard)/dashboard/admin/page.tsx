@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js';
-import { Shield, Mail, AlertCircle, UserPlus, TrendingUp, Copy, Check, Settings, Eye, EyeOff, Calendar, Trash2, ChevronLeft, ChevronRight, X, MessageSquare, FileText, Send, Lock } from 'lucide-react';
+import { Shield, Mail, AlertCircle, UserPlus, TrendingUp, Copy, Check, Settings, Eye, EyeOff, Calendar, Trash2, ChevronLeft, ChevronRight, X, MessageSquare, FileText, Send, Lock, Gift } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 interface UserData {
@@ -108,6 +108,15 @@ export default function AdminPage() {
     const [registrationsOpen, setRegistrationsOpen] = useState(true);
     const [togglingRegistrations, setTogglingRegistrations] = useState(false);
 
+    // Promo state
+    const [promoActive, setPromoActive] = useState(false);
+    const [promoPlacesTotal, setPromoPlacesTotal] = useState(12);
+    const [promoPlacesPrises, setPromoPlacesPrises] = useState(0);
+    const [promoDureeHeures, setPromoDureeHeures] = useState(48);
+    const [promoIntervalMinutes, setPromoIntervalMinutes] = useState(20);
+    const [promoStartedAt, setPromoStartedAt] = useState<string | null>(null);
+    const [launchingPromo, setLaunchingPromo] = useState(false);
+
     // Calendar availability
     const [blockedSlots, setBlockedSlots] = useState<Set<string>>(new Set());
     const [calendarWeekStart, setCalendarWeekStart] = useState(() => {
@@ -171,6 +180,12 @@ export default function AdminPage() {
             const data = await res.json();
             setShowCompanyInfo(data.settings?.show_company_info ?? true);
             setRegistrationsOpen(data.settings?.registrations_open ?? true);
+            setPromoActive(data.settings?.promo_active ?? false);
+            setPromoPlacesTotal(data.settings?.promo_places_total ?? 12);
+            setPromoPlacesPrises(data.settings?.promo_places_prises ?? 0);
+            setPromoDureeHeures(data.settings?.promo_duree_heures ?? 48);
+            setPromoIntervalMinutes(data.settings?.promo_interval_minutes ?? 20);
+            setPromoStartedAt(data.settings?.promo_started_at ?? null);
         } catch (error) {
             console.error('Error loading settings:', error);
         }
@@ -236,6 +251,58 @@ export default function AdminPage() {
             alert('حدث خطأ أثناء تحديث الإعداد');
         } finally {
             setTogglingRegistrations(false);
+        }
+    };
+
+    const launchPromo = async () => {
+        setLaunchingPromo(true);
+        try {
+            const { data: { session } } = await supabase.auth.getSession();
+            const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token}` };
+            const keys: Record<string, any> = {
+                promo_active: true,
+                promo_places_total: promoPlacesTotal,
+                promo_places_prises: 0,
+                promo_duree_heures: promoDureeHeures,
+                promo_interval_minutes: promoIntervalMinutes,
+                promo_started_at: new Date().toISOString(),
+                registrations_open: true,
+                registrations_closed_at: null,
+            };
+            for (const [key, value] of Object.entries(keys)) {
+                await fetch('/api/admin/settings', { method: 'POST', headers, body: JSON.stringify({ key, value }) });
+            }
+            setPromoActive(true);
+            setPromoPlacesPrises(0);
+            setPromoStartedAt(new Date().toISOString());
+            setRegistrationsOpen(true);
+        } catch (error) {
+            console.error('Error launching promo:', error);
+            alert('حدث خطأ أثناء تشغيل العرض');
+        } finally {
+            setLaunchingPromo(false);
+        }
+    };
+
+    const stopPromo = async () => {
+        setLaunchingPromo(true);
+        try {
+            const { data: { session } } = await supabase.auth.getSession();
+            const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token}` };
+            const keys: Record<string, any> = {
+                promo_active: false,
+                promo_started_at: null,
+            };
+            for (const [key, value] of Object.entries(keys)) {
+                await fetch('/api/admin/settings', { method: 'POST', headers, body: JSON.stringify({ key, value }) });
+            }
+            setPromoActive(false);
+            setPromoStartedAt(null);
+        } catch (error) {
+            console.error('Error stopping promo:', error);
+            alert('حدث خطأ أثناء إيقاف العرض');
+        } finally {
+            setLaunchingPromo(false);
         }
     };
 
@@ -768,6 +835,91 @@ ${LOGIN_URL}
                             </button>
                         </div>
                     </div>
+                </div>
+
+                {/* Promo Section */}
+                <div className="bg-[#111111]/50 border border-[#C5A04E]/10 rounded-xl p-6 mb-8">
+                    <div className="flex items-center gap-3 mb-6">
+                        <Gift className="w-6 h-6 text-[#C5A04E]" />
+                        <h2 className="text-2xl font-bold text-white">عرض محدود</h2>
+                        {promoActive && (
+                            <span className="bg-green-500/20 text-green-400 text-xs font-bold px-3 py-1 rounded-full animate-pulse">نشط</span>
+                        )}
+                    </div>
+
+                    {!promoActive ? (
+                        <>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                                <div>
+                                    <label className="block text-sm text-gray-500 mb-2">عدد الأماكن</label>
+                                    <input
+                                        type="number"
+                                        min={1}
+                                        max={100}
+                                        value={promoPlacesTotal}
+                                        onChange={(e) => setPromoPlacesTotal(parseInt(e.target.value) || 12)}
+                                        className="w-full bg-[#1A1A1A] border border-[#C5A04E]/10 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C5A04E] text-center text-xl font-bold"
+                                        style={{ fontFamily: 'Orbitron, monospace' }}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm text-gray-500 mb-2">مدة العرض (ساعات)</label>
+                                    <input
+                                        type="number"
+                                        min={1}
+                                        max={168}
+                                        value={promoDureeHeures}
+                                        onChange={(e) => setPromoDureeHeures(parseInt(e.target.value) || 48)}
+                                        className="w-full bg-[#1A1A1A] border border-[#C5A04E]/10 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C5A04E] text-center text-xl font-bold"
+                                        style={{ fontFamily: 'Orbitron, monospace' }}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm text-gray-500 mb-2">الوقت بين كل تسجيل وهمي (دقائق)</label>
+                                    <input
+                                        type="number"
+                                        min={1}
+                                        max={120}
+                                        value={promoIntervalMinutes}
+                                        onChange={(e) => setPromoIntervalMinutes(parseInt(e.target.value) || 20)}
+                                        className="w-full bg-[#1A1A1A] border border-[#C5A04E]/10 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C5A04E] text-center text-xl font-bold"
+                                        style={{ fontFamily: 'Orbitron, monospace' }}
+                                    />
+                                </div>
+                            </div>
+                            <button
+                                onClick={launchPromo}
+                                disabled={launchingPromo}
+                                className="w-full bg-gradient-to-r from-[#C5A04E] to-[#D4B85C] text-white font-bold py-4 rounded-xl text-lg hover:opacity-90 transition-opacity disabled:opacity-50"
+                            >
+                                {launchingPromo ? 'جاري التشغيل...' : '🚀 تشغيل العرض'}
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <div className="grid grid-cols-3 gap-4 mb-6">
+                                <div className="bg-[#1A1A1A] rounded-xl p-4 text-center">
+                                    <p className="text-gray-500 text-xs mb-1">الأماكن</p>
+                                    <p className="text-2xl font-bold text-white" style={{ fontFamily: 'Orbitron, monospace' }}>{promoPlacesPrises}/{promoPlacesTotal}</p>
+                                </div>
+                                <div className="bg-[#1A1A1A] rounded-xl p-4 text-center">
+                                    <p className="text-gray-500 text-xs mb-1">المدة</p>
+                                    <p className="text-2xl font-bold text-white" style={{ fontFamily: 'Orbitron, monospace' }}>{promoDureeHeures}h</p>
+                                </div>
+                                <div className="bg-[#1A1A1A] rounded-xl p-4 text-center">
+                                    <p className="text-gray-500 text-xs mb-1">كل</p>
+                                    <p className="text-2xl font-bold text-white" style={{ fontFamily: 'Orbitron, monospace' }}>{promoIntervalMinutes}min</p>
+                                </div>
+                            </div>
+                            <button
+                                onClick={stopPromo}
+                                disabled={launchingPromo}
+                                className="w-full bg-red-500/20 border border-red-500/30 text-red-400 font-bold py-4 rounded-xl text-lg hover:bg-red-500/30 transition-colors disabled:opacity-50"
+                            >
+                                {launchingPromo ? 'جاري الإيقاف...' : '⛔ إيقاف العرض'}
+                            </button>
+                        </>
+                    )}
                 </div>
 
                 {/* Add New Student Section */}

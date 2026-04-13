@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 function StarRating({ count, total }: { count: number; total: string }) {
   return (
@@ -49,37 +49,276 @@ function ClosedTimer({ closedAt }: { closedAt: string }) {
   );
 }
 
+/* ═══════════════════════════════════════════════
+   PROMO COUNTDOWN TIMER
+   ═══════════════════════════════════════════════ */
+function PromoCountdown({ startedAt, dureeHeures }: { startedAt: string; dureeHeures: number }) {
+  const [time, setTime] = useState({ hours: 0, minutes: 0, seconds: 0 });
+  const [expired, setExpired] = useState(false);
+
+  useEffect(() => {
+    const endTime = new Date(startedAt).getTime() + dureeHeures * 3600000;
+
+    function tick() {
+      const remaining = endTime - Date.now();
+      if (remaining <= 0) {
+        setExpired(true);
+        setTime({ hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+      setTime({
+        hours: Math.floor(remaining / 3600000),
+        minutes: Math.floor((remaining % 3600000) / 60000),
+        seconds: Math.floor((remaining % 60000) / 1000),
+      });
+    }
+
+    tick();
+    const interval = setInterval(tick, 1000);
+    return () => clearInterval(interval);
+  }, [startedAt, dureeHeures]);
+
+  if (expired) return null;
+
+  const isUrgent = time.hours === 0 && time.minutes < 60;
+  const color = isUrgent ? 'text-red-500' : 'text-[#ffd700]';
+  const borderColor = isUrgent ? 'border-red-500/30' : 'border-[#C5A04E]/20';
+
+  return (
+    <div className="text-center space-y-3">
+      <p className="text-gray-400 text-sm font-bold">⏳ ينتهي العرض خلال</p>
+      <div className="flex justify-center gap-3" dir="ltr">
+        {[
+          { val: time.hours, label: 'ساعات' },
+          { val: time.minutes, label: 'دقائق' },
+          { val: time.seconds, label: 'ثواني' },
+        ].map((item, i) => (
+          <div key={i} className="text-center">
+            <div className={`bg-[#0A0A0A] border ${borderColor} rounded-xl px-4 py-3 min-w-[70px] md:min-w-[90px]`}>
+              <span className={`text-3xl md:text-4xl font-bold ${color}`} style={{ fontFamily: 'Orbitron, monospace' }}>
+                {String(item.val).padStart(2, '0')}
+              </span>
+            </div>
+            <span className="text-[10px] text-gray-500 mt-1 block font-cairo">{item.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   PROMO SLOTS GRID
+   ═══════════════════════════════════════════════ */
+function PromoSlots({ total, taken, newlyTaken }: { total: number; taken: number; newlyTaken: number | null }) {
+  const remaining = total - taken;
+  const isAlmostFull = remaining <= 3 && remaining > 0;
+
+  return (
+    <div className="flex flex-wrap justify-center gap-2 md:gap-3">
+      {Array.from({ length: total }, (_, i) => {
+        const slotNum = i + 1;
+        const isTaken = slotNum <= taken;
+        const isJustTaken = slotNum === newlyTaken;
+        const isLastFew = !isTaken && isAlmostFull;
+
+        return (
+          <div
+            key={slotNum}
+            className={`
+              relative w-12 h-12 md:w-14 md:h-14 rounded-xl flex items-center justify-center transition-all duration-500
+              ${isTaken
+                ? `bg-red-950/80 border border-red-800/50 ${isJustTaken ? 'animate-slot-flash' : ''}`
+                : isLastFew
+                  ? 'bg-[#0A0A0A] border border-red-500/40 animate-pulse-urgent'
+                  : 'bg-[#0A0A0A] border border-[#C5A04E]/30 shadow-[0_0_8px_rgba(197,160,78,0.15)]'
+              }
+            `}
+          >
+            <span
+              className={`text-sm md:text-base font-bold ${
+                isTaken ? 'text-gray-600 line-through' : isLastFew ? 'text-red-400' : 'text-[#C5A04E]'
+              }`}
+              style={{ fontFamily: 'Orbitron, monospace' }}
+            >
+              {slotNum}
+            </span>
+            {isTaken && (
+              <span className="absolute -top-1 -left-1 text-[10px]">❌</span>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   PROMO SECTION (cases + timer + texte)
+   ═══════════════════════════════════════════════ */
+function PromoSection({ settings }: { settings: any }) {
+  const {
+    promo_places_total: total = 12,
+    promo_places_prises: serverTaken = 0,
+    promo_duree_heures: dureeHeures = 48,
+    promo_interval_minutes: intervalMinutes = 20,
+    promo_started_at: startedAt,
+  } = settings;
+
+  const [simulatedExtra, setSimulatedExtra] = useState(0);
+  const [newlyTaken, setNewlyTaken] = useState<number | null>(null);
+  const prevTakenRef = useRef(0);
+
+  // Calculate simulated count based on elapsed time since start
+  useEffect(() => {
+    if (!startedAt || !intervalMinutes) return;
+
+    function calcSimulated() {
+      const elapsed = Date.now() - new Date(startedAt).getTime();
+      const simCount = Math.floor(elapsed / (intervalMinutes * 60000));
+      return Math.max(0, simCount);
+    }
+
+    setSimulatedExtra(calcSimulated());
+
+    const interval = setInterval(() => {
+      const newSim = calcSimulated();
+      setSimulatedExtra(prev => {
+        if (newSim > prev) return newSim;
+        return prev;
+      });
+    }, 10000); // Check every 10s
+
+    return () => clearInterval(interval);
+  }, [startedAt, intervalMinutes]);
+
+  const taken = Math.min(serverTaken + simulatedExtra, total);
+  const remaining = total - taken;
+
+  // Flash animation when a new slot is taken
+  useEffect(() => {
+    if (taken > prevTakenRef.current && prevTakenRef.current > 0) {
+      setNewlyTaken(taken);
+      const timer = setTimeout(() => setNewlyTaken(null), 1500);
+      return () => clearTimeout(timer);
+    }
+    prevTakenRef.current = taken;
+  }, [taken]);
+
+  // Dynamic text
+  let statusText = '';
+  let statusColor = 'text-[#C5A04E]';
+  if (remaining <= 0) {
+    statusText = '⛔ نفذت جميع الأماكن';
+    statusColor = 'text-red-500';
+  } else if (remaining <= 3) {
+    statusText = `🔴 آخر ${remaining} أماكن — لا تضيع الفرصة`;
+    statusColor = 'text-red-400 animate-pulse';
+  } else {
+    statusText = '🔥 سجّل الآن قبل نفاذ الأماكن';
+    statusColor = 'text-[#C5A04E]';
+  }
+
+  return (
+    <section className="w-full px-4 pb-6">
+      <div className="max-w-[1050px] mx-auto rounded-2xl border border-[#C5A04E]/20 bg-[#0A0A0A] p-6 md:p-8 space-y-6">
+
+        {/* Counter */}
+        <div className="text-center">
+          <p className="text-gray-400 text-sm mb-2">الأماكن المتبقية</p>
+          <p className="text-4xl md:text-5xl font-black text-white" style={{ fontFamily: 'Orbitron, monospace' }}>
+            <span className={remaining <= 3 ? 'text-red-500' : 'text-[#C5A04E]'}>{remaining}</span>
+            <span className="text-gray-600 text-2xl md:text-3xl mx-2">/</span>
+            <span className="text-gray-500 text-2xl md:text-3xl">{total}</span>
+          </p>
+        </div>
+
+        {/* Slots grid */}
+        <PromoSlots total={total} taken={taken} newlyTaken={newlyTaken} />
+
+        {/* Dynamic text */}
+        <p className={`text-center text-lg font-bold ${statusColor}`}>
+          {statusText}
+        </p>
+
+        {/* Countdown */}
+        {startedAt && remaining > 0 && (
+          <PromoCountdown startedAt={startedAt} dureeHeures={dureeHeures} />
+        )}
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   HOMEPAGE
+   ═══════════════════════════════════════════════ */
 export default function HomePage() {
   const [registrationsOpen, setRegistrationsOpen] = useState(true);
   const [closedAt, setClosedAt] = useState<string | null>(null);
   const [loaded, setLoaded] = useState(false);
+  const [promoActive, setPromoActive] = useState(false);
+  const [promoSettings, setPromoSettings] = useState<any>({});
 
   useEffect(() => {
     fetch('/api/admin/settings')
       .then(r => r.json())
       .then(data => {
-        setRegistrationsOpen(data.settings?.registrations_open ?? true);
-        setClosedAt(data.settings?.registrations_closed_at || null);
+        const s = data.settings || {};
+        setRegistrationsOpen(s.registrations_open ?? true);
+        setClosedAt(s.registrations_closed_at || null);
+        setPromoActive(s.promo_active ?? false);
+        setPromoSettings(s);
         setLoaded(true);
       })
       .catch(() => setLoaded(true));
   }, []);
 
+  // Poll promo data every 15s when promo is active (for real-time slot updates)
+  useEffect(() => {
+    if (!promoActive) return;
+    const interval = setInterval(() => {
+      fetch('/api/admin/settings')
+        .then(r => r.json())
+        .then(data => {
+          const s = data.settings || {};
+          setPromoSettings(s);
+          setRegistrationsOpen(s.registrations_open ?? true);
+          setClosedAt(s.registrations_closed_at || null);
+          // Check if promo was stopped by admin or auto-closed
+          if (!s.promo_active) setPromoActive(false);
+        })
+        .catch(() => {});
+    }, 15000);
+    return () => clearInterval(interval);
+  }, [promoActive]);
+
   const showClosed = loaded && !registrationsOpen;
+  const showPromo = loaded && promoActive && registrationsOpen;
 
   return (
     <main className="min-h-screen bg-[#0A0A0A] font-cairo flex flex-col items-center" dir="rtl">
 
       {/* CSS Animations */}
-      {showClosed && (
-        <style>{`
-          @keyframes glow-telegram {
-            0%, 100% { box-shadow: 0 0 10px rgba(0,136,204,0.3); }
-            50% { box-shadow: 0 0 25px rgba(0,136,204,0.6); }
-          }
-          .animate-glow-telegram { animation: glow-telegram 2s ease-in-out infinite; }
-        `}</style>
-      )}
+      <style>{`
+        @keyframes glow-telegram {
+          0%, 100% { box-shadow: 0 0 10px rgba(0,136,204,0.3); }
+          50% { box-shadow: 0 0 25px rgba(0,136,204,0.6); }
+        }
+        .animate-glow-telegram { animation: glow-telegram 2s ease-in-out infinite; }
+
+        @keyframes slot-flash {
+          0% { background-color: rgba(239,68,68,0.6); transform: scale(1.15); }
+          100% { background-color: rgba(69,10,10,0.8); transform: scale(1); }
+        }
+        .animate-slot-flash { animation: slot-flash 0.6s ease-out; }
+
+        @keyframes pulse-urgent {
+          0%, 100% { border-color: rgba(239,68,68,0.2); box-shadow: 0 0 4px rgba(239,68,68,0.1); }
+          50% { border-color: rgba(239,68,68,0.6); box-shadow: 0 0 12px rgba(239,68,68,0.3); }
+        }
+        .animate-pulse-urgent { animation: pulse-urgent 1.2s ease-in-out infinite; }
+      `}</style>
 
       {/* Header — ECOMY logo */}
       <header className="w-full py-10 flex justify-center">
@@ -87,6 +326,9 @@ export default function HomePage() {
           ECOMY
         </h1>
       </header>
+
+      {/* PROMO SECTION — only when active */}
+      {showPromo && <PromoSection settings={promoSettings} />}
 
       {/* 3-Card Grid — ALWAYS same layout */}
       <section className="flex-1 flex items-center justify-center w-full px-4 py-8">

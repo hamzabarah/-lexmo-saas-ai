@@ -163,6 +163,43 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     }
 
     console.log('✅ [DONE] handleCheckoutCompleted finished for:', email, '| emailSent:', emailSent, '| dbSuccess:', dbSuccess);
+
+    // ===== STEP 6: INCREMENT PROMO COUNTER =====
+    try {
+        const promoSupabase = supabase || getSupabaseAdmin();
+        const { data: stateRow } = await promoSupabase
+            .from('live_dashboard_state')
+            .select('data')
+            .eq('id', 1)
+            .single();
+
+        const stateData = stateRow?.data || {};
+        const settings = stateData.settings || {};
+
+        if (settings.promo_active) {
+            const currentTaken = (settings.promo_places_prises || 0) + 1;
+            const totalPlaces = settings.promo_places_total || 12;
+
+            const updatedSettings = { ...settings, promo_places_prises: currentTaken };
+
+            // Auto-close if all places taken
+            if (currentTaken >= totalPlaces) {
+                updatedSettings.promo_active = false;
+                updatedSettings.registrations_open = false;
+                updatedSettings.registrations_closed_at = new Date().toISOString();
+                console.log('🔒 [STEP 6] All promo places taken — auto-closing registrations');
+            }
+
+            await promoSupabase
+                .from('live_dashboard_state')
+                .update({ data: { ...stateData, settings: updatedSettings } })
+                .eq('id', 1);
+
+            console.log('✅ [STEP 6] Promo counter incremented:', currentTaken, '/', totalPlaces);
+        }
+    } catch (promoError: any) {
+        console.error('⚠️ [STEP 6] Promo counter update failed (non-blocking):', promoError?.message);
+    }
 }
 
 export async function POST(req: NextRequest) {

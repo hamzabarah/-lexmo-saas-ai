@@ -13,6 +13,7 @@ function getSupabaseAdmin() {
 }
 
 // GET: Read settings (public, no auth needed)
+// Also checks if promo timer expired → auto-closes
 export async function GET() {
     try {
         const admin = getSupabaseAdmin();
@@ -24,7 +25,34 @@ export async function GET() {
 
         if (error) throw error;
 
-        const settings = data?.data?.settings || {};
+        const currentData = data?.data || {};
+        const settings = currentData.settings || {};
+
+        // Auto-close promo if timer expired or slots full
+        if (settings.promo_active && settings.promo_started_at && settings.promo_duree_heures) {
+            const endTime = new Date(settings.promo_started_at).getTime() + settings.promo_duree_heures * 3600000;
+            const taken = settings.promo_places_prises || 0;
+            const total = settings.promo_places_total || 12;
+            const intervalMin = settings.promo_interval_minutes || 20;
+            const elapsed = Date.now() - new Date(settings.promo_started_at).getTime();
+            const simulatedTaken = Math.floor(elapsed / (intervalMin * 60000));
+            const effectiveTaken = Math.min(taken + simulatedTaken, total);
+
+            if (Date.now() >= endTime || effectiveTaken >= total) {
+                const updatedSettings = {
+                    ...settings,
+                    promo_active: false,
+                    registrations_open: false,
+                    registrations_closed_at: new Date().toISOString(),
+                };
+                await admin
+                    .from('live_dashboard_state')
+                    .update({ data: { ...currentData, settings: updatedSettings } })
+                    .eq('id', 1);
+                return NextResponse.json({ settings: updatedSettings });
+            }
+        }
+
         return NextResponse.json({ settings });
     } catch (error: any) {
         return NextResponse.json({ settings: {} }, { status: 500 });
