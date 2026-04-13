@@ -170,8 +170,14 @@ function PromoCardInfo({ settings }: { settings: any }) {
   const [timer, setTimer] = useState({ h: 0, m: 0, s: 0 });
   const [expired, setExpired] = useState(false);
   const [viewerCount, setViewerCount] = useState(0);
+  const [prevViewerCount, setPrevViewerCount] = useState(0);
+  const [viewerSliding, setViewerSliding] = useState(false);
   const [lastPerson, setLastPerson] = useState<typeof NAMES[0] | null>(null);
   const [lastTime, setLastTime] = useState(0);
+  const [displayPerson, setDisplayPerson] = useState<typeof NAMES[0] | null>(null);
+  const [displayTime, setDisplayTime] = useState(0);
+  const [tickerSliding, setTickerSliding] = useState(false);
+  const [tickerFlash, setTickerFlash] = useState(false);
   const shuffledRef = useRef<typeof NAMES>([]);
   const indexRef = useRef(0);
   const [, setTick] = useState(0);
@@ -232,9 +238,11 @@ function PromoCardInfo({ settings }: { settings: any }) {
     return () => clearInterval(iv);
   }, [startedAt, dureeHeures]);
 
-  // Viewer count (30-85, varies ±1-5 every 8-15s)
+  // Viewer count (30-85, varies ±1-5 every 8-15s) with slide animation
   useEffect(() => {
-    setViewerCount(30 + Math.floor(Math.random() * 55));
+    const initial = 30 + Math.floor(Math.random() * 55);
+    setViewerCount(initial);
+    setPrevViewerCount(initial);
     const iv = setInterval(() => {
       setViewerCount(prev => {
         const delta = Math.floor(Math.random() * 5) + 1;
@@ -242,54 +250,74 @@ function PromoCardInfo({ settings }: { settings: any }) {
         let next = prev + delta * dir;
         if (next < 30) next = 30 + Math.floor(Math.random() * 3);
         if (next > 85) next = 85 - Math.floor(Math.random() * 3);
+        setPrevViewerCount(prev);
+        setViewerSliding(true);
+        setTimeout(() => setViewerSliding(false), 300);
         return next;
       });
     }, (8 + Math.random() * 7) * 1000);
     return () => clearInterval(iv);
   }, []);
 
-  // Last registration: show the most recent simulated one
+  // Last registration + ticker rotation (8-10s cycle with slide animation)
   useEffect(() => {
     if (!startedAt || !intervalMinutes) return;
     const startMs = new Date(startedAt).getTime();
     const intervalMs = intervalMinutes * 60000;
 
-    function updateLast() {
-      const elapsed = Date.now() - startMs;
-      const count = Math.floor(elapsed / intervalMs);
-      if (count > 0) {
-        const entryTime = startMs + (count - 1) * intervalMs;
-        setLastTime(entryTime);
-        // Only change person when count changes
-        setLastPerson(prev => {
-          if (!prev) return getNext();
-          return prev;
-        });
-      }
-    }
-
     // Set initial person
     const elapsed = Date.now() - startMs;
     const count = Math.floor(elapsed / intervalMs);
     if (count > 0) {
-      setLastPerson(getNext());
-      setLastTime(startMs + (count - 1) * intervalMs);
+      const person = getNext();
+      setLastPerson(person);
+      setDisplayPerson(person);
+      const t = startMs + (count - 1) * intervalMs;
+      setLastTime(t);
+      setDisplayTime(t);
     }
 
-    const iv = setInterval(() => {
+    // Check for new simulated entries
+    const checkIv = setInterval(() => {
       const now = Date.now();
       const currentCount = Math.floor((now - startMs) / intervalMs);
       const currentEntryTime = startMs + (currentCount - 1) * intervalMs;
       setLastTime(prev => {
         if (currentEntryTime > prev && currentCount > 0) {
-          setLastPerson(getNext());
+          const newP = getNext();
+          setLastPerson(newP);
+          // Trigger slide animation
+          setTickerSliding(true);
+          setTickerFlash(true);
+          setTimeout(() => {
+            setDisplayPerson(newP);
+            setDisplayTime(currentEntryTime);
+            setTickerSliding(false);
+          }, 250);
+          setTimeout(() => setTickerFlash(false), 800);
           return currentEntryTime;
         }
         return prev;
       });
     }, 10000);
 
-    return () => clearInterval(iv);
+    // Ticker rotation: cycle through names every 8-10s
+    const tickerIv = setInterval(() => {
+      const newP = getNext();
+      setTickerSliding(true);
+      setTickerFlash(true);
+      setTimeout(() => {
+        setDisplayPerson(newP);
+        setDisplayTime(Date.now() - (Math.floor(Math.random() * 5) + 1) * 60000);
+        setTickerSliding(false);
+      }, 250);
+      setTimeout(() => setTickerFlash(false), 800);
+    }, (8 + Math.random() * 2) * 1000);
+
+    return () => {
+      clearInterval(checkIv);
+      clearInterval(tickerIv);
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startedAt, intervalMinutes]);
 
@@ -314,6 +342,9 @@ function PromoCardInfo({ settings }: { settings: any }) {
     if (diff <= 10) return `منذ ${diff} دقائق`;
     return `منذ ${diff} دقيقة`;
   }
+
+  const tickerPerson = displayPerson || lastPerson;
+  const tickerTime = displayTime || lastTime;
 
   return (
     <div className="rounded-xl bg-[#111111]/60 border border-[#C5A04E]/10 p-3.5 mb-3 space-y-3">
@@ -346,19 +377,61 @@ function PromoCardInfo({ settings }: { settings: any }) {
         </div>
       </div>
 
-      {/* 3. Viewers + Last registration — subtle */}
-      <div className="space-y-1 pt-0.5">
-        {viewerCount > 0 && (
-          <p className="text-center text-gray-500 text-[11px]">
-            👁 {viewerCount} شخص يشاهد هذا العرض الآن
-          </p>
-        )}
-        {lastPerson && lastTime > 0 && (
-          <p className="text-center text-gray-500 text-[11px]">
-            ✅ آخر تسجيل : {lastPerson.name} من {FLAG_TO_COUNTRY[lastPerson.flag] || ''} {lastPerson.flag} — {timeAgo(lastTime)}
-          </p>
-        )}
-      </div>
+      {/* 3. Viewers — stacked avatars + slide counter */}
+      {viewerCount > 0 && (
+        <div className="flex items-center justify-center gap-2 bg-[#0A0A0A]/60 rounded-lg py-1.5 px-3">
+          {/* Stacked avatar silhouettes */}
+          <div className="flex -space-x-1.5 rtl:space-x-reverse shrink-0">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="w-5 h-5 rounded-full bg-[#2A2A2A] border border-[#1A1A1A] flex items-center justify-center">
+                <svg className="w-2.5 h-2.5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </div>
+            ))}
+          </div>
+          <span className="text-gray-400 text-[11px]">👁</span>
+          {/* Sliding number */}
+          <div className="overflow-hidden h-[16px] relative" style={{ minWidth: '20px' }}>
+            <span
+              className={`text-gray-300 text-[13px] font-semibold absolute inset-0 flex items-center transition-transform duration-300 ${viewerSliding ? '-translate-y-full opacity-0' : 'translate-y-0 opacity-100'}`}
+              style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
+            >
+              {viewerSliding ? prevViewerCount : viewerCount}
+            </span>
+            <span
+              className={`text-gray-300 text-[13px] font-semibold absolute inset-0 flex items-center transition-transform duration-300 ${viewerSliding ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}`}
+              style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
+            >
+              {viewerCount}
+            </span>
+          </div>
+          <span className="text-gray-500 text-[11px]">شخص يشاهد هذا العرض</span>
+        </div>
+      )}
+
+      {/* 4. LIVE ticker — last registration with vertical slide */}
+      {tickerPerson && tickerTime > 0 && (
+        <div className={`flex items-center gap-2 bg-[#0A0A0A]/60 rounded-lg py-1.5 px-3 transition-colors duration-500 ${tickerFlash ? 'bg-green-950/30' : ''}`}>
+          {/* LIVE badge */}
+          <div className="flex items-center gap-1 shrink-0">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+            </span>
+            <span className="text-white text-[10px] font-bold bg-red-600/80 px-1.5 py-0.5 rounded">LIVE</span>
+          </div>
+          <span className="text-gray-600 text-[11px]">•</span>
+          {/* Sliding text */}
+          <div className="overflow-hidden h-[18px] relative flex-1 min-w-0">
+            <p
+              className={`text-gray-300 text-[12px] truncate absolute inset-0 flex items-center transition-all duration-500 ease-out ${tickerSliding ? '-translate-y-full opacity-0' : 'translate-y-0 opacity-100'}`}
+            >
+              ✅ {tickerPerson.name} من {FLAG_TO_COUNTRY[tickerPerson.flag] || ''} {tickerPerson.flag} {tickerPerson.gender === 'f' ? 'انضمت' : 'انضم'} — {timeAgo(tickerTime)}
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
