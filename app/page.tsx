@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 
 function StarRating({ count, total }: { count: number; total: string }) {
   return (
@@ -66,7 +66,6 @@ function CompactPromoInfo({ settings }: { settings: any }) {
   const [timer, setTimer] = useState({ h: 0, m: 0, s: 0 });
   const [expired, setExpired] = useState(false);
 
-  // Simulated slots
   useEffect(() => {
     if (!startedAt || !intervalMinutes) return;
     function calc() {
@@ -78,7 +77,6 @@ function CompactPromoInfo({ settings }: { settings: any }) {
     return () => clearInterval(iv);
   }, [startedAt, intervalMinutes]);
 
-  // Countdown timer
   useEffect(() => {
     if (!startedAt) return;
     const endTime = new Date(startedAt).getTime() + dureeHeures * 3600000;
@@ -105,14 +103,12 @@ function CompactPromoInfo({ settings }: { settings: any }) {
 
   return (
     <div className="space-y-2 mb-2">
-      {/* Places counter */}
       <div className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg ${isUrgent ? 'bg-red-950/60 border border-red-800/40' : 'bg-[#C5A04E]/10 border border-[#C5A04E]/20'}`}>
         <span className="text-base">🔥</span>
         <span className={`font-bold text-sm ${isUrgent ? 'text-red-400 animate-pulse' : 'text-[#C5A04E]'}`}>
           باقي {remaining} أماكن فقط
         </span>
       </div>
-      {/* Inline timer */}
       <div className="flex items-center justify-center gap-1.5 text-gray-400 text-xs">
         <span>⏳</span>
         <span>ينتهي العرض خلال</span>
@@ -125,12 +121,9 @@ function CompactPromoInfo({ settings }: { settings: any }) {
 }
 
 /* ═══════════════════════════════════════════════
-   SOCIAL PROOF NOTIFICATIONS
-   Toast popup with 100 Arabic names
-   Two modes: promo active (interval from admin) / inactive (30-45s)
+   NAMES LIST + COUNTRY MAP (shared data)
    ═══════════════════════════════════════════════ */
-const SOCIAL_PROOF_NAMES: { name: string; gender: 'm' | 'f'; flag: string }[] = [
-  // Western names (80)
+const NAMES: { name: string; gender: 'm' | 'f'; flag: string }[] = [
   { name: 'أحمد', gender: 'm', flag: '🇫🇷' },
   { name: 'محمد', gender: 'm', flag: '🇧🇪' },
   { name: 'يوسف', gender: 'm', flag: '🇩🇪' },
@@ -181,7 +174,6 @@ const SOCIAL_PROOF_NAMES: { name: string; gender: 'm' | 'f'; flag: string }[] = 
   { name: 'نادر', gender: 'm', flag: '🇳🇱' },
   { name: 'شريف', gender: 'm', flag: '🇧🇪' },
   { name: 'زياد', gender: 'm', flag: '🇫🇷' },
-  // Female Western
   { name: 'فاطمة', gender: 'f', flag: '🇫🇷' },
   { name: 'مريم', gender: 'f', flag: '🇧🇪' },
   { name: 'سارة', gender: 'f', flag: '🇩🇪' },
@@ -202,7 +194,6 @@ const SOCIAL_PROOF_NAMES: { name: string; gender: 'm' | 'f'; flag: string }[] = 
   { name: 'سميرة', gender: 'f', flag: '🇬🇧' },
   { name: 'نجاة', gender: 'f', flag: '🇫🇷' },
   { name: 'وفاء', gender: 'f', flag: '🇳🇱' },
-  // Maghreb (10)
   { name: 'عبد الرحمن', gender: 'm', flag: '🇲🇦' },
   { name: 'أيمن', gender: 'm', flag: '🇩🇿' },
   { name: 'حمدي', gender: 'm', flag: '🇹🇳' },
@@ -213,7 +204,6 @@ const SOCIAL_PROOF_NAMES: { name: string; gender: 'm' | 'f'; flag: string }[] = 
   { name: 'أشرف', gender: 'm', flag: '🇩🇿' },
   { name: 'هيثم', gender: 'm', flag: '🇹🇳' },
   { name: 'سيف الدين', gender: 'm', flag: '🇲🇦' },
-  // Gulf (10)
   { name: 'فهد', gender: 'm', flag: '🇸🇦' },
   { name: 'سلطان', gender: 'm', flag: '🇦🇪' },
   { name: 'تركي', gender: 'm', flag: '🇸🇦' },
@@ -226,110 +216,221 @@ const SOCIAL_PROOF_NAMES: { name: string; gender: 'm' | 'f'; flag: string }[] = 
   { name: 'خليفة', gender: 'm', flag: '🇴🇲' },
 ];
 
-function SocialProofNotification({ promoActive, intervalMinutes }: { promoActive: boolean; intervalMinutes: number }) {
-  const [visible, setVisible] = useState(false);
-  const [currentPerson, setCurrentPerson] = useState<typeof SOCIAL_PROOF_NAMES[0] | null>(null);
-  const shuffledRef = useRef<typeof SOCIAL_PROOF_NAMES>([]);
+const FLAG_TO_COUNTRY: Record<string, string> = {
+  '🇫🇷': 'فرنسا', '🇧🇪': 'بلجيكا', '🇩🇪': 'ألمانيا', '🇮🇹': 'إيطاليا',
+  '🇪🇸': 'إسبانيا', '🇬🇧': 'بريطانيا', '🇳🇱': 'هولندا', '🇲🇦': 'المغرب',
+  '🇩🇿': 'الجزائر', '🇹🇳': 'تونس', '🇸🇦': 'السعودية', '🇦🇪': 'الإمارات',
+  '🇰🇼': 'الكويت', '🇶🇦': 'قطر', '🇧🇭': 'البحرين', '🇴🇲': 'عُمان',
+};
+
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function formatEntry(p: typeof NAMES[0]) {
+  const verb = p.gender === 'f' ? 'انضمت' : 'انضم';
+  const country = FLAG_TO_COUNTRY[p.flag] || '';
+  return `✅ ${p.name} من ${country} ${p.flag} ${verb}`;
+}
+
+/* ═══════════════════════════════════════════════
+   ACTIVITY TICKER — scrolling band at top
+   ═══════════════════════════════════════════════ */
+function ActivityTicker() {
+  const tickerText = useMemo(() => {
+    const shuffled = shuffle(NAMES);
+    // Take 30 names for a good-length ticker, repeat set for seamless loop
+    const entries = shuffled.slice(0, 30).map(p => formatEntry(p));
+    return entries.join('  •  ');
+  }, []);
+
+  return (
+    <div className="w-full bg-[#111111] border-b border-[#C5A04E]/10 overflow-hidden" style={{ height: '42px' }}>
+      <div className="ticker-track flex items-center h-full whitespace-nowrap">
+        <span className="ticker-content text-gray-300 text-sm px-4" style={{ fontFamily: 'Cairo, sans-serif' }}>
+          {tickerText}  •
+        </span>
+        <span className="ticker-content text-gray-300 text-sm px-4" style={{ fontFamily: 'Cairo, sans-serif' }}>
+          {tickerText}  •
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   VIEWER COUNT BADGE — live viewers pill
+   ═══════════════════════════════════════════════ */
+function ViewerCountBadge({ promoActive, placesRemaining }: { promoActive: boolean; placesRemaining?: number }) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const min = promoActive ? 30 : 5;
+    const max = promoActive ? 85 : 20;
+    // Initial value
+    setCount(min + Math.floor(Math.random() * (max - min)));
+
+    const iv = setInterval(() => {
+      setCount(prev => {
+        const delta = Math.floor(Math.random() * 5) + 1;
+        const direction = Math.random() > 0.5 ? 1 : -1;
+        let next = prev + delta * direction;
+
+        // When few places remain, bias upward
+        if (promoActive && placesRemaining !== undefined && placesRemaining <= 5) {
+          next = prev + Math.floor(Math.random() * 4) + 1;
+        }
+
+        // Clamp
+        if (next < min) next = min + Math.floor(Math.random() * 3);
+        if (next > max) next = max - Math.floor(Math.random() * 3);
+        return next;
+      });
+    }, (8 + Math.random() * 7) * 1000); // 8-15s
+
+    return () => clearInterval(iv);
+  }, [promoActive, placesRemaining]);
+
+  if (count === 0) return null;
+
+  return (
+    <div className="flex items-center justify-center">
+      <div className="inline-flex items-center gap-2 bg-[#111111] border border-white/10 rounded-full px-4 py-1.5">
+        <span className="relative flex h-2.5 w-2.5">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500" />
+        </span>
+        <span className="text-white text-[13px] font-semibold" style={{ fontFamily: 'Cairo, sans-serif' }}>
+          {count} شخص يشاهد الآن
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   LIVE REGISTRATIONS LIST — last 5 entries
+   ═══════════════════════════════════════════════ */
+function LiveRegistrationsList({ promoActive, promoSettings }: { promoActive: boolean; promoSettings: any }) {
+  const [entries, setEntries] = useState<{ person: typeof NAMES[0]; time: number }[]>([]);
+  const shuffledRef = useRef<typeof NAMES>([]);
   const indexRef = useRef(0);
 
-  // Fisher-Yates shuffle — no repeat until all used
-  const getNextPerson = useCallback(() => {
+  const getNext = useCallback(() => {
     if (indexRef.current >= shuffledRef.current.length) {
-      // Reshuffle
-      const arr = [...SOCIAL_PROOF_NAMES];
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      shuffledRef.current = arr;
+      shuffledRef.current = shuffle(NAMES);
       indexRef.current = 0;
     }
-    const person = shuffledRef.current[indexRef.current];
+    const p = shuffledRef.current[indexRef.current];
     indexRef.current++;
-    return person;
+    return p;
   }, []);
 
   useEffect(() => {
-    // Initial shuffle
-    const arr = [...SOCIAL_PROOF_NAMES];
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
+    shuffledRef.current = shuffle(NAMES);
+
+    if (promoActive && promoSettings.promo_started_at && promoSettings.promo_interval_minutes) {
+      // Promo mode: calculate simulated registrations from start time
+      const startMs = new Date(promoSettings.promo_started_at).getTime();
+      const intervalMs = promoSettings.promo_interval_minutes * 60000;
+      const elapsed = Date.now() - startMs;
+      const totalSimulated = Math.max(0, Math.floor(elapsed / intervalMs));
+
+      // Generate last 5 entries with real timings
+      const initial: { person: typeof NAMES[0]; time: number }[] = [];
+      for (let i = Math.max(0, totalSimulated - 5); i < totalSimulated; i++) {
+        const entryTime = startMs + i * intervalMs;
+        initial.push({ person: getNext(), time: entryTime });
+      }
+      setEntries(initial.reverse()); // newest first
+
+      // Check for new simulated entries periodically
+      const iv = setInterval(() => {
+        const now = Date.now();
+        const currentCount = Math.floor((now - startMs) / intervalMs);
+        setEntries(prev => {
+          const newestTime = prev.length > 0 ? prev[0].time : 0;
+          const expectedNewestTime = startMs + (currentCount - 1) * intervalMs;
+          if (expectedNewestTime > newestTime && currentCount > 0) {
+            const newEntry = { person: getNext(), time: expectedNewestTime };
+            return [newEntry, ...prev].slice(0, 5);
+          }
+          return prev;
+        });
+      }, 10000);
+
+      return () => clearInterval(iv);
+    } else {
+      // Inactive mode: show 5 entries with fictional times
+      const now = Date.now();
+      const gaps = [2, 5, 12, 18, 25]; // minutes ago
+      const initial = gaps.map(g => ({
+        person: getNext(),
+        time: now - g * 60000,
+      }));
+      setEntries(initial);
+
+      // Add a new one every 30-45s
+      const iv = setInterval(() => {
+        setEntries(prev => {
+          const newEntry = { person: getNext(), time: Date.now() };
+          return [newEntry, ...prev].slice(0, 5);
+        });
+      }, (30 + Math.random() * 15) * 1000);
+
+      return () => clearInterval(iv);
     }
-    shuffledRef.current = arr;
-
-    // First notification after a short delay
-    const firstDelay = setTimeout(() => {
-      showNotification();
-    }, promoActive ? 8000 : 15000);
-
-    function showNotification() {
-      const person = getNextPerson();
-      setCurrentPerson(person);
-      setVisible(true);
-
-      // Hide after 5s
-      setTimeout(() => {
-        setVisible(false);
-      }, 5000);
-    }
-
-    // Recurring interval
-    const intervalMs = promoActive
-      ? (intervalMinutes * 60000) / 3 // Show 3x per promo interval
-      : (30 + Math.random() * 15) * 1000; // 30-45s when inactive
-
-    const recurring = setInterval(() => {
-      showNotification();
-    }, intervalMs);
-
-    return () => {
-      clearTimeout(firstDelay);
-      clearInterval(recurring);
-    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [promoActive, intervalMinutes]);
+  }, [promoActive, promoSettings.promo_started_at, promoSettings.promo_interval_minutes]);
 
-  if (!currentPerson) return null;
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const iv = setInterval(() => setTick(t => t + 1), 30000);
+    return () => clearInterval(iv);
+  }, []);
 
-  const verb = currentPerson.gender === 'f' ? 'انضمت' : 'انضم';
+  function timeAgo(ts: number) {
+    const diff = Math.max(0, Math.floor((Date.now() - ts) / 60000));
+    if (diff === 0) return 'منذ لحظات';
+    if (diff === 1) return 'منذ دقيقة';
+    if (diff === 2) return 'منذ دقيقتين';
+    if (diff <= 10) return `منذ ${diff} دقائق`;
+    return `منذ ${diff} دقيقة`;
+  }
+
+  if (entries.length === 0) return null;
 
   return (
-    <div
-      className={`fixed z-[9999] transition-all duration-500 ease-out ${
-        visible ? 'translate-y-0 opacity-100' : 'translate-y-[120%] opacity-0'
-      }`}
-      style={{
-        bottom: '24px',
-        left: '50%',
-        transform: `translateX(-50%) ${visible ? 'translateY(0)' : 'translateY(120%)'}`,
-        width: '90%',
-        maxWidth: '350px',
-      }}
-    >
-      <div
-        className="bg-[#111111] border border-[#C5A04E]/30 rounded-2xl px-4 py-3 flex items-center gap-3"
-        style={{ boxShadow: '0 8px 30px rgba(0,0,0,0.5), 0 0 15px rgba(197,160,78,0.15)' }}
-        dir="rtl"
-      >
-        {/* Avatar with flag */}
-        <div className="relative shrink-0">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#C5A04E]/30 to-[#C5A04E]/10 flex items-center justify-center border border-[#C5A04E]/20">
-            <span className="text-[#C5A04E] text-sm font-bold">{currentPerson.name.charAt(0)}</span>
-          </div>
-          <span className="absolute -bottom-0.5 -left-0.5 text-xs" style={{ fontSize: '14px', lineHeight: 1 }}>{currentPerson.flag}</span>
-        </div>
-
-        {/* Text */}
-        <div className="flex-1 min-w-0">
-          <p className="text-white text-sm font-bold truncate">
-            <span className="text-green-400">✅</span>{' '}
-            {currentPerson.name} {currentPerson.flag} {verb} للتو
-          </p>
-          <p className="text-gray-500 text-xs">منذ لحظات</p>
+    <section className="w-full px-4 pb-6">
+      <div className="max-w-[500px] mx-auto">
+        <h3 className="text-white text-base font-bold mb-3 text-center">📋 آخر التسجيلات</h3>
+        <div className="bg-[#111111] border border-[#C5A04E]/15 rounded-2xl overflow-hidden">
+          {entries.map((entry, i) => {
+            const verb = entry.person.gender === 'f' ? 'انضمت' : 'انضم';
+            const country = FLAG_TO_COUNTRY[entry.person.flag] || '';
+            return (
+              <div
+                key={`${entry.person.name}-${entry.time}-${i}`}
+                className={`flex items-center justify-between px-4 py-3 ${i < entries.length - 1 ? 'border-b border-white/5' : ''} ${i === 0 ? 'animate-fade-in' : ''}`}
+              >
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="text-green-400 text-sm shrink-0">✅</span>
+                  <span className="text-white text-sm truncate">
+                    {entry.person.name} من {country} {entry.person.flag}
+                  </span>
+                </div>
+                <span className="text-gray-500 text-xs shrink-0 mr-3">{timeAgo(entry.time)}</span>
+              </div>
+            );
+          })}
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -378,6 +479,17 @@ export default function HomePage() {
   const showClosed = loaded && !registrationsOpen;
   const showPromo = loaded && promoActive && registrationsOpen;
 
+  // Calculate remaining places for viewer badge pressure
+  const placesRemaining = useMemo(() => {
+    if (!promoActive || !promoSettings.promo_started_at) return undefined;
+    const total = promoSettings.promo_places_total || 12;
+    const serverTaken = promoSettings.promo_places_prises || 0;
+    const intervalMin = promoSettings.promo_interval_minutes || 20;
+    const elapsed = Date.now() - new Date(promoSettings.promo_started_at).getTime();
+    const simulated = Math.floor(elapsed / (intervalMin * 60000));
+    return Math.max(0, total - Math.min(serverTaken + simulated, total));
+  }, [promoActive, promoSettings]);
+
   return (
     <main className="min-h-screen bg-[#0A0A0A] font-cairo flex flex-col items-center" dir="rtl">
 
@@ -388,16 +500,41 @@ export default function HomePage() {
           50% { box-shadow: 0 0 25px rgba(0,136,204,0.6); }
         }
         .animate-glow-telegram { animation: glow-telegram 2s ease-in-out infinite; }
+
+        @keyframes ticker-scroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .ticker-track {
+          animation: ticker-scroll 60s linear infinite;
+          width: max-content;
+        }
+
+        @keyframes fade-in {
+          from { opacity: 0; transform: translateY(-8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { animation: fade-in 0.4s ease-out; }
       `}</style>
 
-      {/* Header — ECOMY logo */}
+      {/* 1. Activity Ticker — scrolling band */}
+      {loaded && <ActivityTicker />}
+
+      {/* 2. Header — ECOMY logo */}
       <header className="w-full py-10 flex justify-center">
         <h1 className="text-3xl font-bold font-orbitron tracking-tighter text-[#C5A04E]">
           ECOMY
         </h1>
       </header>
 
-      {/* 3-Card Grid */}
+      {/* 3. Viewer Count Badge */}
+      {loaded && (
+        <div className="pb-4">
+          <ViewerCountBadge promoActive={promoActive} placesRemaining={placesRemaining} />
+        </div>
+      )}
+
+      {/* 4. 3-Card Grid */}
       <section className="flex-1 flex items-center justify-center w-full px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-[1050px] w-full md:auto-rows-[1fr]">
 
@@ -437,7 +574,6 @@ export default function HomePage() {
                     <span className="inline-block bg-[#C5A04E]/10 text-[#C5A04E] text-[11px] font-bold px-2.5 py-0.5 rounded-full">تخفيض %75</span>
                   </div>
                   <div className="flex-1" />
-                  {/* Compact promo info — only when promo active */}
                   {showPromo && <CompactPromoInfo settings={promoSettings} />}
                   <div className="w-full text-center bg-[#10B981] group-hover:bg-[#0D9668] text-white text-[15px] font-bold py-3.5 rounded-xl transition-colors">
                     ابدأ الآن
@@ -491,7 +627,7 @@ export default function HomePage() {
             )}
           </div>
 
-          {/* Card 3 — Connexion espace membre (TOUJOURS identique) */}
+          {/* Card 3 — Connexion espace membre */}
           <Link
             href="/login"
             className="group flex flex-col bg-[#0A0A0A] rounded-2xl overflow-hidden hover:scale-[1.02] transition-all duration-200"
@@ -556,6 +692,11 @@ export default function HomePage() {
         </section>
       )}
 
+      {/* 5. Live Registrations List */}
+      {loaded && registrationsOpen && (
+        <LiveRegistrationsList promoActive={promoActive} promoSettings={promoSettings} />
+      )}
+
       {/* Telegram Community Banner */}
       <section className="w-full px-4 pb-8">
         <a
@@ -577,14 +718,6 @@ export default function HomePage() {
           Terms & Conditions
         </a>
       </footer>
-
-      {/* Social Proof Notifications — always active (two modes) */}
-      {loaded && registrationsOpen && (
-        <SocialProofNotification
-          promoActive={promoActive}
-          intervalMinutes={promoSettings.promo_interval_minutes || 20}
-        />
-      )}
     </main>
   );
 }
