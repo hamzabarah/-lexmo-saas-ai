@@ -5,6 +5,7 @@ import { createClient } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js';
 import { Shield, Mail, AlertCircle, UserPlus, TrendingUp, Copy, Check, Settings, Eye, EyeOff, Calendar, Trash2, ChevronLeft, ChevronRight, X, MessageSquare, FileText, Send, Lock, Gift } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import ChallengeTracker from './ChallengeTracker';
 
 interface UserData {
     id: string;
@@ -921,6 +922,9 @@ ${LOGIN_URL}
                         </>
                     )}
                 </div>
+
+                {/* Challenge Tracker */}
+                <ChallengeTracker />
 
                 {/* Add New Student Section */}
                 <div className="bg-[#111111]/50 border border-[#C5A04E]/10 rounded-xl p-6 mb-8">
