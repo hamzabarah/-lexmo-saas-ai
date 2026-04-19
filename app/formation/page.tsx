@@ -92,6 +92,61 @@ export default function FormationPage() {
     </div>
   );
 
+  const ComparisonTable = (
+    <div className="space-y-4">
+      <h2 className="text-white text-xl font-bold">اختر العرض المناسب لك</h2>
+      <div className="overflow-hidden rounded-2xl border border-[#C5A04E]/10">
+        <table className="w-full text-right">
+          <thead>
+            <tr className="bg-[#111111]">
+              <th className="px-4 py-4 text-white font-bold text-sm w-1/2">المميزات</th>
+              <th className="px-4 py-4 text-white font-bold text-sm">
+                <div>بدون مرافقة</div>
+                <div className="text-[#C5A04E] text-lg font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>197 €</div>
+              </th>
+              <th className="px-4 py-4 text-white font-bold text-sm bg-[#C5A04E]/10">
+                <div>مع مرافقة</div>
+                <div className="text-[#C5A04E] text-lg font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>497 €</div>
+              </th>
+            </tr>
+          </thead>
+          <tbody className="text-gray-300 text-sm">
+            {[
+              { feature: "26 مرحلة", basic: true, full: true },
+              { feature: "+142 درس فيديو", basic: true, full: true },
+              { feature: "اختبارات", basic: true, full: true },
+              { feature: "PDF وأدلة", basic: true, full: true },
+              { feature: "وصول مدى الحياة", basic: true, full: true },
+              { feature: "دعم مباشر على تلغرام", basic: false, full: true },
+              { feature: "مرافقة شخصية", basic: false, full: true },
+            ].map((row, i) => (
+              <tr key={i} className="border-t border-[#C5A04E]/10">
+                <td className="px-4 py-3">{row.feature}</td>
+                <td className="px-4 py-3 text-center text-lg">{row.basic ? "✅" : "❌"}</td>
+                <td className="px-4 py-3 text-center text-lg bg-[#C5A04E]/[0.04]">{row.full ? "✅" : "❌"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+        <a
+          href="https://buy.stripe.com/9B63cvbhe4bLay17gDgfu06"
+          className="block w-full text-center bg-[#1A1A1A] border border-[#C5A04E]/30 hover:bg-[#222222] text-white text-sm font-bold py-3.5 rounded-xl transition-colors"
+        >
+          ابدأ بدون مرافقة — 197 €
+        </a>
+        <a
+          href="https://buy.stripe.com/4gM4gz4SQ5fP7lP44rgfu04"
+          className="block w-full text-center bg-[#C5A04E] hover:bg-[#D4B85C] text-white text-sm font-bold py-3.5 rounded-xl transition-all"
+          style={{ boxShadow: '0 4px 14px rgba(197,160,78,0.2)' }}
+        >
+          ابدأ مع مرافقة — 497 €
+        </a>
+      </div>
+    </div>
+  );
+
   const FAQ = (
     <div className="space-y-4">
       <h2 className="text-white text-xl font-bold">الأسئلة الشائعة</h2>
@@ -220,6 +275,9 @@ export default function FormationPage() {
 
             {/* Description */}
             {Description}
+
+            {/* Comparison Table — Two offers */}
+            {ComparisonTable}
 
             {/* FAQ */}
             {FAQ}

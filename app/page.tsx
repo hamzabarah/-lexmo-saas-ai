@@ -506,9 +506,9 @@ export default function HomePage() {
         </h1>
       </header>
 
-      {/* 3-Card Grid */}
+      {/* 4-Card Grid */}
       <section className="flex-1 flex items-center justify-center w-full px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-[1050px] w-full md:auto-rows-[1fr]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-[1280px] w-full md:auto-rows-[1fr]">
 
           {/* Card 1 — Formation E-commerce */}
           <div className="relative flex flex-col bg-[#0A0A0A] rounded-2xl overflow-hidden" style={{ boxShadow: '0 4px 20px rgba(197,160,78,0.1)' }}>
@@ -556,7 +556,52 @@ export default function HomePage() {
             )}
           </div>
 
-          {/* Card 2 — Diagnostic Business */}
+          {/* Card 2 — Formation E-commerce SANS accompagnement (197€) */}
+          <div className="relative flex flex-col bg-[#0A0A0A] rounded-2xl overflow-hidden" style={{ boxShadow: '0 4px 20px rgba(197,160,78,0.1)' }}>
+            {showClosed ? (
+              <>
+                <img src="/images/ecommerce-banner.png" alt="تكوين التجارة الإلكترونية — بدون مرافقة" className="w-full aspect-video object-cover" />
+                <div className="p-5 space-y-3 flex-1 flex flex-col">
+                  <StarRating count={5} total="453" />
+                  <h3 className="text-white font-bold text-[15px] leading-snug">اربح من الإنترنت | الطريق نحو أول 1000€</h3>
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <span className="text-gray-500 text-xl font-black line-through" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>970 €</span>
+                    <span className="text-white text-xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>197 €</span>
+                    <span className="inline-block bg-[#C5A04E]/10 text-[#C5A04E] text-[11px] font-bold px-2.5 py-0.5 rounded-full">تخفيض %80</span>
+                  </div>
+                  <div className="flex-1" />
+                  <div className="w-full text-center bg-gray-700 text-gray-400 text-[15px] font-bold py-3.5 rounded-xl cursor-not-allowed">
+                    ابدأ الآن
+                  </div>
+                </div>
+                <div className="absolute inset-0 bg-black/80 flex items-center justify-center rounded-2xl">
+                  <span className="bg-red-900/90 text-red-200 font-bold text-lg px-6 py-3 rounded-xl border border-red-700/50">
+                    نفذت الأماكن
+                  </span>
+                </div>
+              </>
+            ) : (
+              <a href="https://buy.stripe.com/9B63cvbhe4bLay17gDgfu06" className="group flex flex-col flex-1">
+                <img src="/images/ecommerce-banner.png" alt="تكوين التجارة الإلكترونية — بدون مرافقة" className="w-full aspect-video object-cover" />
+                <div className="p-5 space-y-3 flex-1 flex flex-col">
+                  <StarRating count={5} total="453" />
+                  <h3 className="text-white font-bold text-[15px] leading-snug">اربح من الإنترنت | الطريق نحو أول 1000€</h3>
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <span className="text-gray-500 text-xl font-black line-through" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>970 €</span>
+                    <span className="text-white text-xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>197 €</span>
+                    <span className="inline-block bg-[#C5A04E]/10 text-[#C5A04E] text-[11px] font-bold px-2.5 py-0.5 rounded-full">تخفيض %80</span>
+                  </div>
+                  <div className="flex-1" />
+                  {showPromo && <PromoCardInfo settings={promoSettings} />}
+                  <div className="w-full text-center bg-[#10B981] group-hover:bg-[#0D9668] text-white text-[15px] font-bold py-3.5 rounded-xl transition-colors">
+                    ابدأ الآن
+                  </div>
+                </div>
+              </a>
+            )}
+          </div>
+
+          {/* Card 3 — Diagnostic Business */}
           <div className="relative flex flex-col bg-[#0A0A0A] rounded-2xl overflow-hidden" style={{ boxShadow: '0 4px 20px rgba(197,160,78,0.1)' }}>
             {showClosed ? (
               <>
@@ -600,7 +645,7 @@ export default function HomePage() {
             )}
           </div>
 
-          {/* Card 3 — Connexion espace membre */}
+          {/* Card 4 — Connexion espace membre */}
           <Link
             href="/login"
             className="group flex flex-col bg-[#0A0A0A] rounded-2xl overflow-hidden hover:scale-[1.02] transition-all duration-200"

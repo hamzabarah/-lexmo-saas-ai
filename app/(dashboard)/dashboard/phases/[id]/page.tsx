@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowRight, ArrowLeft, BookOpen, Play, FileText, HelpCircle, CheckCircle2, Circle, Clock } from "lucide-react";
 import { getStepContent, Lesson } from "../stepsData";
 import LessonContentRenderer from "./LessonContentRenderer";
 import QuizRenderer from "./QuizRenderer";
+import { checkUserSubscription } from "@/lib/check-subscription";
 
 export default function StepDetailPage() {
     const params = useParams();
@@ -15,6 +16,15 @@ export default function StepDetailPage() {
 
     const [activeLessonIndex, setActiveLessonIndex] = useState(0);
     const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
+    const [userPlan, setUserPlan] = useState<string | null>(null);
+
+    useEffect(() => {
+        checkUserSubscription().then((result) => {
+            setUserPlan(result?.subscription?.plan ?? null);
+        });
+    }, []);
+
+    const hasTelegramSupport = userPlan !== 'ecommerce_basic';
 
     // Flatten all lessons for navigation
     const allLessons = useMemo(() => {
@@ -195,21 +205,23 @@ export default function StepDetailPage() {
                         </div>
                     </div>
 
-                    {/* Telegram Help Block */}
-                    <div className="bg-[#111111] border border-[#C5A04E]/10 rounded-2xl p-5 text-center" dir="rtl">
-                        <p className="text-lg font-bold text-white mb-2">💬 محتاج مساعدة؟</p>
-                        <p className="text-gray-400 text-sm mb-4 leading-relaxed">إذا واجهت أي مشكلة في هذه المرحلة، تواصل معي مباشرة وأنا أساعدك</p>
-                        <a
-                            href="https://t.me/ecomyyy"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white font-bold transition-colors hover:opacity-90"
-                            style={{ backgroundColor: '#0088cc' }}
-                        >
-                            <span>تواصل معي على تلغرام</span>
-                            <span>📩</span>
-                        </a>
-                    </div>
+                    {/* Telegram Help Block — hidden for ecommerce_basic (plan without support) */}
+                    {hasTelegramSupport && (
+                        <div className="bg-[#111111] border border-[#C5A04E]/10 rounded-2xl p-5 text-center" dir="rtl">
+                            <p className="text-lg font-bold text-white mb-2">💬 محتاج مساعدة؟</p>
+                            <p className="text-gray-400 text-sm mb-4 leading-relaxed">إذا واجهت أي مشكلة في هذه المرحلة، تواصل معي مباشرة وأنا أساعدك</p>
+                            <a
+                                href="https://t.me/ecomyyy"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white font-bold transition-colors hover:opacity-90"
+                                style={{ backgroundColor: '#0088cc' }}
+                            >
+                                <span>تواصل معي على تلغرام</span>
+                                <span>📩</span>
+                            </a>
+                        </div>
+                    )}
                 </div>
 
                 {/* Lesson Sidebar (left in RTL) */}

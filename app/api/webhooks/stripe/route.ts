@@ -42,10 +42,14 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     }
 
     // Determine product type by amount
-    // 49700 = 497€ = formation (plan: 'ecommerce')
+    // 49700 = 497€ = formation complète (plan: 'ecommerce')
+    // 19700 = 197€ = formation sans accompagnement (plan: 'ecommerce_basic')
     // 9700  = 97€  = diagnostic (plan: 'diagnostic')
     const amountTotal = session.amount_total;
-    const plan: string = amountTotal === 9700 ? 'diagnostic' : 'ecommerce';
+    const plan: string =
+        amountTotal === 9700 ? 'diagnostic'
+        : amountTotal === 19700 ? 'ecommerce_basic'
+        : 'ecommerce';
     console.log('🔍 [STEP 3] amount_total:', amountTotal, '→ plan:', plan);
 
     // ===== STEP 4: SEND EMAIL FIRST (highest priority) =====
@@ -153,7 +157,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
     // Try with the correct plan first, then fallback to 'spark' if CHECK constraint rejects it
     let dbSuccess = await upsertSubscription(plan);
-    if (!dbSuccess && plan === 'ecommerce') {
+    if (!dbSuccess && (plan === 'ecommerce' || plan === 'ecommerce_basic')) {
         console.log('⚠️ [STEP 5] Retrying with plan=spark (CHECK constraint fallback)...');
         dbSuccess = await upsertSubscription('spark');
     }
