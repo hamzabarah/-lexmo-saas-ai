@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from "react";
 import { Star, ChevronDown } from "lucide-react";
 
 const CTA_TEXT = "سجل قبل إغلاق التسجيل";
+const STRIPE_LINK = "https://buy.stripe.com/9B63cvbhe4bLay17gDgfu06";
+const PRODUCT_TITLE = "اربح من الإنترنت | الطريق نحو أول 1000€";
 
 const faqData = [
   {
@@ -20,15 +22,15 @@ const faqData = [
   },
   {
     q: "هل يوجد دعم بعد الشراء؟",
-    a: "نعم، لديك وصول مدى الحياة للمحتوى بالإضافة إلى مجتمع خاص للطلاب للدعم والمساعدة.",
+    a: "هاد العرض مصمم للتعلم الذاتي بوتيرتك. عندك وصول مدى الحياة لكل الدروس، تقدر تراجعها وقت ما تبغيت. الدورة مبنية خطوة بخطوة باش تمشي بنفسك من الصفر حتى المبيعة الأولى بدون ما تحتاج مرافقة.",
   },
   {
     q: "ما الفرق بينكم وبين الكورسات الأخرى؟",
-    a: "نقدم 27 مرحلة عملية مع أكثر من 120 درس فيديو، تغطي كل شيء من إنشاء المتجر إلى الإعلانات المدفوعة على فيسبوك وتيك توك. كل شيء مُحدّث لسنة 2026.",
+    a: "نقدم 26 مرحلة عملية مع أكثر من 142 درس فيديو، تغطي كل شيء من إنشاء المتجر إلى الإعلانات المدفوعة على فيسبوك وتيك توك. كل شيء مُحدّث لسنة 2026.",
   },
 ];
 
-export default function FormationPage() {
+export default function FormationBasicPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showStickyBar, setShowStickyBar] = useState(false);
   const [imgError, setImgError] = useState(false);
@@ -70,25 +72,33 @@ export default function FormationPage() {
 
   const PriceLine = (
     <div className="flex items-center gap-3 flex-wrap">
-      <span className="text-gray-500 text-2xl font-black line-through" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{"1970 €"}</span>
-      <span className="text-white text-2xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{"497 €"}</span>
+      <span className="text-gray-500 text-2xl font-black line-through" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{"970 €"}</span>
+      <span className="text-white text-2xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{"197 €"}</span>
       <span className="inline-block bg-[#C5A04E]/10 text-[#C5A04E] text-[11px] font-bold px-2.5 py-0.5 rounded-full">
-        {"تخفيض %75"}
+        {"تخفيض %80"}
       </span>
     </div>
   );
 
   const Title = (
     <h1 className="text-white text-2xl lg:text-3xl font-bold leading-relaxed">
-      {"من صفر إلى €10,000 شهرياً | 27 مرحلة عملية خطوة بخطوة | ابدأ اليوم"}
+      {"الطريق نحو أول 1000€ | 26 مرحلة عملية للتعلم الذاتي | ابدأ بوتيرتك"}
     </h1>
   );
 
   const Description = (
     <div className="space-y-4 text-gray-400 text-[15px] leading-[1.9]">
       <p>
-        {"أكاديمية إيكومي - المنصة رقم 1 في العالم العربي لتعليم التجارة الإلكترونية من الصفر حتى الربح. نساعدك تبني متجرك الإلكتروني وتبدأ تربح من الإنترنت بخطوات عملية ومجربة. أكثر من 120 درس فيديو عملي في 27 مرحلة."}
+        {"أكاديمية إيكومي - المنصة رقم 1 في العالم العربي لتعليم التجارة الإلكترونية من الصفر حتى الربح. هاد العرض مصمم للي بغا يتعلم بنفسه بوتيرته، بدون مرافقة شخصية. عندك أكثر من 142 درس فيديو عملي في 26 مرحلة، مع اختبارات وأدلة PDF، ووصول مدى الحياة لكل المحتوى — تقدر تراجعه ساعة ما بغيت."}
       </p>
+      <ul className="space-y-2 pt-2">
+        <li className="flex items-start gap-2"><span className="text-[#C5A04E] shrink-0">✓</span><span>26 مرحلة عملية خطوة بخطوة</span></li>
+        <li className="flex items-start gap-2"><span className="text-[#C5A04E] shrink-0">✓</span><span>+142 درس فيديو مفصل</span></li>
+        <li className="flex items-start gap-2"><span className="text-[#C5A04E] shrink-0">✓</span><span>اختبارات في آخر كل مرحلة</span></li>
+        <li className="flex items-start gap-2"><span className="text-[#C5A04E] shrink-0">✓</span><span>أدلة PDF وملفات قابلة للتحميل</span></li>
+        <li className="flex items-start gap-2"><span className="text-[#C5A04E] shrink-0">✓</span><span>وصول مدى الحياة لكل المحتوى</span></li>
+        <li className="flex items-start gap-2"><span className="text-[#C5A04E] shrink-0">✓</span><span>تعلم ذاتي بوتيرتك الخاصة</span></li>
+      </ul>
     </div>
   );
 
@@ -188,7 +198,7 @@ export default function FormationPage() {
   const CTAButton = (
     <a
       ref={ctaRef}
-      href="https://buy.stripe.com/4gM4gz4SQ5fP7lP44rgfu04"
+      href={STRIPE_LINK}
       className="block w-full text-center bg-[#C5A04E] hover:bg-[#D4B85C] text-white text-lg font-bold py-4 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
       style={{ boxShadow: '0 4px 14px rgba(197,160,78,0.2)' }}
     >
@@ -210,7 +220,7 @@ export default function FormationPage() {
             {/* Mobile only: Rating + Price + CTA before title */}
             <div className="lg:hidden space-y-4">
               {RatingLine}
-              <p className="text-white text-lg font-bold">اربح من الإنترنت | التجارة الإلكترونية</p>
+              <p className="text-white text-lg font-bold">{PRODUCT_TITLE}</p>
               {PriceLine}
               {CTAButton}
             </div>
@@ -247,13 +257,13 @@ export default function FormationPage() {
                   {RatingLine}
 
                   <h3 className="text-white font-bold text-[15px] leading-snug">
-                    اربح من الإنترنت | التجارة الإلكترونية
+                    {PRODUCT_TITLE}
                   </h3>
 
                   {PriceLine}
 
                   <a
-                    href="https://buy.stripe.com/4gM4gz4SQ5fP7lP44rgfu04"
+                    href={STRIPE_LINK}
                     className="block w-full text-center bg-[#C5A04E] hover:bg-[#D4B85C] text-white text-[15px] font-bold py-3.5 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
                     style={{ boxShadow: '0 4px 14px rgba(197,160,78,0.2)' }}
                   >
@@ -273,10 +283,10 @@ export default function FormationPage() {
       >
         <div className="px-4 py-3 flex items-center gap-4">
           <div className="shrink-0" dir="ltr">
-            <span className="text-white text-xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{"497 €"}</span>
+            <span className="text-white text-xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{"197 €"}</span>
           </div>
           <a
-            href="https://buy.stripe.com/4gM4gz4SQ5fP7lP44rgfu04"
+            href={STRIPE_LINK}
             className="flex-1 text-center bg-[#C5A04E] hover:bg-[#D4B85C] text-white text-sm font-bold py-3 rounded-xl transition-all duration-200"
             style={{ boxShadow: '0 4px 14px rgba(197,160,78,0.2)' }}
           >

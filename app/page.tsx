@@ -581,7 +581,7 @@ export default function HomePage() {
                 </div>
               </>
             ) : (
-              <a href="https://buy.stripe.com/9B63cvbhe4bLay17gDgfu06" className="group flex flex-col flex-1">
+              <Link href="/formation-basic" className="group flex flex-col flex-1">
                 <img src="/images/ecommerce-banner.png" alt="تكوين التجارة الإلكترونية — بدون مرافقة" className="w-full aspect-video object-cover" />
                 <div className="p-5 space-y-3 flex-1 flex flex-col">
                   <StarRating count={5} total="453" />
@@ -597,7 +597,7 @@ export default function HomePage() {
                     ابدأ الآن
                   </div>
                 </div>
-              </a>
+              </Link>
             )}
           </div>
 
