@@ -155,12 +155,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         }
     }
 
-    // Try with the correct plan first, then fallback to 'spark' if CHECK constraint rejects it
-    let dbSuccess = await upsertSubscription(plan);
-    if (!dbSuccess && (plan === 'ecommerce' || plan === 'ecommerce_basic')) {
-        console.log('⚠️ [STEP 5] Retrying with plan=spark (CHECK constraint fallback)...');
-        dbSuccess = await upsertSubscription('spark');
-    }
+    const dbSuccess = await upsertSubscription(plan);
 
     if (!dbSuccess) {
         console.error('❌ [STEP 5] ALL DB attempts failed for:', email, '- Email sent:', emailSent);

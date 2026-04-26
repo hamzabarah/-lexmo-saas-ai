@@ -620,7 +620,7 @@ export default function AdminPage() {
             // Reset form
             setNewStudentName('');
             setNewStudentEmail('');
-            setNewStudentPlan('spark');
+            setNewStudentPlan('ecommerce');
 
         } catch (error: any) {
             console.error('Error creating student:', error);
@@ -1069,10 +1069,9 @@ ${LOGIN_URL}
                                     const status = statusConfig[subscription.status as keyof typeof statusConfig] || statusConfig.pending;
 
                                     const planIcons = {
-                                        spark: '📚',
-                                        diagnostic: '🔍',
-                                        emperor: '👑',
-                                        legend: '💎'
+                                        ecommerce: '🚀',
+                                        ecommerce_basic: '📚',
+                                        diagnostic: '🎯'
                                     };
 
                                     return (

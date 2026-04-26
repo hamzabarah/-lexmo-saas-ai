@@ -31,7 +31,7 @@ export async function GET() {
                     id: 'admin-override',
                     user_id: user.id,
                     email: user.email,
-                    plan: 'legend',
+                    plan: 'ecommerce',
                     status: 'active',
                     activated_at: new Date().toISOString(),
                     created_at: new Date().toISOString(),

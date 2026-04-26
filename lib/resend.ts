@@ -4,7 +4,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'noreply@ecomy.ai';
 
-export async function sendActivationEmail(toEmail: string, plan: string = 'spark') {
+export async function sendActivationEmail(toEmail: string, plan: string = 'ecommerce') {
     const isFormation = plan !== 'diagnostic';
 
     const subject = isFormation
