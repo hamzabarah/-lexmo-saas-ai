@@ -3,11 +3,13 @@
 import { useEffect, useState } from 'react';
 import StepCard from "@/app/components/dashboard/StepCard";
 import { checkUserSubscription, SubscriptionCheckResult } from "@/lib/check-subscription";
+import { useProgress } from "@/lib/hooks/useProgress";
 import { Lock, Mail } from 'lucide-react';
 
 export default function PhasesPage() {
     const [subscriptionCheck, setSubscriptionCheck] = useState<SubscriptionCheckResult | null>(null);
     const [loading, setLoading] = useState(true);
+    const { getPhaseProgress, getGlobalProgress } = useProgress();
 
     const ADMIN_EMAIL = 'academyfrance75@gmail.com';
 
@@ -124,18 +126,43 @@ export default function PhasesPage() {
         { title: "🔎 اربح أكثر", description: "تعلم كيفاش تقرا الأرقام وتحسن إعلاناتك على تيكتوك باش تربح أكثر" },
     ];
 
+    const global = getGlobalProgress();
+
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {steps.map((step, index) => (
-                <StepCard
-                    key={index}
-                    stepNumber={index + 1}
-                    title={step.title}
-                    description={step.description}
-                    imageUrl={`/etapes/${index + 1}.png`}
-                    progress={0}
-                />
-            ))}
+        <div className="space-y-6 max-w-5xl mx-auto">
+            {/* Global progress bar */}
+            <div className="bg-[#111111] border border-[#C5A04E]/10 rounded-2xl p-6">
+                <div className="flex items-center justify-between mb-3">
+                    <h2 className="text-lg font-bold text-white">📈 تقدمك الإجمالي</h2>
+                    <span className="text-sm text-gray-500 font-mono">
+                        {global.completed}/{global.total} ({global.percentage}%)
+                    </span>
+                </div>
+                <div className="h-3 bg-[#1A1A1A] rounded-full overflow-hidden">
+                    <div
+                        className="h-full bg-gradient-to-l from-[#C5A04E] to-[#0ea5e9] rounded-full transition-all duration-500"
+                        style={{ width: `${global.percentage}%` }}
+                    />
+                </div>
+            </div>
+
+            {/* Steps grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {steps.map((step, index) => {
+                    const stepNumber = index + 1;
+                    const phaseProgress = getPhaseProgress(stepNumber);
+                    return (
+                        <StepCard
+                            key={index}
+                            stepNumber={stepNumber}
+                            title={step.title}
+                            description={step.description}
+                            imageUrl={`/etapes/${stepNumber}.png`}
+                            progress={phaseProgress.percentage}
+                        />
+                    );
+                })}
+            </div>
         </div>
     );
 }

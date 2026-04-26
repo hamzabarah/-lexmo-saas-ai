@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowRight, ArrowLeft, BookOpen, Play, FileText, HelpCircle, CheckCircle2, Circle, Clock } from "lucide-react";
@@ -8,6 +8,15 @@ import { getStepContent, Lesson } from "../stepsData";
 import LessonContentRenderer from "./LessonContentRenderer";
 import QuizRenderer from "./QuizRenderer";
 import { checkUserSubscription } from "@/lib/check-subscription";
+import { useProgress } from "@/lib/hooks/useProgress";
+
+// Parse "7m" / "10m" → seconds. Falls back to 0 if not parseable.
+function parseDurationToSeconds(duration?: string): number {
+    if (!duration) return 0;
+    const m = duration.match(/(\d+)/);
+    if (!m) return 0;
+    return parseInt(m[1], 10) * 60;
+}
 
 export default function StepDetailPage() {
     const params = useParams();
@@ -15,8 +24,15 @@ export default function StepDetailPage() {
     const step = getStepContent(stepNumber);
 
     const [activeLessonIndex, setActiveLessonIndex] = useState(0);
-    const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
     const [userPlan, setUserPlan] = useState<string | null>(null);
+
+    const {
+        markLessonComplete,
+        recordQuizScore,
+        recordTimeSpent,
+        getPhaseProgress,
+        isLessonCompleted,
+    } = useProgress();
 
     useEffect(() => {
         checkUserSubscription().then((result) => {
@@ -37,6 +53,42 @@ export default function StepDetailPage() {
         });
         return lessons;
     }, [step]);
+
+    const lessonKey = (lesson: Lesson, chapterTitle: string) => `${chapterTitle}-${lesson.id}`;
+
+    const activeItem = allLessons[activeLessonIndex];
+    const activeLesson = activeItem?.lesson;
+    const activeKey = activeItem ? lessonKey(activeLesson!, activeItem.chapterTitle) : null;
+
+    // ─── Auto-completion vidéo (90% de la durée estimée) + tracking temps ───
+    const watchedRef = useRef(0); // seconds since user landed on current video lesson
+    useEffect(() => {
+        if (!step) return;
+        if (!activeLesson || activeLesson.type !== 'video') return;
+        if (!activeKey) return;
+
+        const targetSeconds = parseDurationToSeconds(activeLesson.duration);
+        watchedRef.current = 0;
+        let alreadyAutoCompleted = isLessonCompleted(stepNumber, activeKey);
+
+        const id = setInterval(() => {
+            watchedRef.current += 1;
+            // Buffer time-spent every second; the hook flushes batches every 30s
+            recordTimeSpent(stepNumber, activeKey, 1);
+
+            if (
+                !alreadyAutoCompleted &&
+                targetSeconds > 0 &&
+                watchedRef.current >= targetSeconds * 0.9
+            ) {
+                alreadyAutoCompleted = true;
+                markLessonComplete(stepNumber, activeKey, 'auto_video');
+            }
+        }, 1000);
+
+        return () => clearInterval(id);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [activeKey, activeLesson?.type, activeLesson?.duration, stepNumber]);
 
     // No content for this step
     if (!step) {
@@ -59,23 +111,15 @@ export default function StepDetailPage() {
         );
     }
 
-    const activeItem = allLessons[activeLessonIndex];
-    const activeLesson = activeItem?.lesson;
-
+    const phaseStats = getPhaseProgress(stepNumber);
     const totalLessons = allLessons.length;
-    const completedCount = completedLessons.size;
+    const completedCount = phaseStats.completed;
     const progressPercent = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
 
-    const toggleComplete = (key: string) => {
-        setCompletedLessons(prev => {
-            const next = new Set(prev);
-            if (next.has(key)) next.delete(key);
-            else next.add(key);
-            return next;
-        });
+    const toggleComplete = (key: string, currentlyCompleted: boolean) => {
+        if (currentlyCompleted) return; // un-complete not supported by API; ignore
+        markLessonComplete(stepNumber, key, 'manual');
     };
-
-    const lessonKey = (lesson: Lesson, chapterTitle: string) => `${chapterTitle}-${lesson.id}`;
 
     const goNext = () => {
         if (activeLessonIndex < allLessons.length - 1) {
@@ -97,6 +141,8 @@ export default function StepDetailPage() {
 
     // Track global lesson index for sidebar
     let globalIndex = 0;
+
+    const activeKeyCompleted = activeKey ? isLessonCompleted(stepNumber, activeKey) : false;
 
     return (
         <div className="space-y-6">
@@ -148,7 +194,14 @@ export default function StepDetailPage() {
                                 <div className="absolute bottom-0 left-0 right-0 h-[42px] z-10 cursor-default" onContextMenu={(e) => e.preventDefault()} />
                             </div>
                         ) : activeLesson?.type === 'quiz' ? (
-                            <QuizRenderer phaseNumber={stepNumber} />
+                            <QuizRenderer
+                                phaseNumber={stepNumber}
+                                onComplete={(score, total) => {
+                                    if (!activeKey) return;
+                                    void recordQuizScore(stepNumber, activeKey, score, total);
+                                    void markLessonComplete(stepNumber, activeKey, 'quiz');
+                                }}
+                            />
                         ) : activeLesson?.content ? (
                             <LessonContentRenderer contentKey={activeLesson.content} />
                         ) : (
@@ -183,15 +236,15 @@ export default function StepDetailPage() {
                             </button>
 
                             <button
-                                onClick={() => toggleComplete(lessonKey(activeLesson!, activeItem!.chapterTitle))}
+                                onClick={() => activeKey && toggleComplete(activeKey, activeKeyCompleted)}
                                 className={`flex items-center gap-2 px-5 py-2.5 rounded-xl transition-colors ${
-                                    completedLessons.has(lessonKey(activeLesson!, activeItem!.chapterTitle))
-                                        ? "bg-green-500/20 text-green-400 border border-green-500/30"
+                                    activeKeyCompleted
+                                        ? "bg-green-500/20 text-green-400 border border-green-500/30 cursor-default"
                                         : "bg-[#C5A04E]/10 text-[#C5A04E] border border-[#C5A04E]/20 hover:bg-[#C5A04E]/20"
                                 }`}
                             >
                                 <CheckCircle2 size={16} />
-                                <span>{completedLessons.has(lessonKey(activeLesson!, activeItem!.chapterTitle)) ? "مكتمل" : "إكمال الدرس"}</span>
+                                <span>{activeKeyCompleted ? "مكتمل" : "إكمال الدرس"}</span>
                             </button>
 
                             <button
@@ -247,7 +300,7 @@ export default function StepDetailPage() {
                                         globalIndex++;
                                         const isActive = currentGlobalIndex === activeLessonIndex;
                                         const key = lessonKey(lesson, chapter.title);
-                                        const isCompleted = completedLessons.has(key);
+                                        const isCompleted = isLessonCompleted(stepNumber, key);
 
                                         return (
                                             <button
@@ -261,7 +314,7 @@ export default function StepDetailPage() {
                                             >
                                                 {/* Checkbox */}
                                                 <button
-                                                    onClick={(e) => { e.stopPropagation(); toggleComplete(key); }}
+                                                    onClick={(e) => { e.stopPropagation(); toggleComplete(key, isCompleted); }}
                                                     className="shrink-0"
                                                 >
                                                     {isCompleted ? (

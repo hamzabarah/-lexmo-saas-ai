@@ -48,7 +48,13 @@ function saveBestScore(phase: number, score: number) {
 /* ═══════════════════════════════════════════════════════
    QuizRenderer
    ═══════════════════════════════════════════════════════ */
-export default function QuizRenderer({ phaseNumber }: { phaseNumber: number }) {
+export default function QuizRenderer({
+    phaseNumber,
+    onComplete,
+}: {
+    phaseNumber: number;
+    onComplete?: (score: number, total: number) => void;
+}) {
     const rawQuestions = quizzes[phaseNumber];
 
     const [questions, setQuestions] = useState<ShuffledQuestion[]>([]);
@@ -99,6 +105,7 @@ export default function QuizRenderer({ phaseNumber }: { phaseNumber: number }) {
             saveBestScore(phaseNumber, finalScore);
             setBestScore(Math.max(finalScore, bestScore ?? 0));
             setFinished(true);
+            onComplete?.(finalScore, total);
         }
     };
 
