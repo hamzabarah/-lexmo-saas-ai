@@ -6,10 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "inject-lessons": "tsx scripts/inject-lessons.ts",
-    "inject-lessons:dry-run": "tsx scripts/inject-lessons.ts --dry-run",
-    "inject-lessons:module": "tsx scripts/inject-lessons.ts --module"
+    "lint": "eslint"
   },
   "dependencies": {
     "@next/third-parties": "^16.2.1",
