@@ -10,20 +10,6 @@ export default function Footer() {
                     >
                         الشروط العامة
                     </a>
-                    <span className="text-gray-400">•</span>
-                    <a
-                        href="/legal/privacy"
-                        className="text-gray-500 hover:text-white transition-colors text-sm font-cairo"
-                    >
-                        سياسة الخصوصية
-                    </a>
-                    <span className="text-gray-400">•</span>
-                    <a
-                        href="/legal/refund"
-                        className="text-gray-500 hover:text-white transition-colors text-sm font-cairo"
-                    >
-                        سياسة الاسترداد
-                    </a>
                 </div>
 
                 {/* Contact */}

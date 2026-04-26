@@ -35,7 +35,7 @@ export default async function TermsPage() {
         <h1 className="text-3xl lg:text-4xl font-bold text-white mb-2">
           Terms and Conditions of Sale and Use — ECOMY
         </h1>
-        <p className="text-sm text-gray-500 mb-12">Last updated: March 2026 — Version 3.1</p>
+        <p className="text-sm text-gray-500 mb-12">Last updated: April 2026 — Version 4.0</p>
 
         <div className="space-y-10 text-[15px] leading-[1.85]">
 
@@ -50,17 +50,42 @@ export default async function TermsPage() {
 
           {/* Article 2 */}
           <section>
-            <h2 className="text-xl font-bold text-[#C5A04E] mb-3">Article 2 — Description of the Digital Product</h2>
-            <p>ECOMY markets an online training course on e-commerce, consisting of:</p>
+            <h2 className="text-xl font-bold text-[#C5A04E] mb-3">Article 2 — Description of the Digital Products and Services</h2>
+            <p>ECOMY markets three (3) distinct offers related to e-commerce training and consulting:</p>
+
+            <h3 className="text-base font-bold text-white mt-4 mb-2">2.1 — Complete E-commerce Training (€497)</h3>
+            <p>A comprehensive online training course consisting of:</p>
             <ul className="list-disc list-inside mt-2 space-y-1 text-gray-500">
-              <li>Twenty-seven (27) progressive learning modules</li>
-              <li>More than one hundred and twenty (120) practical video lessons</li>
+              <li>Twenty-six (26) progressive learning phases</li>
+              <li>More than one hundred and forty (140) practical video lessons</li>
+              <li>Downloadable PDF documents and course materials</li>
+              <li>Assessment exercises and interactive quizzes</li>
+              <li>Access to the online learning platform</li>
+              <li>Personalized support via Telegram</li>
+            </ul>
+            <p className="mt-3">The selling price is four hundred and ninety-seven euros (€497.00) including all taxes, payable in a single installment at the time of purchase.</p>
+
+            <h3 className="text-base font-bold text-white mt-4 mb-2">2.2 — E-commerce Training without Support (€197)</h3>
+            <p>The same online training course as described in Article 2.1, including:</p>
+            <ul className="list-disc list-inside mt-2 space-y-1 text-gray-500">
+              <li>Twenty-six (26) progressive learning phases</li>
+              <li>More than one hundred and forty (140) practical video lessons</li>
               <li>Downloadable PDF documents and course materials</li>
               <li>Assessment exercises and interactive quizzes</li>
               <li>Access to the online learning platform</li>
             </ul>
-            <p className="mt-3">The selling price of the training is four hundred and ninety-seven euros (€497.00) including all taxes, payable in a single installment at the time of purchase.</p>
-            <p className="mt-3">The product is an intangible digital good. In accordance with Article L.221-28 of the French Consumer Code and Article 16(m) of European Directive 2011/83/EU, access to this digital content is activated immediately and automatically upon payment confirmation, after the Customer&apos;s express consent. This immediate activation carries the consequences described in Article 5 herein.</p>
+            <p className="mt-3">This offer does not include personalized support via Telegram. The selling price is one hundred and ninety-seven euros (€197.00) including all taxes, payable in a single installment at the time of purchase.</p>
+
+            <h3 className="text-base font-bold text-white mt-4 mb-2">2.3 — Business Diagnostic (€97)</h3>
+            <p>A personalized one-on-one consulting service consisting of:</p>
+            <ul className="list-disc list-inside mt-2 space-y-1 text-gray-500">
+              <li>One (1) live video session of forty-five (45) minutes via Google Meet</li>
+              <li>A personalized written action plan delivered after the session</li>
+            </ul>
+            <p className="mt-3">This is a one-time service. The selling price is ninety-seven euros (€97.00) including all taxes, payable in a single installment at the time of purchase.</p>
+
+            <h3 className="text-base font-bold text-white mt-4 mb-2">2.4 — Common provisions</h3>
+            <p>The products and services described in Articles 2.1, 2.2 and 2.3 are intangible digital goods or services. In accordance with Article L.221-28 of the French Consumer Code and Article 16(m) of European Directive 2011/83/EU, access to digital content is activated immediately and automatically upon payment confirmation, after the Customer&apos;s express consent. This immediate activation carries the consequences described in Article 5 herein.</p>
           </section>
 
           {/* Article 3 */}
@@ -79,9 +104,9 @@ export default async function TermsPage() {
           {/* Article 4 */}
           <section>
             <h2 className="text-xl font-bold text-[#C5A04E] mb-3">Article 4 — Pricing, Payment and Transaction Security</h2>
-            <p>The price displayed on the Platform is expressed in euros including all taxes. The Seller reserves the right to modify prices at any time, it being understood that the applicable price is that in force at the time the order is validated.</p>
+            <p>The prices displayed on the Platform are expressed in euros including all taxes. The Seller reserves the right to modify prices at any time, it being understood that the applicable price is that in force at the time the order is validated.</p>
             <p className="mt-3">Payment is made exclusively by credit card via the secure Stripe, Inc. platform. The Seller does not retain any banking data from the Customer. The transaction is secured by SSL protocol and PCI-DSS standards. Any attempt at fraud or misuse will be subject to legal proceedings.</p>
-            <p className="mt-3">In the event of non-payment or bank rejection, the Seller reserves the right to immediately suspend access to the training and to initiate any necessary recovery procedure, including legal action.</p>
+            <p className="mt-3">In the event of non-payment or bank rejection, the Seller reserves the right to immediately suspend access to the training or service and to initiate any necessary recovery procedure, including legal action.</p>
           </section>
 
           {/* Article 5 */}
@@ -104,12 +129,13 @@ export default async function TermsPage() {
             <h3 className="text-base font-bold text-white mt-4 mb-2">5.3 — Absolute No-Refund Policy</h3>
             <p>The Seller applies a strict and absolute no-refund policy. No refund will be granted notably in the following cases, this list not being exhaustive:</p>
             <ul className="list-disc list-inside mt-2 space-y-1 text-gray-500">
-              <li>Subjective dissatisfaction of the Customer regarding the content of the training</li>
+              <li>Subjective dissatisfaction of the Customer regarding the content of the training or the diagnostic session</li>
               <li>Absence of financial or commercial results</li>
               <li>Technical difficulties related to the Customer&apos;s equipment or internet connection</li>
               <li>Change in the Customer&apos;s personal or professional situation</li>
-              <li>Customer&apos;s misjudgment regarding the suitability of the training for their needs</li>
+              <li>Customer&apos;s misjudgment regarding the suitability of the training or service for their needs</li>
               <li>Total or partial non-use of the content by the Customer</li>
+              <li>Customer&apos;s failure to attend a scheduled diagnostic session</li>
               <li>Any other reason invoked by the Customer after activation of access</li>
             </ul>
 
@@ -126,7 +152,7 @@ export default async function TermsPage() {
           <section>
             <h2 className="text-xl font-bold text-[#C5A04E] mb-3">Article 6 — Bank Dispute Procedure (Chargeback)</h2>
             <p>The Seller expressly draws the Customer&apos;s attention to the serious consequences of an unjustified bank dispute (chargeback) procedure.</p>
-            <p className="mt-3">In the event of a chargeback initiated by the Customer after activation of access to the digital content, the Seller will:</p>
+            <p className="mt-3">In the event of a chargeback initiated by the Customer after activation of access to the digital content or service, the Seller will:</p>
             <ul className="list-disc list-inside mt-2 space-y-1 text-gray-500">
               <li>Submit to the banking institution all evidence of activation and access to the content (timestamped server logs, IP addresses, connection history)</li>
               <li>Produce proof of the Customer&apos;s express acceptance of these T&amp;C, including waiver of the right of withdrawal</li>
@@ -157,8 +183,15 @@ export default async function TermsPage() {
           {/* Article 8 */}
           <section>
             <h2 className="text-xl font-bold text-[#C5A04E] mb-3">Article 8 — Duration of Access and Termination Conditions</h2>
+
+            <h3 className="text-base font-bold text-white mt-4 mb-2">8.1 — Training offers (€497 and €197)</h3>
             <p>Access to the training is granted for a fixed period of six (6) months from the activation date. Upon expiry, the Seller reserves the right to delete access without notice or compensation. The Customer may renew their access by purchasing the training again at the then-current prices.</p>
-            <p className="mt-3">The Seller reserves the right to immediately terminate access without notice in case of:</p>
+
+            <h3 className="text-base font-bold text-white mt-4 mb-2">8.2 — Business Diagnostic (€97)</h3>
+            <p>The diagnostic is a one-time service. The Seller&apos;s obligations are deemed fully performed upon delivery of the live session and the written action plan. No continued access is granted thereafter.</p>
+
+            <h3 className="text-base font-bold text-white mt-4 mb-2">8.3 — Termination for breach</h3>
+            <p>The Seller reserves the right to immediately terminate access without notice in case of:</p>
             <ul className="list-disc list-inside mt-2 space-y-1 text-gray-500">
               <li>Violation of any provision of these T&amp;C</li>
               <li>Unauthorized sharing of login credentials</li>
@@ -172,16 +205,16 @@ export default async function TermsPage() {
           {/* Article 9 */}
           <section>
             <h2 className="text-xl font-bold text-[#C5A04E] mb-3">Article 9 — Limitation of Liability and Results Disclaimer</h2>
-            <p>The training content is provided for purely educational and informational purposes. The Seller does not guarantee the achievement of specific financial, commercial or professional results following the training.</p>
+            <p>The training content and the diagnostic service are provided for purely educational and informational purposes. The Seller does not guarantee the achievement of specific financial, commercial or professional results following the training or the diagnostic.</p>
             <p className="mt-3">The Customer expressly acknowledges and accepts that:</p>
             <ul className="list-disc list-inside mt-2 space-y-1 text-gray-500">
               <li>Examples of results and figures presented in marketing materials are illustrations for indicative purposes only and do not constitute a promise of results</li>
               <li>Success depends exclusively on personal effort, investment, skills and market conditions specific to each Customer</li>
               <li>The Seller is not responsible for financial losses, direct or indirect, that may result from applying the strategies taught</li>
-              <li>The training does not constitute financial, tax, legal or accounting advice</li>
+              <li>The training and the diagnostic do not constitute financial, tax, legal or accounting advice</li>
               <li>Results vary significantly from one individual to another</li>
             </ul>
-            <p className="mt-3">The Seller&apos;s liability, for any reason whatsoever, is expressly limited to the amount paid by the Customer for the training (€497). The Seller shall not be liable for indirect, consequential, special or exemplary damages.</p>
+            <p className="mt-3">The Seller&apos;s liability, for any reason whatsoever, is expressly limited to the amount actually paid by the Customer for the product or service concerned. The Seller shall not be liable for indirect, consequential, special or exemplary damages.</p>
           </section>
 
           {/* Article 10 */}
