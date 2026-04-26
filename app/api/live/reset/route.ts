@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { createClient as createServerClient } from '@/utils/supabase/server';
+
+const ADMIN_EMAIL = 'academyfrance75@gmail.com';
 
 // Initialize Supabase Admin Client
 const supabaseAdmin = createClient(
@@ -9,6 +12,17 @@ const supabaseAdmin = createClient(
 
 export async function GET() {
     try {
+        // Auth check: must be logged-in admin
+        const supabase = await createServerClient();
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+        if (user.email !== ADMIN_EMAIL) {
+            return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+        }
+
         const today = new Date().toISOString().split('T')[0];
 
         const resetData = {
