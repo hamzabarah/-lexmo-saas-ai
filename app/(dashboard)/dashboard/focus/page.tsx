@@ -27,15 +27,22 @@ interface ApiResponse {
 }
 
 const CATEGORIES = [
-    { value: "code", label: "Code", color: "#22d3ee" },
-    { value: "design", label: "Design", color: "#f472b6" },
-    { value: "admin", label: "Admin", color: "#a78bfa" },
-    { value: "etude", label: "Étude", color: "#34d399" },
-    { value: "marketing", label: "Marketing", color: "#fbbf24" },
-    { value: "autre", label: "Autre", color: "#9ca3af" },
+    { value: "code", label: "برمجة", color: "#22d3ee" },
+    { value: "design", label: "تصميم", color: "#f472b6" },
+    { value: "admin", label: "إدارة", color: "#a78bfa" },
+    { value: "etude", label: "دراسة", color: "#34d399" },
+    { value: "marketing", label: "تسويق", color: "#fbbf24" },
+    { value: "autre", label: "أخرى", color: "#9ca3af" },
 ];
 
 const QUICK_DURATIONS = [25, 40, 60, 90];
+
+const STATUS_LABELS: Record<string, string> = {
+    running: "قيد التنفيذ",
+    paused: "متوقف مؤقتاً",
+    completed: "مكتمل",
+    abandoned: "ملغى",
+};
 
 function pad(n: number): string {
     return String(n).padStart(2, "0");
@@ -51,7 +58,15 @@ function formatHMS(totalSeconds: number): string {
 }
 
 function formatTime(iso: string): string {
-    return new Date(iso).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+    return new Date(iso).toLocaleTimeString("ar-u-nu-latn", { hour: "2-digit", minute: "2-digit" });
+}
+
+// "Y دقيقة" if no hours, "X ساعة و Y دقيقة" otherwise
+function formatMinutesArabic(totalMinutes: number): string {
+    const h = Math.floor(totalMinutes / 60);
+    const m = totalMinutes % 60;
+    if (h > 0) return `${h} ساعة و ${m} دقيقة`;
+    return `${m} دقيقة`;
 }
 
 function categoryMeta(value: string | null) {
@@ -124,7 +139,7 @@ export default function FocusPage() {
         return () => clearInterval(id);
     }, [activeSession]);
 
-    // Sync local pause ref with server status (re-init if server says paused but no local mark)
+    // Sync local pause ref with server status
     useEffect(() => {
         if (activeSession?.status === "paused" && pauseStartedAtRef.current === null) {
             pauseStartedAtRef.current = Date.now();
@@ -143,9 +158,8 @@ export default function FocusPage() {
             : Date.now();
         const raw = (nowMs - startMs) / 1000 - (activeSession.paused_seconds || 0);
         return Math.max(0, Math.floor(raw));
-        // tick triggers re-compute
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeSession, /* tick */ data]);
+    }, [activeSession, data]);
 
     const plannedSeconds = (activeSession?.planned_duration_minutes || 0) * 60;
     const overtime = activeSession && elapsedSeconds > plannedSeconds && plannedSeconds > 0;
@@ -215,7 +229,6 @@ export default function FocusPage() {
         if (!stopModal) return;
         setSavingStop(true);
         const session = stopModal.session;
-        // If session was paused, finalize the pending pause time
         const pausedAt = pauseStartedAtRef.current;
         const extraPaused =
             session.status === "paused" && pausedAt ? Math.floor((Date.now() - pausedAt) / 1000) : 0;
@@ -240,7 +253,7 @@ export default function FocusPage() {
 
     const handleAbandon = async () => {
         if (!activeSession) return;
-        if (!confirm("Abandonner cette session ? Le temps écoulé ne sera pas compté comme focus complété.")) return;
+        if (!confirm("هل أنت متأكد من إلغاء الجلسة؟")) return;
         const pausedAt = pauseStartedAtRef.current;
         const extraPaused =
             activeSession.status === "paused" && pausedAt ? Math.floor((Date.now() - pausedAt) / 1000) : 0;
@@ -275,8 +288,8 @@ export default function FocusPage() {
                     <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
                         <Lock className="w-10 h-10 text-red-500" />
                     </div>
-                    <h2 className="text-2xl font-bold text-white mb-3">Accès restreint</h2>
-                    <p className="text-gray-400">Cet outil est réservé à l&apos;administrateur.</p>
+                    <h2 className="text-2xl font-bold text-white mb-3">الوصول مقيد</h2>
+                    <p className="text-gray-400">هذه الصفحة محجوزة للمسؤول</p>
                 </div>
             </div>
         );
@@ -286,11 +299,11 @@ export default function FocusPage() {
     const stats = data?.stats || { totalMinutes: 0, completedCount: 0, abandonedCount: 0 };
 
     return (
-        <div className="max-w-4xl mx-auto space-y-6" dir="ltr">
+        <div className="max-w-4xl mx-auto space-y-6">
             {/* Header */}
             <div className="flex items-center gap-3">
                 <Timer className="w-7 h-7 text-[#C5A04E]" />
-                <h1 className="text-2xl font-bold text-white">Focus Tracker</h1>
+                <h1 className="text-2xl font-bold text-white">متتبع التركيز</h1>
             </div>
 
             {/* ─── Active session OR Start form ─── */}
@@ -325,14 +338,14 @@ export default function FocusPage() {
             {/* ─── Today's sessions ─── */}
             <div className="bg-[#111111] border border-[#C5A04E]/10 rounded-2xl p-6">
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-lg font-bold text-white">Aujourd&apos;hui</h2>
+                    <h2 className="text-lg font-bold text-white">اليوم</h2>
                     {!loading && (
                         <p className="text-sm text-gray-500">
-                            Focus total : <span className="text-[#C5A04E] font-bold">{Math.floor(stats.totalMinutes / 60)}h{pad(stats.totalMinutes % 60)}</span>
+                            إجمالي التركيز: <span className="text-[#C5A04E] font-bold">{formatMinutesArabic(stats.totalMinutes)}</span>
                             {" — "}
-                            {stats.completedCount} session{stats.completedCount > 1 ? "s" : ""} complétée{stats.completedCount > 1 ? "s" : ""}
+                            {stats.completedCount} جلسات مكتملة
                             {stats.abandonedCount > 0 && (
-                                <span className="text-gray-600"> · {stats.abandonedCount} abandonnée{stats.abandonedCount > 1 ? "s" : ""}</span>
+                                <span className="text-gray-600"> · {stats.abandonedCount} ملغاة</span>
                             )}
                         </p>
                     )}
@@ -344,7 +357,7 @@ export default function FocusPage() {
                     </div>
                 ) : sessions.length === 0 ? (
                     <div className="text-center py-12 text-gray-500">
-                        Aucune session aujourd&apos;hui. Lance ta première !
+                        لا توجد جلسات اليوم — ابدأ جلستك الأولى!
                     </div>
                 ) : (
                     <div className="space-y-2">
@@ -358,14 +371,13 @@ export default function FocusPage() {
             {/* ─── Stop modal ─── */}
             {stopModal && (
                 <Modal onClose={() => !savingStop && setStopModal(null)}>
-                    <h3 className="text-xl font-bold text-white mb-2">Session terminée</h3>
-                    <p className="text-gray-400 text-sm mb-4">Qu&apos;as-tu accompli pendant cette session ?</p>
+                    <h3 className="text-xl font-bold text-white mb-4">ماذا أنجزت؟</h3>
                     <textarea
                         value={stopModal.notes}
                         onChange={(e) => setStopModal({ ...stopModal, notes: e.target.value })}
                         rows={4}
                         autoFocus
-                        placeholder="Optionnel — notes, livrables, blocages…"
+                        placeholder="اكتب ما أنجزته خلال هذه الجلسة..."
                         className="w-full bg-[#0A0A0A] border border-[#C5A04E]/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#C5A04E] resize-none"
                     />
                     <div className="flex gap-3 mt-5">
@@ -374,7 +386,7 @@ export default function FocusPage() {
                             disabled={savingStop}
                             className="flex-1 px-4 py-3 rounded-xl bg-[#1A1A1A] text-gray-400 font-bold hover:bg-[#222222] transition-colors disabled:opacity-50"
                         >
-                            Annuler
+                            إلغاء
                         </button>
                         <button
                             onClick={handleStopConfirm}
@@ -382,7 +394,7 @@ export default function FocusPage() {
                             className="flex-1 px-4 py-3 rounded-xl bg-[#C5A04E] text-white font-bold hover:bg-[#D4B85C] transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                         >
                             {savingStop ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
-                            Valider
+                            حفظ
                         </button>
                     </div>
                 </Modal>
@@ -391,7 +403,7 @@ export default function FocusPage() {
             {/* ─── Detail modal ─── */}
             {detailModal && (
                 <Modal onClose={() => setDetailModal(null)}>
-                    <SessionDetail session={detailModal} />
+                    <SessionDetail session={detailModal} onClose={() => setDetailModal(null)} />
                 </Modal>
             )}
         </div>
@@ -438,8 +450,9 @@ function ActiveSessionView({
                 )}
             </div>
 
-            {/* Big timer */}
+            {/* Big timer (LTR for digits) */}
             <div
+                dir="ltr"
                 className={`text-6xl md:text-8xl font-bold tracking-tight transition-colors ${
                     overtime ? "text-red-400" : isPaused ? "text-gray-500" : "text-white"
                 }`}
@@ -459,9 +472,9 @@ function ActiveSessionView({
                     />
                 </div>
                 <p className="text-xs text-gray-500 mt-2">
-                    Planifié : {session.planned_duration_minutes} min
-                    {overtime && <span className="text-red-400 ml-2">· Temps dépassé</span>}
-                    {isPaused && <span className="text-yellow-400 ml-2">· En pause</span>}
+                    المدة المخططة: {session.planned_duration_minutes} دقيقة
+                    {overtime && <span className="text-red-400 mr-2">· تجاوز الوقت</span>}
+                    {isPaused && <span className="text-yellow-400 mr-2">· متوقف مؤقتاً</span>}
                 </p>
             </div>
 
@@ -472,27 +485,27 @@ function ActiveSessionView({
                         onClick={onResume}
                         className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#C5A04E] text-white font-bold hover:bg-[#D4B85C] transition-colors"
                     >
-                        <Play className="w-5 h-5" /> Reprendre
+                        <Play className="w-5 h-5" /> استئناف
                     </button>
                 ) : (
                     <button
                         onClick={onPause}
                         className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#1A1A1A] text-gray-300 font-bold hover:bg-[#222222] transition-colors border border-white/[0.08]"
                     >
-                        <Pause className="w-5 h-5" /> Pause
+                        <Pause className="w-5 h-5" /> إيقاف مؤقت
                     </button>
                 )}
                 <button
                     onClick={onStop}
                     className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-green-600/90 text-white font-bold hover:bg-green-600 transition-colors"
                 >
-                    <Square className="w-5 h-5" /> Stop
+                    <Square className="w-5 h-5" /> إنهاء
                 </button>
                 <button
                     onClick={onAbandon}
                     className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#1A1A1A] text-red-400 font-bold hover:bg-red-500/10 transition-colors border border-red-500/20"
                 >
-                    <X className="w-5 h-5" /> Abandonner
+                    <X className="w-5 h-5" /> إلغاء
                 </button>
             </div>
         </div>
@@ -532,12 +545,12 @@ function StartForm({
         <div className="space-y-6">
             {/* Task title */}
             <div>
-                <label className="block text-sm font-bold text-gray-400 mb-2">Sur quoi tu travailles ?</label>
+                <label className="block text-sm font-bold text-gray-400 mb-2">على ماذا تعمل؟</label>
                 <input
                     type="text"
                     value={taskTitle}
                     onChange={(e) => setTaskTitle(e.target.value)}
-                    placeholder="Ex: refactor du dashboard admin"
+                    placeholder="مثال: تحسين لوحة الإدارة"
                     autoFocus
                     className="w-full bg-[#0A0A0A] border border-[#C5A04E]/15 rounded-xl px-4 py-3 text-white text-lg focus:outline-none focus:border-[#C5A04E]"
                 />
@@ -545,7 +558,7 @@ function StartForm({
 
             {/* Duration */}
             <div>
-                <label className="block text-sm font-bold text-gray-400 mb-2">Durée prévue</label>
+                <label className="block text-sm font-bold text-gray-400 mb-2">المدة المخططة</label>
                 <div className="flex flex-wrap gap-2">
                     {QUICK_DURATIONS.map((d) => (
                         <button
@@ -560,7 +573,7 @@ function StartForm({
                                     : "bg-[#1A1A1A] text-gray-400 hover:bg-[#222222]"
                             }`}
                         >
-                            {d} min
+                            {d} دقيقة
                         </button>
                     ))}
                     <input
@@ -569,7 +582,7 @@ function StartForm({
                         value={customDuration}
                         onChange={(e) => setCustomDuration(e.target.value)}
                         onBlur={onCustomBlur}
-                        placeholder="Autre"
+                        placeholder="أخرى"
                         className="w-24 bg-[#1A1A1A] border border-[#C5A04E]/15 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-[#C5A04E]"
                     />
                 </div>
@@ -577,7 +590,7 @@ function StartForm({
 
             {/* Category */}
             <div>
-                <label className="block text-sm font-bold text-gray-400 mb-2">Catégorie</label>
+                <label className="block text-sm font-bold text-gray-400 mb-2">الفئة</label>
                 <div className="flex flex-wrap gap-2">
                     {CATEGORIES.map((c) => (
                         <button
@@ -607,7 +620,7 @@ function StartForm({
                 className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-[#C5A04E] text-white text-lg font-bold hover:bg-[#D4B85C] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
                 {starting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Play className="w-5 h-5" />}
-                Démarrer
+                ابدأ
             </button>
         </div>
     );
@@ -629,10 +642,10 @@ function SessionRow({ session, onClick }: { session: FocusSession; onClick: () =
     return (
         <button
             onClick={onClick}
-            className="w-full flex items-center gap-3 p-3 rounded-xl bg-[#0A0A0A] hover:bg-[#1A1A1A] transition-colors text-left border border-white/[0.04]"
+            className="w-full flex items-center gap-3 p-3 rounded-xl bg-[#0A0A0A] hover:bg-[#1A1A1A] transition-colors text-right border border-white/[0.04]"
         >
             <div className="shrink-0">{statusIcon}</div>
-            <div className="text-xs text-gray-500 font-mono shrink-0 w-12">{formatTime(session.started_at)}</div>
+            <div className="text-xs text-gray-500 font-mono shrink-0 w-12" dir="ltr">{formatTime(session.started_at)}</div>
             <div className="flex-1 min-w-0">
                 <p className="text-sm text-white truncate">{session.task_title}</p>
                 {session.notes && <p className="text-xs text-gray-500 truncate mt-0.5">{session.notes}</p>}
@@ -648,7 +661,7 @@ function SessionRow({ session, onClick }: { session: FocusSession; onClick: () =
             {session.status === "completed" && (
                 <span className="text-xs text-gray-400 font-mono shrink-0 flex items-center gap-1">
                     <Clock className="w-3 h-3" />
-                    {Math.floor(realSeconds / 60)}m
+                    {Math.floor(realSeconds / 60)} دقيقة
                 </span>
             )}
         </button>
@@ -656,11 +669,13 @@ function SessionRow({ session, onClick }: { session: FocusSession; onClick: () =
 }
 
 // ─── Session detail ───────────────────────────────────────────
-function SessionDetail({ session }: { session: FocusSession }) {
+function SessionDetail({ session, onClose }: { session: FocusSession; onClose: () => void }) {
     const cat = categoryMeta(session.category);
     const realSeconds = session.ended_at
         ? Math.max(0, Math.floor((new Date(session.ended_at).getTime() - new Date(session.started_at).getTime()) / 1000) - (session.paused_seconds || 0))
         : 0;
+    const realMinutes = Math.floor(realSeconds / 60);
+    const pausedMinutes = Math.floor((session.paused_seconds || 0) / 60);
 
     return (
         <div className="space-y-4">
@@ -676,20 +691,27 @@ function SessionDetail({ session }: { session: FocusSession }) {
             )}
 
             <div className="grid grid-cols-2 gap-3 text-sm">
-                <Field label="Statut" value={session.status} />
-                <Field label="Début" value={formatTime(session.started_at)} />
-                {session.ended_at && <Field label="Fin" value={formatTime(session.ended_at)} />}
-                <Field label="Planifié" value={`${session.planned_duration_minutes} min`} />
-                {session.ended_at && <Field label="Réel" value={`${Math.floor(realSeconds / 60)} min`} />}
-                {session.paused_seconds > 0 && <Field label="Pause" value={`${Math.floor(session.paused_seconds / 60)} min`} />}
+                <Field label="الحالة" value={STATUS_LABELS[session.status] || session.status} />
+                <Field label="وقت البدء" value={formatTime(session.started_at)} />
+                {session.ended_at && <Field label="وقت الانتهاء" value={formatTime(session.ended_at)} />}
+                <Field label="المدة المخططة" value={`${session.planned_duration_minutes} دقيقة`} />
+                {session.ended_at && <Field label="المدة الفعلية" value={`${realMinutes} دقيقة`} />}
+                {session.paused_seconds > 0 && <Field label="الإيقاف المؤقت" value={`${pausedMinutes} دقيقة`} />}
             </div>
 
-            {session.notes && (
-                <div className="bg-[#0A0A0A] border border-[#C5A04E]/10 rounded-xl p-4">
-                    <p className="text-xs font-bold text-gray-500 mb-2">Notes</p>
-                    <p className="text-sm text-gray-300 whitespace-pre-wrap">{session.notes}</p>
-                </div>
-            )}
+            <div className="bg-[#0A0A0A] border border-[#C5A04E]/10 rounded-xl p-4">
+                <p className="text-xs font-bold text-gray-500 mb-2">ملاحظات</p>
+                <p className="text-sm text-gray-300 whitespace-pre-wrap">
+                    {session.notes || <span className="text-gray-600">لا توجد ملاحظات</span>}
+                </p>
+            </div>
+
+            <button
+                onClick={onClose}
+                className="w-full px-4 py-3 rounded-xl bg-[#1A1A1A] text-gray-300 font-bold hover:bg-[#222222] transition-colors"
+            >
+                إغلاق
+            </button>
         </div>
     );
 }
