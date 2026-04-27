@@ -206,16 +206,18 @@ export default function FocusPage() {
         }
     }, [activeSession?.status]);
 
-    const elapsedSeconds = useMemo(() => {
-        if (!activeSession) return 0;
+    // Computed every render — setTick (1s interval) triggers re-renders so the
+    // displayed value advances. Don't memoize on [activeSession]: the deps would
+    // never change between ticks and the timer would freeze.
+    let elapsedSeconds = 0;
+    if (activeSession) {
         const startMs = new Date(activeSession.started_at).getTime();
         const nowMs = activeSession.status === "paused" && pauseStartedAtRef.current
             ? pauseStartedAtRef.current
             : Date.now();
         const raw = (nowMs - startMs) / 1000 - (activeSession.paused_seconds || 0);
-        return Math.max(0, Math.floor(raw));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeSession, sessionsData]);
+        elapsedSeconds = Math.max(0, Math.floor(raw));
+    }
 
     const plannedSeconds = (activeSession?.planned_duration_minutes || 0) * 60;
     const overtime = activeSession && elapsedSeconds > plannedSeconds && plannedSeconds > 0;
