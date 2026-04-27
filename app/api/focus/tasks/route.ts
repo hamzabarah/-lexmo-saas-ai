@@ -63,8 +63,21 @@ export async function GET(req: NextRequest) {
         time_total_seconds: number;
         sessions_count_total: number;
     }>();
+    const subtaskMap = new Map<string, { count: number; completed: number }>();
 
     if (taskIds.length > 0) {
+        // Subtasks counters in one query
+        const { data: subtaskRows } = await admin
+            .from('focus_subtasks')
+            .select('task_id, is_completed')
+            .in('task_id', taskIds);
+        for (const st of subtaskRows || []) {
+            const entry = subtaskMap.get(st.task_id) || { count: 0, completed: 0 };
+            entry.count++;
+            if (st.is_completed) entry.completed++;
+            subtaskMap.set(st.task_id, entry);
+        }
+
         const { data: sessions } = await admin
             .from('focus_sessions')
             .select('task_id, started_at, ended_at, paused_seconds, status')
@@ -102,9 +115,12 @@ export async function GET(req: NextRequest) {
             time_total_seconds: 0,
             sessions_count_total: 0,
         };
+        const sub = subtaskMap.get(t.id) || { count: 0, completed: 0 };
         return {
             ...t,
             ...agg,
+            subtasks_count: sub.count,
+            subtasks_completed_count: sub.completed,
             // Backward-compat aliases
             total_time_seconds: agg.time_total_seconds,
             sessions_count: agg.sessions_count_total,

@@ -23,6 +23,8 @@ export interface FocusTask {
     time_this_month_seconds: number;
     time_total_seconds: number;
     sessions_count_total: number;
+    subtasks_count: number;
+    subtasks_completed_count: number;
     // Backward-compat aliases
     total_time_seconds: number;
     sessions_count: number;

@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
     const admin = getAdmin();
     const { data: sessions, error } = await admin
         .from('focus_sessions')
-        .select('*, focus_tasks(id, title, category)')
+        .select('*, focus_tasks(id, title, category), focus_subtasks(id, title)')
         .eq('user_id', user.id)
         .gte('started_at', target.toISOString())
         .lt('started_at', next.toISOString())
@@ -67,10 +67,14 @@ export async function POST(req: NextRequest) {
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await req.json();
-    const { task_title, category, planned_duration_minutes, task_id } = body;
+    const { task_title, category, planned_duration_minutes, task_id, subtask_id } = body;
 
     if (typeof task_title !== 'string' || !task_title.trim()) {
         return NextResponse.json({ error: 'task_title required' }, { status: 400 });
+    }
+
+    if (subtask_id && !task_id) {
+        return NextResponse.json({ error: 'subtask_id requires task_id' }, { status: 400 });
     }
 
     const planned =
@@ -98,6 +102,18 @@ export async function POST(req: NextRequest) {
         }
     }
 
+    // If linked to a subtask, verify it belongs to the parent task
+    if (subtask_id) {
+        const { data: subtask } = await admin
+            .from('focus_subtasks')
+            .select('id, user_id, task_id')
+            .eq('id', subtask_id)
+            .single();
+        if (!subtask || subtask.user_id !== user.id || subtask.task_id !== task_id) {
+            return NextResponse.json({ error: 'Invalid subtask_id' }, { status: 403 });
+        }
+    }
+
     const { data, error } = await admin
         .from('focus_sessions')
         .insert({
@@ -107,6 +123,7 @@ export async function POST(req: NextRequest) {
             planned_duration_minutes: planned,
             status: 'running',
             task_id: task_id || null,
+            subtask_id: subtask_id || null,
         })
         .select()
         .single();

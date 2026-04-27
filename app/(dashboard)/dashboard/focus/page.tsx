@@ -4,11 +4,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
 import { useFocusTasks, FocusTask, TaskCategory, TaskStatus, TaskType } from "@/lib/hooks/useFocusTasks";
+import { useFocusSubtasks, FocusSubtask } from "@/lib/hooks/useFocusSubtasks";
 import {
     Lock, Play, Pause, Square, X, Timer, Tag, Clock, Loader2,
     CheckCircle2, AlertCircle, PauseCircle, Plus, Target,
     MoreVertical, Pencil, Trash2, History, Circle, CheckCircle,
-    Repeat, Check, BarChart3, Archive
+    Repeat, Check, BarChart3, Archive, ListChecks, ChevronLeft
 } from "lucide-react";
 
 const ADMIN_EMAIL = "academyfrance75@gmail.com";
@@ -25,7 +26,9 @@ interface FocusSession {
     paused_seconds: number;
     status: "running" | "paused" | "completed" | "abandoned";
     task_id: string | null;
+    subtask_id: string | null;
     focus_tasks: { id: string; title: string; category: string | null } | null;
+    focus_subtasks: { id: string; title: string } | null;
     created_at: string;
     updated_at: string;
 }
@@ -129,6 +132,7 @@ export default function FocusPage() {
     const tasksApi = useFocusTasks();
 
     const [selectedTask, setSelectedTask] = useState<FocusTask | null>(null);
+    const [selectedSubtask, setSelectedSubtask] = useState<FocusSubtask | null>(null);
 
     const [plannedMinutes, setPlannedMinutes] = useState<number>(40);
     const [customDuration, setCustomDuration] = useState<string>("");
@@ -149,6 +153,7 @@ export default function FocusPage() {
         defaultType: TaskType;
     } | null>(null);
     const [historyModal, setHistoryModal] = useState<FocusTask | null>(null);
+    const [detailsTaskModal, setDetailsTaskModal] = useState<FocusTask | null>(null);
 
     // Per-section filters
     const [recurringFilter, setRecurringFilter] = useState<"active" | "all">("active");
@@ -217,7 +222,7 @@ export default function FocusPage() {
 
     // ─── Tracker actions ───
     const handleStart = async () => {
-        const title = (selectedTask?.title || freeTitle).trim();
+        const title = (selectedSubtask?.title || selectedTask?.title || freeTitle).trim();
         if (!title) return;
         setStarting(true);
         try {
@@ -230,12 +235,14 @@ export default function FocusPage() {
                     category: selectedTask?.category || null,
                     planned_duration_minutes: plannedMinutes,
                     task_id: selectedTask?.id || null,
+                    subtask_id: selectedSubtask?.id || null,
                 }),
             });
             if (res.ok) {
                 setFreeTitle("");
                 setCustomDuration("");
                 setSelectedTask(null);
+                setSelectedSubtask(null);
                 await refreshSessions();
                 if (selectedTask) await tasksApi.refresh();
             }
@@ -333,7 +340,19 @@ export default function FocusPage() {
             return;
         }
         setSelectedTask(task);
+        setSelectedSubtask(null);
         setFreeTitle("");
+    };
+
+    const startSessionFromSubtask = (task: FocusTask, subtask: FocusSubtask) => {
+        if (activeSession) {
+            alert("يوجد جلسة نشطة بالفعل. أنهها أولاً.");
+            return;
+        }
+        setSelectedTask(task);
+        setSelectedSubtask(subtask);
+        setFreeTitle("");
+        setDetailsTaskModal(null);
     };
 
     const toggleTaskDone = async (task: FocusTask) => {
@@ -436,6 +455,7 @@ export default function FocusPage() {
                             if (confirm(`حذف المهمة "${task.title}"؟`)) await tasksApi.deleteTask(task.id);
                         }}
                         onShowHistory={() => setHistoryModal(task)}
+                        onShowDetails={() => setDetailsTaskModal(task)}
                     />
                 )}
             />
@@ -471,6 +491,7 @@ export default function FocusPage() {
                             if (confirm(`حذف المهمة "${task.title}"؟`)) await tasksApi.deleteTask(task.id);
                         }}
                         onShowHistory={() => setHistoryModal(task)}
+                        onShowDetails={() => setDetailsTaskModal(task)}
                     />
                 )}
             />
@@ -505,6 +526,7 @@ export default function FocusPage() {
                             if (confirm(`حذف المهمة "${task.title}"؟`)) await tasksApi.deleteTask(task.id);
                         }}
                         onShowHistory={() => setHistoryModal(task)}
+                        onShowDetails={() => setDetailsTaskModal(task)}
                     />
                 )}
             />
@@ -529,7 +551,8 @@ export default function FocusPage() {
                 ) : (
                     <StartForm
                         selectedTask={selectedTask}
-                        onClearSelectedTask={() => setSelectedTask(null)}
+                        selectedSubtask={selectedSubtask}
+                        onClearSelected={() => { setSelectedTask(null); setSelectedSubtask(null); }}
                         freeTitle={freeTitle}
                         setFreeTitle={setFreeTitle}
                         plannedMinutes={plannedMinutes}
@@ -625,6 +648,29 @@ export default function FocusPage() {
                         task={historyModal}
                         sessions={sessions.filter((s) => s.task_id === historyModal.id)}
                         onClose={() => setHistoryModal(null)}
+                    />
+                </Modal>
+            )}
+
+            {detailsTaskModal && (
+                <Modal onClose={() => setDetailsTaskModal(null)} large>
+                    <TaskDetailsModal
+                        task={detailsTaskModal}
+                        recentSessions={sessions.filter((s) => s.task_id === detailsTaskModal.id).slice(0, 10)}
+                        onTitleSave={async (newTitle) => {
+                            await tasksApi.updateTask(detailsTaskModal.id, { title: newTitle });
+                        }}
+                        onSubtaskChanged={async () => {
+                            await tasksApi.refresh();
+                        }}
+                        onStartSessionGeneral={() => {
+                            startSessionFromTask(detailsTaskModal);
+                            setDetailsTaskModal(null);
+                        }}
+                        onStartSessionSubtask={(subtask) => startSessionFromSubtask(detailsTaskModal, subtask)}
+                        onClose={() => setDetailsTaskModal(null)}
+                        activeTaskId={activeSession?.task_id || null}
+                        activeSubtaskId={activeSession?.subtask_id || null}
                     />
                 </Modal>
             )}
@@ -732,6 +778,7 @@ function RecurringTaskRow({
     onArchive,
     onDelete,
     onShowHistory,
+    onShowDetails,
 }: {
     task: FocusTask;
     isActiveTask: boolean;
@@ -740,6 +787,7 @@ function RecurringTaskRow({
     onArchive: () => void;
     onDelete: () => void;
     onShowHistory: () => void;
+    onShowDetails: () => void;
 }) {
     const cat = task.category ? CATEGORY_META[task.category] : null;
     const isArchived = task.status === "done";
@@ -748,17 +796,25 @@ function RecurringTaskRow({
         <div className={`p-3 rounded-xl bg-[#0A0A0A] border ${isActiveTask ? "border-[#C5A04E]/40" : isArchived ? "border-white/[0.04] opacity-60" : "border-white/[0.04]"}`}>
             <div className="flex items-start gap-3">
                 <div className="flex-1 min-w-0">
-                    <p className={`text-sm font-bold ${isArchived ? "text-gray-500 line-through" : "text-white"}`}>
+                    <button
+                        onClick={onShowDetails}
+                        className={`text-sm font-bold text-right hover:underline ${isArchived ? "text-gray-500 line-through" : "text-white"}`}
+                    >
                         {task.title}
-                    </p>
-                    {cat && (
-                        <span
-                            className="inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full"
-                            style={{ backgroundColor: cat.bg, color: cat.text }}
-                        >
-                            {cat.label}
-                        </span>
-                    )}
+                    </button>
+                    <div className="flex items-center gap-2 mt-1 flex-wrap">
+                        {cat && (
+                            <span
+                                className="text-[10px] font-bold px-2 py-0.5 rounded-full"
+                                style={{ backgroundColor: cat.bg, color: cat.text }}
+                            >
+                                {cat.label}
+                            </span>
+                        )}
+                        {task.subtasks_count > 0 && (
+                            <SubtaskCounter task={task} onClick={onShowDetails} />
+                        )}
+                    </div>
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">
                     {!isArchived && (
@@ -772,6 +828,7 @@ function RecurringTaskRow({
                         </button>
                     )}
                     <TaskMenu>
+                        <MenuItem icon={<ListChecks className="w-4 h-4" />} label="المهام الفرعية" onClick={onShowDetails} />
                         <MenuItem icon={<Pencil className="w-4 h-4" />} label="تعديل" onClick={onEdit} />
                         <MenuItem icon={<History className="w-4 h-4" />} label="السجل" onClick={onShowHistory} />
                         <MenuItem
@@ -804,6 +861,7 @@ function OneTimeTaskRow({
     onEdit,
     onDelete,
     onShowHistory,
+    onShowDetails,
 }: {
     task: FocusTask;
     isActiveTask: boolean;
@@ -812,6 +870,7 @@ function OneTimeTaskRow({
     onEdit: () => void;
     onDelete: () => void;
     onShowHistory: () => void;
+    onShowDetails: () => void;
 }) {
     const cat = task.category ? CATEGORY_META[task.category] : null;
     const isDone = task.status === "done";
@@ -823,7 +882,12 @@ function OneTimeTaskRow({
             </button>
 
             <div className="flex-1 min-w-0">
-                <p className={`text-sm font-bold ${isDone ? "text-gray-500 line-through" : "text-white"}`}>{task.title}</p>
+                <button
+                    onClick={onShowDetails}
+                    className={`text-sm font-bold text-right hover:underline ${isDone ? "text-gray-500 line-through" : "text-white"}`}
+                >
+                    {task.title}
+                </button>
                 <div className="flex items-center gap-2 mt-1 flex-wrap">
                     {cat && (
                         <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: cat.bg, color: cat.text }}>
@@ -837,6 +901,7 @@ function OneTimeTaskRow({
                         <Clock className="w-3 h-3" />
                         الوقت المنقضي: {formatDuration(task.time_total_seconds)}
                     </span>
+                    {task.subtasks_count > 0 && <SubtaskCounter task={task} onClick={onShowDetails} />}
                 </div>
             </div>
 
@@ -852,6 +917,7 @@ function OneTimeTaskRow({
             )}
 
             <TaskMenu>
+                <MenuItem icon={<ListChecks className="w-4 h-4" />} label="المهام الفرعية" onClick={onShowDetails} />
                 <MenuItem icon={<Pencil className="w-4 h-4" />} label="تعديل" onClick={onEdit} />
                 <MenuItem icon={<History className="w-4 h-4" />} label="السجل" onClick={onShowHistory} />
                 <MenuItem icon={<Trash2 className="w-4 h-4" />} label="حذف" danger onClick={onDelete} />
@@ -869,6 +935,7 @@ function LongTermTaskRow({
     onEdit,
     onDelete,
     onShowHistory,
+    onShowDetails,
 }: {
     task: FocusTask;
     isActiveTask: boolean;
@@ -877,6 +944,7 @@ function LongTermTaskRow({
     onEdit: () => void;
     onDelete: () => void;
     onShowHistory: () => void;
+    onShowDetails: () => void;
 }) {
     const cat = task.category ? CATEGORY_META[task.category] : null;
     const isDone = task.status === "done";
@@ -888,7 +956,12 @@ function LongTermTaskRow({
             </button>
 
             <div className="flex-1 min-w-0">
-                <p className={`text-sm font-bold ${isDone ? "text-gray-500 line-through" : "text-white"}`}>{task.title}</p>
+                <button
+                    onClick={onShowDetails}
+                    className={`text-sm font-bold text-right hover:underline ${isDone ? "text-gray-500 line-through" : "text-white"}`}
+                >
+                    {task.title}
+                </button>
                 <div className="flex items-center gap-2 mt-1 flex-wrap">
                     {cat && (
                         <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: cat.bg, color: cat.text }}>
@@ -901,6 +974,7 @@ function LongTermTaskRow({
                     <span className="text-[10px] text-gray-500">
                         الإجمالي: {formatDuration(task.time_total_seconds)} · الجلسات: {task.sessions_count_total}
                     </span>
+                    {task.subtasks_count > 0 && <SubtaskCounter task={task} onClick={onShowDetails} />}
                 </div>
             </div>
 
@@ -916,11 +990,25 @@ function LongTermTaskRow({
             )}
 
             <TaskMenu>
+                <MenuItem icon={<ListChecks className="w-4 h-4" />} label="المهام الفرعية" onClick={onShowDetails} />
                 <MenuItem icon={<Pencil className="w-4 h-4" />} label="تعديل" onClick={onEdit} />
                 <MenuItem icon={<History className="w-4 h-4" />} label="السجل" onClick={onShowHistory} />
                 <MenuItem icon={<Trash2 className="w-4 h-4" />} label="حذف" danger onClick={onDelete} />
             </TaskMenu>
         </div>
+    );
+}
+
+// ─── Subtask counter badge ────────────────────────────────────
+function SubtaskCounter({ task, onClick }: { task: FocusTask; onClick: () => void }) {
+    return (
+        <button
+            onClick={onClick}
+            className="text-[10px] text-gray-400 flex items-center gap-1 hover:text-[#C5A04E] transition-colors"
+        >
+            <ListChecks className="w-3 h-3" />
+            <span dir="ltr">{task.subtasks_completed_count}/{task.subtasks_count}</span>
+        </button>
     );
 }
 
@@ -1194,11 +1282,18 @@ function ActiveSessionView({
             {session.task_id && (
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#C5A04E]/10 border border-[#C5A04E]/20">
                     <Target className="w-3.5 h-3.5 text-[#C5A04E]" />
-                    <span className="text-xs text-[#C5A04E] font-bold">مهمة مرتبطة</span>
+                    <span className="text-xs text-[#C5A04E] font-bold">
+                        {session.subtask_id ? "مهمة فرعية مرتبطة" : "مهمة مرتبطة"}
+                    </span>
                 </div>
             )}
 
             <div className="space-y-2">
+                {session.subtask_id && session.focus_tasks && (
+                    <p className="text-xs text-gray-500">
+                        🎯 {session.focus_tasks.title} <span className="text-gray-600">→</span>
+                    </p>
+                )}
                 <h2 className="text-xl font-bold text-white">{session.task_title}</h2>
                 {catMeta && (
                     <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full" style={{ backgroundColor: catMeta.bg, color: catMeta.text }}>
@@ -1255,12 +1350,13 @@ function ActiveSessionView({
 
 // ─── Start form ───────────────────────────────────────────────
 function StartForm({
-    selectedTask, onClearSelectedTask, freeTitle, setFreeTitle,
+    selectedTask, selectedSubtask, onClearSelected, freeTitle, setFreeTitle,
     plannedMinutes, setPlannedMinutes, customDuration, setCustomDuration,
     onStart, starting,
 }: {
     selectedTask: FocusTask | null;
-    onClearSelectedTask: () => void;
+    selectedSubtask: FocusSubtask | null;
+    onClearSelected: () => void;
     freeTitle: string;
     setFreeTitle: (v: string) => void;
     plannedMinutes: number;
@@ -1282,11 +1378,18 @@ function StartForm({
                     <div className="flex items-center gap-2 min-w-0">
                         <Target className="w-5 h-5 text-[#C5A04E] shrink-0" />
                         <div className="min-w-0">
-                            <p className="text-xs text-[#C5A04E] font-bold mb-0.5">🎯 المهمة</p>
-                            <p className="text-white text-sm font-bold truncate">{selectedTask.title}</p>
+                            <p className="text-xs text-[#C5A04E] font-bold mb-0.5">🎯 {selectedSubtask ? "المهمة الفرعية" : "المهمة"}</p>
+                            {selectedSubtask ? (
+                                <>
+                                    <p className="text-gray-500 text-[11px] truncate">{selectedTask.title}</p>
+                                    <p className="text-white text-sm font-bold truncate">↳ {selectedSubtask.title}</p>
+                                </>
+                            ) : (
+                                <p className="text-white text-sm font-bold truncate">{selectedTask.title}</p>
+                            )}
                         </div>
                     </div>
-                    <button onClick={onClearSelectedTask} className="shrink-0 px-3 py-1.5 rounded-lg bg-[#1A1A1A] text-gray-400 text-xs font-bold hover:bg-[#222222] transition-colors">
+                    <button onClick={onClearSelected} className="shrink-0 px-3 py-1.5 rounded-lg bg-[#1A1A1A] text-gray-400 text-xs font-bold hover:bg-[#222222] transition-colors">
                         إلغاء
                     </button>
                 </div>
@@ -1432,10 +1535,333 @@ function Field({ label, value }: { label: string; value: string }) {
     );
 }
 
-function Modal({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
+// ─── Task details modal (with subtasks) ───────────────────────
+function TaskDetailsModal({
+    task,
+    recentSessions,
+    onTitleSave,
+    onSubtaskChanged,
+    onStartSessionGeneral,
+    onStartSessionSubtask,
+    onClose,
+    activeTaskId,
+    activeSubtaskId,
+}: {
+    task: FocusTask;
+    recentSessions: FocusSession[];
+    onTitleSave: (title: string) => Promise<void>;
+    onSubtaskChanged: () => Promise<void>;
+    onStartSessionGeneral: () => void;
+    onStartSessionSubtask: (subtask: FocusSubtask) => void;
+    onClose: () => void;
+    activeTaskId: string | null;
+    activeSubtaskId: string | null;
+}) {
+    const subtasksApi = useFocusSubtasks(task.id);
+    const [editingTitle, setEditingTitle] = useState(false);
+    const [titleDraft, setTitleDraft] = useState(task.title);
+    const [savingTitle, setSavingTitle] = useState(false);
+    const [newSubtaskTitle, setNewSubtaskTitle] = useState("");
+    const [adding, setAdding] = useState(false);
+
+    const cat = task.category ? CATEGORY_META[task.category] : null;
+    const typeMeta = TYPE_META[task.task_type];
+    const TypeIcon = typeMeta.icon;
+
+    const completedCount = subtasksApi.subtasks.filter((s) => s.is_completed).length;
+    const totalCount = subtasksApi.subtasks.length;
+
+    const handleTitleSave = async () => {
+        const t = titleDraft.trim();
+        if (!t || t === task.title) {
+            setEditingTitle(false);
+            setTitleDraft(task.title);
+            return;
+        }
+        setSavingTitle(true);
+        await onTitleSave(t);
+        setSavingTitle(false);
+        setEditingTitle(false);
+    };
+
+    const handleAdd = async () => {
+        const t = newSubtaskTitle.trim();
+        if (!t) return;
+        setAdding(true);
+        await subtasksApi.createSubtask(t);
+        await onSubtaskChanged();
+        setNewSubtaskTitle("");
+        setAdding(false);
+    };
+
     return (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
-            <div className="bg-[#111111] border border-[#C5A04E]/15 rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+        <div className="space-y-5">
+            {/* Header */}
+            <div>
+                {editingTitle ? (
+                    <input
+                        type="text"
+                        value={titleDraft}
+                        onChange={(e) => setTitleDraft(e.target.value)}
+                        onBlur={handleTitleSave}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") handleTitleSave();
+                            if (e.key === "Escape") { setEditingTitle(false); setTitleDraft(task.title); }
+                        }}
+                        autoFocus
+                        disabled={savingTitle}
+                        className="w-full bg-[#1A1A1A] border border-[#C5A04E]/30 rounded-xl px-3 py-2 text-white text-lg font-bold focus:outline-none focus:border-[#C5A04E]"
+                    />
+                ) : (
+                    <h3
+                        onClick={() => { setTitleDraft(task.title); setEditingTitle(true); }}
+                        className="text-xl font-bold text-white cursor-text hover:bg-[#1A1A1A] rounded-lg px-2 py-1 -mx-2 transition-colors"
+                    >
+                        {task.title}
+                    </h3>
+                )}
+
+                <div className="flex items-center gap-2 mt-2 flex-wrap">
+                    <span
+                        className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full"
+                        style={{ backgroundColor: typeMeta.bg, color: typeMeta.text }}
+                    >
+                        <TypeIcon className="w-3 h-3" />
+                        {typeMeta.label}
+                    </span>
+                    {cat && (
+                        <span
+                            className="text-[10px] font-bold px-2 py-0.5 rounded-full"
+                            style={{ backgroundColor: cat.bg, color: cat.text }}
+                        >
+                            {cat.label}
+                        </span>
+                    )}
+                </div>
+
+                <p className="text-xs text-gray-500 mt-3">
+                    الإجمالي: <span className="text-[#C5A04E] font-bold">{formatDuration(task.time_total_seconds)}</span>
+                    {" · "}
+                    {task.sessions_count_total} جلسة
+                </p>
+            </div>
+
+            <div className="h-px bg-[#C5A04E]/10" />
+
+            {/* Subtasks section */}
+            <div>
+                <div className="flex items-center justify-between mb-3">
+                    <h4 className="text-base font-bold text-white">المهام الفرعية</h4>
+                    {totalCount > 0 && (
+                        <span className="text-xs text-gray-500">
+                            <span dir="ltr">{completedCount} / {totalCount}</span> مكتملة
+                        </span>
+                    )}
+                </div>
+
+                {/* Add field */}
+                <div className="flex gap-2 mb-3">
+                    <input
+                        type="text"
+                        value={newSubtaskTitle}
+                        onChange={(e) => setNewSubtaskTitle(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === "Enter") handleAdd(); }}
+                        placeholder="+ إضافة مهمة فرعية..."
+                        disabled={adding}
+                        className="flex-1 bg-[#1A1A1A] border border-[#C5A04E]/15 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-[#C5A04E] disabled:opacity-50"
+                    />
+                    <button
+                        onClick={handleAdd}
+                        disabled={!newSubtaskTitle.trim() || adding}
+                        className="px-3 py-2 rounded-xl bg-[#C5A04E] text-white text-sm font-bold hover:bg-[#D4B85C] transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1"
+                    >
+                        {adding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+                    </button>
+                </div>
+
+                {/* List */}
+                {subtasksApi.loading ? (
+                    <div className="flex items-center justify-center py-6">
+                        <Loader2 className="w-5 h-5 animate-spin text-gray-500" />
+                    </div>
+                ) : subtasksApi.subtasks.length === 0 ? (
+                    <p className="text-center py-6 text-gray-500 text-xs">لا توجد مهام فرعية. أضف واحدة للبدء!</p>
+                ) : (
+                    <div className="space-y-1.5">
+                        {subtasksApi.subtasks.map((st) => (
+                            <SubtaskRow
+                                key={st.id}
+                                subtask={st}
+                                isActive={activeTaskId === task.id && activeSubtaskId === st.id}
+                                onToggle={async () => {
+                                    await subtasksApi.toggleCompleted(st.id);
+                                    await onSubtaskChanged();
+                                }}
+                                onRename={async (newTitle) => {
+                                    await subtasksApi.updateSubtask(st.id, { title: newTitle });
+                                }}
+                                onDelete={async () => {
+                                    if (confirm(`حذف المهمة الفرعية "${st.title}"؟`)) {
+                                        await subtasksApi.deleteSubtask(st.id);
+                                        await onSubtaskChanged();
+                                    }
+                                }}
+                                onStartSession={() => onStartSessionSubtask(st)}
+                            />
+                        ))}
+                    </div>
+                )}
+            </div>
+
+            {/* Recent sessions */}
+            {recentSessions.length > 0 && (
+                <>
+                    <div className="h-px bg-[#C5A04E]/10" />
+                    <div>
+                        <h4 className="text-base font-bold text-white mb-3">آخر الجلسات</h4>
+                        <div className="space-y-1.5 max-h-48 overflow-y-auto">
+                            {recentSessions.map((s) => (
+                                <div key={s.id} className="bg-[#1A1A1A] rounded-lg px-3 py-2 text-xs flex items-center gap-2">
+                                    <span className="text-gray-500 font-mono shrink-0" dir="ltr">{formatTime(s.started_at)}</span>
+                                    <span className="flex-1 text-gray-300 truncate">{s.task_title}</span>
+                                    {s.status === "completed" && s.ended_at && (
+                                        <span className="text-[#C5A04E] shrink-0 font-mono">
+                                            {formatDuration(
+                                                Math.max(0, Math.floor((new Date(s.ended_at).getTime() - new Date(s.started_at).getTime()) / 1000) - (s.paused_seconds || 0))
+                                            )}
+                                        </span>
+                                    )}
+                                    <span className="text-gray-600 text-[10px] shrink-0">{STATUS_LABELS[s.status]}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </>
+            )}
+
+            {/* Footer buttons */}
+            <div className="flex gap-3 pt-2">
+                <button
+                    onClick={onClose}
+                    className="flex-1 px-4 py-3 rounded-xl bg-[#1A1A1A] text-gray-300 font-bold hover:bg-[#222222] transition-colors"
+                >
+                    إغلاق
+                </button>
+                <button
+                    onClick={onStartSessionGeneral}
+                    disabled={activeTaskId === task.id}
+                    className="flex-1 px-4 py-3 rounded-xl bg-[#C5A04E] text-white font-bold hover:bg-[#D4B85C] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                    <Play className="w-4 h-4" />
+                    ابدأ جلسة (مهمة عامة)
+                </button>
+            </div>
+        </div>
+    );
+}
+
+// ─── Subtask row (in details modal) ───────────────────────────
+function SubtaskRow({
+    subtask,
+    isActive,
+    onToggle,
+    onRename,
+    onDelete,
+    onStartSession,
+}: {
+    subtask: FocusSubtask;
+    isActive: boolean;
+    onToggle: () => Promise<void>;
+    onRename: (title: string) => Promise<void>;
+    onDelete: () => void;
+    onStartSession: () => void;
+}) {
+    const [editing, setEditing] = useState(false);
+    const [draft, setDraft] = useState(subtask.title);
+    const [saving, setSaving] = useState(false);
+
+    const handleSave = async () => {
+        const t = draft.trim();
+        if (!t || t === subtask.title) {
+            setEditing(false);
+            setDraft(subtask.title);
+            return;
+        }
+        setSaving(true);
+        await onRename(t);
+        setSaving(false);
+        setEditing(false);
+    };
+
+    return (
+        <div className={`flex items-center gap-2 p-2 rounded-lg bg-[#1A1A1A] border ${isActive ? "border-[#C5A04E]/40" : "border-transparent"} ${subtask.is_completed ? "opacity-60" : ""}`}>
+            <button onClick={onToggle} className="shrink-0" aria-label={subtask.is_completed ? "إلغاء" : "إكمال"}>
+                {subtask.is_completed ? (
+                    <CheckCircle className="w-4 h-4 text-green-500" />
+                ) : (
+                    <Circle className="w-4 h-4 text-gray-500 hover:text-gray-300 transition-colors" />
+                )}
+            </button>
+
+            {editing ? (
+                <input
+                    type="text"
+                    value={draft}
+                    onChange={(e) => setDraft(e.target.value)}
+                    onBlur={handleSave}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") handleSave();
+                        if (e.key === "Escape") { setEditing(false); setDraft(subtask.title); }
+                    }}
+                    autoFocus
+                    disabled={saving}
+                    className="flex-1 bg-[#0A0A0A] border border-[#C5A04E]/30 rounded-md px-2 py-1 text-white text-sm focus:outline-none focus:border-[#C5A04E]"
+                />
+            ) : (
+                <button
+                    onClick={() => { setDraft(subtask.title); setEditing(true); }}
+                    className={`flex-1 text-right text-sm hover:underline ${subtask.is_completed ? "text-gray-500 line-through" : "text-white"}`}
+                >
+                    {subtask.title}
+                </button>
+            )}
+
+            {subtask.total_time_seconds > 0 && (
+                <span className="text-[10px] text-gray-500 shrink-0 font-mono">
+                    {formatDuration(subtask.total_time_seconds)}
+                </span>
+            )}
+
+            {!subtask.is_completed && (
+                <button
+                    onClick={onStartSession}
+                    disabled={isActive}
+                    className="shrink-0 p-1.5 rounded-md bg-[#C5A04E]/10 text-[#C5A04E] hover:bg-[#C5A04E]/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    aria-label="ابدأ جلسة"
+                    title="ابدأ جلسة"
+                >
+                    <Play className="w-3.5 h-3.5" />
+                </button>
+            )}
+
+            <button
+                onClick={onDelete}
+                className="shrink-0 p-1.5 rounded-md text-gray-500 hover:bg-red-500/10 hover:text-red-400 transition-colors"
+                aria-label="حذف"
+            >
+                <Trash2 className="w-3.5 h-3.5" />
+            </button>
+        </div>
+    );
+}
+
+function Modal({ children, onClose, large }: { children: React.ReactNode; onClose: () => void; large?: boolean }) {
+    return (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in" onClick={onClose}>
+            <div
+                className={`bg-[#0F0F0F] border border-[#C5A04E]/20 rounded-2xl p-6 w-full max-h-[90vh] overflow-y-auto ${large ? "max-w-2xl" : "max-w-md"}`}
+                onClick={(e) => e.stopPropagation()}
+            >
                 {children}
             </div>
         </div>
