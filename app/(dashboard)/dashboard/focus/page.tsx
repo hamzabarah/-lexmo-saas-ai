@@ -147,6 +147,10 @@ export default function FocusPage() {
     const [savingStop, setSavingStop] = useState(false);
     const [detailModal, setDetailModal] = useState<FocusSession | null>(null);
 
+    // Extend popup: shows once at the moment overtime transitions from false to true
+    const [showExtendPopup, setShowExtendPopup] = useState(false);
+    const prevOvertimeRef = useRef(false);
+
     // Add/Edit task modal state — pre-fill task_type per section
     const [taskModal, setTaskModal] = useState<{
         mode: "create" | "edit";
@@ -207,6 +211,14 @@ export default function FocusPage() {
         }
     }, [activeSession?.status]);
 
+    // Reset popup state when no active session
+    useEffect(() => {
+        if (!activeSession) {
+            setShowExtendPopup(false);
+            prevOvertimeRef.current = false;
+        }
+    }, [activeSession]);
+
     // Computed every render — setTick (1s interval) triggers re-renders so the
     // displayed value advances. Don't memoize on [activeSession]: the deps would
     // never change between ticks and the timer would freeze.
@@ -222,6 +234,15 @@ export default function FocusPage() {
 
     const plannedSeconds = (activeSession?.planned_duration_minutes || 0) * 60;
     const overtime = activeSession && elapsedSeconds > plannedSeconds && plannedSeconds > 0;
+
+    // Show extend popup once at each false→true overtime transition
+    useEffect(() => {
+        const isOvertime = !!overtime;
+        if (isOvertime && !prevOvertimeRef.current) {
+            setShowExtendPopup(true);
+        }
+        prevOvertimeRef.current = isOvertime;
+    }, [overtime]);
 
     // ─── Tracker actions ───
     const handleStart = async () => {
@@ -334,6 +355,22 @@ export default function FocusPage() {
         pauseStartedAtRef.current = null;
         await refreshSessions();
         await tasksApi.refresh();
+    };
+
+    const extendSession = async (extraMinutes: number) => {
+        if (!activeSession || extraMinutes <= 0) return;
+        await fetch("/api/focus", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({
+                id: activeSession.id,
+                action: "extend",
+                extra_minutes: Math.floor(extraMinutes),
+            }),
+        });
+        await refreshSessions();
+        setShowExtendPopup(false);
     };
 
     // ─── Task actions ───
@@ -674,6 +711,19 @@ export default function FocusPage() {
                         onClose={() => setDetailsTaskModal(null)}
                         activeTaskId={activeSession?.task_id || null}
                         activeSubtaskId={activeSession?.subtask_id || null}
+                    />
+                </Modal>
+            )}
+
+            {showExtendPopup && activeSession && (
+                <Modal onClose={() => setShowExtendPopup(false)}>
+                    <ExtendTimePopup
+                        onExtend={extendSession}
+                        onStop={() => {
+                            setShowExtendPopup(false);
+                            openStopModal();
+                        }}
+                        onClose={() => setShowExtendPopup(false)}
                     />
                 </Modal>
             )}
@@ -1854,6 +1904,119 @@ function SubtaskRow({
             >
                 <Trash2 className="w-3.5 h-3.5" />
             </button>
+        </div>
+    );
+}
+
+// ─── Extend time popup (overtime overflow) ───────────────────
+function ExtendTimePopup({
+    onExtend,
+    onStop,
+    onClose,
+}: {
+    onExtend: (minutes: number) => Promise<void>;
+    onStop: () => void;
+    onClose: () => void;
+}) {
+    const [customValue, setCustomValue] = useState("");
+    const [error, setError] = useState<string | null>(null);
+    const [submitting, setSubmitting] = useState(false);
+
+    const QUICK = [10, 25, 40, 60];
+
+    const handleQuick = async (m: number) => {
+        if (submitting) return;
+        setSubmitting(true);
+        setError(null);
+        await onExtend(m);
+        setSubmitting(false);
+    };
+
+    const handleCustom = async () => {
+        if (submitting) return;
+        const n = parseInt(customValue, 10);
+        if (Number.isNaN(n) || n < 1) {
+            setError("القيمة يجب أن تكون 1 دقيقة على الأقل");
+            return;
+        }
+        if (n > 480) {
+            setError("الحد الأقصى 480 دقيقة (8 ساعات)");
+            return;
+        }
+        setError(null);
+        setSubmitting(true);
+        await onExtend(n);
+        setSubmitting(false);
+    };
+
+    return (
+        <div className="space-y-5">
+            <div className="text-center">
+                <h3 className="text-xl font-bold text-white mb-2">⏰ انتهى الوقت المخطط!</h3>
+                <p className="text-sm text-gray-400">هل تحتاج وقتاً إضافياً لإكمال المهمة؟</p>
+            </div>
+
+            {/* Quick buttons */}
+            <div className="grid grid-cols-2 gap-2">
+                {QUICK.map((m) => (
+                    <button
+                        key={m}
+                        onClick={() => handleQuick(m)}
+                        disabled={submitting}
+                        className="px-4 py-3 rounded-xl bg-[#C5A04E]/10 text-[#C5A04E] font-bold hover:bg-[#C5A04E]/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    >
+                        + {m} {m === 1 ? "دقيقة" : "دقائق"}
+                    </button>
+                ))}
+            </div>
+
+            {/* Custom field */}
+            <div>
+                <label className="block text-xs font-bold text-gray-400 mb-2">أو اكتب الوقت بالدقائق</label>
+                <div className="flex gap-2">
+                    <input
+                        type="number"
+                        min={1}
+                        max={480}
+                        value={customValue}
+                        onChange={(e) => setCustomValue(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === "Enter") handleCustom(); }}
+                        placeholder="مثال: 15"
+                        disabled={submitting}
+                        className="flex-1 bg-[#1A1A1A] border border-[#C5A04E]/15 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-[#C5A04E] disabled:opacity-50"
+                        dir="ltr"
+                    />
+                    <button
+                        onClick={handleCustom}
+                        disabled={submitting || !customValue.trim()}
+                        className="px-4 py-2 rounded-xl bg-[#C5A04E] text-white text-sm font-bold hover:bg-[#D4B85C] transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1"
+                    >
+                        {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : "إضافة"}
+                    </button>
+                </div>
+                {error && <p className="mt-2 text-xs text-red-400">{error}</p>}
+            </div>
+
+            <div className="h-px bg-[#C5A04E]/10" />
+
+            {/* Footer actions */}
+            <div className="flex flex-col gap-2">
+                <button
+                    onClick={onStop}
+                    disabled={submitting}
+                    className="w-full px-4 py-3 rounded-xl bg-green-600/90 text-white font-bold hover:bg-green-600 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                    <Square className="w-4 h-4" />
+                    إنهاء الجلسة الآن
+                </button>
+                <button
+                    onClick={onClose}
+                    disabled={submitting}
+                    className="w-full px-4 py-3 rounded-xl bg-[#1A1A1A] text-gray-400 font-bold hover:bg-[#222222] transition-colors disabled:opacity-50"
+                >
+                    متابعة بدون إضافة
+                </button>
+            </div>
         </div>
     );
 }

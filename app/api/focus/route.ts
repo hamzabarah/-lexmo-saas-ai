@@ -174,6 +174,19 @@ export async function PATCH(req: NextRequest) {
             update.status = 'abandoned';
             update.ended_at = new Date().toISOString();
             break;
+        case 'extend': {
+            const extra = body.extra_minutes;
+            if (typeof extra !== 'number' || extra <= 0 || extra > 480) {
+                return NextResponse.json({ error: 'Invalid extra_minutes (1-480)' }, { status: 400 });
+            }
+            const { data: cur } = await admin
+                .from('focus_sessions')
+                .select('planned_duration_minutes')
+                .eq('id', id)
+                .single();
+            update.planned_duration_minutes = (cur?.planned_duration_minutes || 0) + Math.floor(extra);
+            break;
+        }
         default:
             return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
     }
