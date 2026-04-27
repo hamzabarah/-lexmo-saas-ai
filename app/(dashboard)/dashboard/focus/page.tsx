@@ -2,11 +2,12 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { useFocusTasks, FocusTask, TaskCategory, TaskStatus } from "@/lib/hooks/useFocusTasks";
+import { useFocusTasks, FocusTask, TaskCategory, TaskStatus, TaskType } from "@/lib/hooks/useFocusTasks";
 import {
     Lock, Play, Pause, Square, X, Timer, Tag, Clock, Loader2,
     CheckCircle2, AlertCircle, PauseCircle, Plus, Target,
-    MoreVertical, Pencil, Trash2, History, Circle, CheckCircle
+    MoreVertical, Pencil, Trash2, History, Circle, CheckCircle,
+    Repeat, Check, BarChart3, Archive
 } from "lucide-react";
 
 const ADMIN_EMAIL = "academyfrance75@gmail.com";
@@ -42,16 +43,33 @@ const STATUS_LABELS: Record<string, string> = {
     abandoned: "ملغى",
 };
 
-const TASK_FILTERS: { value: "all" | TaskStatus; label: string }[] = [
-    { value: "all", label: "الكل" },
-    { value: "todo", label: "للقيام" },
-    { value: "in_progress", label: "قيد التنفيذ" },
-    { value: "done", label: "مكتمل" },
-];
-
 const CATEGORY_META: Record<TaskCategory, { label: string; bg: string; text: string }> = {
     personal: { label: "شخصي", bg: "rgba(59, 130, 246, 0.15)", text: "#93C5FD" },
     professional: { label: "مهني", bg: "rgba(197, 160, 78, 0.15)", text: "#FDE68A" },
+};
+
+const TYPE_META: Record<TaskType, { label: string; subtitle: string; icon: any; bg: string; text: string }> = {
+    recurring: {
+        label: "متكررة",
+        subtitle: "تتكرر يومياً أو أسبوعياً",
+        icon: Repeat,
+        bg: "rgba(167, 139, 250, 0.15)",
+        text: "#C4B5FD",
+    },
+    one_time: {
+        label: "مرة واحدة",
+        subtitle: "تنتهي بعد إنجازها",
+        icon: Check,
+        bg: "rgba(96, 165, 250, 0.15)",
+        text: "#93C5FD",
+    },
+    long_term: {
+        label: "طويلة المدى",
+        subtitle: "تأخذ عدة جلسات",
+        icon: BarChart3,
+        bg: "rgba(251, 146, 60, 0.15)",
+        text: "#FDBA74",
+    },
 };
 
 function pad(n: number): string {
@@ -71,6 +89,17 @@ function formatTime(iso: string): string {
     return new Date(iso).toLocaleTimeString("ar-u-nu-latn", { hour: "2-digit", minute: "2-digit" });
 }
 
+// Compact Arabic duration: "X س Y د" / "X د" / "أقل من دقيقة"
+function formatDuration(seconds: number): string {
+    if (seconds <= 0) return "0 د";
+    if (seconds < 60) return "أقل من دقيقة";
+    if (seconds < 3600) return `${Math.floor(seconds / 60)} د`;
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    if (h >= 24 || m === 0) return `${h} س`;
+    return `${h} س ${m} د`;
+}
+
 function formatMinutesArabic(totalMinutes: number): string {
     const h = Math.floor(totalMinutes / 60);
     const m = totalMinutes % 60;
@@ -78,18 +107,14 @@ function formatMinutesArabic(totalMinutes: number): string {
     return `${m} دقيقة`;
 }
 
-function formatSecondsAsMinutesArabic(totalSeconds: number): string {
-    return formatMinutesArabic(Math.floor(totalSeconds / 60));
-}
-
 function todayISO(): string {
     const d = new Date();
     return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
-function formatDateArabic(iso: string): string {
+function formatDateArabicShort(iso: string): string {
     return new Date(`${iso}T00:00:00`).toLocaleDateString("ar-u-nu-latn", {
-        weekday: "long", day: "numeric", month: "long", year: "numeric",
+        day: "numeric", month: "long",
     });
 }
 
@@ -97,39 +122,39 @@ export default function FocusPage() {
     const [authChecked, setAuthChecked] = useState(false);
     const [authorized, setAuthorized] = useState(false);
 
-    // Sessions data
     const [sessionsData, setSessionsData] = useState<SessionsResponse | null>(null);
     const [sessionsLoading, setSessionsLoading] = useState(true);
 
-    // Tasks
-    const today = useMemo(() => todayISO(), []);
-    const tasksApi = useFocusTasks(today);
+    const tasksApi = useFocusTasks();
 
-    // Selected task (pre-filled in tracker form, not yet started)
     const [selectedTask, setSelectedTask] = useState<FocusTask | null>(null);
 
-    // Tracker form state
     const [plannedMinutes, setPlannedMinutes] = useState<number>(40);
     const [customDuration, setCustomDuration] = useState<string>("");
     const [freeTitle, setFreeTitle] = useState("");
     const [starting, setStarting] = useState(false);
 
-    // Active session ticker
     const [, setTick] = useState(0);
     const pauseStartedAtRef = useRef<number | null>(null);
 
-    // Modals
     const [stopModal, setStopModal] = useState<{ session: FocusSession; notes: string } | null>(null);
     const [savingStop, setSavingStop] = useState(false);
     const [detailModal, setDetailModal] = useState<FocusSession | null>(null);
 
-    // Tasks UI state
-    const [taskFilter, setTaskFilter] = useState<"all" | TaskStatus>("all");
-    const [showAddTaskModal, setShowAddTaskModal] = useState(false);
-    const [editTaskModal, setEditTaskModal] = useState<FocusTask | null>(null);
+    // Add/Edit task modal state — pre-fill task_type per section
+    const [taskModal, setTaskModal] = useState<{
+        mode: "create" | "edit";
+        task?: FocusTask;
+        defaultType: TaskType;
+    } | null>(null);
     const [historyModal, setHistoryModal] = useState<FocusTask | null>(null);
 
-    // ─── Admin auth check ───
+    // Per-section filters
+    const [recurringFilter, setRecurringFilter] = useState<"active" | "all">("active");
+    const [oneTimeFilter, setOneTimeFilter] = useState<"today" | "week" | "all">("today");
+    const [longTermFilter, setLongTermFilter] = useState<"active" | "done">("active");
+
+    // ─── Auth ───
     useEffect(() => {
         const supabase = createClient();
         supabase.auth.getUser().then(({ data: { user } }) => {
@@ -138,16 +163,14 @@ export default function FocusPage() {
         });
     }, []);
 
-    // ─── Load sessions ───
+    // ─── Sessions ───
     const refreshSessions = useCallback(async () => {
         try {
             const res = await fetch("/api/focus", { credentials: "include" });
             if (!res.ok) return;
             const json: SessionsResponse = await res.json();
             setSessionsData(json);
-        } catch {
-            /* */
-        }
+        } catch { /* */ }
     }, []);
 
     useEffect(() => {
@@ -215,9 +238,7 @@ export default function FocusPage() {
                 await refreshSessions();
                 if (selectedTask) await tasksApi.refresh();
             }
-        } catch {
-            /* */
-        }
+        } catch { /* */ }
         setStarting(false);
     };
 
@@ -264,7 +285,6 @@ export default function FocusPage() {
         const extraPaused =
             session.status === "paused" && pausedAt ? Math.floor((Date.now() - pausedAt) / 1000) : 0;
         const finalPaused = (session.paused_seconds || 0) + extraPaused;
-
         await fetch("/api/focus", {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
@@ -323,13 +343,26 @@ export default function FocusPage() {
         }
     };
 
-    // ─── Filtered tasks ───
-    const filteredTasks = useMemo(() => {
-        if (taskFilter === "all") return tasksApi.tasks;
-        return tasksApi.tasks.filter((t) => t.status === taskFilter);
-    }, [tasksApi.tasks, taskFilter]);
+    // ─── Filtered tasks per section ───
+    const recurringTasks = useMemo(() => {
+        const all = tasksApi.getRecurringTasks();
+        if (recurringFilter === "active") return all.filter((t) => t.status !== "done");
+        return all;
+    }, [tasksApi, recurringFilter]);
 
-    // ─── Render ───
+    const oneTimeTasks = useMemo(() => {
+        if (oneTimeFilter === "today") return tasksApi.getOneTimeTasks(todayISO());
+        if (oneTimeFilter === "week") return tasksApi.getOneTimeTasksThisWeek();
+        return tasksApi.getOneTimeTasks();
+    }, [tasksApi, oneTimeFilter]);
+
+    const longTermTasks = useMemo(() => {
+        const all = tasksApi.getLongTermTasks();
+        if (longTermFilter === "active") return all.filter((t) => t.status !== "done");
+        return all.filter((t) => t.status === "done");
+    }, [tasksApi, longTermFilter]);
+
+    // ─── Render guards ───
     if (!authChecked) {
         return (
             <div className="flex items-center justify-center min-h-[60vh]">
@@ -356,87 +389,122 @@ export default function FocusPage() {
     const stats = sessionsData?.stats || { totalMinutes: 0, completedCount: 0, abandonedCount: 0 };
 
     return (
-        <div className="max-w-4xl mx-auto space-y-6">
-            {/* ──────────── SECTION 1 — TASKS ──────────── */}
-            <div className="bg-[#111111] border border-[#C5A04E]/10 rounded-2xl p-6">
-                <div className="flex items-center justify-between mb-1">
-                    <div className="flex items-center gap-3">
-                        <Target className="w-6 h-6 text-[#C5A04E]" />
-                        <h2 className="text-xl font-bold text-white">مهام اليوم</h2>
-                    </div>
-                    <button
-                        onClick={() => setShowAddTaskModal(true)}
-                        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#C5A04E] text-white text-sm font-bold hover:bg-[#D4B85C] transition-colors"
-                    >
-                        <Plus className="w-4 h-4" />
-                        إضافة مهمة
-                    </button>
-                </div>
-                <p className="text-xs text-gray-500 mb-4">{formatDateArabic(today)}</p>
-
-                {/* Filters */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                    {TASK_FILTERS.map((f) => {
-                        const count =
-                            f.value === "all"
-                                ? tasksApi.tasks.length
-                                : tasksApi.stats[f.value as TaskStatus] || 0;
-                        return (
-                            <button
-                                key={f.value}
-                                onClick={() => setTaskFilter(f.value)}
-                                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
-                                    taskFilter === f.value
-                                        ? "bg-[#C5A04E] text-white"
-                                        : "bg-[#1A1A1A] text-gray-400 hover:bg-[#222222]"
-                                }`}
-                            >
-                                {f.label} {count > 0 && <span className="opacity-70">({count})</span>}
-                            </button>
-                        );
-                    })}
-                </div>
-
-                {/* Task list */}
-                {tasksApi.loading ? (
-                    <div className="flex items-center justify-center py-8">
-                        <Loader2 className="w-6 h-6 animate-spin text-gray-500" />
-                    </div>
-                ) : filteredTasks.length === 0 ? (
-                    <div className="text-center py-10 text-gray-500 text-sm">
-                        {taskFilter === "all"
-                            ? "لا توجد مهام لهذا اليوم. ابدأ بإضافة مهمة!"
-                            : "لا توجد مهام في هذه الفئة"}
-                    </div>
-                ) : (
-                    <div className="space-y-2">
-                        {filteredTasks.map((task) => (
-                            <TaskRow
-                                key={task.id}
-                                task={task}
-                                isActiveTask={activeSession?.task_id === task.id}
-                                onToggleDone={() => toggleTaskDone(task)}
-                                onStartSession={() => startSessionFromTask(task)}
-                                onEdit={() => setEditTaskModal(task)}
-                                onDelete={async () => {
-                                    if (confirm(`حذف المهمة "${task.title}"؟`)) {
-                                        await tasksApi.deleteTask(task.id);
-                                    }
-                                }}
-                                onShowHistory={() => setHistoryModal(task)}
-                            />
-                        ))}
-                    </div>
-                )}
+        <div className="max-w-4xl mx-auto space-y-5">
+            {/* Page header */}
+            <div className="flex items-center gap-3">
+                <Timer className="w-7 h-7 text-[#C5A04E]" />
+                <h1 className="text-2xl font-bold text-white">متتبع التركيز</h1>
             </div>
 
-            {/* ──────────── SECTION 2 — TRACKER ──────────── */}
+            {/* ─── Section 1: Recurring tasks ─── */}
+            <TaskSection
+                type="recurring"
+                tasks={recurringTasks}
+                allCount={tasksApi.getRecurringTasks().length}
+                loading={tasksApi.loading}
+                emptyMessage="لا توجد مهام في هذه الفئة"
+                onAdd={() => setTaskModal({ mode: "create", defaultType: "recurring" })}
+                renderFilters={() => (
+                    <FilterTabs
+                        active={recurringFilter}
+                        onChange={(v) => setRecurringFilter(v as any)}
+                        options={[
+                            { value: "active", label: "نشطة" },
+                            { value: "all", label: "الكل" },
+                        ]}
+                    />
+                )}
+                renderTask={(task) => (
+                    <RecurringTaskRow
+                        key={task.id}
+                        task={task}
+                        isActiveTask={activeSession?.task_id === task.id}
+                        onStartSession={() => startSessionFromTask(task)}
+                        onEdit={() => setTaskModal({ mode: "edit", task, defaultType: task.task_type })}
+                        onArchive={() => tasksApi.updateTask(task.id, { status: task.status === "done" ? "in_progress" : "done" })}
+                        onDelete={async () => {
+                            if (confirm(`حذف المهمة "${task.title}"؟`)) await tasksApi.deleteTask(task.id);
+                        }}
+                        onShowHistory={() => setHistoryModal(task)}
+                    />
+                )}
+            />
+
+            {/* ─── Section 2: One-time tasks ─── */}
+            <TaskSection
+                type="one_time"
+                tasks={oneTimeTasks}
+                allCount={tasksApi.getOneTimeTasks().length}
+                loading={tasksApi.loading}
+                emptyMessage="لا توجد مهام في هذه الفئة"
+                onAdd={() => setTaskModal({ mode: "create", defaultType: "one_time" })}
+                renderFilters={() => (
+                    <FilterTabs
+                        active={oneTimeFilter}
+                        onChange={(v) => setOneTimeFilter(v as any)}
+                        options={[
+                            { value: "today", label: "اليوم" },
+                            { value: "week", label: "هذا الأسبوع" },
+                            { value: "all", label: "الكل" },
+                        ]}
+                    />
+                )}
+                renderTask={(task) => (
+                    <OneTimeTaskRow
+                        key={task.id}
+                        task={task}
+                        isActiveTask={activeSession?.task_id === task.id}
+                        onToggleDone={() => toggleTaskDone(task)}
+                        onStartSession={() => startSessionFromTask(task)}
+                        onEdit={() => setTaskModal({ mode: "edit", task, defaultType: task.task_type })}
+                        onDelete={async () => {
+                            if (confirm(`حذف المهمة "${task.title}"؟`)) await tasksApi.deleteTask(task.id);
+                        }}
+                        onShowHistory={() => setHistoryModal(task)}
+                    />
+                )}
+            />
+
+            {/* ─── Section 3: Long-term tasks ─── */}
+            <TaskSection
+                type="long_term"
+                tasks={longTermTasks}
+                allCount={tasksApi.getLongTermTasks().length}
+                loading={tasksApi.loading}
+                emptyMessage="لا توجد مهام في هذه الفئة"
+                onAdd={() => setTaskModal({ mode: "create", defaultType: "long_term" })}
+                renderFilters={() => (
+                    <FilterTabs
+                        active={longTermFilter}
+                        onChange={(v) => setLongTermFilter(v as any)}
+                        options={[
+                            { value: "active", label: "نشطة" },
+                            { value: "done", label: "مكتملة" },
+                        ]}
+                    />
+                )}
+                renderTask={(task) => (
+                    <LongTermTaskRow
+                        key={task.id}
+                        task={task}
+                        isActiveTask={activeSession?.task_id === task.id}
+                        onToggleDone={() => toggleTaskDone(task)}
+                        onStartSession={() => startSessionFromTask(task)}
+                        onEdit={() => setTaskModal({ mode: "edit", task, defaultType: task.task_type })}
+                        onDelete={async () => {
+                            if (confirm(`حذف المهمة "${task.title}"؟`)) await tasksApi.deleteTask(task.id);
+                        }}
+                        onShowHistory={() => setHistoryModal(task)}
+                    />
+                )}
+            />
+
+            {/* ─── Tracker section ─── */}
             <div className="bg-[#111111] border border-[#C5A04E]/10 rounded-2xl p-8">
                 <div className="flex items-center gap-3 mb-6">
-                    <Timer className="w-6 h-6 text-[#C5A04E]" />
-                    <h2 className="text-xl font-bold text-white">متتبع التركيز</h2>
+                    <Play className="w-6 h-6 text-[#C5A04E]" />
+                    <h2 className="text-xl font-bold text-white">جلسة التركيز</h2>
                 </div>
-
                 {activeSession ? (
                     <ActiveSessionView
                         session={activeSession}
@@ -464,7 +532,7 @@ export default function FocusPage() {
                 )}
             </div>
 
-            {/* ──────────── SESSIONS LIST ──────────── */}
+            {/* ─── Today sessions ─── */}
             <div className="bg-[#111111] border border-[#C5A04E]/10 rounded-2xl p-6">
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-lg font-bold text-white">الجلسات اليوم</h2>
@@ -479,15 +547,12 @@ export default function FocusPage() {
                         </p>
                     )}
                 </div>
-
                 {sessionsLoading ? (
                     <div className="flex items-center justify-center py-8">
                         <Loader2 className="w-6 h-6 animate-spin text-gray-500" />
                     </div>
                 ) : sessions.length === 0 ? (
-                    <div className="text-center py-10 text-gray-500 text-sm">
-                        لا توجد جلسات اليوم
-                    </div>
+                    <div className="text-center py-10 text-gray-500 text-sm">لا توجد جلسات اليوم</div>
                 ) : (
                     <div className="space-y-2">
                         {sessions.map((s) => (
@@ -497,7 +562,7 @@ export default function FocusPage() {
                 )}
             </div>
 
-            {/* ──────────── MODALS ──────────── */}
+            {/* ─── Modals ─── */}
             {stopModal && (
                 <Modal onClose={() => !savingStop && setStopModal(null)}>
                     <h3 className="text-xl font-bold text-white mb-4">ماذا أنجزت؟</h3>
@@ -510,18 +575,8 @@ export default function FocusPage() {
                         className="w-full bg-[#0A0A0A] border border-[#C5A04E]/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#C5A04E] resize-none"
                     />
                     <div className="flex gap-3 mt-5">
-                        <button
-                            onClick={() => setStopModal(null)}
-                            disabled={savingStop}
-                            className="flex-1 px-4 py-3 rounded-xl bg-[#1A1A1A] text-gray-400 font-bold hover:bg-[#222222] transition-colors disabled:opacity-50"
-                        >
-                            إلغاء
-                        </button>
-                        <button
-                            onClick={handleStopConfirm}
-                            disabled={savingStop}
-                            className="flex-1 px-4 py-3 rounded-xl bg-[#C5A04E] text-white font-bold hover:bg-[#D4B85C] transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
-                        >
+                        <button onClick={() => setStopModal(null)} disabled={savingStop} className="flex-1 px-4 py-3 rounded-xl bg-[#1A1A1A] text-gray-400 font-bold hover:bg-[#222222] transition-colors disabled:opacity-50">إلغاء</button>
+                        <button onClick={handleStopConfirm} disabled={savingStop} className="flex-1 px-4 py-3 rounded-xl bg-[#C5A04E] text-white font-bold hover:bg-[#D4B85C] transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
                             {savingStop ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
                             حفظ
                         </button>
@@ -535,28 +590,20 @@ export default function FocusPage() {
                 </Modal>
             )}
 
-            {showAddTaskModal && (
-                <Modal onClose={() => setShowAddTaskModal(false)}>
+            {taskModal && (
+                <Modal onClose={() => setTaskModal(null)}>
                     <TaskForm
-                        defaultDate={today}
-                        onCancel={() => setShowAddTaskModal(false)}
+                        task={taskModal.mode === "edit" ? taskModal.task : undefined}
+                        defaultType={taskModal.defaultType}
+                        defaultDate={todayISO()}
+                        onCancel={() => setTaskModal(null)}
                         onSubmit={async (data) => {
-                            await tasksApi.createTask(data);
-                            setShowAddTaskModal(false);
-                        }}
-                    />
-                </Modal>
-            )}
-
-            {editTaskModal && (
-                <Modal onClose={() => setEditTaskModal(null)}>
-                    <TaskForm
-                        task={editTaskModal}
-                        defaultDate={today}
-                        onCancel={() => setEditTaskModal(null)}
-                        onSubmit={async (data) => {
-                            await tasksApi.updateTask(editTaskModal.id, data);
-                            setEditTaskModal(null);
+                            if (taskModal.mode === "edit" && taskModal.task) {
+                                await tasksApi.updateTask(taskModal.task.id, data);
+                            } else {
+                                await tasksApi.createTask(data);
+                            }
+                            setTaskModal(null);
                         }}
                     />
                 </Modal>
@@ -575,8 +622,171 @@ export default function FocusPage() {
     );
 }
 
-// ─── Task row ─────────────────────────────────────────────────
-function TaskRow({
+// ─── Reusable section wrapper ─────────────────────────────────
+function TaskSection({
+    type,
+    tasks,
+    allCount,
+    loading,
+    emptyMessage,
+    onAdd,
+    renderFilters,
+    renderTask,
+}: {
+    type: TaskType;
+    tasks: FocusTask[];
+    allCount: number;
+    loading: boolean;
+    emptyMessage: string;
+    onAdd: () => void;
+    renderFilters: () => React.ReactNode;
+    renderTask: (task: FocusTask) => React.ReactNode;
+}) {
+    const meta = TYPE_META[type];
+    const Icon = meta.icon;
+
+    return (
+        <div className="bg-[#111111] border border-[#C5A04E]/10 rounded-2xl p-5">
+            <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2.5">
+                    <span
+                        className="w-8 h-8 rounded-lg flex items-center justify-center"
+                        style={{ backgroundColor: meta.bg }}
+                    >
+                        <Icon className="w-4 h-4" style={{ color: meta.text }} />
+                    </span>
+                    <h2 className="text-base font-bold text-white">{meta.label}</h2>
+                    {allCount > 0 && (
+                        <span className="text-xs text-gray-500">({allCount})</span>
+                    )}
+                </div>
+                <button
+                    onClick={onAdd}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1A1A1A] text-[#C5A04E] text-xs font-bold hover:bg-[#222222] transition-colors"
+                >
+                    <Plus className="w-3.5 h-3.5" />
+                    إضافة
+                </button>
+            </div>
+
+            <div className="mb-3">{renderFilters()}</div>
+
+            {loading ? (
+                <div className="flex items-center justify-center py-6">
+                    <Loader2 className="w-5 h-5 animate-spin text-gray-500" />
+                </div>
+            ) : tasks.length === 0 ? (
+                <div className="text-center py-6 text-gray-600 text-xs">{emptyMessage}</div>
+            ) : (
+                <div className="space-y-2">{tasks.map(renderTask)}</div>
+            )}
+        </div>
+    );
+}
+
+// ─── Filter tabs ──────────────────────────────────────────────
+function FilterTabs({
+    active,
+    onChange,
+    options,
+}: {
+    active: string;
+    onChange: (v: string) => void;
+    options: { value: string; label: string }[];
+}) {
+    return (
+        <div className="flex flex-wrap gap-2">
+            {options.map((opt) => (
+                <button
+                    key={opt.value}
+                    onClick={() => onChange(opt.value)}
+                    className={`px-3 py-1 rounded-lg text-[11px] font-bold transition-colors ${
+                        active === opt.value
+                            ? "bg-[#C5A04E] text-white"
+                            : "bg-[#1A1A1A] text-gray-400 hover:bg-[#222222]"
+                    }`}
+                >
+                    {opt.label}
+                </button>
+            ))}
+        </div>
+    );
+}
+
+// ─── Recurring task row (no checkbox, time stats grid) ────────
+function RecurringTaskRow({
+    task,
+    isActiveTask,
+    onStartSession,
+    onEdit,
+    onArchive,
+    onDelete,
+    onShowHistory,
+}: {
+    task: FocusTask;
+    isActiveTask: boolean;
+    onStartSession: () => void;
+    onEdit: () => void;
+    onArchive: () => void;
+    onDelete: () => void;
+    onShowHistory: () => void;
+}) {
+    const cat = task.category ? CATEGORY_META[task.category] : null;
+    const isArchived = task.status === "done";
+
+    return (
+        <div className={`p-3 rounded-xl bg-[#0A0A0A] border ${isActiveTask ? "border-[#C5A04E]/40" : isArchived ? "border-white/[0.04] opacity-60" : "border-white/[0.04]"}`}>
+            <div className="flex items-start gap-3">
+                <div className="flex-1 min-w-0">
+                    <p className={`text-sm font-bold ${isArchived ? "text-gray-500 line-through" : "text-white"}`}>
+                        {task.title}
+                    </p>
+                    {cat && (
+                        <span
+                            className="inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full"
+                            style={{ backgroundColor: cat.bg, color: cat.text }}
+                        >
+                            {cat.label}
+                        </span>
+                    )}
+                </div>
+                <div className="flex items-center gap-1.5 shrink-0">
+                    {!isArchived && (
+                        <button
+                            onClick={onStartSession}
+                            disabled={isActiveTask}
+                            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#C5A04E]/10 text-[#C5A04E] text-xs font-bold hover:bg-[#C5A04E]/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <Play className="w-3 h-3" />
+                            {isActiveTask ? "نشطة" : "ابدأ"}
+                        </button>
+                    )}
+                    <TaskMenu>
+                        <MenuItem icon={<Pencil className="w-4 h-4" />} label="تعديل" onClick={onEdit} />
+                        <MenuItem icon={<History className="w-4 h-4" />} label="السجل" onClick={onShowHistory} />
+                        <MenuItem
+                            icon={<Archive className="w-4 h-4" />}
+                            label={isArchived ? "إلغاء الأرشفة" : "أرشفة"}
+                            onClick={onArchive}
+                        />
+                        <MenuItem icon={<Trash2 className="w-4 h-4" />} label="حذف" danger onClick={onDelete} />
+                    </TaskMenu>
+                </div>
+            </div>
+
+            {/* 4-stat grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3">
+                <StatCell label="اليوم" value={formatDuration(task.time_today_seconds)} />
+                <StatCell label="الأسبوع" value={formatDuration(task.time_this_week_seconds)} />
+                <StatCell label="الشهر" value={formatDuration(task.time_this_month_seconds)} />
+                <StatCell label="الإجمالي" value={formatDuration(task.time_total_seconds)} />
+            </div>
+        </div>
+    );
+}
+
+// ─── One-time task row (checkbox + simple total) ──────────────
+function OneTimeTaskRow({
     task,
     isActiveTask,
     onToggleDone,
@@ -593,91 +803,150 @@ function TaskRow({
     onDelete: () => void;
     onShowHistory: () => void;
 }) {
-    const [menuOpen, setMenuOpen] = useState(false);
     const cat = task.category ? CATEGORY_META[task.category] : null;
     const isDone = task.status === "done";
-    const inProgress = task.status === "in_progress" || isActiveTask;
 
     return (
-        <div
-            className={`flex items-center gap-3 p-3 rounded-xl bg-[#0A0A0A] transition-all border ${
-                inProgress
-                    ? "border-[#C5A04E]/40"
-                    : isDone
-                    ? "border-white/[0.04] opacity-60"
-                    : "border-white/[0.04]"
-            }`}
-        >
-            {/* Checkbox (right in RTL) */}
+        <div className={`flex items-center gap-3 p-3 rounded-xl bg-[#0A0A0A] border ${isActiveTask ? "border-[#C5A04E]/40" : isDone ? "border-white/[0.04] opacity-60" : "border-white/[0.04]"}`}>
             <button onClick={onToggleDone} className="shrink-0" aria-label={isDone ? "إلغاء الإكمال" : "إكمال"}>
-                {isDone ? (
-                    <CheckCircle className="w-5 h-5 text-green-500" />
-                ) : (
-                    <Circle className="w-5 h-5 text-gray-500 hover:text-gray-300 transition-colors" />
-                )}
+                {isDone ? <CheckCircle className="w-5 h-5 text-green-500" /> : <Circle className="w-5 h-5 text-gray-500 hover:text-gray-300 transition-colors" />}
             </button>
 
-            {/* Title + meta */}
             <div className="flex-1 min-w-0">
-                <p className={`text-sm font-bold ${isDone ? "text-gray-500 line-through" : "text-white"}`}>
-                    {task.title}
-                </p>
-                <div className="flex items-center gap-2 mt-1">
+                <p className={`text-sm font-bold ${isDone ? "text-gray-500 line-through" : "text-white"}`}>{task.title}</p>
+                <div className="flex items-center gap-2 mt-1 flex-wrap">
                     {cat && (
-                        <span
-                            className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-                            style={{ backgroundColor: cat.bg, color: cat.text }}
-                        >
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: cat.bg, color: cat.text }}>
                             {cat.label}
                         </span>
                     )}
-                    {task.total_time_seconds > 0 && (
-                        <span className="text-[10px] text-gray-500 flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
-                            {formatSecondsAsMinutesArabic(task.total_time_seconds)}
-                        </span>
+                    {task.scheduled_date && (
+                        <span className="text-[10px] text-gray-500">📅 {formatDateArabicShort(task.scheduled_date)}</span>
                     )}
-                    {task.sessions_count > 0 && (
-                        <span className="text-[10px] text-gray-600">· {task.sessions_count} جلسة</span>
-                    )}
+                    <span className="text-[10px] text-gray-500 flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        الوقت المنقضي: {formatDuration(task.time_total_seconds)}
+                    </span>
                 </div>
             </div>
 
-            {/* Start session button */}
             {!isDone && (
                 <button
                     onClick={onStartSession}
                     disabled={isActiveTask}
-                    className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#C5A04E]/10 text-[#C5A04E] text-xs font-bold hover:bg-[#C5A04E]/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="shrink-0 flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#C5A04E]/10 text-[#C5A04E] text-xs font-bold hover:bg-[#C5A04E]/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     <Play className="w-3 h-3" />
-                    {isActiveTask ? "نشطة" : "ابدأ جلسة"}
+                    {isActiveTask ? "نشطة" : "ابدأ"}
                 </button>
             )}
 
-            {/* Menu */}
-            <div className="relative shrink-0">
-                <button
-                    onClick={() => setMenuOpen((o) => !o)}
-                    className="p-1.5 rounded-lg text-gray-500 hover:bg-[#1A1A1A] hover:text-white transition-colors"
-                    aria-label="القائمة"
-                >
-                    <MoreVertical className="w-4 h-4" />
-                </button>
-                {menuOpen && (
-                    <>
-                        <div
-                            className="fixed inset-0 z-40"
-                            onClick={() => setMenuOpen(false)}
-                        />
-                        <div className="absolute left-0 top-full mt-1 z-50 min-w-[180px] bg-[#1A1A1A] border border-[#C5A04E]/15 rounded-xl shadow-xl py-1 text-right">
-                            <MenuItem icon={<Pencil className="w-4 h-4" />} label="تعديل" onClick={() => { setMenuOpen(false); onEdit(); }} />
-                            <MenuItem icon={<History className="w-4 h-4" />} label="السجل" onClick={() => { setMenuOpen(false); onShowHistory(); }} />
-                            <MenuItem icon={<Trash2 className="w-4 h-4" />} label="حذف" danger onClick={() => { setMenuOpen(false); onDelete(); }} />
-                        </div>
-                    </>
-                )}
+            <TaskMenu>
+                <MenuItem icon={<Pencil className="w-4 h-4" />} label="تعديل" onClick={onEdit} />
+                <MenuItem icon={<History className="w-4 h-4" />} label="السجل" onClick={onShowHistory} />
+                <MenuItem icon={<Trash2 className="w-4 h-4" />} label="حذف" danger onClick={onDelete} />
+            </TaskMenu>
+        </div>
+    );
+}
+
+// ─── Long-term task row (checkbox + total + sessions count) ───
+function LongTermTaskRow({
+    task,
+    isActiveTask,
+    onToggleDone,
+    onStartSession,
+    onEdit,
+    onDelete,
+    onShowHistory,
+}: {
+    task: FocusTask;
+    isActiveTask: boolean;
+    onToggleDone: () => void;
+    onStartSession: () => void;
+    onEdit: () => void;
+    onDelete: () => void;
+    onShowHistory: () => void;
+}) {
+    const cat = task.category ? CATEGORY_META[task.category] : null;
+    const isDone = task.status === "done";
+
+    return (
+        <div className={`flex items-center gap-3 p-3 rounded-xl bg-[#0A0A0A] border ${isActiveTask ? "border-[#C5A04E]/40" : isDone ? "border-white/[0.04] opacity-60" : "border-white/[0.04]"}`}>
+            <button onClick={onToggleDone} className="shrink-0" aria-label={isDone ? "إلغاء الإكمال" : "إكمال"}>
+                {isDone ? <CheckCircle className="w-5 h-5 text-green-500" /> : <Circle className="w-5 h-5 text-gray-500 hover:text-gray-300 transition-colors" />}
+            </button>
+
+            <div className="flex-1 min-w-0">
+                <p className={`text-sm font-bold ${isDone ? "text-gray-500 line-through" : "text-white"}`}>{task.title}</p>
+                <div className="flex items-center gap-2 mt-1 flex-wrap">
+                    {cat && (
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: cat.bg, color: cat.text }}>
+                            {cat.label}
+                        </span>
+                    )}
+                    {task.scheduled_date && (
+                        <span className="text-[10px] text-gray-500">📅 {formatDateArabicShort(task.scheduled_date)}</span>
+                    )}
+                    <span className="text-[10px] text-gray-500">
+                        الإجمالي: {formatDuration(task.time_total_seconds)} · الجلسات: {task.sessions_count_total}
+                    </span>
+                </div>
             </div>
+
+            {!isDone && (
+                <button
+                    onClick={onStartSession}
+                    disabled={isActiveTask}
+                    className="shrink-0 flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#C5A04E]/10 text-[#C5A04E] text-xs font-bold hover:bg-[#C5A04E]/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <Play className="w-3 h-3" />
+                    {isActiveTask ? "نشطة" : "ابدأ"}
+                </button>
+            )}
+
+            <TaskMenu>
+                <MenuItem icon={<Pencil className="w-4 h-4" />} label="تعديل" onClick={onEdit} />
+                <MenuItem icon={<History className="w-4 h-4" />} label="السجل" onClick={onShowHistory} />
+                <MenuItem icon={<Trash2 className="w-4 h-4" />} label="حذف" danger onClick={onDelete} />
+            </TaskMenu>
+        </div>
+    );
+}
+
+// ─── Stat cell (used in recurring grid) ───────────────────────
+function StatCell({ label, value }: { label: string; value: string }) {
+    return (
+        <div className="bg-[#0A0A0A] border border-white/[0.04] rounded-lg px-2 py-1.5 text-center">
+            <p className="text-[9px] font-bold text-gray-600 uppercase tracking-wider">{label}</p>
+            <p className="text-xs text-white font-mono mt-0.5">{value}</p>
+        </div>
+    );
+}
+
+// ─── Task menu (3-dot) ────────────────────────────────────────
+function TaskMenu({ children }: { children: React.ReactNode }) {
+    const [open, setOpen] = useState(false);
+    return (
+        <div className="relative shrink-0">
+            <button
+                onClick={() => setOpen((o) => !o)}
+                className="p-1.5 rounded-lg text-gray-500 hover:bg-[#1A1A1A] hover:text-white transition-colors"
+                aria-label="القائمة"
+            >
+                <MoreVertical className="w-4 h-4" />
+            </button>
+            {open && (
+                <>
+                    <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+                    <div
+                        className="absolute left-0 top-full mt-1 z-50 min-w-[180px] bg-[#1A1A1A] border border-[#C5A04E]/15 rounded-xl shadow-xl py-1 text-right"
+                        onClick={() => setOpen(false)}
+                    >
+                        {children}
+                    </div>
+                </>
+            )}
         </div>
     );
 }
@@ -696,37 +965,50 @@ function MenuItem({ icon, label, onClick, danger }: { icon: React.ReactNode; lab
     );
 }
 
-// ─── Task form (create/edit) ──────────────────────────────────
+// ─── Task form ────────────────────────────────────────────────
 function TaskForm({
     task,
+    defaultType,
     defaultDate,
     onSubmit,
     onCancel,
 }: {
     task?: FocusTask;
+    defaultType: TaskType;
     defaultDate: string;
     onSubmit: (data: {
         title: string;
         description?: string;
         category?: TaskCategory;
         scheduled_date?: string;
+        task_type: TaskType;
     }) => Promise<void>;
     onCancel: () => void;
 }) {
     const [title, setTitle] = useState(task?.title || "");
     const [description, setDescription] = useState(task?.description || "");
     const [category, setCategory] = useState<TaskCategory>(task?.category || "professional");
+    const [taskType, setTaskType] = useState<TaskType>(task?.task_type || defaultType);
     const [scheduledDate, setScheduledDate] = useState(task?.scheduled_date || defaultDate);
     const [submitting, setSubmitting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const showDate = taskType !== "recurring";
 
     const handleSubmit = async () => {
         if (!title.trim()) return;
+        if (showDate && !scheduledDate) {
+            setError("التاريخ مطلوب");
+            return;
+        }
         setSubmitting(true);
+        setError(null);
         await onSubmit({
             title: title.trim(),
             description: description.trim() || undefined,
             category,
-            scheduled_date: scheduledDate,
+            scheduled_date: showDate ? scheduledDate : undefined,
+            task_type: taskType,
         });
         setSubmitting(false);
     };
@@ -752,23 +1034,13 @@ function TaskForm({
                 <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    rows={3}
+                    rows={2}
                     placeholder="تفاصيل إضافية..."
                     className="w-full bg-[#0A0A0A] border border-[#C5A04E]/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#C5A04E] resize-none"
                 />
             </div>
 
-            <div>
-                <label className="block text-sm font-bold text-gray-400 mb-2">التاريخ المخطط</label>
-                <input
-                    type="date"
-                    value={scheduledDate}
-                    onChange={(e) => setScheduledDate(e.target.value)}
-                    className="w-full bg-[#0A0A0A] border border-[#C5A04E]/15 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#C5A04E]"
-                    dir="ltr"
-                />
-            </div>
-
+            {/* Category */}
             <div>
                 <label className="block text-sm font-bold text-gray-400 mb-2">الفئة</label>
                 <div className="flex gap-2">
@@ -779,7 +1051,7 @@ function TaskForm({
                             <button
                                 key={c}
                                 onClick={() => setCategory(c)}
-                                className="flex-1 px-4 py-3 rounded-xl text-sm font-bold transition-colors border"
+                                className="flex-1 px-4 py-2.5 rounded-xl text-sm font-bold transition-colors border"
                                 style={
                                     active
                                         ? { backgroundColor: meta.bg, color: meta.text, borderColor: meta.text }
@@ -793,12 +1065,56 @@ function TaskForm({
                 </div>
             </div>
 
+            {/* Type */}
+            <div>
+                <label className="block text-sm font-bold text-gray-400 mb-2">نوع المهمة</label>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    {(["recurring", "one_time", "long_term"] as TaskType[]).map((t) => {
+                        const meta = TYPE_META[t];
+                        const Icon = meta.icon;
+                        const active = taskType === t;
+                        return (
+                            <button
+                                key={t}
+                                onClick={() => setTaskType(t)}
+                                className="p-3 rounded-xl text-right transition-colors border"
+                                style={
+                                    active
+                                        ? { backgroundColor: meta.bg, borderColor: meta.text }
+                                        : { backgroundColor: "#0A0A0A", borderColor: "rgba(255,255,255,0.04)" }
+                                }
+                            >
+                                <div className="flex items-center gap-2 mb-1">
+                                    <Icon className="w-4 h-4" style={{ color: active ? meta.text : "#9CA3AF" }} />
+                                    <span className="text-sm font-bold" style={{ color: active ? meta.text : "#fff" }}>
+                                        {meta.label}
+                                    </span>
+                                </div>
+                                <p className="text-[10px] text-gray-500 leading-tight">{meta.subtitle}</p>
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
+
+            {/* Date — conditional */}
+            {showDate && (
+                <div>
+                    <label className="block text-sm font-bold text-gray-400 mb-2">التاريخ المخطط</label>
+                    <input
+                        type="date"
+                        value={scheduledDate}
+                        onChange={(e) => setScheduledDate(e.target.value)}
+                        className="w-full bg-[#0A0A0A] border border-[#C5A04E]/15 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#C5A04E]"
+                        dir="ltr"
+                    />
+                </div>
+            )}
+
+            {error && <p className="text-red-400 text-xs">{error}</p>}
+
             <div className="flex gap-3 pt-2">
-                <button
-                    onClick={onCancel}
-                    disabled={submitting}
-                    className="flex-1 px-4 py-3 rounded-xl bg-[#1A1A1A] text-gray-400 font-bold hover:bg-[#222222] transition-colors disabled:opacity-50"
-                >
+                <button onClick={onCancel} disabled={submitting} className="flex-1 px-4 py-3 rounded-xl bg-[#1A1A1A] text-gray-400 font-bold hover:bg-[#222222] transition-colors disabled:opacity-50">
                     إلغاء
                 </button>
                 <button
@@ -814,25 +1130,15 @@ function TaskForm({
     );
 }
 
-// ─── Task history (sessions for a task) ───────────────────────
-function TaskHistory({
-    task,
-    sessions,
-    onClose,
-}: {
-    task: FocusTask;
-    sessions: FocusSession[];
-    onClose: () => void;
-}) {
+// ─── Task history ─────────────────────────────────────────────
+function TaskHistory({ task, sessions, onClose }: { task: FocusTask; sessions: FocusSession[]; onClose: () => void }) {
     return (
         <div className="space-y-4">
             <h3 className="text-xl font-bold text-white">سجل الجلسات</h3>
             <p className="text-sm text-gray-400">{task.title}</p>
 
             {sessions.length === 0 ? (
-                <div className="text-center py-8 text-gray-500 text-sm">
-                    لا توجد جلسات لهذه المهمة اليوم
-                </div>
+                <div className="text-center py-8 text-gray-500 text-sm">لا توجد جلسات لهذه المهمة اليوم</div>
             ) : (
                 <div className="space-y-2 max-h-80 overflow-y-auto">
                     {sessions.map((s) => (
@@ -847,10 +1153,7 @@ function TaskHistory({
                 </div>
             )}
 
-            <button
-                onClick={onClose}
-                className="w-full px-4 py-3 rounded-xl bg-[#1A1A1A] text-gray-300 font-bold hover:bg-[#222222] transition-colors"
-            >
+            <button onClick={onClose} className="w-full px-4 py-3 rounded-xl bg-[#1A1A1A] text-gray-300 font-bold hover:bg-[#222222] transition-colors">
                 إغلاق
             </button>
         </div>
@@ -859,14 +1162,8 @@ function TaskHistory({
 
 // ─── Active session view ──────────────────────────────────────
 function ActiveSessionView({
-    session,
-    elapsedSeconds,
-    plannedSeconds,
-    overtime,
-    onPause,
-    onResume,
-    onStop,
-    onAbandon,
+    session, elapsedSeconds, plannedSeconds, overtime,
+    onPause, onResume, onStop, onAbandon,
 }: {
     session: FocusSession;
     elapsedSeconds: number;
@@ -884,7 +1181,6 @@ function ActiveSessionView({
 
     return (
         <div className="text-center space-y-6">
-            {/* Linked task badge */}
             {session.task_id && (
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#C5A04E]/10 border border-[#C5A04E]/20">
                     <Target className="w-3.5 h-3.5 text-[#C5A04E]" />
@@ -895,10 +1191,7 @@ function ActiveSessionView({
             <div className="space-y-2">
                 <h2 className="text-xl font-bold text-white">{session.task_title}</h2>
                 {catMeta && (
-                    <span
-                        className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full"
-                        style={{ backgroundColor: catMeta.bg, color: catMeta.text }}
-                    >
+                    <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full" style={{ backgroundColor: catMeta.bg, color: catMeta.text }}>
                         <Tag className="w-3 h-3" />
                         {catMeta.label}
                     </span>
@@ -918,9 +1211,7 @@ function ActiveSessionView({
             <div className="max-w-md mx-auto">
                 <div className="h-2 bg-[#1A1A1A] rounded-full overflow-hidden">
                     <div
-                        className={`h-full rounded-full transition-all duration-1000 ${
-                            overtime ? "bg-red-400" : "bg-gradient-to-r from-[#C5A04E] to-[#0ea5e9]"
-                        }`}
+                        className={`h-full rounded-full transition-all duration-1000 ${overtime ? "bg-red-400" : "bg-gradient-to-r from-[#C5A04E] to-[#0ea5e9]"}`}
                         style={{ width: `${progress}%` }}
                     />
                 </div>
@@ -933,30 +1224,18 @@ function ActiveSessionView({
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
                 {isPaused ? (
-                    <button
-                        onClick={onResume}
-                        className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#C5A04E] text-white font-bold hover:bg-[#D4B85C] transition-colors"
-                    >
+                    <button onClick={onResume} className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#C5A04E] text-white font-bold hover:bg-[#D4B85C] transition-colors">
                         <Play className="w-5 h-5" /> استئناف
                     </button>
                 ) : (
-                    <button
-                        onClick={onPause}
-                        className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#1A1A1A] text-gray-300 font-bold hover:bg-[#222222] transition-colors border border-white/[0.08]"
-                    >
+                    <button onClick={onPause} className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#1A1A1A] text-gray-300 font-bold hover:bg-[#222222] transition-colors border border-white/[0.08]">
                         <Pause className="w-5 h-5" /> إيقاف مؤقت
                     </button>
                 )}
-                <button
-                    onClick={onStop}
-                    className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-green-600/90 text-white font-bold hover:bg-green-600 transition-colors"
-                >
+                <button onClick={onStop} className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-green-600/90 text-white font-bold hover:bg-green-600 transition-colors">
                     <Square className="w-5 h-5" /> إنهاء
                 </button>
-                <button
-                    onClick={onAbandon}
-                    className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#1A1A1A] text-red-400 font-bold hover:bg-red-500/10 transition-colors border border-red-500/20"
-                >
+                <button onClick={onAbandon} className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#1A1A1A] text-red-400 font-bold hover:bg-red-500/10 transition-colors border border-red-500/20">
                     <X className="w-5 h-5" /> إلغاء
                 </button>
             </div>
@@ -966,16 +1245,9 @@ function ActiveSessionView({
 
 // ─── Start form ───────────────────────────────────────────────
 function StartForm({
-    selectedTask,
-    onClearSelectedTask,
-    freeTitle,
-    setFreeTitle,
-    plannedMinutes,
-    setPlannedMinutes,
-    customDuration,
-    setCustomDuration,
-    onStart,
-    starting,
+    selectedTask, onClearSelectedTask, freeTitle, setFreeTitle,
+    plannedMinutes, setPlannedMinutes, customDuration, setCustomDuration,
+    onStart, starting,
 }: {
     selectedTask: FocusTask | null;
     onClearSelectedTask: () => void;
@@ -1004,10 +1276,7 @@ function StartForm({
                             <p className="text-white text-sm font-bold truncate">{selectedTask.title}</p>
                         </div>
                     </div>
-                    <button
-                        onClick={onClearSelectedTask}
-                        className="shrink-0 px-3 py-1.5 rounded-lg bg-[#1A1A1A] text-gray-400 text-xs font-bold hover:bg-[#222222] transition-colors"
-                    >
+                    <button onClick={onClearSelectedTask} className="shrink-0 px-3 py-1.5 rounded-lg bg-[#1A1A1A] text-gray-400 text-xs font-bold hover:bg-[#222222] transition-colors">
                         إلغاء
                     </button>
                 </div>
@@ -1030,10 +1299,7 @@ function StartForm({
                     {QUICK_DURATIONS.map((d) => (
                         <button
                             key={d}
-                            onClick={() => {
-                                setPlannedMinutes(d);
-                                setCustomDuration("");
-                            }}
+                            onClick={() => { setPlannedMinutes(d); setCustomDuration(""); }}
                             className={`px-4 py-2 rounded-xl text-sm font-bold transition-colors ${
                                 plannedMinutes === d && !customDuration
                                     ? "bg-[#C5A04E] text-white"
@@ -1082,10 +1348,7 @@ function SessionRow({ session, onClick }: { session: FocusSession; onClick: () =
         : <Play className="w-4 h-4 text-[#C5A04E]" />;
 
     return (
-        <button
-            onClick={onClick}
-            className="w-full flex items-center gap-3 p-3 rounded-xl bg-[#0A0A0A] hover:bg-[#1A1A1A] transition-colors text-right border border-white/[0.04]"
-        >
+        <button onClick={onClick} className="w-full flex items-center gap-3 p-3 rounded-xl bg-[#0A0A0A] hover:bg-[#1A1A1A] transition-colors text-right border border-white/[0.04]">
             <div className="shrink-0">{statusIcon}</div>
             <div className="text-xs text-gray-500 font-mono shrink-0 w-12" dir="ltr">{formatTime(session.started_at)}</div>
             <div className="flex-1 min-w-0">
@@ -1093,17 +1356,14 @@ function SessionRow({ session, onClick }: { session: FocusSession; onClick: () =
                 {session.notes && <p className="text-xs text-gray-500 truncate mt-0.5">{session.notes}</p>}
             </div>
             {catMeta && (
-                <span
-                    className="text-xs font-bold px-2 py-0.5 rounded-full shrink-0"
-                    style={{ backgroundColor: catMeta.bg, color: catMeta.text }}
-                >
+                <span className="text-xs font-bold px-2 py-0.5 rounded-full shrink-0" style={{ backgroundColor: catMeta.bg, color: catMeta.text }}>
                     {catMeta.label}
                 </span>
             )}
             {session.status === "completed" && (
                 <span className="text-xs text-gray-400 font-mono shrink-0 flex items-center gap-1">
                     <Clock className="w-3 h-3" />
-                    {Math.floor(realSeconds / 60)} دقيقة
+                    {formatDuration(realSeconds)}
                 </span>
             )}
         </button>
@@ -1124,10 +1384,7 @@ function SessionDetail({ session, onClose }: { session: FocusSession; onClose: (
         <div className="space-y-4">
             <h3 className="text-xl font-bold text-white">{session.task_title}</h3>
             {catMeta && (
-                <span
-                    className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full"
-                    style={{ backgroundColor: catMeta.bg, color: catMeta.text }}
-                >
+                <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full" style={{ backgroundColor: catMeta.bg, color: catMeta.text }}>
                     <Tag className="w-3 h-3" />
                     {catMeta.label}
                 </span>
@@ -1149,10 +1406,7 @@ function SessionDetail({ session, onClose }: { session: FocusSession; onClose: (
                 </p>
             </div>
 
-            <button
-                onClick={onClose}
-                className="w-full px-4 py-3 rounded-xl bg-[#1A1A1A] text-gray-300 font-bold hover:bg-[#222222] transition-colors"
-            >
+            <button onClick={onClose} className="w-full px-4 py-3 rounded-xl bg-[#1A1A1A] text-gray-300 font-bold hover:bg-[#222222] transition-colors">
                 إغلاق
             </button>
         </div>
@@ -1168,17 +1422,10 @@ function Field({ label, value }: { label: string; value: string }) {
     );
 }
 
-// ─── Modal ───────────────────────────────────────────────────
 function Modal({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
     return (
-        <div
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-            onClick={onClose}
-        >
-            <div
-                className="bg-[#111111] border border-[#C5A04E]/15 rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto"
-                onClick={(e) => e.stopPropagation()}
-            >
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
+            <div className="bg-[#111111] border border-[#C5A04E]/15 rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
                 {children}
             </div>
         </div>

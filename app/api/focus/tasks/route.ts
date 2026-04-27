@@ -4,6 +4,9 @@ import { createClient as createAdminClient } from '@supabase/supabase-js';
 
 export const dynamic = 'force-dynamic';
 
+const VALID_TYPES = ['recurring', 'one_time', 'long_term'] as const;
+type TaskType = typeof VALID_TYPES[number];
+
 function getAdmin() {
     return createAdminClient(
         process.env.SUPABASE_URL!,
@@ -12,14 +15,24 @@ function getAdmin() {
     );
 }
 
-// Effective seconds for one finished session (excludes paused time)
 function effectiveSeconds(s: { started_at: string; ended_at: string | null; paused_seconds: number | null }): number {
     if (!s.ended_at) return 0;
     const elapsed = (new Date(s.ended_at).getTime() - new Date(s.started_at).getTime()) / 1000;
     return Math.max(0, Math.floor(elapsed - (s.paused_seconds || 0)));
 }
 
-// GET: tasks (filterable by date and status) + stats + per-task aggregates
+// Period boundaries in UTC ms — keeps stats consistent across server invocations
+function getPeriodBoundaries() {
+    const now = new Date();
+    const todayStart = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+    const dow = new Date(todayStart).getUTCDay(); // 0=Sun
+    const daysSinceMonday = dow === 0 ? 6 : dow - 1;
+    const weekStart = todayStart - daysSinceMonday * 86400000;
+    const monthStart = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1);
+    return { todayStart, weekStart, monthStart };
+}
+
+// GET: tasks (filterable by date / status / type) + per-task time stats
 export async function GET(req: NextRequest) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -27,19 +40,29 @@ export async function GET(req: NextRequest) {
 
     const dateStr = req.nextUrl.searchParams.get('date');
     const status = req.nextUrl.searchParams.get('status');
+    const type = req.nextUrl.searchParams.get('type');
 
     const admin = getAdmin();
     let query = admin.from('focus_tasks').select('*').eq('user_id', user.id);
     if (dateStr) query = query.eq('scheduled_date', dateStr);
     if (status) query = query.eq('status', status);
+    if (type && (VALID_TYPES as readonly string[]).includes(type)) {
+        query = query.eq('task_type', type);
+    }
     query = query.order('created_at', { ascending: false });
 
     const { data: tasks, error } = await query;
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-    // Aggregate session totals per task
+    // Aggregate session totals per task (single query, JS-side aggregation)
     const taskIds = (tasks || []).map((t: any) => t.id);
-    const aggMap = new Map<string, { total_time_seconds: number; sessions_count: number }>();
+    const aggMap = new Map<string, {
+        time_today_seconds: number;
+        time_this_week_seconds: number;
+        time_this_month_seconds: number;
+        time_total_seconds: number;
+        sessions_count_total: number;
+    }>();
 
     if (taskIds.length > 0) {
         const { data: sessions } = await admin
@@ -47,20 +70,45 @@ export async function GET(req: NextRequest) {
             .select('task_id, started_at, ended_at, paused_seconds, status')
             .in('task_id', taskIds);
 
+        const { todayStart, weekStart, monthStart } = getPeriodBoundaries();
+
         for (const s of sessions || []) {
             if (!s.task_id) continue;
-            const entry = aggMap.get(s.task_id) || { total_time_seconds: 0, sessions_count: 0 };
-            entry.sessions_count += 1;
+            const entry = aggMap.get(s.task_id) || {
+                time_today_seconds: 0,
+                time_this_week_seconds: 0,
+                time_this_month_seconds: 0,
+                time_total_seconds: 0,
+                sessions_count_total: 0,
+            };
+            entry.sessions_count_total += 1;
             if (s.status === 'completed') {
-                entry.total_time_seconds += effectiveSeconds(s);
+                const sec = effectiveSeconds(s);
+                const startedMs = new Date(s.started_at).getTime();
+                entry.time_total_seconds += sec;
+                if (startedMs >= monthStart) entry.time_this_month_seconds += sec;
+                if (startedMs >= weekStart) entry.time_this_week_seconds += sec;
+                if (startedMs >= todayStart) entry.time_today_seconds += sec;
             }
             aggMap.set(s.task_id, entry);
         }
     }
 
     const enriched = (tasks || []).map((t: any) => {
-        const agg = aggMap.get(t.id) || { total_time_seconds: 0, sessions_count: 0 };
-        return { ...t, total_time_seconds: agg.total_time_seconds, sessions_count: agg.sessions_count };
+        const agg = aggMap.get(t.id) || {
+            time_today_seconds: 0,
+            time_this_week_seconds: 0,
+            time_this_month_seconds: 0,
+            time_total_seconds: 0,
+            sessions_count_total: 0,
+        };
+        return {
+            ...t,
+            ...agg,
+            // Backward-compat aliases
+            total_time_seconds: agg.time_total_seconds,
+            sessions_count: agg.sessions_count_total,
+        };
     });
 
     const stats = { todo: 0, in_progress: 0, done: 0 };
@@ -78,13 +126,28 @@ export async function POST(req: NextRequest) {
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await req.json();
-    const { title, description, category, scheduled_date } = body;
+    const { title, description, category, scheduled_date, task_type } = body;
 
     if (typeof title !== 'string' || !title.trim()) {
         return NextResponse.json({ error: 'title required' }, { status: 400 });
     }
     if (category && category !== 'personal' && category !== 'professional') {
         return NextResponse.json({ error: 'invalid category' }, { status: 400 });
+    }
+
+    const ttype: TaskType = (task_type && (VALID_TYPES as readonly string[]).includes(task_type))
+        ? task_type as TaskType
+        : 'one_time';
+
+    // Date rules
+    if (ttype === 'recurring') {
+        if (scheduled_date) {
+            return NextResponse.json({ error: 'recurring tasks must not have a scheduled_date' }, { status: 400 });
+        }
+    } else {
+        if (!scheduled_date) {
+            return NextResponse.json({ error: 'scheduled_date required for one_time/long_term' }, { status: 400 });
+        }
     }
 
     const admin = getAdmin();
@@ -95,7 +158,8 @@ export async function POST(req: NextRequest) {
             title: title.trim(),
             description: description || null,
             category: category || null,
-            scheduled_date: scheduled_date || null,
+            scheduled_date: ttype === 'recurring' ? null : scheduled_date,
+            task_type: ttype,
             status: 'todo',
         })
         .select()
@@ -105,14 +169,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ task: data });
 }
 
-// PATCH: update a task (title/description/category/scheduled_date/status)
+// PATCH: update a task
 export async function PATCH(req: NextRequest) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await req.json();
-    const { id, title, description, category, scheduled_date, status } = body;
+    const { id, title, description, category, scheduled_date, status, task_type } = body;
 
     if (!id) return NextResponse.json({ error: 'id required' }, { status: 400 });
     if (status && !['todo', 'in_progress', 'done'].includes(status)) {
@@ -121,13 +185,15 @@ export async function PATCH(req: NextRequest) {
     if (category && category !== 'personal' && category !== 'professional') {
         return NextResponse.json({ error: 'invalid category' }, { status: 400 });
     }
+    if (task_type && !(VALID_TYPES as readonly string[]).includes(task_type)) {
+        return NextResponse.json({ error: 'invalid task_type' }, { status: 400 });
+    }
 
     const admin = getAdmin();
 
-    // Ownership check
     const { data: existing } = await admin
         .from('focus_tasks')
-        .select('id, user_id, status')
+        .select('id, user_id, status, task_type')
         .eq('id', id)
         .single();
     if (!existing || existing.user_id !== user.id) {
@@ -138,13 +204,22 @@ export async function PATCH(req: NextRequest) {
     if (typeof title === 'string') update.title = title.trim();
     if (description !== undefined) update.description = description || null;
     if (category !== undefined) update.category = category || null;
-    if (scheduled_date !== undefined) update.scheduled_date = scheduled_date || null;
+    if (task_type) {
+        update.task_type = task_type;
+        // Switching to recurring: clear scheduled_date regardless of what client sent
+        if (task_type === 'recurring') {
+            update.scheduled_date = null;
+        } else if (scheduled_date !== undefined) {
+            update.scheduled_date = scheduled_date || null;
+        }
+    } else if (scheduled_date !== undefined) {
+        update.scheduled_date = scheduled_date || null;
+    }
     if (status) {
         update.status = status;
         if (status === 'done') {
             update.completed_at = new Date().toISOString();
         } else if (existing.status === 'done') {
-            // Reverting from done → clear completion timestamp
             update.completed_at = null;
         }
     }
@@ -160,7 +235,7 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ task: data });
 }
 
-// DELETE: remove a task
+// DELETE
 export async function DELETE(req: NextRequest) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -172,7 +247,7 @@ export async function DELETE(req: NextRequest) {
             const body = await req.json();
             id = body?.id || null;
         } catch {
-            /* no body */
+            /* */
         }
     }
     if (!id) return NextResponse.json({ error: 'id required' }, { status: 400 });
