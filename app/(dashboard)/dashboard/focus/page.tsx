@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
 import { useFocusTasks, FocusTask, TaskCategory, TaskStatus, TaskType } from "@/lib/hooks/useFocusTasks";
 import {
@@ -391,9 +392,18 @@ export default function FocusPage() {
     return (
         <div className="max-w-4xl mx-auto space-y-5">
             {/* Page header */}
-            <div className="flex items-center gap-3">
-                <Timer className="w-7 h-7 text-[#C5A04E]" />
-                <h1 className="text-2xl font-bold text-white">متتبع التركيز</h1>
+            <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                    <Timer className="w-7 h-7 text-[#C5A04E]" />
+                    <h1 className="text-2xl font-bold text-white">متتبع التركيز</h1>
+                </div>
+                <Link
+                    href="/dashboard/focus/stats"
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#1A1A1A] border border-[#C5A04E]/30 text-[#C5A04E] text-sm font-bold hover:bg-[#C5A04E]/10 transition-colors"
+                >
+                    <BarChart3 className="w-4 h-4" />
+                    📊 الإحصائيات
+                </Link>
             </div>
 
             {/* ─── Section 1: Recurring tasks ─── */}
