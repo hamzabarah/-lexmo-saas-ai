@@ -19,7 +19,7 @@ function effectiveSeconds(s: { started_at: string; ended_at: string | null; paus
     return Math.max(0, Math.floor(elapsed - (s.paused_seconds || 0)));
 }
 
-// GET: today's sessions (or ?date=YYYY-MM-DD) + computed stats
+// GET: today's sessions (or ?date=YYYY-MM-DD) + computed stats + linked task info
 export async function GET(req: NextRequest) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
     const admin = getAdmin();
     const { data: sessions, error } = await admin
         .from('focus_sessions')
-        .select('*')
+        .select('*, focus_tasks(id, title, category)')
         .eq('user_id', user.id)
         .gte('started_at', target.toISOString())
         .lt('started_at', next.toISOString())
@@ -60,14 +60,14 @@ export async function GET(req: NextRequest) {
     });
 }
 
-// POST: start a new session
+// POST: start a new session (optionally linked to a task)
 export async function POST(req: NextRequest) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await req.json();
-    const { task_title, category, planned_duration_minutes } = body;
+    const { task_title, category, planned_duration_minutes, task_id } = body;
 
     if (typeof task_title !== 'string' || !task_title.trim()) {
         return NextResponse.json({ error: 'task_title required' }, { status: 400 });
@@ -75,10 +75,29 @@ export async function POST(req: NextRequest) {
 
     const planned =
         typeof planned_duration_minutes === 'number' && planned_duration_minutes > 0
-            ? Math.min(planned_duration_minutes, 60 * 8) // hard cap 8h
+            ? Math.min(planned_duration_minutes, 60 * 8)
             : 40;
 
     const admin = getAdmin();
+
+    // If linked to a task, verify ownership and bump task to in_progress
+    if (task_id) {
+        const { data: task } = await admin
+            .from('focus_tasks')
+            .select('id, user_id, status')
+            .eq('id', task_id)
+            .single();
+        if (!task || task.user_id !== user.id) {
+            return NextResponse.json({ error: 'Invalid task_id' }, { status: 403 });
+        }
+        if (task.status === 'todo') {
+            await admin
+                .from('focus_tasks')
+                .update({ status: 'in_progress', updated_at: new Date().toISOString() })
+                .eq('id', task_id);
+        }
+    }
+
     const { data, error } = await admin
         .from('focus_sessions')
         .insert({
@@ -87,6 +106,7 @@ export async function POST(req: NextRequest) {
             category: category || null,
             planned_duration_minutes: planned,
             status: 'running',
+            task_id: task_id || null,
         })
         .select()
         .single();
@@ -110,7 +130,6 @@ export async function PATCH(req: NextRequest) {
 
     const admin = getAdmin();
 
-    // Verify ownership
     const { data: existing } = await admin
         .from('focus_sessions')
         .select('id, user_id')

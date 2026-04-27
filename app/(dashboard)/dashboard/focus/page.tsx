@@ -2,7 +2,12 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { Lock, Play, Pause, Square, X, Timer, Tag, Clock, Loader2, CheckCircle2, AlertCircle, PauseCircle } from "lucide-react";
+import { useFocusTasks, FocusTask, TaskCategory, TaskStatus } from "@/lib/hooks/useFocusTasks";
+import {
+    Lock, Play, Pause, Square, X, Timer, Tag, Clock, Loader2,
+    CheckCircle2, AlertCircle, PauseCircle, Plus, Target,
+    MoreVertical, Pencil, Trash2, History, Circle, CheckCircle
+} from "lucide-react";
 
 const ADMIN_EMAIL = "academyfrance75@gmail.com";
 
@@ -17,23 +22,16 @@ interface FocusSession {
     ended_at: string | null;
     paused_seconds: number;
     status: "running" | "paused" | "completed" | "abandoned";
+    task_id: string | null;
+    focus_tasks: { id: string; title: string; category: string | null } | null;
     created_at: string;
     updated_at: string;
 }
 
-interface ApiResponse {
+interface SessionsResponse {
     sessions: FocusSession[];
     stats: { totalMinutes: number; completedCount: number; abandonedCount: number };
 }
-
-const CATEGORIES = [
-    { value: "code", label: "برمجة", color: "#22d3ee" },
-    { value: "design", label: "تصميم", color: "#f472b6" },
-    { value: "admin", label: "إدارة", color: "#a78bfa" },
-    { value: "etude", label: "دراسة", color: "#34d399" },
-    { value: "marketing", label: "تسويق", color: "#fbbf24" },
-    { value: "autre", label: "أخرى", color: "#9ca3af" },
-];
 
 const QUICK_DURATIONS = [25, 40, 60, 90];
 
@@ -42,6 +40,18 @@ const STATUS_LABELS: Record<string, string> = {
     paused: "متوقف مؤقتاً",
     completed: "مكتمل",
     abandoned: "ملغى",
+};
+
+const TASK_FILTERS: { value: "all" | TaskStatus; label: string }[] = [
+    { value: "all", label: "الكل" },
+    { value: "todo", label: "للقيام" },
+    { value: "in_progress", label: "قيد التنفيذ" },
+    { value: "done", label: "مكتمل" },
+];
+
+const CATEGORY_META: Record<TaskCategory, { label: string; bg: string; text: string }> = {
+    personal: { label: "شخصي", bg: "rgba(59, 130, 246, 0.15)", text: "#93C5FD" },
+    professional: { label: "مهني", bg: "rgba(197, 160, 78, 0.15)", text: "#FDE68A" },
 };
 
 function pad(n: number): string {
@@ -61,7 +71,6 @@ function formatTime(iso: string): string {
     return new Date(iso).toLocaleTimeString("ar-u-nu-latn", { hour: "2-digit", minute: "2-digit" });
 }
 
-// "Y دقيقة" if no hours, "X ساعة و Y دقيقة" otherwise
 function formatMinutesArabic(totalMinutes: number): string {
     const h = Math.floor(totalMinutes / 60);
     const m = totalMinutes % 60;
@@ -69,36 +78,56 @@ function formatMinutesArabic(totalMinutes: number): string {
     return `${m} دقيقة`;
 }
 
-function categoryMeta(value: string | null) {
-    return CATEGORIES.find((c) => c.value === value) || null;
+function formatSecondsAsMinutesArabic(totalSeconds: number): string {
+    return formatMinutesArabic(Math.floor(totalSeconds / 60));
+}
+
+function todayISO(): string {
+    const d = new Date();
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+function formatDateArabic(iso: string): string {
+    return new Date(`${iso}T00:00:00`).toLocaleDateString("ar-u-nu-latn", {
+        weekday: "long", day: "numeric", month: "long", year: "numeric",
+    });
 }
 
 export default function FocusPage() {
     const [authChecked, setAuthChecked] = useState(false);
     const [authorized, setAuthorized] = useState(false);
 
-    const [data, setData] = useState<ApiResponse | null>(null);
-    const [loading, setLoading] = useState(true);
+    // Sessions data
+    const [sessionsData, setSessionsData] = useState<SessionsResponse | null>(null);
+    const [sessionsLoading, setSessionsLoading] = useState(true);
 
-    // Start form
-    const [taskTitle, setTaskTitle] = useState("");
-    const [category, setCategory] = useState<string>("code");
+    // Tasks
+    const today = useMemo(() => todayISO(), []);
+    const tasksApi = useFocusTasks(today);
+
+    // Selected task (pre-filled in tracker form, not yet started)
+    const [selectedTask, setSelectedTask] = useState<FocusTask | null>(null);
+
+    // Tracker form state
     const [plannedMinutes, setPlannedMinutes] = useState<number>(40);
     const [customDuration, setCustomDuration] = useState<string>("");
+    const [freeTitle, setFreeTitle] = useState("");
     const [starting, setStarting] = useState(false);
 
-    // Timer ticker
+    // Active session ticker
     const [, setTick] = useState(0);
-
-    // Pause tracking (client-side: when did the current pause start?)
     const pauseStartedAtRef = useRef<number | null>(null);
 
-    // Stop modal
+    // Modals
     const [stopModal, setStopModal] = useState<{ session: FocusSession; notes: string } | null>(null);
     const [savingStop, setSavingStop] = useState(false);
-
-    // Detail modal
     const [detailModal, setDetailModal] = useState<FocusSession | null>(null);
+
+    // Tasks UI state
+    const [taskFilter, setTaskFilter] = useState<"all" | TaskStatus>("all");
+    const [showAddTaskModal, setShowAddTaskModal] = useState(false);
+    const [editTaskModal, setEditTaskModal] = useState<FocusTask | null>(null);
+    const [historyModal, setHistoryModal] = useState<FocusTask | null>(null);
 
     // ─── Admin auth check ───
     useEffect(() => {
@@ -110,27 +139,27 @@ export default function FocusPage() {
     }, []);
 
     // ─── Load sessions ───
-    const refresh = useCallback(async () => {
+    const refreshSessions = useCallback(async () => {
         try {
             const res = await fetch("/api/focus", { credentials: "include" });
             if (!res.ok) return;
-            const json: ApiResponse = await res.json();
-            setData(json);
+            const json: SessionsResponse = await res.json();
+            setSessionsData(json);
         } catch {
-            /* non-blocking */
+            /* */
         }
     }, []);
 
     useEffect(() => {
         if (!authorized) return;
-        setLoading(true);
-        refresh().finally(() => setLoading(false));
-    }, [authorized, refresh]);
+        setSessionsLoading(true);
+        refreshSessions().finally(() => setSessionsLoading(false));
+    }, [authorized, refreshSessions]);
 
-    // ─── Active session ticker (1s) ───
+    // ─── Active session ───
     const activeSession = useMemo(
-        () => data?.sessions.find((s) => s.status === "running" || s.status === "paused") || null,
-        [data]
+        () => sessionsData?.sessions.find((s) => s.status === "running" || s.status === "paused") || null,
+        [sessionsData]
     );
 
     useEffect(() => {
@@ -139,7 +168,6 @@ export default function FocusPage() {
         return () => clearInterval(id);
     }, [activeSession]);
 
-    // Sync local pause ref with server status
     useEffect(() => {
         if (activeSession?.status === "paused" && pauseStartedAtRef.current === null) {
             pauseStartedAtRef.current = Date.now();
@@ -149,7 +177,6 @@ export default function FocusPage() {
         }
     }, [activeSession?.status]);
 
-    // ─── Compute elapsed seconds for active session ───
     const elapsedSeconds = useMemo(() => {
         if (!activeSession) return 0;
         const startMs = new Date(activeSession.started_at).getTime();
@@ -159,14 +186,15 @@ export default function FocusPage() {
         const raw = (nowMs - startMs) / 1000 - (activeSession.paused_seconds || 0);
         return Math.max(0, Math.floor(raw));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeSession, data]);
+    }, [activeSession, sessionsData]);
 
     const plannedSeconds = (activeSession?.planned_duration_minutes || 0) * 60;
     const overtime = activeSession && elapsedSeconds > plannedSeconds && plannedSeconds > 0;
 
-    // ─── Actions ───
+    // ─── Tracker actions ───
     const handleStart = async () => {
-        if (!taskTitle.trim()) return;
+        const title = (selectedTask?.title || freeTitle).trim();
+        if (!title) return;
         setStarting(true);
         try {
             const res = await fetch("/api/focus", {
@@ -174,15 +202,18 @@ export default function FocusPage() {
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
                 body: JSON.stringify({
-                    task_title: taskTitle,
-                    category,
+                    task_title: title,
+                    category: selectedTask?.category || null,
                     planned_duration_minutes: plannedMinutes,
+                    task_id: selectedTask?.id || null,
                 }),
             });
             if (res.ok) {
-                setTaskTitle("");
+                setFreeTitle("");
                 setCustomDuration("");
-                await refresh();
+                setSelectedTask(null);
+                await refreshSessions();
+                if (selectedTask) await tasksApi.refresh();
             }
         } catch {
             /* */
@@ -199,7 +230,7 @@ export default function FocusPage() {
             credentials: "include",
             body: JSON.stringify({ id: activeSession.id, action: "pause" }),
         });
-        await refresh();
+        await refreshSessions();
     };
 
     const handleResume = async () => {
@@ -217,7 +248,7 @@ export default function FocusPage() {
                 paused_seconds: (activeSession.paused_seconds || 0) + extraPaused,
             }),
         });
-        await refresh();
+        await refreshSessions();
     };
 
     const openStopModal = () => {
@@ -248,7 +279,8 @@ export default function FocusPage() {
         pauseStartedAtRef.current = null;
         setStopModal(null);
         setSavingStop(false);
-        await refresh();
+        await refreshSessions();
+        await tasksApi.refresh();
     };
 
     const handleAbandon = async () => {
@@ -269,8 +301,33 @@ export default function FocusPage() {
             }),
         });
         pauseStartedAtRef.current = null;
-        await refresh();
+        await refreshSessions();
+        await tasksApi.refresh();
     };
+
+    // ─── Task actions ───
+    const startSessionFromTask = (task: FocusTask) => {
+        if (activeSession) {
+            alert("يوجد جلسة نشطة بالفعل. أنهها أولاً.");
+            return;
+        }
+        setSelectedTask(task);
+        setFreeTitle("");
+    };
+
+    const toggleTaskDone = async (task: FocusTask) => {
+        if (task.status === "done") {
+            await tasksApi.markAsTodo(task);
+        } else {
+            await tasksApi.markAsDone(task.id);
+        }
+    };
+
+    // ─── Filtered tasks ───
+    const filteredTasks = useMemo(() => {
+        if (taskFilter === "all") return tasksApi.tasks;
+        return tasksApi.tasks.filter((t) => t.status === taskFilter);
+    }, [tasksApi.tasks, taskFilter]);
 
     // ─── Render ───
     if (!authChecked) {
@@ -295,19 +352,91 @@ export default function FocusPage() {
         );
     }
 
-    const sessions = data?.sessions || [];
-    const stats = data?.stats || { totalMinutes: 0, completedCount: 0, abandonedCount: 0 };
+    const sessions = sessionsData?.sessions || [];
+    const stats = sessionsData?.stats || { totalMinutes: 0, completedCount: 0, abandonedCount: 0 };
 
     return (
         <div className="max-w-4xl mx-auto space-y-6">
-            {/* Header */}
-            <div className="flex items-center gap-3">
-                <Timer className="w-7 h-7 text-[#C5A04E]" />
-                <h1 className="text-2xl font-bold text-white">متتبع التركيز</h1>
+            {/* ──────────── SECTION 1 — TASKS ──────────── */}
+            <div className="bg-[#111111] border border-[#C5A04E]/10 rounded-2xl p-6">
+                <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center gap-3">
+                        <Target className="w-6 h-6 text-[#C5A04E]" />
+                        <h2 className="text-xl font-bold text-white">مهام اليوم</h2>
+                    </div>
+                    <button
+                        onClick={() => setShowAddTaskModal(true)}
+                        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#C5A04E] text-white text-sm font-bold hover:bg-[#D4B85C] transition-colors"
+                    >
+                        <Plus className="w-4 h-4" />
+                        إضافة مهمة
+                    </button>
+                </div>
+                <p className="text-xs text-gray-500 mb-4">{formatDateArabic(today)}</p>
+
+                {/* Filters */}
+                <div className="flex flex-wrap gap-2 mb-4">
+                    {TASK_FILTERS.map((f) => {
+                        const count =
+                            f.value === "all"
+                                ? tasksApi.tasks.length
+                                : tasksApi.stats[f.value as TaskStatus] || 0;
+                        return (
+                            <button
+                                key={f.value}
+                                onClick={() => setTaskFilter(f.value)}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
+                                    taskFilter === f.value
+                                        ? "bg-[#C5A04E] text-white"
+                                        : "bg-[#1A1A1A] text-gray-400 hover:bg-[#222222]"
+                                }`}
+                            >
+                                {f.label} {count > 0 && <span className="opacity-70">({count})</span>}
+                            </button>
+                        );
+                    })}
+                </div>
+
+                {/* Task list */}
+                {tasksApi.loading ? (
+                    <div className="flex items-center justify-center py-8">
+                        <Loader2 className="w-6 h-6 animate-spin text-gray-500" />
+                    </div>
+                ) : filteredTasks.length === 0 ? (
+                    <div className="text-center py-10 text-gray-500 text-sm">
+                        {taskFilter === "all"
+                            ? "لا توجد مهام لهذا اليوم. ابدأ بإضافة مهمة!"
+                            : "لا توجد مهام في هذه الفئة"}
+                    </div>
+                ) : (
+                    <div className="space-y-2">
+                        {filteredTasks.map((task) => (
+                            <TaskRow
+                                key={task.id}
+                                task={task}
+                                isActiveTask={activeSession?.task_id === task.id}
+                                onToggleDone={() => toggleTaskDone(task)}
+                                onStartSession={() => startSessionFromTask(task)}
+                                onEdit={() => setEditTaskModal(task)}
+                                onDelete={async () => {
+                                    if (confirm(`حذف المهمة "${task.title}"؟`)) {
+                                        await tasksApi.deleteTask(task.id);
+                                    }
+                                }}
+                                onShowHistory={() => setHistoryModal(task)}
+                            />
+                        ))}
+                    </div>
+                )}
             </div>
 
-            {/* ─── Active session OR Start form ─── */}
+            {/* ──────────── SECTION 2 — TRACKER ──────────── */}
             <div className="bg-[#111111] border border-[#C5A04E]/10 rounded-2xl p-8">
+                <div className="flex items-center gap-3 mb-6">
+                    <Timer className="w-6 h-6 text-[#C5A04E]" />
+                    <h2 className="text-xl font-bold text-white">متتبع التركيز</h2>
+                </div>
+
                 {activeSession ? (
                     <ActiveSessionView
                         session={activeSession}
@@ -321,10 +450,10 @@ export default function FocusPage() {
                     />
                 ) : (
                     <StartForm
-                        taskTitle={taskTitle}
-                        setTaskTitle={setTaskTitle}
-                        category={category}
-                        setCategory={setCategory}
+                        selectedTask={selectedTask}
+                        onClearSelectedTask={() => setSelectedTask(null)}
+                        freeTitle={freeTitle}
+                        setFreeTitle={setFreeTitle}
                         plannedMinutes={plannedMinutes}
                         setPlannedMinutes={setPlannedMinutes}
                         customDuration={customDuration}
@@ -335,11 +464,11 @@ export default function FocusPage() {
                 )}
             </div>
 
-            {/* ─── Today's sessions ─── */}
+            {/* ──────────── SESSIONS LIST ──────────── */}
             <div className="bg-[#111111] border border-[#C5A04E]/10 rounded-2xl p-6">
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-lg font-bold text-white">اليوم</h2>
-                    {!loading && (
+                    <h2 className="text-lg font-bold text-white">الجلسات اليوم</h2>
+                    {!sessionsLoading && (
                         <p className="text-sm text-gray-500">
                             إجمالي التركيز: <span className="text-[#C5A04E] font-bold">{formatMinutesArabic(stats.totalMinutes)}</span>
                             {" — "}
@@ -351,13 +480,13 @@ export default function FocusPage() {
                     )}
                 </div>
 
-                {loading ? (
+                {sessionsLoading ? (
                     <div className="flex items-center justify-center py-8">
                         <Loader2 className="w-6 h-6 animate-spin text-gray-500" />
                     </div>
                 ) : sessions.length === 0 ? (
-                    <div className="text-center py-12 text-gray-500">
-                        لا توجد جلسات اليوم — ابدأ جلستك الأولى!
+                    <div className="text-center py-10 text-gray-500 text-sm">
+                        لا توجد جلسات اليوم
                     </div>
                 ) : (
                     <div className="space-y-2">
@@ -368,7 +497,7 @@ export default function FocusPage() {
                 )}
             </div>
 
-            {/* ─── Stop modal ─── */}
+            {/* ──────────── MODALS ──────────── */}
             {stopModal && (
                 <Modal onClose={() => !savingStop && setStopModal(null)}>
                     <h3 className="text-xl font-bold text-white mb-4">ماذا أنجزت؟</h3>
@@ -400,12 +529,330 @@ export default function FocusPage() {
                 </Modal>
             )}
 
-            {/* ─── Detail modal ─── */}
             {detailModal && (
                 <Modal onClose={() => setDetailModal(null)}>
                     <SessionDetail session={detailModal} onClose={() => setDetailModal(null)} />
                 </Modal>
             )}
+
+            {showAddTaskModal && (
+                <Modal onClose={() => setShowAddTaskModal(false)}>
+                    <TaskForm
+                        defaultDate={today}
+                        onCancel={() => setShowAddTaskModal(false)}
+                        onSubmit={async (data) => {
+                            await tasksApi.createTask(data);
+                            setShowAddTaskModal(false);
+                        }}
+                    />
+                </Modal>
+            )}
+
+            {editTaskModal && (
+                <Modal onClose={() => setEditTaskModal(null)}>
+                    <TaskForm
+                        task={editTaskModal}
+                        defaultDate={today}
+                        onCancel={() => setEditTaskModal(null)}
+                        onSubmit={async (data) => {
+                            await tasksApi.updateTask(editTaskModal.id, data);
+                            setEditTaskModal(null);
+                        }}
+                    />
+                </Modal>
+            )}
+
+            {historyModal && (
+                <Modal onClose={() => setHistoryModal(null)}>
+                    <TaskHistory
+                        task={historyModal}
+                        sessions={sessions.filter((s) => s.task_id === historyModal.id)}
+                        onClose={() => setHistoryModal(null)}
+                    />
+                </Modal>
+            )}
+        </div>
+    );
+}
+
+// ─── Task row ─────────────────────────────────────────────────
+function TaskRow({
+    task,
+    isActiveTask,
+    onToggleDone,
+    onStartSession,
+    onEdit,
+    onDelete,
+    onShowHistory,
+}: {
+    task: FocusTask;
+    isActiveTask: boolean;
+    onToggleDone: () => void;
+    onStartSession: () => void;
+    onEdit: () => void;
+    onDelete: () => void;
+    onShowHistory: () => void;
+}) {
+    const [menuOpen, setMenuOpen] = useState(false);
+    const cat = task.category ? CATEGORY_META[task.category] : null;
+    const isDone = task.status === "done";
+    const inProgress = task.status === "in_progress" || isActiveTask;
+
+    return (
+        <div
+            className={`flex items-center gap-3 p-3 rounded-xl bg-[#0A0A0A] transition-all border ${
+                inProgress
+                    ? "border-[#C5A04E]/40"
+                    : isDone
+                    ? "border-white/[0.04] opacity-60"
+                    : "border-white/[0.04]"
+            }`}
+        >
+            {/* Checkbox (right in RTL) */}
+            <button onClick={onToggleDone} className="shrink-0" aria-label={isDone ? "إلغاء الإكمال" : "إكمال"}>
+                {isDone ? (
+                    <CheckCircle className="w-5 h-5 text-green-500" />
+                ) : (
+                    <Circle className="w-5 h-5 text-gray-500 hover:text-gray-300 transition-colors" />
+                )}
+            </button>
+
+            {/* Title + meta */}
+            <div className="flex-1 min-w-0">
+                <p className={`text-sm font-bold ${isDone ? "text-gray-500 line-through" : "text-white"}`}>
+                    {task.title}
+                </p>
+                <div className="flex items-center gap-2 mt-1">
+                    {cat && (
+                        <span
+                            className="text-[10px] font-bold px-2 py-0.5 rounded-full"
+                            style={{ backgroundColor: cat.bg, color: cat.text }}
+                        >
+                            {cat.label}
+                        </span>
+                    )}
+                    {task.total_time_seconds > 0 && (
+                        <span className="text-[10px] text-gray-500 flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            {formatSecondsAsMinutesArabic(task.total_time_seconds)}
+                        </span>
+                    )}
+                    {task.sessions_count > 0 && (
+                        <span className="text-[10px] text-gray-600">· {task.sessions_count} جلسة</span>
+                    )}
+                </div>
+            </div>
+
+            {/* Start session button */}
+            {!isDone && (
+                <button
+                    onClick={onStartSession}
+                    disabled={isActiveTask}
+                    className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#C5A04E]/10 text-[#C5A04E] text-xs font-bold hover:bg-[#C5A04E]/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <Play className="w-3 h-3" />
+                    {isActiveTask ? "نشطة" : "ابدأ جلسة"}
+                </button>
+            )}
+
+            {/* Menu */}
+            <div className="relative shrink-0">
+                <button
+                    onClick={() => setMenuOpen((o) => !o)}
+                    className="p-1.5 rounded-lg text-gray-500 hover:bg-[#1A1A1A] hover:text-white transition-colors"
+                    aria-label="القائمة"
+                >
+                    <MoreVertical className="w-4 h-4" />
+                </button>
+                {menuOpen && (
+                    <>
+                        <div
+                            className="fixed inset-0 z-40"
+                            onClick={() => setMenuOpen(false)}
+                        />
+                        <div className="absolute left-0 top-full mt-1 z-50 min-w-[180px] bg-[#1A1A1A] border border-[#C5A04E]/15 rounded-xl shadow-xl py-1 text-right">
+                            <MenuItem icon={<Pencil className="w-4 h-4" />} label="تعديل" onClick={() => { setMenuOpen(false); onEdit(); }} />
+                            <MenuItem icon={<History className="w-4 h-4" />} label="السجل" onClick={() => { setMenuOpen(false); onShowHistory(); }} />
+                            <MenuItem icon={<Trash2 className="w-4 h-4" />} label="حذف" danger onClick={() => { setMenuOpen(false); onDelete(); }} />
+                        </div>
+                    </>
+                )}
+            </div>
+        </div>
+    );
+}
+
+function MenuItem({ icon, label, onClick, danger }: { icon: React.ReactNode; label: string; onClick: () => void; danger?: boolean }) {
+    return (
+        <button
+            onClick={onClick}
+            className={`w-full flex items-center gap-3 px-4 py-2 text-sm transition-colors ${
+                danger ? "text-red-400 hover:bg-red-500/10" : "text-gray-300 hover:bg-[#222222]"
+            }`}
+        >
+            {icon}
+            <span>{label}</span>
+        </button>
+    );
+}
+
+// ─── Task form (create/edit) ──────────────────────────────────
+function TaskForm({
+    task,
+    defaultDate,
+    onSubmit,
+    onCancel,
+}: {
+    task?: FocusTask;
+    defaultDate: string;
+    onSubmit: (data: {
+        title: string;
+        description?: string;
+        category?: TaskCategory;
+        scheduled_date?: string;
+    }) => Promise<void>;
+    onCancel: () => void;
+}) {
+    const [title, setTitle] = useState(task?.title || "");
+    const [description, setDescription] = useState(task?.description || "");
+    const [category, setCategory] = useState<TaskCategory>(task?.category || "professional");
+    const [scheduledDate, setScheduledDate] = useState(task?.scheduled_date || defaultDate);
+    const [submitting, setSubmitting] = useState(false);
+
+    const handleSubmit = async () => {
+        if (!title.trim()) return;
+        setSubmitting(true);
+        await onSubmit({
+            title: title.trim(),
+            description: description.trim() || undefined,
+            category,
+            scheduled_date: scheduledDate,
+        });
+        setSubmitting(false);
+    };
+
+    return (
+        <div className="space-y-5">
+            <h3 className="text-xl font-bold text-white">{task ? "تعديل المهمة" : "إضافة مهمة"}</h3>
+
+            <div>
+                <label className="block text-sm font-bold text-gray-400 mb-2">عنوان المهمة</label>
+                <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    autoFocus
+                    placeholder="مثال: مراجعة الكود الجديد"
+                    className="w-full bg-[#0A0A0A] border border-[#C5A04E]/15 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#C5A04E]"
+                />
+            </div>
+
+            <div>
+                <label className="block text-sm font-bold text-gray-400 mb-2">وصف (اختياري)</label>
+                <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    rows={3}
+                    placeholder="تفاصيل إضافية..."
+                    className="w-full bg-[#0A0A0A] border border-[#C5A04E]/15 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#C5A04E] resize-none"
+                />
+            </div>
+
+            <div>
+                <label className="block text-sm font-bold text-gray-400 mb-2">التاريخ المخطط</label>
+                <input
+                    type="date"
+                    value={scheduledDate}
+                    onChange={(e) => setScheduledDate(e.target.value)}
+                    className="w-full bg-[#0A0A0A] border border-[#C5A04E]/15 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#C5A04E]"
+                    dir="ltr"
+                />
+            </div>
+
+            <div>
+                <label className="block text-sm font-bold text-gray-400 mb-2">الفئة</label>
+                <div className="flex gap-2">
+                    {(["personal", "professional"] as TaskCategory[]).map((c) => {
+                        const meta = CATEGORY_META[c];
+                        const active = category === c;
+                        return (
+                            <button
+                                key={c}
+                                onClick={() => setCategory(c)}
+                                className="flex-1 px-4 py-3 rounded-xl text-sm font-bold transition-colors border"
+                                style={
+                                    active
+                                        ? { backgroundColor: meta.bg, color: meta.text, borderColor: meta.text }
+                                        : { backgroundColor: "#1A1A1A", color: "#9CA3AF", borderColor: "transparent" }
+                                }
+                            >
+                                {meta.label}
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
+
+            <div className="flex gap-3 pt-2">
+                <button
+                    onClick={onCancel}
+                    disabled={submitting}
+                    className="flex-1 px-4 py-3 rounded-xl bg-[#1A1A1A] text-gray-400 font-bold hover:bg-[#222222] transition-colors disabled:opacity-50"
+                >
+                    إلغاء
+                </button>
+                <button
+                    onClick={handleSubmit}
+                    disabled={!title.trim() || submitting}
+                    className="flex-1 px-4 py-3 rounded-xl bg-[#C5A04E] text-white font-bold hover:bg-[#D4B85C] transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                    {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
+                    حفظ
+                </button>
+            </div>
+        </div>
+    );
+}
+
+// ─── Task history (sessions for a task) ───────────────────────
+function TaskHistory({
+    task,
+    sessions,
+    onClose,
+}: {
+    task: FocusTask;
+    sessions: FocusSession[];
+    onClose: () => void;
+}) {
+    return (
+        <div className="space-y-4">
+            <h3 className="text-xl font-bold text-white">سجل الجلسات</h3>
+            <p className="text-sm text-gray-400">{task.title}</p>
+
+            {sessions.length === 0 ? (
+                <div className="text-center py-8 text-gray-500 text-sm">
+                    لا توجد جلسات لهذه المهمة اليوم
+                </div>
+            ) : (
+                <div className="space-y-2 max-h-80 overflow-y-auto">
+                    {sessions.map((s) => (
+                        <div key={s.id} className="bg-[#0A0A0A] border border-white/[0.04] rounded-xl p-3 text-sm">
+                            <div className="flex items-center justify-between">
+                                <span className="text-white">{formatTime(s.started_at)}</span>
+                                <span className="text-xs text-gray-500">{STATUS_LABELS[s.status]}</span>
+                            </div>
+                            {s.notes && <p className="text-xs text-gray-400 mt-2">{s.notes}</p>}
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            <button
+                onClick={onClose}
+                className="w-full px-4 py-3 rounded-xl bg-[#1A1A1A] text-gray-300 font-bold hover:bg-[#222222] transition-colors"
+            >
+                إغلاق
+            </button>
         </div>
     );
 }
@@ -430,27 +877,34 @@ function ActiveSessionView({
     onStop: () => void;
     onAbandon: () => void;
 }) {
-    const cat = categoryMeta(session.category);
     const isPaused = session.status === "paused";
     const progress = plannedSeconds > 0 ? Math.min(100, (elapsedSeconds / plannedSeconds) * 100) : 0;
+    const linkedCat = session.focus_tasks?.category as TaskCategory | undefined;
+    const catMeta = linkedCat ? CATEGORY_META[linkedCat] : null;
 
     return (
         <div className="text-center space-y-6">
-            {/* Task title + category */}
+            {/* Linked task badge */}
+            {session.task_id && (
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#C5A04E]/10 border border-[#C5A04E]/20">
+                    <Target className="w-3.5 h-3.5 text-[#C5A04E]" />
+                    <span className="text-xs text-[#C5A04E] font-bold">مهمة مرتبطة</span>
+                </div>
+            )}
+
             <div className="space-y-2">
                 <h2 className="text-xl font-bold text-white">{session.task_title}</h2>
-                {cat && (
+                {catMeta && (
                     <span
                         className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full"
-                        style={{ backgroundColor: `${cat.color}20`, color: cat.color }}
+                        style={{ backgroundColor: catMeta.bg, color: catMeta.text }}
                     >
                         <Tag className="w-3 h-3" />
-                        {cat.label}
+                        {catMeta.label}
                     </span>
                 )}
             </div>
 
-            {/* Big timer (LTR for digits) */}
             <div
                 dir="ltr"
                 className={`text-6xl md:text-8xl font-bold tracking-tight transition-colors ${
@@ -461,7 +915,6 @@ function ActiveSessionView({
                 {formatHMS(elapsedSeconds)}
             </div>
 
-            {/* Progress bar + planned */}
             <div className="max-w-md mx-auto">
                 <div className="h-2 bg-[#1A1A1A] rounded-full overflow-hidden">
                     <div
@@ -478,7 +931,6 @@ function ActiveSessionView({
                 </p>
             </div>
 
-            {/* Controls */}
             <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
                 {isPaused ? (
                     <button
@@ -514,10 +966,10 @@ function ActiveSessionView({
 
 // ─── Start form ───────────────────────────────────────────────
 function StartForm({
-    taskTitle,
-    setTaskTitle,
-    category,
-    setCategory,
+    selectedTask,
+    onClearSelectedTask,
+    freeTitle,
+    setFreeTitle,
     plannedMinutes,
     setPlannedMinutes,
     customDuration,
@@ -525,10 +977,10 @@ function StartForm({
     onStart,
     starting,
 }: {
-    taskTitle: string;
-    setTaskTitle: (v: string) => void;
-    category: string;
-    setCategory: (v: string) => void;
+    selectedTask: FocusTask | null;
+    onClearSelectedTask: () => void;
+    freeTitle: string;
+    setFreeTitle: (v: string) => void;
     plannedMinutes: number;
     setPlannedMinutes: (v: number) => void;
     customDuration: string;
@@ -543,20 +995,35 @@ function StartForm({
 
     return (
         <div className="space-y-6">
-            {/* Task title */}
-            <div>
-                <label className="block text-sm font-bold text-gray-400 mb-2">على ماذا تعمل؟</label>
-                <input
-                    type="text"
-                    value={taskTitle}
-                    onChange={(e) => setTaskTitle(e.target.value)}
-                    placeholder="مثال: تحسين لوحة الإدارة"
-                    autoFocus
-                    className="w-full bg-[#0A0A0A] border border-[#C5A04E]/15 rounded-xl px-4 py-3 text-white text-lg focus:outline-none focus:border-[#C5A04E]"
-                />
-            </div>
+            {selectedTask ? (
+                <div className="flex items-center justify-between gap-3 p-4 rounded-xl bg-[#C5A04E]/5 border border-[#C5A04E]/20">
+                    <div className="flex items-center gap-2 min-w-0">
+                        <Target className="w-5 h-5 text-[#C5A04E] shrink-0" />
+                        <div className="min-w-0">
+                            <p className="text-xs text-[#C5A04E] font-bold mb-0.5">🎯 المهمة</p>
+                            <p className="text-white text-sm font-bold truncate">{selectedTask.title}</p>
+                        </div>
+                    </div>
+                    <button
+                        onClick={onClearSelectedTask}
+                        className="shrink-0 px-3 py-1.5 rounded-lg bg-[#1A1A1A] text-gray-400 text-xs font-bold hover:bg-[#222222] transition-colors"
+                    >
+                        إلغاء
+                    </button>
+                </div>
+            ) : (
+                <div>
+                    <label className="block text-sm font-bold text-gray-400 mb-2">على ماذا تعمل؟</label>
+                    <input
+                        type="text"
+                        value={freeTitle}
+                        onChange={(e) => setFreeTitle(e.target.value)}
+                        placeholder="مثال: تحسين لوحة الإدارة"
+                        className="w-full bg-[#0A0A0A] border border-[#C5A04E]/15 rounded-xl px-4 py-3 text-white text-lg focus:outline-none focus:border-[#C5A04E]"
+                    />
+                </div>
+            )}
 
-            {/* Duration */}
             <div>
                 <label className="block text-sm font-bold text-gray-400 mb-2">المدة المخططة</label>
                 <div className="flex flex-wrap gap-2">
@@ -588,35 +1055,9 @@ function StartForm({
                 </div>
             </div>
 
-            {/* Category */}
-            <div>
-                <label className="block text-sm font-bold text-gray-400 mb-2">الفئة</label>
-                <div className="flex flex-wrap gap-2">
-                    {CATEGORIES.map((c) => (
-                        <button
-                            key={c.value}
-                            onClick={() => setCategory(c.value)}
-                            className={`px-4 py-2 rounded-xl text-sm font-bold transition-colors border ${
-                                category === c.value
-                                    ? "border-transparent text-white"
-                                    : "border-white/[0.06] text-gray-400 hover:text-white"
-                            }`}
-                            style={
-                                category === c.value
-                                    ? { backgroundColor: c.color }
-                                    : { backgroundColor: "#1A1A1A" }
-                            }
-                        >
-                            {c.label}
-                        </button>
-                    ))}
-                </div>
-            </div>
-
-            {/* Start button */}
             <button
                 onClick={onStart}
-                disabled={!taskTitle.trim() || starting}
+                disabled={(!selectedTask && !freeTitle.trim()) || starting}
                 className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-[#C5A04E] text-white text-lg font-bold hover:bg-[#D4B85C] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
                 {starting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Play className="w-5 h-5" />}
@@ -628,7 +1069,8 @@ function StartForm({
 
 // ─── Session row ──────────────────────────────────────────────
 function SessionRow({ session, onClick }: { session: FocusSession; onClick: () => void }) {
-    const cat = categoryMeta(session.category);
+    const linkedCat = session.focus_tasks?.category as TaskCategory | undefined;
+    const catMeta = linkedCat ? CATEGORY_META[linkedCat] : null;
     const realSeconds = session.ended_at
         ? Math.max(0, Math.floor((new Date(session.ended_at).getTime() - new Date(session.started_at).getTime()) / 1000) - (session.paused_seconds || 0))
         : 0;
@@ -650,12 +1092,12 @@ function SessionRow({ session, onClick }: { session: FocusSession; onClick: () =
                 <p className="text-sm text-white truncate">{session.task_title}</p>
                 {session.notes && <p className="text-xs text-gray-500 truncate mt-0.5">{session.notes}</p>}
             </div>
-            {cat && (
+            {catMeta && (
                 <span
                     className="text-xs font-bold px-2 py-0.5 rounded-full shrink-0"
-                    style={{ backgroundColor: `${cat.color}20`, color: cat.color }}
+                    style={{ backgroundColor: catMeta.bg, color: catMeta.text }}
                 >
-                    {cat.label}
+                    {catMeta.label}
                 </span>
             )}
             {session.status === "completed" && (
@@ -670,7 +1112,8 @@ function SessionRow({ session, onClick }: { session: FocusSession; onClick: () =
 
 // ─── Session detail ───────────────────────────────────────────
 function SessionDetail({ session, onClose }: { session: FocusSession; onClose: () => void }) {
-    const cat = categoryMeta(session.category);
+    const linkedCat = session.focus_tasks?.category as TaskCategory | undefined;
+    const catMeta = linkedCat ? CATEGORY_META[linkedCat] : null;
     const realSeconds = session.ended_at
         ? Math.max(0, Math.floor((new Date(session.ended_at).getTime() - new Date(session.started_at).getTime()) / 1000) - (session.paused_seconds || 0))
         : 0;
@@ -680,13 +1123,13 @@ function SessionDetail({ session, onClose }: { session: FocusSession; onClose: (
     return (
         <div className="space-y-4">
             <h3 className="text-xl font-bold text-white">{session.task_title}</h3>
-            {cat && (
+            {catMeta && (
                 <span
                     className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full"
-                    style={{ backgroundColor: `${cat.color}20`, color: cat.color }}
+                    style={{ backgroundColor: catMeta.bg, color: catMeta.text }}
                 >
                     <Tag className="w-3 h-3" />
-                    {cat.label}
+                    {catMeta.label}
                 </span>
             )}
 
@@ -733,7 +1176,7 @@ function Modal({ children, onClose }: { children: React.ReactNode; onClose: () =
             onClick={onClose}
         >
             <div
-                className="bg-[#111111] border border-[#C5A04E]/15 rounded-2xl p-6 max-w-md w-full"
+                className="bg-[#111111] border border-[#C5A04E]/15 rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto"
                 onClick={(e) => e.stopPropagation()}
             >
                 {children}
