@@ -81,12 +81,13 @@ function pad(n: number): string {
 }
 
 function formatHMS(totalSeconds: number): string {
-    const s = Math.max(0, Math.floor(totalSeconds));
+    const sign = totalSeconds < 0 ? "-" : "";
+    const s = Math.abs(Math.floor(totalSeconds));
     const h = Math.floor(s / 3600);
     const m = Math.floor((s % 3600) / 60);
     const sec = s % 60;
-    if (h > 0) return `${h}:${pad(m)}:${pad(sec)}`;
-    return `${pad(m)}:${pad(sec)}`;
+    if (h > 0) return `${sign}${h}:${pad(m)}:${pad(sec)}`;
+    return `${sign}${pad(m)}:${pad(sec)}`;
 }
 
 function formatTime(iso: string): string {
@@ -1308,11 +1309,11 @@ function ActiveSessionView({
             <div
                 dir="ltr"
                 className={`text-6xl md:text-8xl font-bold tracking-tight transition-colors ${
-                    overtime ? "text-red-400" : isPaused ? "text-gray-500" : "text-white"
+                    overtime ? "text-red-500" : isPaused ? "text-gray-500" : "text-white"
                 }`}
                 style={{ fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace" }}
             >
-                {formatHMS(elapsedSeconds)}
+                {formatHMS(plannedSeconds - elapsedSeconds)}
             </div>
 
             <div className="max-w-md mx-auto">
