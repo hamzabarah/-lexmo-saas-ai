@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js';
-import { Shield, Mail, AlertCircle, UserPlus, TrendingUp, Copy, Check, Settings, Eye, EyeOff, Calendar, Trash2, ChevronLeft, ChevronRight, X, MessageSquare, FileText, Send, Lock, Gift } from 'lucide-react';
+import { Shield, Mail, AlertCircle, UserPlus, TrendingUp, Copy, Check, Settings, Eye, EyeOff, Calendar, Trash2, ChevronLeft, ChevronRight, X, MessageSquare, FileText, Send, Lock, Gift, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 
@@ -92,6 +92,7 @@ export default function AdminPage() {
     const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
     const [loading, setLoading] = useState(true);
     const [unauthorized, setUnauthorized] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
 
     // Add Student Form State
     const [newStudentName, setNewStudentName] = useState('');
@@ -1037,9 +1038,52 @@ ${LOGIN_URL}
                 </div>
 
                 {/* Members Table */}
+                {(() => {
+                    const normalizedQuery = searchQuery.trim().toLowerCase();
+                    const filteredSubscriptions = normalizedQuery
+                        ? subscriptions.filter((subscription) => {
+                            const userData = users.find(u => u.email === subscription.email);
+                            const email = subscription.email?.toLowerCase() || '';
+                            const name = userData?.name?.toLowerCase() || '';
+                            const phone = userData?.phone || '';
+                            return (
+                                email.includes(normalizedQuery) ||
+                                name.includes(normalizedQuery) ||
+                                phone.includes(searchQuery.trim())
+                            );
+                        })
+                        : subscriptions;
+
+                    return (
                 <div className="bg-[#111111]/50 border border-[#C5A04E]/10 rounded-xl overflow-hidden">
-                    <div className="p-6 border-b border-[#C5A04E]/10">
-                        <h2 className="text-2xl font-bold text-white">جميع الأعضاء</h2>
+                    <div className="p-6 border-b border-[#C5A04E]/10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div className="flex items-center gap-4">
+                            <h2 className="text-2xl font-bold text-white">جميع الأعضاء</h2>
+                            {subscriptions.length > 0 && (
+                                <span className="text-sm text-gray-400 bg-[#1A1A1A] border border-[#C5A04E]/10 px-3 py-1 rounded-full">
+                                    {filteredSubscriptions.length} / {subscriptions.length} عضو
+                                </span>
+                            )}
+                        </div>
+                        <div className="relative w-full md:max-w-[500px]">
+                            <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                placeholder="🔍 ابحث بالبريد الإلكتروني، الاسم، أو الهاتف..."
+                                className="w-full bg-[#1A1A1A] border border-[#C5A04E]/10 text-white rounded-lg pr-11 pl-10 py-3 text-sm focus:outline-none focus:border-[#C5A04E] focus:ring-1 focus:ring-[#C5A04E] transition"
+                            />
+                            <Search className="w-4 h-4 text-gray-500 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                            {searchQuery && (
+                                <button
+                                    onClick={() => setSearchQuery('')}
+                                    aria-label="مسح البحث"
+                                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition p-1 rounded"
+                                >
+                                    <X className="w-4 h-4" />
+                                </button>
+                            )}
+                        </div>
                     </div>
 
                     <div className="overflow-x-auto">
@@ -1057,7 +1101,14 @@ ${LOGIN_URL}
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-800">
-                                {subscriptions.map((subscription) => {
+                                {filteredSubscriptions.length === 0 && subscriptions.length > 0 && (
+                                    <tr>
+                                        <td colSpan={8} className="px-6 py-12 text-center text-gray-500">
+                                            لم يتم العثور على نتائج
+                                        </td>
+                                    </tr>
+                                )}
+                                {filteredSubscriptions.map((subscription) => {
                                     const userData = users.find(u => u.email === subscription.email);
 
                                     const statusConfig = {
@@ -1123,6 +1174,8 @@ ${LOGIN_URL}
                         </table>
                     </div>
                 </div>
+                    );
+                })()}
 
                 {subscriptions.length === 0 && (
                     <div className="text-center py-12 text-gray-500">
