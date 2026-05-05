@@ -181,17 +181,17 @@ export default function StepDetailPage() {
                                 onContextMenu={(e) => e.preventDefault()}
                             >
                                 <iframe
-                                    src={`${activeLesson.videoUrl}?rel=0&modestbranding=1&iv_load_policy=3&showinfo=0&controls=1`}
+                                    src={`${activeLesson.videoUrl}?rel=0&modestbranding=1&iv_load_policy=3&showinfo=0&controls=1&disablekb=1`}
                                     className="absolute inset-0 w-full h-full"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowFullScreen
                                     title={activeLesson.title}
                                 />
-                                {/* Transparent overlays — block clicks on YouTube links without hiding anything */}
-                                {/* Top: blocks title, channel, share, copy link */}
+                                {/* Top transparent overlay: blocks clicks on title, channel, share, copy link */}
                                 <div className="absolute top-0 left-0 right-0 h-[72px] z-10 cursor-default" onContextMenu={(e) => e.preventDefault()} />
-                                {/* Bottom full width: blocks "Watch on YouTube", subtitles, settings, YouTube logo */}
-                                <div className="absolute bottom-0 left-0 right-0 h-[42px] z-10 cursor-default" onContextMenu={(e) => e.preventDefault()} />
+                                {/* Opaque corner overlays: visually hide "Watch on YouTube" (bottom-left) and YouTube logo (bottom-right) while keeping playback controls accessible */}
+                                <div className="absolute bottom-0 left-0 h-[42px] w-[140px] bg-[#111111] z-10 cursor-default" onContextMenu={(e) => e.preventDefault()} />
+                                <div className="absolute bottom-0 right-0 h-[42px] w-[140px] bg-[#111111] z-10 cursor-default" onContextMenu={(e) => e.preventDefault()} />
                             </div>
                         ) : activeLesson?.type === 'quiz' ? (
                             <QuizRenderer
