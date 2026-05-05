@@ -448,7 +448,7 @@ export const stepsContent: StepContent[] = [
             {
                 title: "الدروس",
                 lessons: [
-                    { id: 1, title: "اختيار مكان التحويل الجزء 1", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=kHkmK82vbgY") },
+                    { id: 1, title: "اختيار مكان التحويل الجزء 1", type: "video", videoUrl: youtubeEmbed("https://youtu.be/EA8xKS652_0") },
                     { id: 2, title: "اختيار مكان التحويل الجزء 2", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=-40nXLx26h4") },
                     { id: 3, title: "اختيار مكان التحويل الجزء 3", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=EnSqxyiXS84") },
                     { id: 4, title: "اختيار مكان التحويل الجزء 4", type: "video", videoUrl: youtubeEmbed("https://www.youtube.com/watch?v=fxQmctfq9WU") },
