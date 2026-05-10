@@ -5,6 +5,7 @@ import { createClient } from '@/utils/supabase/client';
 import { User } from '@supabase/supabase-js';
 import { Shield, Mail, AlertCircle, UserPlus, TrendingUp, Copy, Check, Settings, Eye, EyeOff, Calendar, Trash2, ChevronLeft, ChevronRight, X, MessageSquare, FileText, Send, Lock, Gift, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import DiagnosticSubmissionsSection from './DiagnosticSubmissionsSection';
 
 
 interface UserData {
@@ -1435,6 +1436,9 @@ ${LOGIN_URL}
                         </div>
                     )}
                 </div>
+
+                {/* ===== Diagnostic V2 (180 questions) ===== */}
+                <DiagnosticSubmissionsSection />
             </div>
 
             {/* ===== Diagnostic Modal ===== */}

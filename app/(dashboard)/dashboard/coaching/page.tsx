@@ -1,85 +1,151 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useMemo } from "react";
+import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { checkUserSubscription, SubscriptionCheckResult } from "@/lib/check-subscription";
-import { Lock, Calendar, Clock, CheckCircle, ClipboardList, Timer, Search, FileText, User, Mail, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+    Lock, CheckCircle, Sparkles, ClipboardList, Hourglass, FileText, ListChecks,
+    Activity, MessageCircle, ArrowLeft,
+} from "lucide-react";
+import { TOTAL_QUESTIONS, countAnsweredQuestions, countVisibleQuestions, type ResponsesMap } from "@/lib/diagnostic-questions";
 
-interface CoachingProfile {
+type SubmissionStatus = 'in_progress' | 'completed' | 'analyzing' | 'bilan_published' | 'plan_published' | 'in_development';
+
+interface ProjectStep {
+    step: string;
+    status: 'done' | 'in_progress' | 'locked';
+}
+
+interface Submission {
     id: string;
     user_id: string;
-    full_name: string | null;
-    google_meet_email: string | null;
-    current_step: number;
+    status: SubmissionStatus;
+    responses: ResponsesMap;
+    current_block: number;
+    current_question: number;
+    bilan_content: string | null;
+    plan_content: string | null;
+    project_steps: ProjectStep[];
+    completed_at: string | null;
+    bilan_published_at: string | null;
+    plan_published_at: string | null;
+    created_at: string;
+    updated_at: string;
 }
 
-interface BookingData {
-    id: string;
-    booking_date: string;
-    status: string;
-}
-
-const STEP_CONFIG = [
-    { num: 1, title: "معلوماتك", icon: ClipboardList, description: "أدخل اسمك وبريدك الإلكتروني لحجز جلستك" },
-    { num: 2, title: "حجز الموعد", icon: Calendar, description: "اختر الموعد المناسب لك لجلسة Google Meet" },
-    { num: 3, title: "موعد الجلسة", icon: Timer, description: "العد التنازلي لجلستك الخاصة" },
-    { num: 4, title: "التشخيص", icon: Search, description: "تحليل شامل لوضعك واكتشاف البزنس المناسب لك" },
-    { num: 5, title: "النتيجة", icon: FileText, description: "ملخص التشخيص + خطة العمل + التوصية" },
+const STEPS = [
+    { num: 1, key: 'welcome',       title: 'مرحبا بك',           emoji: '🎉', icon: Sparkles,     description: 'الخطوات اللي غادي تعدا' },
+    { num: 2, key: 'questionnaire', title: 'الاستبيان',          emoji: '📋', icon: ClipboardList, description: '180 سؤال — كنفهموك من الداخل' },
+    { num: 3, key: 'analyzing',     title: 'التحليل جاري',       emoji: '⏳', icon: Hourglass,    description: 'كنحللو الملف ديالك — أقل من 48 ساعة' },
+    { num: 4, key: 'bilan',         title: 'البيلان جاهز',       emoji: '📊', icon: FileText,     description: 'تشخيص شخصي لوضعيتك ومشروعك' },
+    { num: 5, key: 'plan',          title: 'خطة العمل',          emoji: '📋', icon: ListChecks,   description: 'الخطوات العملية باش تبدأ' },
+    { num: 6, key: 'tracker',       title: 'المتابعة',           emoji: '🔄', icon: Activity,     description: 'تتبع تقدم المشروع ديالك' },
 ];
 
-function CountdownTimer({ targetDate }: { targetDate: string }) {
-    const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-    const [isPast, setIsPast] = useState(false);
+function statusToActiveStep(submission: Submission | null): number {
+    if (!submission) return 1;
+    switch (submission.status) {
+        case 'in_progress':     return 2;
+        case 'completed':       return 3;
+        case 'analyzing':       return 3;
+        case 'bilan_published': return 4;
+        case 'plan_published':  return 5;
+        case 'in_development':  return 6;
+        default:                return 1;
+    }
+}
 
-    useEffect(() => {
-        const calc = () => {
-            const now = new Date().getTime();
-            const target = new Date(targetDate).getTime();
-            const diff = target - now;
-
-            if (diff <= 0) {
-                setIsPast(true);
-                return;
-            }
-
-            setTimeLeft({
-                days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-                hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-                minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
-                seconds: Math.floor((diff % (1000 * 60)) / 1000),
-            });
-        };
-
-        calc();
-        const interval = setInterval(calc, 1000);
-        return () => clearInterval(interval);
-    }, [targetDate]);
-
-    if (isPast) {
-        return (
-            <div className="text-center py-6">
-                <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-3" />
-                <p className="text-green-400 text-lg font-bold">تمت الجلسة</p>
+function TelegramHelpBlock() {
+    return (
+        <a
+            href="https://t.me/ecomyyy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block bg-gradient-to-l from-[#229ED9]/10 to-[#229ED9]/5 border border-[#229ED9]/20 hover:border-[#229ED9]/40 rounded-2xl p-5 transition-all"
+        >
+            <div className="flex items-center justify-center gap-3 text-center">
+                <MessageCircle className="w-5 h-5 text-[#229ED9] shrink-0" />
+                <div>
+                    <p className="text-white font-bold text-sm">💬 محتاج مساعدة؟</p>
+                    <p className="text-gray-400 text-xs mt-0.5">تواصل معي على تلغرام 📩 — t.me/ecomyyy</p>
+                </div>
             </div>
+        </a>
+    );
+}
+
+function AnalyzingProgress() {
+    const [pct, setPct] = useState(8);
+    useEffect(() => {
+        const id = setInterval(() => {
+            setPct(prev => {
+                if (prev >= 92) return 92;
+                return prev + Math.random() * 3;
+            });
+        }, 1200);
+        return () => clearInterval(id);
+    }, []);
+    return (
+        <div className="space-y-4">
+            <div className="w-full bg-[#0A0A0A] rounded-full h-2 overflow-hidden">
+                <div
+                    className="h-full bg-gradient-to-r from-[#C5A04E] to-[#D4B85C] transition-all duration-700"
+                    style={{ width: `${pct.toFixed(1)}%` }}
+                />
+            </div>
+            <div className="flex items-center justify-center gap-2 text-gray-500 text-xs">
+                <div className="w-2 h-2 rounded-full bg-[#C5A04E] animate-pulse" />
+                <span>الذكاء الاصطناعي + الفريق ديالنا كيخدمو على ملفك</span>
+            </div>
+        </div>
+    );
+}
+
+function MarkdownPanel({ content }: { content: string }) {
+    return (
+        <div className="prose prose-invert prose-sm md:prose-base max-w-none
+            prose-headings:text-[#C5A04E] prose-headings:font-bold
+            prose-p:text-gray-300 prose-p:leading-relaxed
+            prose-strong:text-white
+            prose-li:text-gray-300
+            prose-a:text-[#C5A04E] prose-a:no-underline hover:prose-a:underline
+            prose-hr:border-[#C5A04E]/20
+            prose-blockquote:border-r-[#C5A04E] prose-blockquote:border-r-4 prose-blockquote:border-l-0 prose-blockquote:text-gray-400
+            prose-code:text-[#C5A04E] prose-code:bg-[#0A0A0A] prose-code:rounded prose-code:px-1 prose-code:py-0.5 prose-code:before:content-none prose-code:after:content-none">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+        </div>
+    );
+}
+
+function ProjectStepsView({ steps }: { steps: ProjectStep[] }) {
+    if (!steps.length) {
+        return (
+            <p className="text-gray-500 text-sm text-center py-8">
+                مازال ما تحطاتش الخطوات — كاتنزاد من طرف الإدارة بعد ما تبدا المشروع.
+            </p>
         );
     }
-
-    const boxes = [
-        { value: timeLeft.days, label: "أيام" },
-        { value: timeLeft.hours, label: "ساعات" },
-        { value: timeLeft.minutes, label: "دقائق" },
-        { value: timeLeft.seconds, label: "ثواني" },
-    ];
-
     return (
-        <div className="flex justify-center gap-4">
-            {boxes.map((box) => (
-                <div key={box.label} className="bg-[#0A0A0A] border border-[#C5A04E]/20 rounded-xl px-5 py-4 min-w-[80px] text-center">
-                    <div className="text-3xl font-bold text-white font-mono" style={{ fontFamily: 'Inter, system-ui, monospace' }}>
-                        {String(box.value).padStart(2, '0')}
+        <div className="space-y-3">
+            {steps.map((s, i) => {
+                const cfg = s.status === 'done'
+                    ? { icon: CheckCircle, color: 'text-green-500', bg: 'bg-green-500/10 border-green-500/30', label: '✅ تم' }
+                    : s.status === 'in_progress'
+                        ? { icon: Hourglass, color: 'text-[#C5A04E]', bg: 'bg-[#C5A04E]/10 border-[#C5A04E]/30', label: '⏳ جاري' }
+                        : { icon: Lock, color: 'text-gray-500', bg: 'bg-[#1A1A1A] border-gray-700/30', label: '🔒 لم يبدأ بعد' };
+                const Icon = cfg.icon;
+                return (
+                    <div key={i} className={`flex items-center gap-4 ${cfg.bg} border rounded-xl px-5 py-4`}>
+                        <Icon className={`w-5 h-5 ${cfg.color} shrink-0`} />
+                        <div className="flex-1">
+                            <p className="text-white font-semibold text-sm">{s.step}</p>
+                        </div>
+                        <span className={`text-xs font-bold ${cfg.color} shrink-0`}>{cfg.label}</span>
                     </div>
-                    <div className="text-gray-500 text-xs mt-1 font-bold">{box.label}</div>
-                </div>
-            ))}
+                );
+            })}
         </div>
     );
 }
@@ -87,182 +153,45 @@ function CountdownTimer({ targetDate }: { targetDate: string }) {
 export default function CoachingPage() {
     const [subscriptionCheck, setSubscriptionCheck] = useState<SubscriptionCheckResult | null>(null);
     const [loading, setLoading] = useState(true);
-    const [profile, setProfile] = useState<CoachingProfile | null>(null);
-    const [booking, setBooking] = useState<BookingData | null>(null);
-    const [availableSlots, setAvailableSlots] = useState<string[]>([]);
-    const [slotsLoading, setSlotsLoading] = useState(false);
-    const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
-    const [bookingLoading, setBookingLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [diagnostic, setDiagnostic] = useState<any>(null);
-    const [validating, setValidating] = useState(false);
-
-    // Calendar week state
-    const [calendarWeekStart, setCalendarWeekStart] = useState(() => {
-        const now = new Date();
-        const day = now.getDay();
-        const start = new Date(now);
-        start.setDate(now.getDate() - day);
-        start.setHours(0, 0, 0, 0);
-        return start;
-    });
-
-    // Form fields (step 1)
-    const [fullName, setFullName] = useState("");
-    const [googleMeetEmail, setGoogleMeetEmail] = useState("");
-    const [formSubmitting, setFormSubmitting] = useState(false);
-
-    const currentStep = profile?.current_step || 1;
-
-    const DAY_NAMES = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
-
-    const availableSlotsSet = new Set(availableSlots);
-
-    const loadProfile = useCallback(async () => {
-        try {
-            const res = await fetch('/api/coaching-profile');
-            const data = await res.json();
-            if (data.profile) setProfile(data.profile);
-            if (data.booking) setBooking(data.booking);
-            if (data.diagnostic) setDiagnostic(data.diagnostic);
-        } catch {
-            console.error('Error loading profile');
-        }
-    }, []);
-
-    const loadSlots = useCallback(async () => {
-        setSlotsLoading(true);
-        try {
-            const res = await fetch('/api/bookings');
-            const data = await res.json();
-            setAvailableSlots(data.slots || []);
-        } catch {
-            console.error('Error loading slots');
-        }
-        setSlotsLoading(false);
-    }, []);
+    const [submission, setSubmission] = useState<Submission | null>(null);
 
     useEffect(() => {
-        checkUserSubscription().then(async (result) => {
-            setSubscriptionCheck(result);
-            const hasAccess = result?.hasAccess && (result?.subscription?.plan === 'diagnostic' || result?.isAdmin);
+        (async () => {
+            const sub = await checkUserSubscription();
+            setSubscriptionCheck(sub);
+            const hasAccess = sub?.hasAccess && (sub?.subscription?.plan === 'diagnostic' || sub?.isAdmin);
             if (hasAccess) {
-                await loadProfile();
+                try {
+                    const res = await fetch('/api/diagnostic-submission');
+                    if (res.ok) {
+                        const data = await res.json();
+                        setSubmission(data.submission || null);
+                    }
+                } catch {
+                    /* ignore — render onboarding */
+                }
             }
             setLoading(false);
-        });
-    }, [loadProfile]);
+        })();
+    }, []);
 
-    // Load slots when step 2 is active
-    useEffect(() => {
-        if (currentStep === 2) {
-            loadSlots();
-        }
-    }, [currentStep, loadSlots]);
+    const activeStep = useMemo(() => statusToActiveStep(submission), [submission]);
 
-    const handleFormSubmit = async () => {
-        if (!fullName.trim() || !googleMeetEmail.trim()) {
-            setError('يرجى ملء جميع الحقول');
-            return;
-        }
-        if (!googleMeetEmail.includes('@')) {
-            setError('البريد الإلكتروني غير صالح');
-            return;
-        }
+    const firstName = useMemo(() => {
+        const raw = submission?.responses?.['1']?.answer;
+        if (typeof raw !== 'string' || !raw.trim()) return null;
+        const trimmed = raw.trim();
+        const first = trimmed.split(/\s+/)[0];
+        return first || trimmed;
+    }, [submission]);
 
-        setFormSubmitting(true);
-        setError(null);
-
-        try {
-            const res = await fetch('/api/coaching-profile', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ full_name: fullName, google_meet_email: googleMeetEmail }),
-            });
-            const data = await res.json();
-            if (!res.ok) {
-                setError(data.error || 'حدث خطأ');
-            } else {
-                setProfile(data.profile);
-            }
-        } catch {
-            setError('حدث خطأ');
-        }
-        setFormSubmitting(false);
-    };
-
-    const handleBook = async () => {
-        if (!selectedSlot) return;
-        setBookingLoading(true);
-        setError(null);
-
-        try {
-            const res = await fetch('/api/bookings', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ booking_date: selectedSlot }),
-            });
-            const data = await res.json();
-
-            if (!res.ok) {
-                setError(data.error || 'حدث خطأ أثناء الحجز');
-            } else {
-                setBooking(data.booking);
-                // Refresh profile to get updated step
-                await loadProfile();
-            }
-        } catch {
-            setError('حدث خطأ أثناء الحجز');
-        }
-        setBookingLoading(false);
-    };
-
-    const handleValidateDiagnostic = async () => {
-        setValidating(true);
-        try {
-            const res = await fetch('/api/coaching-profile', {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'validate_diagnostic' }),
-            });
-            if (res.ok) {
-                await loadProfile();
-            }
-        } catch {
-            console.error('Error validating diagnostic');
-        }
-        setValidating(false);
-    };
-
-    // === ADMIN DEMO STATE (local only, no API calls) ===
-    const isAdmin = subscriptionCheck?.isAdmin === true;
-    const [demoStep, setDemoStep] = useState(1);
-    const [demoName, setDemoName] = useState("");
-    const [demoEmail, setDemoEmail] = useState("");
-    const [demoSelectedSlot, setDemoSelectedSlot] = useState<string | null>(null);
-
-    // Generate fake slots for demo calendar
-    const generateDemoSlots = () => {
-        const slots: string[] = [];
-        const now = new Date();
-        for (let d = 1; d <= 10; d++) {
-            const date = new Date(now);
-            date.setDate(now.getDate() + d);
-            for (const h of [10, 11, 14, 15, 16, 17]) {
-                slots.push(new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), h, 0, 0)).toISOString());
-            }
-        }
-        return slots;
-    };
-    const demoSlots = isAdmin ? generateDemoSlots() : [];
-    const demoSlotsSet = new Set(demoSlots);
-
-    // Demo fake booking date (tomorrow at 14:00)
-    const demoBookingDate = (() => {
-        const d = new Date();
-        d.setDate(d.getDate() + 1);
-        return new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), 14, 0, 0)).toISOString();
-    })();
+    const questionnaireProgress = useMemo(() => {
+        if (!submission) return { answered: 0, total: TOTAL_QUESTIONS, pct: 0 };
+        const answered = countAnsweredQuestions(submission.responses);
+        const total = countVisibleQuestions(submission.responses);
+        const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
+        return { answered, total, pct };
+    }, [submission]);
 
     if (loading) {
         return (
@@ -284,7 +213,7 @@ export default function CoachingPage() {
                         <Lock className="w-10 h-10 text-red-500" />
                     </div>
                     <h2 className="text-2xl font-bold text-white mb-4">الوصول مقيد</h2>
-                    <p className="text-gray-400 mb-6">هذه المنطقة مخصصة لعملاء تشخيص البزنس</p>
+                    <p className="text-gray-400 mb-6">هاد المنطقة مخصصة لعملاء التشخيص</p>
                     <a
                         href="/diagnostic"
                         className="inline-block bg-[#E8600A] hover:bg-[#D15509] text-white font-bold px-8 py-3 rounded-xl transition-colors"
@@ -296,77 +225,41 @@ export default function CoachingPage() {
         );
     }
 
-    // =============================================
-    // ADMIN DEMO MODE — Visual-only, no Supabase
-    // =============================================
-    if (isAdmin) {
-        const DEMO_VISUAL_STEPS = [
-            { icon: "💳", text: "ادفع 97€ على ecomy.ai" },
-            { icon: "📧", text: "توصلك رسالة على الإيميل ديالك" },
-            { icon: "📝", text: "سجل حسابك في المنصة" },
-            { icon: "📅", text: "اختار الموعد اللي يناسبك أنت" },
-            { icon: "⏳", text: "استنا يوم الموعد" },
-            { icon: "🎥", text: "نتلاقاو على Google Meet — 45 دقيقة" },
-            { icon: "📊", text: "توصلك نتيجة التشخيص في حسابك" },
-        ];
-
-        const DEMO_STEP_CONFIG = [
-            { num: 1, title: "معلوماتك", icon: ClipboardList, description: "أدخل اسمك وبريدك الإلكتروني لحجز جلستك" },
-            { num: 2, title: "حجز الموعد", icon: Calendar, description: "اختر الموعد المناسب لك لجلسة Google Meet" },
-            { num: 3, title: "موعد الجلسة", icon: Timer, description: "العد التنازلي لجلستك الخاصة" },
-            { num: 4, title: "التشخيص", icon: Search, description: "تحليل شامل لوضعك واكتشاف البزنس المناسب لك" },
-            { num: 5, title: "النتيجة", icon: FileText, description: "ملخص التشخيص + خطة العمل + التوصية" },
-        ];
-
-        return (
-            <div className="max-w-3xl mx-auto space-y-4 py-4">
-                {/* Header */}
-                <div className="text-center space-y-2 mb-4">
-                    <h1 className="text-3xl font-bold text-white">جلسة التشخيص</h1>
-                    <p className="text-gray-400">أكمل الخطوات للحصول على جلستك الفردية</p>
+    return (
+        <div className="max-w-3xl mx-auto space-y-4 py-4">
+            {/* Welcome header */}
+            <div className="text-center space-y-3 mb-6">
+                <div className="inline-flex items-center gap-2 bg-[#C5A04E]/10 border border-[#C5A04E]/30 text-[#C5A04E] text-xs font-bold px-3 py-1.5 rounded-full">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>مسار التشخيص الشخصي</span>
                 </div>
+                <h1 className="text-3xl md:text-4xl font-bold text-white">
+                    {firstName ? `مرحبا ${firstName} 🎉` : 'مرحبا بك 🎉'}
+                </h1>
+                <p className="text-gray-400 text-sm md:text-base max-w-xl mx-auto leading-relaxed">
+                    حنا هنا باش نفهموك من الداخل ونلقاو ليك المشروع المناسب.
+                    شوف الخطوات اللي غادي تعدا وأنت كاتعرف فين واصل في كل لحظة.
+                </p>
+            </div>
 
-                {/* 7-STEP VISUAL PROCESS BANNER */}
-                <div className="bg-[#111111]/50 border border-[#C5A04E]/10 rounded-2xl p-6 mb-6">
-                    <div className="flex items-center justify-center flex-wrap gap-2 md:gap-0">
-                        {DEMO_VISUAL_STEPS.map((vs, i) => (
-                            <div key={i} className="flex items-center">
-                                <div className="flex flex-col items-center text-center min-w-[80px] md:min-w-[90px]">
-                                    <div className="w-12 h-12 bg-[#C5A04E]/10 border-2 border-[#C5A04E]/30 rounded-full flex items-center justify-center text-xl mb-2">
-                                        {vs.icon}
-                                    </div>
-                                    <span className="text-[10px] md:text-xs text-gray-300 font-bold leading-tight px-1 max-w-[90px]">
-                                        {vs.text}
-                                    </span>
-                                </div>
-                                {i < DEMO_VISUAL_STEPS.length - 1 && (
-                                    <div className="text-[#C5A04E]/40 mx-1 text-lg hidden md:block">←</div>
-                                )}
-                            </div>
-                        ))}
-                    </div>
-                    <p className="text-center text-gray-400 text-sm mt-5 leading-relaxed">
-                        أنت اللي كتختار الوقت اللي يناسبك. كنديرو التشخيص مع بعض، ومن بعد كتوصلك النتيجة مباشرة في حسابك 🎯
-                    </p>
-                </div>
-
-                {/* 5 INTERACTIVE DEMO STEPS */}
-                {DEMO_STEP_CONFIG.map((step, idx) => {
-                    const isCompleted = demoStep > step.num;
-                    const isActive = demoStep === step.num;
-                    const isLocked = demoStep < step.num;
+            {/* 6-step roadmap */}
+            <div className="space-y-0">
+                {STEPS.map((step, idx) => {
+                    const isCompleted = activeStep > step.num;
+                    const isActive = activeStep === step.num;
+                    const isLocked = activeStep < step.num;
                     const Icon = step.icon;
-                    const isLast = idx === DEMO_STEP_CONFIG.length - 1;
+                    const isLast = idx === STEPS.length - 1;
 
                     return (
                         <div key={step.num} className="flex gap-4">
-                            {/* Step indicator column */}
+                            {/* Indicator column */}
                             <div className="flex flex-col items-center">
-                                <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-all ${
+                                <div className={`w-11 h-11 rounded-full flex items-center justify-center shrink-0 transition-all ${
                                     isCompleted
                                         ? 'bg-green-500/20 border-2 border-green-500'
                                         : isActive
-                                            ? 'bg-[#C5A04E]/20 border-2 border-[#C5A04E]'
+                                            ? 'bg-[#C5A04E]/20 border-2 border-[#C5A04E] ring-4 ring-[#C5A04E]/10'
                                             : 'bg-[#1A1A1A] border-2 border-gray-700'
                                 }`}>
                                     {isCompleted ? (
@@ -374,249 +267,178 @@ export default function CoachingPage() {
                                     ) : isLocked ? (
                                         <Lock className="w-4 h-4 text-gray-500" />
                                     ) : (
-                                        <span className={`text-sm font-bold ${isActive ? 'text-[#C5A04E]' : 'text-gray-500'}`}>
-                                            {step.num}
-                                        </span>
+                                        <span className="text-base">{step.emoji}</span>
                                     )}
                                 </div>
                                 {!isLast && (
-                                    <div className={`w-0.5 flex-1 min-h-[20px] ${
-                                        isCompleted ? 'bg-green-500/30' : 'bg-gray-700/50'
-                                    }`} />
+                                    <div className={`w-0.5 flex-1 min-h-[40px] ${isCompleted ? 'bg-green-500/30' : 'bg-gray-700/50'}`} />
                                 )}
                             </div>
 
-                            {/* Step content */}
-                            <div className={`flex-1 pb-6`}>
-                                {/* Step header */}
+                            {/* Content column */}
+                            <div className="flex-1 pb-6">
                                 <div className="flex items-center gap-3 mb-1">
                                     <Icon className={`w-5 h-5 ${
                                         isCompleted ? 'text-green-500' : isActive ? 'text-[#C5A04E]' : 'text-gray-500'
                                     }`} />
-                                    <h3 className={`font-bold ${
+                                    <h3 className={`font-bold text-base md:text-lg ${
                                         isCompleted ? 'text-green-400' : isActive ? 'text-white' : 'text-gray-400'
                                     }`}>
                                         {step.title}
-                                        {isCompleted && <span className="text-green-500 text-sm mr-2">✓</span>}
-                                        {isLocked && <span className="text-gray-500 text-xs font-normal mr-2">— قريباً</span>}
+                                        {isCompleted && <span className="text-green-500 text-sm mr-2">✓ تم</span>}
+                                        {isActive && <span className="text-[#C5A04E] text-xs font-normal mr-2">— ⏳ جاري</span>}
+                                        {isLocked && <span className="text-gray-500 text-xs font-normal mr-2">— 🔒 لم يبدأ بعد</span>}
                                     </h3>
                                 </div>
                                 <p className={`text-sm mr-8 ${
-                                    isCompleted ? 'text-gray-500' : isActive ? 'text-gray-400' : 'text-gray-500'
+                                    isCompleted ? 'text-gray-500' : isActive ? 'text-gray-400' : 'text-gray-600'
                                 }`}>
                                     {step.description}
                                 </p>
 
                                 {/* Active step content */}
                                 {isActive && (
-                                    <div className="bg-[#111111]/50 border border-[#C5A04E]/10 rounded-2xl p-6 mt-3">
-                                        {/* DEMO STEP 1: Form */}
-                                        {step.num === 1 && (
-                                            <div className="space-y-5">
-                                                <p className="text-gray-400 text-sm">أدخل معلوماتك لحجز جلسة التشخيص</p>
-                                                <div>
-                                                    <label className="flex items-center gap-2 text-sm text-white font-semibold mb-2">
-                                                        <User className="w-4 h-4" />
-                                                        الاسم الكامل
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        value={demoName}
-                                                        onChange={e => setDemoName(e.target.value)}
-                                                        placeholder="أدخل اسمك الكامل"
-                                                        className="w-full bg-[#F3F4F6] border border-gray-300 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C5A04E] focus:border-[#C5A04E] placeholder-[#9CA3AF]"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label className="flex items-center gap-2 text-sm text-white font-semibold mb-2">
-                                                        <Mail className="w-4 h-4" />
-                                                        البريد الإلكتروني لـ Google Meet
-                                                    </label>
-                                                    <input
-                                                        type="email"
-                                                        value={demoEmail}
-                                                        onChange={e => setDemoEmail(e.target.value)}
-                                                        placeholder="example@gmail.com"
-                                                        dir="ltr"
-                                                        className="w-full bg-[#F3F4F6] border border-gray-300 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C5A04E] focus:border-[#C5A04E] placeholder-[#9CA3AF] text-left"
-                                                    />
-                                                </div>
-                                                <button
-                                                    onClick={() => setDemoStep(2)}
-                                                    className="w-full bg-[#C5A04E] hover:bg-[#D4B85C] text-white font-bold py-3.5 rounded-xl transition-colors"
-                                                >
-                                                    تأكيد
-                                                </button>
-                                            </div>
-                                        )}
-
-                                        {/* DEMO STEP 2: Calendar with fake slots */}
-                                        {step.num === 2 && (
-                                            <div className="space-y-4">
-                                                {/* Week Navigation */}
-                                                <div className="flex items-center justify-between">
-                                                    <button onClick={() => navigateWeek(-1)} className="flex items-center gap-1 text-gray-400 hover:text-white transition px-2 py-1 rounded-lg hover:bg-white/5">
-                                                        <ChevronRight className="w-4 h-4" />
-                                                        <span className="text-xs font-bold hidden sm:inline">السابق</span>
-                                                    </button>
-                                                    <span className="text-white font-bold text-sm">
-                                                        {calendarWeekStart.toLocaleDateString('ar-u-nu-latn', { day: 'numeric', month: 'long', year: 'numeric' })}
-                                                        {' — '}
-                                                        {(() => { const end = new Date(calendarWeekStart); end.setDate(calendarWeekStart.getDate() + 6); return end.toLocaleDateString('ar-u-nu-latn', { day: 'numeric', month: 'long' }); })()}
-                                                    </span>
-                                                    <button onClick={() => navigateWeek(1)} className="flex items-center gap-1 text-gray-400 hover:text-white transition px-2 py-1 rounded-lg hover:bg-white/5">
-                                                        <span className="text-xs font-bold hidden sm:inline">التالي</span>
-                                                        <ChevronLeft className="w-4 h-4" />
-                                                    </button>
-                                                </div>
-
-                                                {/* Calendar Grid */}
-                                                <div className="overflow-x-auto -mx-6 px-6">
-                                                    <div className="min-w-[560px]">
-                                                        {/* Day headers */}
-                                                        <div className="grid grid-cols-7 gap-1 mb-2">
-                                                            {DAY_NAMES.map((dayName, i) => {
-                                                                const date = new Date(calendarWeekStart);
-                                                                date.setDate(calendarWeekStart.getDate() + i);
-                                                                const isToday = date.toDateString() === new Date().toDateString();
-                                                                return (
-                                                                    <div key={i} className={`text-center py-1.5 rounded-lg ${isToday ? 'bg-[#C5A04E]/10' : ''}`}>
-                                                                        <div className={`text-[10px] font-bold ${isToday ? 'text-[#C5A04E]' : 'text-gray-500'}`}>{dayName}</div>
-                                                                        <div className={`text-sm font-bold ${isToday ? 'text-[#C5A04E]' : 'text-white'}`}>{date.getDate()}</div>
-                                                                    </div>
-                                                                );
-                                                            })}
-                                                        </div>
-
-                                                        {/* Hour rows */}
-                                                        {Array.from({ length: 11 }, (_, hi) => 9 + hi).map(hour => (
-                                                            <div key={hour} className="grid grid-cols-7 gap-1 mb-1">
-                                                                {Array.from({ length: 7 }, (_, di) => {
-                                                                    const d = new Date(calendarWeekStart);
-                                                                    d.setDate(calendarWeekStart.getDate() + di);
-                                                                    const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), hour, 0, 0, 0));
-                                                                    const iso = date.toISOString();
-                                                                    const isAvailable = demoSlotsSet.has(iso);
-                                                                    const isPast = date < new Date();
-                                                                    const isSelected = demoSelectedSlot === iso;
-
-                                                                    if (isPast || !isAvailable) {
-                                                                        return (
-                                                                            <div key={di} className="py-1.5 rounded text-[11px] font-bold text-center bg-[#0A0A0A] text-gray-700">
-                                                                                {String(hour).padStart(2, '0')}:00
-                                                                            </div>
-                                                                        );
-                                                                    }
-
-                                                                    return (
-                                                                        <button
-                                                                            key={di}
-                                                                            onClick={() => setDemoSelectedSlot(iso)}
-                                                                            className={`py-1.5 rounded text-[11px] font-bold transition-all ${
-                                                                                isSelected
-                                                                                    ? 'bg-[#C5A04E] text-white border border-[#C5A04E]'
-                                                                                    : 'bg-[#1A1A1A] text-gray-300 border border-transparent hover:border-[#C5A04E]/40 hover:bg-[#C5A04E]/10'
-                                                                            }`}
-                                                                        >
-                                                                            {String(hour).padStart(2, '0')}:00
-                                                                        </button>
-                                                                    );
-                                                                })}
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-
-                                                {demoSelectedSlot && (
-                                                    <div className="border-t border-[#C5A04E]/10 pt-4 space-y-3">
-                                                        <p className="text-gray-400 text-sm text-center">
-                                                            الموعد المختار:{' '}
-                                                            <span className="text-[#C5A04E] font-bold">
-                                                                {new Date(demoSelectedSlot).toLocaleString('ar-u-nu-latn', {
-                                                                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-                                                                    hour: '2-digit', minute: '2-digit'
-                                                                })}
-                                                            </span>
-                                                        </p>
-                                                        <button
-                                                            onClick={() => setDemoStep(3)}
-                                                            className="w-full bg-[#C5A04E] hover:bg-[#D4B85C] text-white font-bold py-3.5 rounded-xl transition-colors"
-                                                        >
-                                                            تأكيد الحجز
-                                                        </button>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        )}
-
-                                        {/* DEMO STEP 3: Countdown with fake date */}
-                                        {step.num === 3 && (
-                                            <div className="space-y-6 text-center">
-                                                <div>
-                                                    <p className="text-gray-400 text-sm mb-1">موعد جلستك</p>
-                                                    <p className="text-[#C5A04E] text-lg font-bold">
-                                                        {new Date(demoBookingDate).toLocaleDateString('ar-u-nu-latn', {
-                                                            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-                                                        })}
-                                                        {' — '}
-                                                        {new Date(demoBookingDate).toLocaleTimeString('ar-u-nu-latn', {
-                                                            hour: '2-digit', minute: '2-digit'
-                                                        })}
-                                                    </p>
-                                                </div>
-                                                <CountdownTimer targetDate={demoBookingDate} />
-                                                <p className="text-gray-500 text-sm">
-                                                    سيتم إرسال رابط Google Meet إلى بريدك الإلكتروني قبل الجلسة
+                                    <div className="bg-[#111111]/50 border border-[#C5A04E]/10 rounded-2xl p-6 mt-4">
+                                        {step.key === 'welcome' && (
+                                            <div className="space-y-5 text-center">
+                                                <p className="text-gray-300 leading-relaxed">
+                                                    غادي نسولوك 180 سؤال على وضعيتك، شخصيتك، خبرتك ومحيطك.
+                                                    كل سؤال مهم — والأجوبة ديالك غادي تعطينا صورة كاملة باش نلقاو ليك المشروع المناسب.
                                                 </p>
+                                                <div className="grid grid-cols-3 gap-3 text-center">
+                                                    <div className="bg-[#0A0A0A] rounded-xl p-3 border border-[#C5A04E]/10">
+                                                        <p className="text-2xl font-bold text-[#C5A04E]">9</p>
+                                                        <p className="text-gray-500 text-xs">أجزاء</p>
+                                                    </div>
+                                                    <div className="bg-[#0A0A0A] rounded-xl p-3 border border-[#C5A04E]/10">
+                                                        <p className="text-2xl font-bold text-[#C5A04E]">180</p>
+                                                        <p className="text-gray-500 text-xs">سؤال</p>
+                                                    </div>
+                                                    <div className="bg-[#0A0A0A] rounded-xl p-3 border border-[#C5A04E]/10">
+                                                        <p className="text-2xl font-bold text-[#C5A04E]">~30</p>
+                                                        <p className="text-gray-500 text-xs">دقيقة</p>
+                                                    </div>
+                                                </div>
+                                                <p className="text-gray-500 text-xs">
+                                                    تقدر توقف وترجع في أي وقت — الأجوبة ديالك كتسجل أوتوماتيكيا 💾
+                                                </p>
+                                                <Link
+                                                    href="/dashboard/coaching/questionnaire"
+                                                    className="inline-flex items-center justify-center gap-3 w-full bg-gradient-to-r from-[#C5A04E] to-[#D4B85C] hover:opacity-90 text-white font-bold py-4 rounded-xl transition"
+                                                >
+                                                    <span>بدء الاستبيان</span>
+                                                    <ArrowLeft className="w-5 h-5" />
+                                                </Link>
                                             </div>
                                         )}
 
-                                        {/* DEMO STEP 4 & 5: Locked */}
-                                        {(step.num === 4 || step.num === 5) && (
-                                            <div className="flex items-center justify-center gap-3 py-4">
-                                                <Lock className="w-5 h-5 text-gray-500" />
-                                                <span className="text-gray-500 text-sm font-bold">
-                                                    سيتم فتحها بعد إتمام المراحل السابقة
-                                                </span>
+                                        {step.key === 'questionnaire' && (
+                                            <div className="space-y-5">
+                                                <div>
+                                                    <div className="flex items-center justify-between mb-2 text-sm">
+                                                        <span className="text-gray-400">التقدم</span>
+                                                        <span className="text-[#C5A04E] font-bold">
+                                                            {questionnaireProgress.answered} / {questionnaireProgress.total}
+                                                        </span>
+                                                    </div>
+                                                    <div className="w-full bg-[#0A0A0A] rounded-full h-2 overflow-hidden">
+                                                        <div
+                                                            className="h-full bg-gradient-to-r from-[#C5A04E] to-[#D4B85C] transition-all duration-500"
+                                                            style={{ width: `${questionnaireProgress.pct}%` }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <p className="text-gray-400 text-sm leading-relaxed">
+                                                    {questionnaireProgress.answered === 0
+                                                        ? 'مازال ما بديتي الاستبيان — كملو باش نلقاو ليك المشروع المناسب.'
+                                                        : `وصلتي للجزء ${submission?.current_block ?? 1} من 9. كمل من فين وقفتي.`}
+                                                </p>
+                                                <Link
+                                                    href="/dashboard/coaching/questionnaire"
+                                                    className="inline-flex items-center justify-center gap-3 w-full bg-gradient-to-r from-[#C5A04E] to-[#D4B85C] hover:opacity-90 text-white font-bold py-4 rounded-xl transition"
+                                                >
+                                                    <span>{questionnaireProgress.answered === 0 ? 'بدء الاستبيان' : 'كمل من فين وقفتي'}</span>
+                                                    <ArrowLeft className="w-5 h-5" />
+                                                </Link>
+                                            </div>
+                                        )}
+
+                                        {step.key === 'analyzing' && (
+                                            <div className="space-y-5 text-center">
+                                                <div className="w-16 h-16 mx-auto rounded-full bg-[#C5A04E]/10 border border-[#C5A04E]/30 flex items-center justify-center">
+                                                    <Hourglass className="w-7 h-7 text-[#C5A04E] animate-pulse" />
+                                                </div>
+                                                <h4 className="text-white text-lg font-bold">كنحللو الملف الشخصي ديالك...</h4>
+                                                <p className="text-gray-400 text-sm leading-relaxed">
+                                                    البيلان ديالك غادي يكون جاهز في أقل من <strong className="text-[#C5A04E]">48 ساعة</strong>.
+                                                    غادي توصلك إشعار ملي يكون متاح هنا.
+                                                </p>
+                                                <AnalyzingProgress />
+                                            </div>
+                                        )}
+
+                                        {step.key === 'bilan' && submission?.bilan_content && (
+                                            <div className="space-y-4">
+                                                <div className="flex items-center gap-2 text-[#C5A04E]">
+                                                    <FileText className="w-5 h-5" />
+                                                    <h4 className="font-bold">البيلان ديالك</h4>
+                                                </div>
+                                                <div className="bg-[#0A0A0A] border border-[#C5A04E]/10 rounded-xl p-5">
+                                                    <MarkdownPanel content={submission.bilan_content} />
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {step.key === 'plan' && submission?.plan_content && (
+                                            <div className="space-y-4">
+                                                <div className="flex items-center gap-2 text-[#C5A04E]">
+                                                    <ListChecks className="w-5 h-5" />
+                                                    <h4 className="font-bold">خطة العمل</h4>
+                                                </div>
+                                                <div className="bg-[#0A0A0A] border border-[#C5A04E]/10 rounded-xl p-5">
+                                                    <MarkdownPanel content={submission.plan_content} />
+                                                </div>
+                                                <a
+                                                    href="https://t.me/ecomyyy"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center justify-center gap-3 w-full bg-gradient-to-r from-[#E8600A] to-[#F97316] hover:opacity-90 text-white font-bold py-4 rounded-xl transition"
+                                                >
+                                                    <MessageCircle className="w-5 h-5" />
+                                                    <span>تواصل معنا باش نبداو</span>
+                                                </a>
+                                            </div>
+                                        )}
+
+                                        {step.key === 'tracker' && (
+                                            <div className="space-y-4">
+                                                <div className="flex items-center gap-2 text-[#C5A04E]">
+                                                    <Activity className="w-5 h-5" />
+                                                    <h4 className="font-bold">تقدم المشروع</h4>
+                                                </div>
+                                                <ProjectStepsView steps={submission?.project_steps || []} />
                                             </div>
                                         )}
                                     </div>
                                 )}
 
-                                {/* Completed step summary (demo) */}
-                                {isCompleted && step.num === 1 && (
+                                {/* Completed-state summaries */}
+                                {isCompleted && step.key === 'questionnaire' && (
                                     <div className="bg-[#111111]/30 border border-green-500/10 rounded-xl px-5 py-3 mt-3">
                                         <p className="text-gray-400 text-sm">
-                                            <span className="text-gray-500">الاسم:</span> <span className="text-white">{demoName || 'أحمد'}</span>
-                                            {' — '}
-                                            <span className="text-gray-500">Google Meet:</span> <span className="text-white" dir="ltr">{demoEmail || 'ahmed@gmail.com'}</span>
+                                            <span className="text-gray-500">تم الاستبيان كامل —</span>{' '}
+                                            <span className="text-white">{questionnaireProgress.answered} جواب</span>
                                         </p>
                                     </div>
                                 )}
-
-                                {isCompleted && step.num === 2 && (
+                                {isCompleted && step.key === 'bilan' && submission?.bilan_published_at && (
                                     <div className="bg-[#111111]/30 border border-green-500/10 rounded-xl px-5 py-3 mt-3">
                                         <p className="text-gray-400 text-sm">
-                                            <span className="text-gray-500">الموعد:</span>{' '}
+                                            <span className="text-gray-500">نشر البيلان:</span>{' '}
                                             <span className="text-white">
-                                                {new Date(demoBookingDate).toLocaleString('ar-u-nu-latn', {
-                                                    weekday: 'long', month: 'long', day: 'numeric',
-                                                    hour: '2-digit', minute: '2-digit'
-                                                })}
+                                                {new Date(submission.bilan_published_at).toLocaleDateString('ar-u-nu-latn', { year: 'numeric', month: 'long', day: 'numeric' })}
                                             </span>
                                         </p>
-                                    </div>
-                                )}
-
-                                {/* Locked step placeholder */}
-                                {isLocked && (step.num === 4 || step.num === 5) && (
-                                    <div className="bg-[#111111]/30 border border-gray-700/30 rounded-2xl p-5 mt-3">
-                                        <div className="flex items-center justify-center gap-3">
-                                            <Lock className="w-4 h-4 text-gray-500" />
-                                            <span className="text-gray-500 text-sm font-bold">
-                                                سيتم فتحها بعد إتمام المراحل السابقة
-                                            </span>
-                                        </div>
                                     </div>
                                 )}
                             </div>
@@ -624,350 +446,11 @@ export default function CoachingPage() {
                     );
                 })}
             </div>
-        );
-    }
 
-    const navigateWeek = (direction: number) => {
-        const newStart = new Date(calendarWeekStart);
-        newStart.setDate(calendarWeekStart.getDate() + (direction * 7));
-        setCalendarWeekStart(newStart);
-    };
-
-    return (
-        <div className="max-w-3xl mx-auto space-y-4 py-4">
-            {/* Header */}
-            <div className="text-center space-y-2 mb-8">
-                <h1 className="text-3xl font-bold text-white">جلسة التشخيص</h1>
-                <p className="text-gray-400">أكمل الخطوات للحصول على جلستك الفردية</p>
+            {/* Telegram help block */}
+            <div className="pt-2">
+                <TelegramHelpBlock />
             </div>
-
-            {/* Stepper */}
-            {STEP_CONFIG.map((step, idx) => {
-                const isCompleted = currentStep > step.num;
-                const isActive = currentStep === step.num;
-                const isLocked = currentStep < step.num;
-                const Icon = step.icon;
-                const isLast = idx === STEP_CONFIG.length - 1;
-
-                return (
-                    <div key={step.num} className="flex gap-4">
-                        {/* Step indicator column */}
-                        <div className="flex flex-col items-center">
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-all ${
-                                isCompleted
-                                    ? 'bg-green-500/20 border-2 border-green-500'
-                                    : isActive
-                                        ? 'bg-[#C5A04E]/20 border-2 border-[#C5A04E]'
-                                        : 'bg-[#1A1A1A] border-2 border-gray-700'
-                            }`}>
-                                {isCompleted ? (
-                                    <CheckCircle className="w-5 h-5 text-green-500" />
-                                ) : isLocked ? (
-                                    <Lock className="w-4 h-4 text-gray-500" />
-                                ) : (
-                                    <span className={`text-sm font-bold ${isActive ? 'text-[#C5A04E]' : 'text-gray-500'}`}>
-                                        {step.num}
-                                    </span>
-                                )}
-                            </div>
-                            {!isLast && (
-                                <div className={`w-0.5 flex-1 min-h-[20px] ${
-                                    isCompleted ? 'bg-green-500/30' : 'bg-gray-700/50'
-                                }`} />
-                            )}
-                        </div>
-
-                        {/* Step content */}
-                        <div className={`flex-1 pb-6 ${isLast ? '' : ''}`}>
-                            {/* Step header */}
-                            <div className="flex items-center gap-3 mb-1">
-                                <Icon className={`w-5 h-5 ${
-                                    isCompleted ? 'text-green-500' : isActive ? 'text-[#C5A04E]' : 'text-gray-500'
-                                }`} />
-                                <h3 className={`font-bold ${
-                                    isCompleted ? 'text-green-400' : isActive ? 'text-white' : 'text-gray-400'
-                                }`}>
-                                    {step.title}
-                                    {isCompleted && <span className="text-green-500 text-sm mr-2">✓</span>}
-                                    {isLocked && <span className="text-gray-500 text-xs font-normal mr-2">— قريباً</span>}
-                                </h3>
-                            </div>
-                            <p className={`text-sm mr-8 ${
-                                isCompleted ? 'text-gray-500' : isActive ? 'text-gray-400' : 'text-gray-500'
-                            }`}>
-                                {step.description}
-                            </p>
-
-                            {/* Active step content */}
-                            {isActive && (
-                                <div className="bg-[#111111]/50 border border-[#C5A04E]/10 rounded-2xl p-6 mt-3">
-                                    {/* STEP 1: Pre-appointment form */}
-                                    {step.num === 1 && (
-                                        <div className="space-y-5">
-                                            <p className="text-gray-400 text-sm">أدخل معلوماتك لحجز جلسة التشخيص</p>
-
-                                            <div>
-                                                <label className="flex items-center gap-2 text-sm text-white font-semibold mb-2">
-                                                    <User className="w-4 h-4" />
-                                                    الاسم الكامل
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={fullName}
-                                                    onChange={e => setFullName(e.target.value)}
-                                                    placeholder="أدخل اسمك الكامل"
-                                                    className="w-full bg-[#F3F4F6] border border-gray-300 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C5A04E] focus:border-[#C5A04E] placeholder-[#9CA3AF]"
-                                                />
-                                            </div>
-
-                                            <div>
-                                                <label className="flex items-center gap-2 text-sm text-white font-semibold mb-2">
-                                                    <Mail className="w-4 h-4" />
-                                                    البريد الإلكتروني لـ Google Meet
-                                                </label>
-                                                <input
-                                                    type="email"
-                                                    value={googleMeetEmail}
-                                                    onChange={e => setGoogleMeetEmail(e.target.value)}
-                                                    placeholder="example@gmail.com"
-                                                    dir="ltr"
-                                                    className="w-full bg-[#F3F4F6] border border-gray-300 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#C5A04E] focus:border-[#C5A04E] placeholder-[#9CA3AF] text-left"
-                                                />
-                                            </div>
-
-                                            {error && <p className="text-red-500 text-sm">{error}</p>}
-
-                                            <button
-                                                onClick={handleFormSubmit}
-                                                disabled={formSubmitting}
-                                                className="w-full bg-[#C5A04E] hover:bg-[#D4B85C] text-white font-bold py-3.5 rounded-xl transition-colors disabled:opacity-50"
-                                            >
-                                                {formSubmitting ? 'جاري الحفظ...' : 'تأكيد'}
-                                            </button>
-                                        </div>
-                                    )}
-
-                                    {/* STEP 2: Weekly Calendar Picker */}
-                                    {step.num === 2 && (
-                                        <div className="space-y-4">
-                                            {slotsLoading ? (
-                                                <div className="text-center text-gray-500 py-8">جاري تحميل المواعيد...</div>
-                                            ) : (
-                                                <>
-                                                    {/* Week Navigation */}
-                                                    <div className="flex items-center justify-between">
-                                                        <button onClick={() => navigateWeek(-1)} className="flex items-center gap-1 text-gray-400 hover:text-white transition px-2 py-1 rounded-lg hover:bg-white/5">
-                                                            <ChevronRight className="w-4 h-4" />
-                                                            <span className="text-xs font-bold hidden sm:inline">السابق</span>
-                                                        </button>
-                                                        <span className="text-white font-bold text-sm">
-                                                            {calendarWeekStart.toLocaleDateString('ar-u-nu-latn', { day: 'numeric', month: 'long', year: 'numeric' })}
-                                                            {' — '}
-                                                            {(() => { const end = new Date(calendarWeekStart); end.setDate(calendarWeekStart.getDate() + 6); return end.toLocaleDateString('ar-u-nu-latn', { day: 'numeric', month: 'long' }); })()}
-                                                        </span>
-                                                        <button onClick={() => navigateWeek(1)} className="flex items-center gap-1 text-gray-400 hover:text-white transition px-2 py-1 rounded-lg hover:bg-white/5">
-                                                            <span className="text-xs font-bold hidden sm:inline">التالي</span>
-                                                            <ChevronLeft className="w-4 h-4" />
-                                                        </button>
-                                                    </div>
-
-                                                    {/* Calendar Grid */}
-                                                    <div className="overflow-x-auto -mx-6 px-6">
-                                                        <div className="min-w-[560px]">
-                                                            {/* Day headers */}
-                                                            <div className="grid grid-cols-7 gap-1 mb-2">
-                                                                {DAY_NAMES.map((dayName, i) => {
-                                                                    const date = new Date(calendarWeekStart);
-                                                                    date.setDate(calendarWeekStart.getDate() + i);
-                                                                    const isToday = date.toDateString() === new Date().toDateString();
-                                                                    return (
-                                                                        <div key={i} className={`text-center py-1.5 rounded-lg ${isToday ? 'bg-[#C5A04E]/10' : ''}`}>
-                                                                            <div className={`text-[10px] font-bold ${isToday ? 'text-[#C5A04E]' : 'text-gray-500'}`}>{dayName}</div>
-                                                                            <div className={`text-sm font-bold ${isToday ? 'text-[#C5A04E]' : 'text-white'}`}>{date.getDate()}</div>
-                                                                        </div>
-                                                                    );
-                                                                })}
-                                                            </div>
-
-                                                            {/* Hour rows */}
-                                                            {Array.from({ length: 11 }, (_, hi) => 9 + hi).map(hour => (
-                                                                <div key={hour} className="grid grid-cols-7 gap-1 mb-1">
-                                                                    {Array.from({ length: 7 }, (_, di) => {
-                                                                        const d = new Date(calendarWeekStart);
-                                                                        d.setDate(calendarWeekStart.getDate() + di);
-                                                                        // Use local date components to build UTC date (avoids day shift)
-                                                                        const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), hour, 0, 0, 0));
-                                                                        const iso = date.toISOString();
-                                                                        const isAvailable = availableSlotsSet.has(iso);
-                                                                        const isPast = date < new Date();
-                                                                        const isSelected = selectedSlot === iso;
-
-                                                                        if (isPast || !isAvailable) {
-                                                                            return (
-                                                                                <div key={di} className="py-1.5 rounded text-[11px] font-bold text-center bg-[#0A0A0A] text-gray-700">
-                                                                                    {String(hour).padStart(2, '0')}:00
-                                                                                </div>
-                                                                            );
-                                                                        }
-
-                                                                        return (
-                                                                            <button
-                                                                                key={di}
-                                                                                onClick={() => setSelectedSlot(iso)}
-                                                                                className={`py-1.5 rounded text-[11px] font-bold transition-all ${
-                                                                                    isSelected
-                                                                                        ? 'bg-[#C5A04E] text-white border border-[#C5A04E]'
-                                                                                        : 'bg-[#1A1A1A] text-gray-300 border border-transparent hover:border-[#C5A04E]/40 hover:bg-[#C5A04E]/10'
-                                                                                }`}
-                                                                            >
-                                                                                {String(hour).padStart(2, '0')}:00
-                                                                            </button>
-                                                                        );
-                                                                    })}
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                </>
-                                            )}
-
-                                            {selectedSlot && (
-                                                <div className="border-t border-[#C5A04E]/10 pt-4 space-y-3">
-                                                    <p className="text-gray-400 text-sm text-center">
-                                                        الموعد المختار:{' '}
-                                                        <span className="text-[#C5A04E] font-bold">
-                                                            {new Date(selectedSlot).toLocaleString('ar-u-nu-latn', {
-                                                                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-                                                                hour: '2-digit', minute: '2-digit'
-                                                            })}
-                                                        </span>
-                                                    </p>
-                                                    {error && <p className="text-red-500 text-sm text-center">{error}</p>}
-                                                    <button
-                                                        onClick={handleBook}
-                                                        disabled={bookingLoading}
-                                                        className="w-full bg-[#C5A04E] hover:bg-[#D4B85C] text-white font-bold py-3.5 rounded-xl transition-colors disabled:opacity-50"
-                                                    >
-                                                        {bookingLoading ? 'جاري الحجز...' : 'تأكيد الحجز'}
-                                                    </button>
-                                                </div>
-                                            )}
-                                        </div>
-                                    )}
-
-                                    {/* STEP 3: Countdown */}
-                                    {step.num === 3 && booking && (
-                                        <div className="space-y-6 text-center">
-                                            <div>
-                                                <p className="text-gray-400 text-sm mb-1">موعد جلستك</p>
-                                                <p className="text-[#C5A04E] text-lg font-bold">
-                                                    {new Date(booking.booking_date).toLocaleDateString('ar-u-nu-latn', {
-                                                        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-                                                    })}
-                                                    {' — '}
-                                                    {new Date(booking.booking_date).toLocaleTimeString('ar-u-nu-latn', {
-                                                        hour: '2-digit', minute: '2-digit'
-                                                    })}
-                                                </p>
-                                            </div>
-
-                                            <CountdownTimer targetDate={booking.booking_date} />
-
-                                            <p className="text-gray-500 text-sm">
-                                                سيتم إرسال رابط Google Meet إلى بريدك الإلكتروني قبل الجلسة
-                                            </p>
-                                        </div>
-                                    )}
-
-                                    {/* STEP 4: Diagnostic result */}
-                                    {step.num === 4 && diagnostic && (
-                                        <div className="space-y-5">
-                                            <p className="text-gray-400 text-sm">نتيجة تحليل جلسة التشخيص الخاصة بك</p>
-
-                                            {[
-                                                { label: 'ملخص الوضع', value: diagnostic.summary },
-                                                { label: 'البزنس المناسب', value: diagnostic.recommended_business },
-                                                { label: 'خطة العمل', value: diagnostic.action_plan },
-                                                { label: 'التوصية', value: diagnostic.recommendation },
-                                            ].map((field, i) => (
-                                                <div key={i} className="bg-[#0A0A0A] border border-[#C5A04E]/20 rounded-xl p-4">
-                                                    <h4 className="text-[#C5A04E] font-bold text-sm mb-2">{field.label}</h4>
-                                                    <p className="text-gray-300 text-sm whitespace-pre-wrap">{field.value || '-'}</p>
-                                                </div>
-                                            ))}
-
-                                            <button
-                                                onClick={handleValidateDiagnostic}
-                                                disabled={validating}
-                                                className="w-full bg-[#C5A04E] hover:bg-[#D4B85C] text-white font-bold py-3.5 rounded-xl transition-colors disabled:opacity-50"
-                                            >
-                                                {validating ? 'جاري التأكيد...' : 'لقد استلمت تشخيصي ✅'}
-                                            </button>
-                                        </div>
-                                    )}
-
-                                    {/* STEP 5: Completion */}
-                                    {step.num === 5 && (
-                                        <div className="text-center space-y-4 py-4">
-                                            <CheckCircle className="w-16 h-16 text-green-500 mx-auto" />
-                                            <h3 className="text-xl font-bold text-white">تهانينا! تم إتمام التشخيص</h3>
-                                            <p className="text-gray-400 text-sm">
-                                                تم استلام تشخيصك بنجاح. سيتم التواصل معك قريباً بخصوص الخطوات القادمة.
-                                            </p>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-
-                            {/* Completed step summary */}
-                            {isCompleted && step.num === 1 && profile && (
-                                <div className="bg-[#111111]/30 border border-green-500/10 rounded-xl px-5 py-3 mt-3">
-                                    <p className="text-gray-400 text-sm">
-                                        <span className="text-gray-500">الاسم:</span> <span className="text-white">{profile.full_name}</span>
-                                        {' — '}
-                                        <span className="text-gray-500">Google Meet:</span> <span className="text-white" dir="ltr">{profile.google_meet_email}</span>
-                                    </p>
-                                </div>
-                            )}
-
-                            {isCompleted && step.num === 2 && booking && (
-                                <div className="bg-[#111111]/30 border border-green-500/10 rounded-xl px-5 py-3 mt-3">
-                                    <p className="text-gray-400 text-sm">
-                                        <span className="text-gray-500">الموعد:</span>{' '}
-                                        <span className="text-white">
-                                            {new Date(booking.booking_date).toLocaleString('ar-u-nu-latn', {
-                                                weekday: 'long', month: 'long', day: 'numeric',
-                                                hour: '2-digit', minute: '2-digit'
-                                            })}
-                                        </span>
-                                    </p>
-                                </div>
-                            )}
-
-                            {isCompleted && step.num === 4 && diagnostic && (
-                                <div className="bg-[#111111]/30 border border-green-500/10 rounded-xl px-5 py-3 mt-3">
-                                    <p className="text-gray-400 text-sm">
-                                        <span className="text-gray-500">البزنس المناسب:</span>{' '}
-                                        <span className="text-white">{diagnostic.recommended_business}</span>
-                                    </p>
-                                </div>
-                            )}
-
-                            {/* Locked step placeholder */}
-                            {isLocked && (step.num === 4 || step.num === 5) && (
-                                <div className="bg-[#111111]/30 border border-gray-700/30 rounded-2xl p-5 mt-3">
-                                    <div className="flex items-center justify-center gap-3">
-                                        <Lock className="w-4 h-4 text-gray-500" />
-                                        <span className="text-gray-500 text-sm font-bold">
-                                            سيتم فتحها بعد إتمام المراحل السابقة
-                                        </span>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                );
-            })}
         </div>
     );
 }
