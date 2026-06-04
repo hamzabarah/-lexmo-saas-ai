@@ -66,6 +66,7 @@ export async function updateSession(request: NextRequest) {
         '/api/webhooks/stripe',
         '/formation',
         '/diagnostic',
+        '/blog',
     ];
 
     const isPublicRoute = publicRoutes.some(route =>
