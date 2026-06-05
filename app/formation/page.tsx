@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Star, ChevronDown } from "lucide-react";
+import VideoCarousel from "@/components/testimonials/VideoCarousel";
+import ProofGallery from "@/components/testimonials/ProofGallery";
 
 const CTA_TEXT = "سجل قبل إغلاق التسجيل";
 
@@ -218,8 +220,14 @@ export default function FormationPage() {
             {/* Title */}
             {Title}
 
+            {/* Témoignages vidéo (Shorts verticaux) */}
+            <VideoCarousel />
+
             {/* Description */}
             {Description}
+
+            {/* Preuves / captures d'écran (masqué si aucun screen) */}
+            <ProofGallery />
 
             {/* FAQ */}
             {FAQ}
