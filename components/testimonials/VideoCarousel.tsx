@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { ChevronRight, ChevronLeft, Play } from "lucide-react";
+import Flag from "./Flag";
 import {
   getVideos,
   getYouTubeThumbnail,
@@ -68,7 +69,7 @@ function VideoCard({ t }: { t: Testimonial }) {
           <span className="absolute inset-x-0 bottom-0 p-3">
             <span className="flex items-center justify-end gap-1.5">
               <span className="text-sm font-bold text-white">{t.name}</span>
-              <span className="text-base leading-none">{t.country}</span>
+              <Flag code={t.countryCode} />
             </span>
             <span className="mt-1 block text-[12px] leading-snug text-gray-200 line-clamp-2">
               {t.result}

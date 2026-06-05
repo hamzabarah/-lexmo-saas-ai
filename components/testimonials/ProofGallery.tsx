@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
+import Flag from "./Flag";
 import { getScreens, type Testimonial } from "@/data/testimonials";
 
 /**
@@ -65,7 +66,7 @@ export default function ProofGallery({
             <div className="p-3">
               <div className="flex items-center justify-end gap-1.5">
                 <span className="text-sm font-bold text-white">{t.name}</span>
-                <span className="text-base leading-none">{t.country}</span>
+                <Flag code={t.countryCode} />
               </div>
               <p className="mt-1 text-[12px] leading-snug text-gray-400 line-clamp-2">
                 {t.result}
@@ -103,9 +104,10 @@ export default function ProofGallery({
                 className="mx-auto max-h-[80vh] w-auto rounded-xl object-contain"
               />
             )}
-            <figcaption className="mt-3 text-center text-sm text-gray-300">
-              <span className="font-bold text-white">{active.name}</span> {active.country}
-              <span className="mx-2 text-gray-600">·</span>
+            <figcaption className="mt-3 flex flex-wrap items-center justify-center gap-1.5 text-center text-sm text-gray-300">
+              <span className="font-bold text-white">{active.name}</span>
+              <Flag code={active.countryCode} />
+              <span className="text-gray-600">·</span>
               {active.result}
             </figcaption>
           </figure>

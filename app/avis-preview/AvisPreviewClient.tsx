@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Flag from "@/components/testimonials/Flag";
 import {
   getAll,
   ALL_TAGS,
@@ -77,7 +78,7 @@ function VideoCard({ t }: { t: Testimonial }) {
       <div className="p-4 text-right">
         <div className="flex items-center justify-end gap-2">
           <span className="font-bold text-white">{t.name}</span>
-          <span className="text-lg">{t.country}</span>
+          <Flag code={t.countryCode} />
         </div>
         <p className="mt-1 text-sm text-gray-300">{t.result}</p>
         {t.quote && <p className="mt-2 text-sm italic text-gray-500">“{t.quote}”</p>}
@@ -110,7 +111,7 @@ function ScreenCard({ t }: { t: Testimonial }) {
       <div className="p-4 text-right">
         <div className="flex items-center justify-end gap-2">
           <span className="font-bold text-white">{t.name}</span>
-          <span className="text-lg">{t.country}</span>
+          <Flag code={t.countryCode} />
         </div>
         <p className="mt-1 text-sm text-gray-300">{t.result}</p>
         {t.quote && <p className="mt-2 text-sm italic text-gray-500">“{t.quote}”</p>}
