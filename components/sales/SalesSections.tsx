@@ -125,6 +125,18 @@ export function ProgramModules({ withCoaching = false }: { withCoaching?: boolea
   );
 }
 
+/** Carte dorée "المرافقة الشخصية" (offre 497€ uniquement). */
+export function CoachingCard() {
+  return (
+    <div className="rounded-2xl border border-[#C5A04E]/40 bg-gradient-to-b from-[#C5A04E]/10 to-transparent p-5">
+      <h3 className="text-[#C5A04E] font-bold text-[15px]">🤝 المرافقة الشخصية</h3>
+      <p className="mt-2 text-gray-300 text-sm leading-relaxed">
+        متابعة فردية خطوة بخطوة، مراجعة متجرك ومنتجاتك قبل الإطلاق، وأولوية في الإجابة على أسئلتك
+      </p>
+    </div>
+  );
+}
+
 /** 5. Ce que tu reçois aujourd'hui — liste + bandeau prix. */
 export function WhatYouGet({
   withCoaching = false,

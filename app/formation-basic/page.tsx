@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Star, ChevronDown } from "lucide-react";
 import VideoCarousel from "@/components/testimonials/VideoCarousel";
 import ProofGallery from "@/components/testimonials/ProofGallery";
-import { WhyItWorks, ProgramModules, WhatYouGet, IsThisForYou } from "@/components/sales/SalesSections";
+import { WhyItWorks, WhatYouGet, IsThisForYou } from "@/components/sales/SalesSections";
 
 const CTA_TEXT = "سجل قبل إغلاق التسجيل";
 const STRIPE_LINK = "https://buy.stripe.com/9B63cvbhe4bLay17gDgfu06";
@@ -201,9 +201,6 @@ export default function FormationBasicPage() {
 
             {/* Pourquoi ça marche */}
             <WhyItWorks />
-
-            {/* Le programme */}
-            <ProgramModules withCoaching={false} />
 
             {/* Ce que tu reçois */}
             <WhatYouGet

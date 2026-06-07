@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Star, ChevronDown } from "lucide-react";
 import VideoCarousel from "@/components/testimonials/VideoCarousel";
 import ProofGallery from "@/components/testimonials/ProofGallery";
-import { WhyItWorks, ProgramModules, WhatYouGet, IsThisForYou } from "@/components/sales/SalesSections";
+import { WhyItWorks, CoachingCard, WhatYouGet, IsThisForYou } from "@/components/sales/SalesSections";
 
 const CTA_TEXT = "سجل قبل إغلاق التسجيل";
 const STRIPE_LINK = "https://buy.stripe.com/4gM4gz4SQ5fP7lP44rgfu04";
@@ -202,8 +202,8 @@ export default function FormationPage() {
             {/* Pourquoi ça marche */}
             <WhyItWorks />
 
-            {/* Le programme (avec carte coaching) */}
-            <ProgramModules withCoaching={true} />
+            {/* Carte dorée : المرافقة الشخصية (au-dessus de "شنو غادي تستلم") */}
+            <CoachingCard />
 
             {/* Ce que tu reçois */}
             <WhatYouGet
