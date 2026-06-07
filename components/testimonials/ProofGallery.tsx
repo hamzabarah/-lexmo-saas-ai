@@ -38,6 +38,9 @@ export default function ProofGallery({
   return (
     <section className="space-y-4" aria-label={title}>
       <h2 className="text-white text-xl font-bold">{title}</h2>
+      <p className="-mt-2 text-[11px] leading-snug text-gray-500">
+        نتائج فردية لأعضاء طبقوا التكوين — النتائج تختلف من شخص لآخر وغير مضمونة.
+      </p>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {list.map((t) => (
