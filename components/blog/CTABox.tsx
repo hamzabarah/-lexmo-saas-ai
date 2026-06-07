@@ -15,7 +15,7 @@ export default function CTABox({
   buttonText: string;
 }) {
   return (
-    <div className="not-prose my-10 rounded-2xl border border-[#C5A04E]/40 bg-gradient-to-b from-[#C5A04E]/12 to-transparent p-7 text-center sm:p-9">
+    <div className="not-prose my-10 rounded-2xl border border-[#C5A04E]/40 bg-gradient-to-b from-[#C5A04E]/12 to-transparent p-7 text-center sm:p-9 lg:-mx-20">
       <h3 className="text-xl font-bold leading-snug text-white sm:text-2xl">{title}</h3>
       {subtitle && <p className="mt-3 leading-relaxed text-gray-300">{subtitle}</p>}
       {features.length > 0 && (

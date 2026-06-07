@@ -142,7 +142,7 @@ export default async function BlogArticlePage({
         />
       )}
 
-      <article className="mx-auto max-w-3xl px-4 py-14 sm:px-6 lg:py-20">
+      <article className="mx-auto max-w-4xl px-5 py-14 md:px-8 lg:py-20">
         {/* Breadcrumb */}
         <nav className="mb-6 text-sm text-gray-500">
           <Link href="/blog" className="transition-colors hover:text-[#C5A04E]">
@@ -195,7 +195,7 @@ export default async function BlogArticlePage({
         {/* MDX content */}
         <div
           id="article-body"
-          className="prose prose-invert max-w-none
+          className="prose prose-invert lg:prose-lg max-w-none
             prose-headings:text-white prose-headings:font-bold
             prose-h2:mt-12 prose-h2:scroll-mt-20 prose-h2:text-2xl prose-h3:text-xl
             prose-p:leading-[2] prose-p:text-gray-300

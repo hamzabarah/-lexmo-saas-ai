@@ -7,7 +7,7 @@ export default function GeoTabs({ tabs = [] }: { tabs?: string[][] }) {
   const [active, setActive] = useState(0);
 
   return (
-    <div className="not-prose my-8">
+    <div className="not-prose my-8 lg:-mx-20">
       <div className="flex flex-wrap gap-2">
         {tabs.map((t, i) => (
           <button

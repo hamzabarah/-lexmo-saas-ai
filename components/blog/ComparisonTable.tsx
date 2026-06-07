@@ -10,7 +10,7 @@ export default function ComparisonTable({
 }) {
   const data = rows ?? [];
   return (
-    <figure className="not-prose my-8 overflow-x-auto">
+    <figure className="not-prose my-8 overflow-x-auto lg:-mx-20">
       {title && (
         <figcaption className="mb-3 text-center text-base font-bold text-white">{title}</figcaption>
       )}

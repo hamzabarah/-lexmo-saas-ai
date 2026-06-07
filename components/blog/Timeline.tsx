@@ -41,7 +41,7 @@ function Step({ label, text, last }: { label: string; text: string; last: boolea
 /** Frise verticale, points or lumineux, apparition au scroll. */
 export default function Timeline({ steps = [] }: { steps?: string[][] }) {
   return (
-    <div className="not-prose my-8">
+    <div className="not-prose my-8 lg:-mx-20">
       {steps.map((s, i) => (
         <Step key={i} label={s[0]} text={s[1]} last={i === steps.length - 1} />
       ))}
