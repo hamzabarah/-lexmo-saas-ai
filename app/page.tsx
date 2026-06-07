@@ -499,11 +499,17 @@ export default function HomePage() {
         .animate-promo-pulse { animation: promo-pulse 2s ease-in-out infinite; }
       `}</style>
 
-      {/* Header — ECOMY logo */}
-      <header className="w-full py-10 flex justify-center">
-        <h1 className="text-3xl font-bold font-orbitron tracking-tighter text-[#C5A04E]">
-          ECOMY
-        </h1>
+      {/* Header — ECOMY logo + nav */}
+      <header className="w-full py-8 px-6">
+        <div className="mx-auto flex max-w-[1280px] items-center justify-between">
+          <Link href="/blog" className="text-sm font-semibold text-gray-400 transition-colors hover:text-[#C5A04E]">
+            المدونة
+          </Link>
+          <h1 className="text-3xl font-bold font-orbitron tracking-tighter text-[#C5A04E]">
+            ECOMY
+          </h1>
+          <span aria-hidden className="w-[52px]" />
+        </div>
       </header>
 
       {/* 4-Card Grid */}
@@ -766,7 +772,11 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="w-full py-6 text-center">
+      <footer className="w-full py-6 flex items-center justify-center gap-5">
+        <Link href="/blog" className="text-xs text-gray-500 hover:text-[#C5A04E] transition-colors">
+          المدونة
+        </Link>
+        <span className="text-gray-700">·</span>
         <a href="/legal/terms" className="text-xs text-gray-500 hover:text-gray-400 transition-colors">
           Terms & Conditions
         </a>

@@ -26,6 +26,7 @@ export interface BlogFrontmatter {
   slug: string;
   date: string; // ISO date — published
   updated: string; // ISO date — last modified
+  author: string; // toujours une équipe, jamais un nom de personne
   cover: string; // path under /public or absolute URL
   category: string;
   keywords: string[];
@@ -46,6 +47,7 @@ function normalize(data: Record<string, unknown>, fallbackSlug: string): BlogFro
     slug: (data.slug as string) ?? fallbackSlug,
     date: (data.date as string) ?? "",
     updated: (data.updated as string) ?? (data.date as string) ?? "",
+    author: (data.author as string) ?? "فريق أكاديمية إيكومي",
     cover: (data.cover as string) ?? "",
     category: (data.category as string) ?? "",
     keywords: Array.isArray(data.keywords) ? (data.keywords as string[]) : [],

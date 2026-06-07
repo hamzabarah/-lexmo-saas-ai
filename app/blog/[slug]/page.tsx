@@ -6,6 +6,8 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import { Calendar, Tag, ChevronDown } from "lucide-react";
 import BlogCTA from "@/app/components/blog/BlogCTA";
+import ReadingProgress from "@/components/blog/ReadingProgress";
+import { blogMdxComponents } from "@/components/blog/mdxComponents";
 import {
   getAllPosts,
   getPostBySlug,
@@ -17,8 +19,8 @@ import {
 // Fully static: only pre-rendered slugs exist, anything else 404s.
 export const dynamicParams = false;
 
-// Components exposed to MDX content (BlogCTA usable inline).
-const mdxComponents = { BlogCTA };
+// Composants riches exposés au MDX (DirectAnswer, ProofImage, FAQ, CTABox…).
+const mdxComponents = blogMdxComponents;
 
 export function generateStaticParams() {
   return getAllPosts().map((post) => ({ slug: post.slug }));
@@ -44,6 +46,7 @@ export async function generateMetadata({
     title: `${post.title} | ECOMY`,
     description: post.description,
     keywords: post.keywords,
+    authors: [{ name: post.author || "فريق أكاديمية إيكومي" }],
     alternates: { canonical: url },
     openGraph: {
       title: post.title,
@@ -80,7 +83,11 @@ export default async function BlogArticlePage({
     ? post.cover.startsWith("http")
       ? post.cover
       : `${SITE_URL}${post.cover}`
-    : undefined;
+    : `${SITE_URL}/images/ecommerce-banner.png`;
+
+  // L'article fournit-il déjà son propre CTA (<CTABox>) ? Si oui, on n'ajoute
+  // pas le CTA automatique en bas (évite un double appel à l'action).
+  const hasOwnCta = post.content.includes("<CTABox");
 
   // ── JSON-LD: BlogPosting ──
   const blogPostingLd = {
@@ -94,7 +101,7 @@ export default async function BlogArticlePage({
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
     author: {
       "@type": "Organization",
-      name: "ECOMY",
+      name: post.author || "فريق أكاديمية إيكومي",
       url: SITE_URL,
     },
     publisher: {
@@ -121,6 +128,8 @@ export default async function BlogArticlePage({
 
   return (
     <main dir="rtl" lang="ar" className="min-h-screen bg-[#0A0A0A] font-cairo text-white">
+      <ReadingProgress />
+
       {/* Structured data */}
       <script
         type="application/ld+json"
@@ -185,12 +194,13 @@ export default async function BlogArticlePage({
 
         {/* MDX content */}
         <div
+          id="article-body"
           className="prose prose-invert max-w-none
             prose-headings:text-white prose-headings:font-bold
-            prose-h2:mt-10 prose-h2:text-2xl prose-h3:text-xl
-            prose-p:leading-relaxed prose-p:text-gray-300
-            prose-li:text-gray-300 prose-strong:text-white
-            prose-a:text-[#C5A04E] prose-a:no-underline hover:prose-a:underline
+            prose-h2:mt-12 prose-h2:scroll-mt-20 prose-h2:text-2xl prose-h3:text-xl
+            prose-p:leading-[2] prose-p:text-gray-300
+            prose-li:leading-[1.9] prose-li:text-gray-300 prose-strong:text-white
+            prose-a:text-[#C5A04E] prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
             prose-blockquote:border-r-4 prose-blockquote:border-l-0
             prose-blockquote:border-[#C5A04E] prose-blockquote:bg-[#111111]
             prose-blockquote:rounded-lg prose-blockquote:py-1 prose-blockquote:px-5
@@ -202,13 +212,17 @@ export default async function BlogArticlePage({
             components={mdxComponents}
             options={{
               parseFrontmatter: true,
-              mdxOptions: { remarkPlugins: [remarkGfm] },
+              // Contenu de confiance (fichiers MDX du dépôt) : on autorise les
+              // expressions JS pour que les props tableau (rows/items/steps/…)
+              // soient évaluées. blockDangerousJS reste actif par défaut.
+              blockJS: false,
+              mdxOptions: { format: "mdx", remarkPlugins: [remarkGfm] },
             }}
           />
         </div>
 
-        {/* Auto CTA at the end of every article */}
-        <BlogCTA variant="formation" />
+        {/* CTA automatique en bas — seulement si l'article n'a pas son propre CTABox */}
+        {!hasOwnCta && <BlogCTA variant="formation" />}
 
         {/* FAQ section (from front-matter) */}
         {post.faq.length > 0 && (
@@ -268,6 +282,20 @@ export default async function BlogArticlePage({
           </section>
         )}
       </article>
+
+      <footer className="w-full border-t border-white/10 py-6 flex items-center justify-center gap-5">
+        <Link href="/" className="text-xs text-gray-500 hover:text-[#C5A04E] transition-colors">
+          الرئيسية
+        </Link>
+        <span className="text-gray-700">·</span>
+        <Link href="/blog" className="text-xs text-gray-500 hover:text-[#C5A04E] transition-colors">
+          المدونة
+        </Link>
+        <span className="text-gray-700">·</span>
+        <a href="/legal/terms" className="text-xs text-gray-500 hover:text-gray-400 transition-colors">
+          Terms &amp; Conditions
+        </a>
+      </footer>
     </main>
   );
 }
