@@ -86,9 +86,7 @@ export function ProgramModules({ withCoaching = false }: { withCoaching?: boolea
 
   return (
     <section className="space-y-4">
-      <h2 className="text-white text-xl font-bold leading-relaxed">
-        شنو غادي تتعلم بالضبط؟ <span className="text-[#C5A04E]">27 مرحلة عملية</span>
-      </h2>
+      <h2 className="text-white text-xl font-bold">برنامج التكوين 📚</h2>
 
       <div className="space-y-2">
         {modules.map((m, i) => (

@@ -517,7 +517,8 @@ export default function HomePage() {
                 <img src="/images/ecommerce-banner.png" alt="تكوين التجارة الإلكترونية" className="w-full aspect-video object-cover" />
                 <div className="p-5 space-y-3 flex-1 flex flex-col">
                   <StarRating count={5} total="453" />
-                  <h3 className="text-white font-bold text-[15px] leading-snug">اربح من الإنترنت | التجارة الإلكترونية</h3>
+                  <h3 className="text-white font-bold text-[15px] leading-snug">ما غاديش تمشي بوحدك — مرافقة شخصية حتى أول مبيعة 🤝</h3>
+                  <p className="text-gray-400 text-[13px] leading-relaxed">نفس النظام الكامل + خبير يراجع متجرك ويرافقك خطوة بخطوة نحو أول 1000€ — أسرع وأأمن طريق</p>
                   <div className="flex items-center gap-3 flex-wrap">
                     <span className="text-gray-500 text-xl font-black line-through" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>1970 €</span>
                     <span className="text-white text-xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>497 €</span>
@@ -539,7 +540,8 @@ export default function HomePage() {
                 <img src="/images/ecommerce-banner.png" alt="تكوين التجارة الإلكترونية" className="w-full aspect-video object-cover" />
                 <div className="p-5 space-y-3 flex-1 flex flex-col">
                   <StarRating count={5} total="453" />
-                  <h3 className="text-white font-bold text-[15px] leading-snug">اربح من الإنترنت | التجارة الإلكترونية</h3>
+                  <h3 className="text-white font-bold text-[15px] leading-snug">ما غاديش تمشي بوحدك — مرافقة شخصية حتى أول مبيعة 🤝</h3>
+                  <p className="text-gray-400 text-[13px] leading-relaxed">نفس النظام الكامل + خبير يراجع متجرك ويرافقك خطوة بخطوة نحو أول 1000€ — أسرع وأأمن طريق</p>
                   <div className="flex items-center gap-3 flex-wrap">
                     <span className="text-gray-500 text-xl font-black line-through" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>1970 €</span>
                     <span className="text-white text-xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>497 €</span>
@@ -563,7 +565,8 @@ export default function HomePage() {
                 <img src="/images/ecommerce-banner.png" alt="تكوين التجارة الإلكترونية — بدون مرافقة" className="w-full aspect-video object-cover" />
                 <div className="p-5 space-y-3 flex-1 flex flex-col">
                   <StarRating count={5} total="453" />
-                  <h3 className="text-white font-bold text-[15px] leading-snug">اربح من الإنترنت | الطريق نحو أول 1000€</h3>
+                  <h3 className="text-white font-bold text-[15px] leading-snug">أطلق متجرك بنفسك — من الصفر إلى أول مبيعة أونلاين 🚀</h3>
+                  <p className="text-gray-400 text-[13px] leading-relaxed">النظام الكامل بين يديك: خطة واضحة نحو أول 1000€ — تطبق بوتيرتك، حتى لو ما عندك أي خبرة</p>
                   <div className="flex items-center gap-3 flex-wrap">
                     <span className="text-gray-500 text-xl font-black line-through" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>970 €</span>
                     <span className="text-white text-xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>197 €</span>
@@ -585,7 +588,8 @@ export default function HomePage() {
                 <img src="/images/ecommerce-banner.png" alt="تكوين التجارة الإلكترونية — بدون مرافقة" className="w-full aspect-video object-cover" />
                 <div className="p-5 space-y-3 flex-1 flex flex-col">
                   <StarRating count={5} total="453" />
-                  <h3 className="text-white font-bold text-[15px] leading-snug">اربح من الإنترنت | الطريق نحو أول 1000€</h3>
+                  <h3 className="text-white font-bold text-[15px] leading-snug">أطلق متجرك بنفسك — من الصفر إلى أول مبيعة أونلاين 🚀</h3>
+                  <p className="text-gray-400 text-[13px] leading-relaxed">النظام الكامل بين يديك: خطة واضحة نحو أول 1000€ — تطبق بوتيرتك، حتى لو ما عندك أي خبرة</p>
                   <div className="flex items-center gap-3 flex-wrap">
                     <span className="text-gray-500 text-xl font-black line-through" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>970 €</span>
                     <span className="text-white text-xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>197 €</span>
