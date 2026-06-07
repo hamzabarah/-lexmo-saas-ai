@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { X } from "lucide-react";
+import { useRef, useState } from "react";
+import { ChevronRight, ChevronLeft } from "lucide-react";
 import Flag from "./Flag";
+import Lightbox from "./Lightbox";
 import { getScreens, type Testimonial } from "@/data/testimonials";
-
-const PAGE_SIZE = 12;
 
 /** featured:true en premier, ordre stable pour le reste. */
 function orderFeaturedFirst(list: Testimonial[]): Testimonial[] {
@@ -13,10 +12,44 @@ function orderFeaturedFirst(list: Testimonial[]): Testimonial[] {
 }
 
 /**
- * Galerie de captures d'écran (preuves) en mosaïque "masonry" (CSS columns).
- * Les captures sont des conversations verticales longues : chaque image garde
- * son ratio naturel et s'affiche ENTIÈRE (jamais recadrée).
- * Pagination "voir plus" (+12) et lightbox plein écran scrollable.
+ * Carte preuve : l'image (conversation verticale) s'affiche ENTIÈRE dans une
+ * zone à hauteur fixe avec object-contain (jamais recadrée, fond sombre derrière).
+ */
+function ProofCard({ t, onOpen }: { t: Testimonial; onOpen: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      className="group relative shrink-0 snap-start overflow-hidden rounded-2xl border border-[#C5A04E]/15 bg-[#111111] text-right transition hover:border-[#C5A04E]/40 w-[72vw] sm:w-[320px]"
+      aria-label={`تكبير صورة ${t.name}`}
+    >
+      <div className="flex h-[420px] w-full items-center justify-center bg-black sm:h-[460px]">
+        {t.image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={t.image}
+            alt={t.name}
+            loading="lazy"
+            className="h-full w-full object-contain transition-transform duration-200 group-hover:scale-[1.02]"
+          />
+        ) : (
+          <span className="text-xs text-gray-500">صورة مفقودة</span>
+        )}
+      </div>
+      <div className="p-3">
+        <div className="flex items-center justify-end gap-1.5">
+          <span className="text-sm font-bold text-white">{t.name}</span>
+          <Flag code={t.countryCode} />
+        </div>
+        <p className="mt-1 text-[12px] leading-snug text-gray-400 line-clamp-2">{t.result}</p>
+      </div>
+    </button>
+  );
+}
+
+/**
+ * Carrousel de captures d'écran (preuves) — défilement horizontal scroll-snap,
+ * swipe sur mobile, flèches RTL sur desktop. Identique en UX à VideoCarousel.
  * Se masque automatiquement si la bibliothèque ne contient aucun screen.
  */
 export default function ProofGallery({
@@ -29,123 +62,60 @@ export default function ProofGallery({
   screens?: Testimonial[];
 }) {
   const list = orderFeaturedFirst(screens ?? getScreens());
+  const scrollerRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState<Testimonial | null>(null);
-  const [visible, setVisible] = useState(PAGE_SIZE);
-
-  useEffect(() => {
-    if (!active) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setActive(null);
-    };
-    document.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
-    };
-  }, [active]);
 
   if (list.length === 0) return null;
 
-  const shown = list.slice(0, visible);
-  const remaining = list.length - visible;
+  const scrollByCards = (dir: number) => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir * Math.round(el.clientWidth * 0.8), behavior: "smooth" });
+  };
 
   return (
     <section className="space-y-4" aria-label={title}>
-      <div className="space-y-1">
-        <h2 className="text-white text-xl font-bold">{title}</h2>
-        {subtitle && <p className="text-[13px] leading-snug text-gray-500">{subtitle}</p>}
-        <p className="text-[11px] leading-snug text-gray-500">
-          نتائج فردية لأعضاء طبقوا التكوين — النتائج تختلف من شخص لآخر وغير مضمونة.
-        </p>
+      <div className="flex items-start justify-between gap-3">
+        <div className="space-y-1">
+          <h2 className="text-white text-xl font-bold">{title}</h2>
+          {subtitle && <p className="text-[13px] leading-snug text-gray-500">{subtitle}</p>}
+          <p className="text-[11px] leading-snug text-gray-500">
+            نتائج فردية لأعضاء طبقوا التكوين — النتائج تختلف من شخص لآخر وغير مضمونة.
+          </p>
+        </div>
+
+        {/* Flèches de navigation — desktop uniquement (mobile = swipe) */}
+        <div className="hidden lg:flex items-center gap-2 shrink-0 pt-1">
+          <button
+            type="button"
+            onClick={() => scrollByCards(1)}
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#C5A04E]/20 text-[#C5A04E] transition hover:bg-[#C5A04E]/10"
+            aria-label="عرض المزيد"
+          >
+            {/* RTL : "suivant" pointe vers la gauche */}
+            <ChevronLeft size={18} />
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollByCards(-1)}
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#C5A04E]/20 text-[#C5A04E] transition hover:bg-[#C5A04E]/10"
+            aria-label="السابق"
+          >
+            <ChevronRight size={18} />
+          </button>
+        </div>
       </div>
 
-      {/* Masonry : 2 colonnes mobile · 3 tablette · 4 desktop */}
-      <div className="columns-2 gap-3 sm:columns-3 lg:columns-4">
-        {shown.map((t) => (
-          <button
-            key={t.id}
-            type="button"
-            onClick={() => setActive(t)}
-            className="group mb-3 block w-full break-inside-avoid overflow-hidden rounded-2xl border border-[#C5A04E]/15 bg-[#111111] text-right transition hover:border-[#C5A04E]/40"
-            aria-label={`تكبير صورة ${t.name}`}
-          >
-            {t.image ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={t.image}
-                alt={t.name}
-                loading="lazy"
-                className="block w-full h-auto transition-transform duration-200 group-hover:scale-[1.02]"
-              />
-            ) : (
-              <span className="flex h-40 items-center justify-center text-xs text-gray-500">
-                صورة مفقودة
-              </span>
-            )}
-            <div className="p-3">
-              <div className="flex items-center justify-end gap-1.5">
-                <span className="text-sm font-bold text-white">{t.name}</span>
-                <Flag code={t.countryCode} />
-              </div>
-              <p className="mt-1 text-[12px] leading-snug text-gray-400 line-clamp-2">
-                {t.result}
-              </p>
-            </div>
-          </button>
+      <div
+        ref={scrollerRef}
+        className="flex gap-3 overflow-x-auto overscroll-x-contain scroll-smooth pb-2 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {list.map((t) => (
+          <ProofCard key={t.id} t={t} onOpen={() => setActive(t)} />
         ))}
       </div>
 
-      {/* Bouton "voir plus" */}
-      {remaining > 0 && (
-        <div className="flex justify-center pt-1">
-          <button
-            type="button"
-            onClick={() => setVisible((v) => v + PAGE_SIZE)}
-            className="rounded-xl border border-[#C5A04E]/40 bg-[#C5A04E]/5 px-6 py-3 text-sm font-bold text-[#C5A04E] transition hover:bg-[#C5A04E]/10"
-          >
-            شاهد المزيد من الإثباتات 📊 (+{Math.min(PAGE_SIZE, remaining)})
-          </button>
-        </div>
-      )}
-
-      {/* Lightbox plein écran — scrollable pour lire la conversation entière */}
-      {active && (
-        <div
-          className="fixed inset-0 z-[60] overflow-y-auto overscroll-contain bg-black/90 p-4"
-          onClick={() => setActive(null)}
-          role="dialog"
-          aria-modal="true"
-        >
-          <button
-            type="button"
-            onClick={() => setActive(null)}
-            className="fixed right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
-            aria-label="إغلاق"
-          >
-            <X size={20} />
-          </button>
-          <figure
-            className="mx-auto max-w-2xl py-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {active.image && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={active.image}
-                alt={active.name}
-                className="block w-full h-auto rounded-xl"
-              />
-            )}
-            <figcaption className="mt-3 flex flex-wrap items-center justify-center gap-1.5 text-center text-sm text-gray-300">
-              <span className="font-bold text-white">{active.name}</span>
-              <Flag code={active.countryCode} />
-              <span className="text-gray-600">·</span>
-              {active.result}
-            </figcaption>
-          </figure>
-        </div>
-      )}
+      <Lightbox active={active} onClose={() => setActive(null)} />
     </section>
   );
 }

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Star, ChevronDown } from "lucide-react";
 import VideoCarousel from "@/components/testimonials/VideoCarousel";
 import ProofGallery from "@/components/testimonials/ProofGallery";
+import CustomerReviews from "@/components/testimonials/CustomerReviews";
 
 const CTA_TEXT = "سجل قبل إغلاق التسجيل";
 
@@ -121,72 +122,6 @@ export default function FormationPage() {
     </div>
   );
 
-  const Reviews = (
-    <div className="space-y-5">
-      <h2 className="text-white text-xl font-bold">تقييمات العملاء</h2>
-
-      {/* Overall rating */}
-      <div className="flex flex-col sm:flex-row gap-6">
-        <div className="flex flex-col items-center gap-1 shrink-0">
-          <span className="text-5xl font-black text-white" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>5.0</span>
-          <div className="flex gap-0.5">
-            {[...Array(5)].map((_, i) => (
-              <Star key={i} size={18} className="text-[#D4A843] fill-[#D4A843]" />
-            ))}
-          </div>
-          <span className="text-gray-500 text-sm">453 تقييم</span>
-        </div>
-        <div className="flex-1 space-y-1.5">
-          {[5, 4, 3, 2, 1].map((stars) => (
-            <div key={stars} className="flex items-center gap-3">
-              <span className="text-sm text-gray-500 w-4 text-center" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{stars}</span>
-              <Star size={12} className="text-[#D4A843] fill-[#D4A843] shrink-0" />
-              <div className="flex-1 h-2.5 bg-[#2A2A2A] rounded-full overflow-hidden">
-                <div className="h-full bg-[#D4A843] rounded-full" style={{ width: stars === 5 ? '100%' : '0%' }} />
-              </div>
-              <span className="text-sm text-gray-500 w-8 text-center" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{stars === 5 ? 453 : 0}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Separator */}
-      <div className="border-t border-[#C5A04E]/10" />
-
-      {/* Sub-header */}
-      <div className="flex items-center justify-between">
-        <h3 className="text-white font-bold text-base">أفضل التقييمات</h3>
-        <a href="#reviews" className="text-[#C5A04E] text-sm font-semibold hover:underline">عرض كل التقييمات</a>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {[
-          { flag: "\uD83C\uDDF2\uD83C\uDDE6", name: "يوسف", date: "منذ يومين", text: "والله ما كنتش كنصدق أنني غادي نبيع أونلاين، ودابا كاين نهار ما مشا بلا طلبيات. الشرح بسيط وواضح وكل مرحلة مبنية على اللي قبلها. شكرا على هاد البرنامج الرائع!" },
-          { flag: "\uD83C\uDDE9\uD83C\uDDFF", name: "أمين", date: "منذ 5 أيام", text: "من أحسن الدورات اللي شفتها في حياتي. بدأت من الصفر وما عندي حتى تجربة، وخلال أسبوعين حققت أول مبيعة! ما توقعتش يكون الأمر سهل بهاد الشكل" },
-          { flag: "\uD83C\uDDF8\uD83C\uDDE6", name: "عبدالله", date: "منذ أسبوع", text: "أفضل استثمار عملته في حياتي. المحتوى شامل ومفصل والشرح واضح جداً حتى للمبتدئين. حققت أول €2000 في الشهر الأول من التطبيق" },
-          { flag: "\uD83C\uDDF9\uD83C\uDDF3", name: "سامي", date: "منذ أسبوعين", text: "برنامج ممتاز بصح! كنت خايف نبدأ لأني ما عندي خبرة، بس الدورة شرحت كل شي من الصفر. ودابا عندي متجر كيبيع كل يوم \uD83D\uDD25" },
-          { flag: "\uD83C\uDDEA\uD83C\uDDEC", name: "محمد", date: "منذ 3 أسابيع", text: "ربنا يجزيك خير، الدورة دي غيرت حياتي. من أول أسبوع بدأت أشوف نتايج حقيقية. الشرح عملي ومباشر ومفيش كلام فاضي. أنصح بيها أي حد عايز يبدأ في التجارة الإلكترونية" },
-        ].map((review, i) => (
-          <div key={i} className="bg-[#111111] border border-[#C5A04E]/10 rounded-2xl p-5 space-y-3" dir="rtl">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span style={{ fontSize: '24px', lineHeight: 1 }}>{review.flag}</span>
-                <span className="text-white font-bold text-sm">{review.name}</span>
-              </div>
-              <span className="text-gray-500 text-xs">{review.date}</span>
-            </div>
-            <div className="flex gap-0.5">
-              {[...Array(5)].map((_, j) => (
-                <Star key={j} size={14} className="text-[#D4A843] fill-[#D4A843]" />
-              ))}
-            </div>
-            <p className="text-gray-300 text-sm leading-relaxed">{review.text}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-
   const CTAButton = (
     <a
       ref={ctaRef}
@@ -232,8 +167,8 @@ export default function FormationPage() {
             {/* FAQ */}
             {FAQ}
 
-            {/* Reviews */}
-            {Reviews}
+            {/* Reviews (générés depuis la bibliothèque) */}
+            <CustomerReviews />
           </div>
 
           {/* ===== RIGHT SIDEBAR (sticky) — desktop only ===== */}
