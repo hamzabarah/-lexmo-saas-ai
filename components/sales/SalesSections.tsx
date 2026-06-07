@@ -30,8 +30,8 @@ export function WhyItWorks() {
   ];
 
   return (
-    <section className="space-y-6">
-      <h2 className="text-white text-2xl font-bold text-center">لماذا هذا النظام يخدم؟</h2>
+    <section className="space-y-5">
+      <h2 className="text-white text-xl font-bold">لماذا هذا النظام يخدم؟</h2>
       <div className="grid gap-4 md:grid-cols-3">
         {cards.map((c) => (
           <div
@@ -85,10 +85,9 @@ export function ProgramModules({ withCoaching = false }: { withCoaching?: boolea
   ];
 
   return (
-    <section className="space-y-5">
-      <h2 className="text-white text-2xl font-bold text-center leading-relaxed">
-        شنو غادي تتعلم بالضبط؟
-        <span className="block text-[#C5A04E] text-lg mt-1">27 مرحلة عملية</span>
+    <section className="space-y-4">
+      <h2 className="text-white text-xl font-bold leading-relaxed">
+        شنو غادي تتعلم بالضبط؟ <span className="text-[#C5A04E]">27 مرحلة عملية</span>
       </h2>
 
       <div className="space-y-2">
@@ -149,8 +148,8 @@ export function WhatYouGet({
   }
 
   return (
-    <section className="space-y-5">
-      <h2 className="text-white text-2xl font-bold text-center">شنو غادي تستلم فور تسجيلك اليوم؟ 🎁</h2>
+    <section className="space-y-4">
+      <h2 className="text-white text-xl font-bold">شنو غادي تستلم فور تسجيلك اليوم؟ 🎁</h2>
 
       <div className="space-y-3">
         {items.map((it, i) => (
@@ -191,8 +190,8 @@ export function IsThisForYou() {
   ];
 
   return (
-    <section className="space-y-6">
-      <h2 className="text-white text-2xl font-bold text-center">هل هذا التكوين لك؟</h2>
+    <section className="space-y-5">
+      <h2 className="text-white text-xl font-bold">هل هذا التكوين لك؟</h2>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded-2xl border border-emerald-700/40 bg-emerald-950/30 p-5">
           <h3 className="text-emerald-400 font-bold text-base">✅ هذا التكوين لك إذا كنت:</h3>
