@@ -82,10 +82,12 @@ function VideoCard({ t }: { t: Testimonial }) {
 }
 
 export default function VideoCarousel({
-  title = "شوف نتائج طلابنا بأعينهم 🎥",
+  title = "ماذا يقول طلابنا عن التكوين؟ 🎥",
+  subtitle = "آراء حقيقية بدون فلتر — تجربتهم مع المحتوى والمرافقة",
   videos,
 }: {
   title?: string;
+  subtitle?: string;
   videos?: Testimonial[];
 }) {
   const list = orderFeaturedFirst(videos ?? getVideos());
@@ -101,11 +103,14 @@ export default function VideoCarousel({
 
   return (
     <section className="space-y-4" aria-label={title}>
-      <div className="flex items-center justify-between gap-3">
-        <h2 className="text-white text-xl font-bold">{title}</h2>
+      <div className="flex items-start justify-between gap-3">
+        <div className="space-y-1">
+          <h2 className="text-white text-xl font-bold">{title}</h2>
+          {subtitle && <p className="text-[13px] leading-snug text-gray-500">{subtitle}</p>}
+        </div>
 
         {/* Flèches de navigation — desktop uniquement (mobile = swipe) */}
-        <div className="hidden lg:flex items-center gap-2">
+        <div className="hidden lg:flex items-center gap-2 shrink-0 pt-1">
           <button
             type="button"
             onClick={() => scrollByCards(1)}
