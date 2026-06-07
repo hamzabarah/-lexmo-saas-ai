@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import { Star, ChevronDown } from "lucide-react";
 import VideoCarousel from "@/components/testimonials/VideoCarousel";
 import ProofGallery from "@/components/testimonials/ProofGallery";
-import CustomerReviews from "@/components/testimonials/CustomerReviews";
 
 const CTA_TEXT = "سجل قبل إغلاق التسجيل";
 const STRIPE_LINK = "https://buy.stripe.com/9B63cvbhe4bLay17gDgfu06";
@@ -171,14 +170,11 @@ export default function FormationBasicPage() {
             {/* Description */}
             {Description}
 
-            {/* Preuves / captures d'écran (masqué si aucun screen) */}
+            {/* Section unique : تقييمات وإثباتات (note + histogramme + carrousel preuves) */}
             <ProofGallery />
 
             {/* FAQ */}
             {FAQ}
-
-            {/* Reviews (générés depuis la bibliothèque) */}
-            <CustomerReviews />
           </div>
 
           {/* ===== RIGHT SIDEBAR (sticky) — desktop only ===== */}
