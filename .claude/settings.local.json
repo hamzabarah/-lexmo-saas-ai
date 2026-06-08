@@ -1,6 +1,14 @@
 {
   "permissions": {
     "allow": [
+      "Write",
+      "Edit",
+      "Bash",
+      "Bash(*)",
+      "Bash(npm run build:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
       "Bash(grep -rn \"CREATE TABLE.*task\\\\|from.*task\" supabase/*.sql app/actions/*.ts)",
       "Bash(npx next build)",
       "Bash(npm install resend)",
@@ -14,7 +22,18 @@
       "Read(//mnt/c/Users/user/**)",
       "Bash(mkdir -p public/images/blog/covers)",
       "Bash(cp /c/Users/user/Downloads/_covers_extract/covers/exports/*.png public/images/blog/covers/)",
-      "Read(//c/c/Users/user/Desktop/lexmo-saas-ai/public/images/blog/**)"
+      "Read(//c/c/Users/user/Desktop/lexmo-saas-ai/public/images/blog/**)",
+      "Bash(grep -rn '\"\"' content/blog/kayfa-ahmi-markati-min-annaskh.mdx content/blog/kayfa-abni-marka-khassa.mdx content/blog/ma-houa-albranding.mdx content/blog/kayfa-ohawil-dropshipping-ila-marka.mdx content/blog/amazon-fba-am-almarka-alkhassa.mdx content/blog/afdal-tatbiqat-shopify.mdx content/blog/kayfa-arbit-wasail-addafe-shopify.mdx content/blog/kayfa-ohassin-suraat-matjar-shopify.mdx content/blog/hal-yumkin-matjar-shopify-bilarabiya.mdx content/blog/shopify-am-woocommerce.mdx)",
+      "Bash(echo \"exit grep: $? \\(1 = no matches = good\\)\")",
+      "Bash(grep -c ',a_faire$' content/editorial/plan.csv)",
+      "Bash(echo \"Remaining a_faire in plan.csv: $\\(grep -c ',a_faire$' content/editorial/plan.csv\\)\")",
+      "Bash(grep -c ',publie$' content/editorial/plan.csv)",
+      "Bash(echo \"Total publie: $\\(grep -c ',publie$' content/editorial/plan.csv\\)\")",
+      "Skill(update-config)",
+      "Skill(update-config:*)",
+      "Bash(cat .claude/settings.local.json)",
+      "Bash(cat .claude/settings.json)",
+      "Bash(grep -n \"claude\" .gitignore)"
     ]
   }
 }
