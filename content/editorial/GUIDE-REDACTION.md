@@ -37,3 +37,13 @@
 - `<BlogCTA variant="diagnostic" />` — CTA diagnostic.
 
 Rappel : ids = clés réelles de `data/testimonials.ts`. Vérifier qu'ils existent avant de publier.
+
+## Sélection des preuves (carrousels)
+
+Les carrousels ne sont JAMAIS choisis au hasard. Pour chaque article :
+- VIDÉOS = crédibilité : choisir des témoignages dont le profil colle au sujet/à l'audience de l'article (pays, genre, situation).
+- SCREENS = résultats : montrer une GAMME (du petit chiffre au gros) et des PROFILS VARIÉS (hommes/femmes, plusieurs nationalités), pas toujours les mêmes.
+- Sujets sensibles (halal, légal, taxes) : vidéos de crédibilité uniquement, aucune capture de gains.
+- Sur l'ensemble du blog, répartir les preuves pour éviter qu'un même témoignage revienne sur trop d'articles.
+
+> Champs utiles dans `data/testimonials.ts` pour appliquer cette règle : `gender` (homme/femme), `countryCode` (pays), `tags` (profil/situation), et `resultLevel` (petit/moyen/gros) pour doser la gamme des screens.
