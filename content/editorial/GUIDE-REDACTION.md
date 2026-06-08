@@ -8,6 +8,7 @@
 - Tutoiement direct du lecteur, phrases courtes, zéro remplissage.
 - INTERDIT : mentionner le nom du propriétaire du site. L'auteur est toujours **"فريق أكاديمية إيكومي"**.
 - Positionnement constant : le **"نظام الماركة"** est notre différenciateur vs le dropshipping bas de gamme.
+- **SEO — graphie latine** : Termes techniques toujours avec graphie latine entre parenthèses à la 1re mention : الدروبشيبينغ (dropshipping), شوبيفاي (Shopify), الدفع عند الاستلام (COD)… — au Maghreb on cherche en lettres latines.
 
 ## Structure obligatoire (le moule des 2 articles de référence)
 
@@ -21,7 +22,7 @@
 6. **CTA** : `<BlogCTA variant="diagnostic" />` au premier tiers ; le CTA formation de fin est **automatique**, ne pas le dupliquer (ne pas ajouter de `<CTABox>` ni de second `<BlogCTA>` formation).
 7. **Section localisation** quand pertinent : المغرب / الجزائر / أوروبا / الخليج (devises locales DH/DA/€).
 8. **Maillage interne** : 1 à 2 liens vers les articles déjà publiés du blog (URLs relatives `/blog/...`).
-9. **Longueur cible** : 1500-2200 mots. Battre le n°1 actuel en **profondeur**, pas en remplissage.
+9. **Longueur** : Rédige D'EMBLÉE 1600-2200 mots avec des sections de fond réelles (exemple chiffré concret, cas pratique étape par étape, mini étude de cas). Ne jamais rallonger artificiellement après coup — la longueur vient du fond, pas du remplissage.
 10. **JAMAIS de promesses de revenus garantis** ; toujours "نتائج موثقة" + nuance "ليس للجميع".
 
 ## Composants disponibles (components/blog/)
