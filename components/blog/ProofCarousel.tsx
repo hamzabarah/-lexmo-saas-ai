@@ -1,28 +1,55 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import Flag from "@/components/testimonials/Flag";
 import Lightbox from "@/components/testimonials/Lightbox";
 import { getById, type Testimonial } from "@/data/testimonials";
 
-/** Carte preuve : image entière (w-full h-auto), clic = lightbox. */
-function Card({ t, onOpen }: { t: Testimonial; onOpen: () => void }) {
+/** Carte preuve : image entière (w-full h-auto), clic = lightbox.
+ *  `priority` : les 1ères cartes chargent leur image immédiatement ;
+ *  les suivantes via IntersectionObserver (rootMargin 400px) pour s'afficher plus tôt au scroll. */
+function Card({ t, onOpen, priority = false }: { t: Testimonial; onOpen: () => void; priority?: boolean }) {
+  const cardRef = useRef<HTMLButtonElement>(null);
+  const [inView, setInView] = useState(priority);
+
+  useEffect(() => {
+    if (priority || inView) return;
+    const el = cardRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          obs.disconnect();
+        }
+      },
+      { rootMargin: "400px" },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [priority, inView]);
+
   return (
     <button
+      ref={cardRef}
       type="button"
       onClick={onOpen}
       className="group shrink-0 snap-start overflow-hidden rounded-2xl border border-[#C5A04E]/15 bg-[#111111] text-right transition hover:border-[#C5A04E]/40 w-[65vw] sm:w-[300px]"
       aria-label={`عرض صورة ${t.name} كاملة`}
     >
-      {t.image && (
+      {t.image && (priority || inView) ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={t.image}
           alt={t.name}
-          loading="lazy"
+          loading={priority ? "eager" : "lazy"}
+          fetchPriority={priority ? "high" : "auto"}
           className="block h-auto w-full transition-transform duration-200 group-hover:scale-[1.02]"
         />
+      ) : (
+        // Placeholder qui réserve l'espace tant que l'image n'est pas chargée.
+        <div className="w-full bg-[#1A1A1A]" style={{ aspectRatio: "4 / 5" }} />
       )}
       <div className="p-3">
         <div className="flex items-center justify-end gap-1.5">
@@ -80,8 +107,8 @@ export default function ProofCarousel({ ids = [] }: { ids?: string[] }) {
         ref={scrollerRef}
         className="flex items-start gap-3 overflow-x-auto overscroll-x-contain scroll-smooth pb-2 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
       >
-        {list.map((t) => (
-          <Card key={t.id} t={t} onOpen={() => setActive(t)} />
+        {list.map((t, i) => (
+          <Card key={t.id} t={t} onOpen={() => setActive(t)} priority={i < 3} />
         ))}
       </div>
 

@@ -1,18 +1,40 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronRight, ChevronLeft, Play } from "lucide-react";
 import Flag from "@/components/testimonials/Flag";
 import { getById, getYouTubeThumbnail, getYouTubeId, type Testimonial } from "@/data/testimonials";
 
-/** Carte vidéo 9:16 — façade YouTube lazy (l'iframe ne charge qu'au clic). */
-function Card({ t }: { t: Testimonial }) {
+/** Carte vidéo 9:16 — façade YouTube lazy (l'iframe ne charge qu'au clic).
+ *  `priority` : les 1ères cartes chargent leur vignette immédiatement ;
+ *  les suivantes via IntersectionObserver (rootMargin 400px) pour s'afficher plus tôt au scroll. */
+function Card({ t, priority = false }: { t: Testimonial; priority?: boolean }) {
   const [playing, setPlaying] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(priority);
   const thumb = getYouTubeThumbnail(t.videoUrl);
   const ytId = getYouTubeId(t.videoUrl);
 
+  useEffect(() => {
+    if (priority || inView) return;
+    const el = cardRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          obs.disconnect();
+        }
+      },
+      { rootMargin: "400px" },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [priority, inView]);
+
   return (
     <div
+      ref={cardRef}
       className="relative shrink-0 snap-start overflow-hidden rounded-2xl border border-[#C5A04E]/15 bg-[#111111] w-[65vw] sm:w-[300px]"
       style={{ aspectRatio: "9 / 16" }}
     >
@@ -31,9 +53,15 @@ function Card({ t }: { t: Testimonial }) {
           className="group absolute inset-0 h-full w-full text-right"
           aria-label={`تشغيل فيديو ${t.name}`}
         >
-          {thumb ? (
+          {thumb && (priority || inView) ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={thumb} alt={t.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+            <img
+              src={thumb}
+              alt={t.name}
+              loading={priority ? "eager" : "lazy"}
+              fetchPriority={priority ? "high" : "auto"}
+              className="absolute inset-0 h-full w-full object-cover"
+            />
           ) : (
             <span className="absolute inset-0 bg-[#1A1A1A]" />
           )}
@@ -98,8 +126,8 @@ export default function VideoCarousel({ ids = [] }: { ids?: string[] }) {
         ref={scrollerRef}
         className="flex items-start gap-3 overflow-x-auto overscroll-x-contain scroll-smooth pb-2 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
       >
-        {list.map((t) => (
-          <Card key={t.id} t={t} />
+        {list.map((t, i) => (
+          <Card key={t.id} t={t} priority={i < 3} />
         ))}
       </div>
     </div>
