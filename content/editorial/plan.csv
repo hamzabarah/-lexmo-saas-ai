@@ -178,9 +178,9 @@ ordre,titre_cible,slug,format_snippet,concurrent_a_battre,preuves,statut
 177,سترايب (Stripe): كيف أفتح حساباً وأنا في بلد غير مدعوم؟,stripe-fi-balad-ghayr-madaum,liste numérotée,à auditer (SERP au moment de la rédaction),paiements (solutions Stripe),publie
 178,كم تستغرق مدة الشحن؟ وكيف أتعامل مع زبون مستعجل؟,kam-tastaghriq-muddat-ashahn,réponse directe + liste numérotée,à auditer (SERP au moment de la rédaction),logistique / service client,publie
 179,كيف أتعامل مع طلبات الاسترجاع والاستبدال؟,kayfa-ataamal-mae-alistirjae,liste numérotée,à auditer (SERP au moment de la rédaction),SAV (retours/échanges),publie
-180,ماذا أفعل عندما يصل المنتج تالفاً للزبون؟,madha-afal-montaj-talif,réponse directe + liste numérotée,à auditer (SERP au moment de la rédaction),gestion litiges / SAV,a_faire
-181,كيف أتابع طلباتي وأرسلها أوتوماتيكياً؟,kayfa-atabie-talabati,liste numérotée,à auditer (SERP au moment de la rédaction),automatisation fulfillment,a_faire
-182,التغليف والباكيجينغ: كيف يضاعف قيمة ماركتك؟,attaghlif-walbakaging,liste numérotée,à auditer (SERP au moment de la rédaction),branding (packaging × valeur),a_faire
+180,ماذا أفعل عندما يصل المنتج تالفاً للزبون؟,madha-afal-montaj-talif,réponse directe + liste numérotée,à auditer (SERP au moment de la rédaction),gestion litiges / SAV,publie
+181,كيف أتابع طلباتي وأرسلها أوتوماتيكياً؟,kayfa-atabie-talabati,liste numérotée,à auditer (SERP au moment de la rédaction),automatisation fulfillment,publie
+182,التغليف والباكيجينغ: كيف يضاعف قيمة ماركتك؟,attaghlif-walbakaging,liste numérotée,à auditer (SERP au moment de la rédaction),branding (packaging × valeur),publie
 183,كيف أختار وكيل شحن (Agent) موثوق؟,kayfa-akhtar-wakil-shahn,liste numérotée,à auditer (SERP au moment de la rédaction),sourcing agent fiable,a_faire
 184,خدمة العملاء للمتاجر: الرسائل الجاهزة والأدوات,khidmat-alumalaa-lilmatajir,liste numérotée,à auditer (SERP au moment de la rédaction),outils service client,a_faire
 185,حكم بيع ما لا تملك في الدروبشيبينغ: آراء العلماء والحلول,hukm-baye-ma-la-tamlik,réponse directe nuancée + sources,à auditer (SERP au moment de la rédaction),crédibilité religieuse (pas de preuves de gains),a_faire
