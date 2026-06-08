@@ -62,3 +62,131 @@ ordre,titre_cible,slug,format_snippet,concurrent_a_battre,preuves,statut
 61,كيف أحوّل متجري إلى ماركة تُباع بملايين؟,kayfa-ohawil-matjari-marka-bimalayin,liste numérotée,à auditer (SERP au moment de la rédaction),preuves grosses sorties / scaling (résultats documentés),publie
 62,قصة نجاح موثقة لطالب,qissat-najah-muwathaqa-talib,récit documenté (étude de cas),à auditer (SERP au moment de la rédaction),"preuve étudiant (vidéo + screens, prénom seul)",publie
 63,خارطة الطريق الكاملة للمبتدئ في التجارة الإلكترونية 2026,kharitat-attariq-lil-mobtadi,liste numérotée (étapes),à auditer (SERP au moment de la rédaction),preuves parcours complet (vidéos + premiers résultats),publie
+64,كم أحتاج من المال لبدء التجارة الإلكترونية؟,kam-ahtaj-min-almal-lilbidaya,réponse directe chiffrée,à auditer (SERP au moment de la rédaction),fourchettes réelles par pays (DH/DA/€) + petit budget,a_faire
+65,كيف أوزع ميزانية 500€ لإطلاق متجري؟,kayfa-ozawie-mizaniyat-500-euro,liste numérotée,à auditer (SERP au moment de la rédaction),répartition budget réelle + ROI petit budget,a_faire
+66,متى أسترجع رأس مالي في التجارة الإلكترونية؟,mata-astarjie-ras-mali,réponse directe nuancée,à auditer (SERP au moment de la rédaction),timeline retour sur investissement,a_faire
+67,كم يربح أصحاب المتاجر الإلكترونية شهرياً؟ (أرقام حقيقية),kam-yarbah-ashab-almatajir,réponse directe chiffrée,à auditer (SERP au moment de la rédaction),screens chiffrés (gamme petit→gros),a_faire
+68,كيف أسعّر منتجاتي بطريقة صحيحة؟,kayfa-osaeir-montajati,liste numérotée,à auditer (SERP au moment de la rédaction),marges et pricing (×3),a_faire
+69,كيف أعيد استثمار أرباحي الأولى بذكاء؟,kayfa-oied-istithmar-arbahi,liste numérotée,à auditer (SERP au moment de la rédaction),réinvestissement / scaling progressif,a_faire
+70,هل التجارة الإلكترونية أرخص من فتح محل تقليدي؟,hal-tijara-arkhas-min-mahal,réponse directe + tableau comparatif,à auditer (SERP au moment de la rédaction),comparaison coûts / petit budget,a_faire
+71,التكاليف الخفية في التجارة الإلكترونية التي لا يخبرك بها أحد,takalif-khafiya-fi-tijara,liste numérotée,à auditer (SERP au moment de la rédaction),"tableau coûts réels (produit, pub, retours)",a_faire
+72,كيف أبدأ بميزانية صغيرة وأكبر تدريجياً؟ (خطة 90 يوم),kayfa-abda-mizaniya-saghira-90-yawm,liste numérotée,à auditer (SERP au moment de la rédaction),parcours petit budget → croissance,a_faire
+73,كيف أستهدف الجمهور الصحيح في إعلاناتي؟,kayfa-astahdif-aljomhour-assahih,liste numérotée,à auditer (SERP au moment de la rédaction),ciblage / ROAS amélioré,a_faire
+74,كيف أصنع فيديو إعلاني يبيع بدون ظهور وجهي؟,kayfa-asnae-video-ielani-bidun-zuhur,liste numérotée,à auditer (SERP au moment de la rédaction),créatives sans visage (UGC),a_faire
+75,متى أوقف إعلاناً خاسراً؟ ومتى أصبر عليه؟,mata-oqif-ielan-khasir,réponse directe nuancée,à auditer (SERP au moment de la rédaction),lecture des chiffres / seuils de test,a_faire
+76,حساب الإعلانات تم حظره: الأسباب والحلول,hisab-ielanat-mahzur,liste numérotée,à auditer (SERP au moment de la rédaction),crédibilité (résolution de blocages),a_faire
+77,كيف أكتب نص إعلاني (Copy) يجذب النقرات؟,kayfa-aktub-nas-ielani-copy,liste numérotée,à auditer (SERP au moment de la rédaction),annonces avant/après (CTR),a_faire
+78,إعلانات Google Shopping للمتاجر: متى وكيف؟,ielanat-google-shopping,liste numérotée,à auditer (SERP au moment de la rédaction),multi-plateformes (résultats),a_faire
+79,إعلانات سناب شات للسوق الخليجي: دليل عملي,ielanat-snapchat-lilkhalij,liste numérotée,à auditer (SERP au moment de la rédaction),Snapchat Ads Golfe (chiffres),a_faire
+80,الإعلان بالمؤثرين: كيف أختار وكم أدفع؟,ielan-bilmuathirin,liste numérotée,à auditer (SERP au moment de la rédaction),influence marketing (résultats),a_faire
+81,كيف أختبر عدة منتجات بأقل ميزانية ممكنة؟,kayfa-akhtabir-montajat-aqal-mizaniya,liste numérotée,à auditer (SERP au moment de la rédaction),testing petit budget,a_faire
+82,استراتيجية الإعلانات في رمضان والمواسم,istratijiyat-ielanat-ramadan,liste numérotée,à auditer (SERP au moment de la rédaction),saisonnalité (résultats Ramadan),a_faire
+83,كيف أعيد استهداف الزوار الذين لم يشتروا؟ (Retargeting),kayfa-oied-istihdaf-azzuwar-retargeting,liste numérotée,à auditer (SERP au moment de la rédaction),retargeting / récupération ventes,a_faire
+84,أسرار الإعلانات الناجحة في 2026: ما تغيّر وما بقي,asrar-alielanat-annajiha-2026,liste numérotée,à auditer (SERP au moment de la rédaction),résultats pub récents,a_faire
+85,لماذا يفشل أغلب المبتدئين في الدروبشيبينغ الكلاسيكي؟,limadha-yafshal-almobtadiin-dropshipping,réponse directe nuancée,à auditer (SERP au moment de la rédaction),échec puis succès (système marque),a_faire
+86,الدروبشيبينغ من الصين: المشاكل والبدائل,dropshipping-min-assin,liste numérotée,à auditer (SERP au moment de la rédaction),alternatives (qualité/délais),a_faire
+87,الطباعة عند الطلب (Print on Demand) أم الدروبشيبينغ؟,print-on-demand-am-dropshipping,tableau comparatif,à auditer (SERP au moment de la rédaction),comparaison modèles,a_faire
+88,البيع بالجملة أم القطعة الواحدة: أيهما أنسب للمبتدئ؟,albaye-biljomla-am-alqitaa,tableau comparatif,à auditer (SERP au moment de la rédaction),comparaison marges/volume,a_faire
+89,متى أنتقل من الدروبشيبينغ إلى تخزين منتجاتي؟,mata-antaqil-ila-takhzin,réponse directe nuancée,à auditer (SERP au moment de la rédaction),transition / scaling marque,a_faire
+90,كيف أصمم صفحة منتج تبيع؟ (العناصر الأساسية),kayfa-osammim-safhat-montaj,liste numérotée,à auditer (SERP au moment de la rédaction),pages produit qui convertissent,a_faire
+91,كيف أكتب وصف منتج يقنع الزائر بالشراء؟,kayfa-aktub-wasf-montaj,liste numérotée,à auditer (SERP au moment de la rédaction),descriptions qui vendent,a_faire
+92,كيف أصور منتجاتي باحترافية بهاتفي فقط؟,kayfa-osawwir-montajati-bihatifi,liste numérotée,à auditer (SERP au moment de la rédaction),photos produit pro (avant/après),a_faire
+93,ما هو الـ Landing Page؟ ومتى أحتاجه بدل المتجر؟,ma-houa-landing-page,réponse directe,à auditer (SERP au moment de la rédaction),landing vs store,a_faire
+94,كيف أنشئ لوغو وهوية بصرية لماركتي مجاناً؟,kayfa-onshie-logo-wahawiya,liste numérotée,à auditer (SERP au moment de la rédaction),branding (identité visuelle),a_faire
+95,كيف أبدأ التجارة الإلكترونية في تونس؟,tijara-electroniya-fi-tunis,liste numérotée + spécificités locales,à auditer (SERP au moment de la rédaction),étudiants tunisiens (vidéos + screens),a_faire
+96,الدفع عند الاستلام (COD): كيف يشتغل ولماذا هو ملك المغرب العربي؟,addafe-aind-alistilam-cod,réponse directe + liste numérotée,à auditer (SERP au moment de la rédaction),COD Maghreb (taux de livraison),a_faire
+97,أفضل شركات التوصيل للمتاجر في المغرب,afdal-sharikat-attawsil-almaghrib,liste numérotée,à auditer (SERP au moment de la rédaction),logistique Maroc,a_faire
+98,أفضل شركات التوصيل في الجزائر للتجارة الإلكترونية,afdal-sharikat-attawsil-aljazair,liste numérotée,à auditer (SERP au moment de la rédaction),logistique Algérie (Yalidine…),a_faire
+99,هل أحتاج سجلاً تجارياً لأبيع أونلاين في المغرب؟,hal-ahtaj-sijil-tijari-maghrib,réponse directe nuancée,à auditer (SERP au moment de la rédaction),crédibilité légal Maroc (auto-entrepreneur),a_faire
+100,كيف أستقبل الأموال من الخارج في المغرب والجزائر؟ (باي بال وبدائله),kayfa-astaqbil-alamwal-min-alkharij,liste numérotée,à auditer (SERP au moment de la rédaction),paiements internationaux (PayPal/alternatives),a_faire
+101,البيع في أوروبا وأنت مقيم في المغرب: ممكن؟ وكيف؟,albaye-fi-urubba-min-almaghrib,réponse directe + liste numérotée,à auditer (SERP au moment de la rédaction),vente cross-border,a_faire
+102,مشاكل الدفع الإلكتروني في الجزائر وحلولها العملية,mashakil-addafe-fi-aljazair,liste numérotée,à auditer (SERP au moment de la rédaction),solutions paiement Algérie,a_faire
+103,أفضل المنتجات مبيعاً في السوق المغاربي 2026,afdal-almontajat-fi-almaghrib,liste numérotée,à auditer (SERP au moment de la rédaction),produits gagnants Maghreb,a_faire
+104,كيف أبدأ التجارة الإلكترونية في السعودية؟ (متطلبات 2026),tijara-electroniya-fi-assaudia,liste numérotée + spécificités locales,à auditer (SERP au moment de la rédaction),Golfe / Arabie Saoudite (screens),a_faire
+105,التجارة الإلكترونية في مصر: الفرص والتحديات,tijara-electroniya-fi-misr,liste numérotée,à auditer (SERP au moment de la rédaction),marché égyptien,a_faire
+106,أفضل بوابات الدفع في الخليج (مدى وتابي وتمارا),afdal-bawabat-addafe-alkhalij,liste numérotée,à auditer (SERP au moment de la rédaction),paiement Golfe (tabby/tamara/mada),a_faire
+107,سوق الكويت وقطر والبحرين: فرص التجارة الإلكترونية الصغيرة,suq-alkuwait-qatar-albahrain,liste numérotée,à auditer (SERP au moment de la rédaction),petits marchés Golfe,a_faire
+108,كيف أبيع في السوق السعودي وأنا خارج السعودية؟,kayfa-abie-fi-assuq-assaudi,liste numérotée,à auditer (SERP au moment de la rédaction),vente cross-border Golfe,a_faire
+109,المنتجات الأكثر طلباً في الخليج 2026,almontajat-alaktar-talaban-alkhalij,liste numérotée,à auditer (SERP au moment de la rédaction),produits gagnants Golfe,a_faire
+110,التجارة الإلكترونية في بلجيكا وهولندا للعرب المقيمين,tijara-fi-belgika-wahollanda,liste numérotée + spécificités locales,à auditer (SERP au moment de la rédaction),diaspora Belgique/NL (Rabia…),a_faire
+111,كيف أبدأ بزنس أونلاين في ألمانيا كمقيم عربي؟,bizns-online-fi-almania,liste numérotée + spécificités locales,à auditer (SERP au moment de la rédaction),diaspora Allemagne,a_faire
+112,هل أبيع للسوق الأوروبي أم العربي وأنا في أوروبا؟,albaye-lilurubbi-am-alarabi,tableau comparatif,à auditer (SERP au moment de la rédaction),choix marché diaspora,a_faire
+113,قصص عرب نجحوا في التجارة الإلكترونية من أوروبا,qisas-arab-najahu-min-urubba,liste numérotée,à auditer (SERP au moment de la rédaction),diaspora Europe (gros résultats documentés),a_faire
+114,لماذا يفشل 90% من المبتدئين في التجارة الإلكترونية؟,limadha-yafshal-90-min-almobtadiin,réponse directe nuancée,à auditer (SERP au moment de la rédaction),leçons après erreurs,a_faire
+115,كيف تعرف الدورات النصابة من الجادة؟ (علامات تكشف الاحتيال),kayfa-taarif-addawrat-annassaba,liste numérotée,à auditer (SERP au moment de la rédaction),crédibilité formation (sceptiques convertis),a_faire
+116,«اربح 10000$ في أسبوع»: كيف تميز الوعود الكاذبة؟,kayfa-tomayyiz-alwuiud-alkadiba,liste numérotée,à auditer (SERP au moment de la rédaction),crédibilité (réalité vs promesses),a_faire
+117,أخطاء اختيار المنتج التي تحرق ميزانيتك,akhtae-ikhtiyar-almontaj,liste numérotée,à auditer (SERP au moment de la rédaction),erreurs produit corrigées,a_faire
+118,متجر جميل بدون مبيعات: التشخيص والعلاج,matjar-jamil-bidun-mabiaat,liste numérotée,à auditer (SERP au moment de la rédaction),diagnostic conversion,a_faire
+119,لماذا يتخلى الزوار عن السلة قبل الدفع؟ وكيف تستعيدهم؟,limadha-yatakhalla-azzuwar-aan-assalla,réponse directe + liste numérotée,à auditer (SERP au moment de la rédaction),récupération paniers abandonnés,a_faire
+120,قصص فشل حقيقية في التجارة الإلكترونية ودروسها,qisas-fashal-haqiqiya,liste numérotée,à auditer (SERP au moment de la rédaction),échec puis réussite (leçons),a_faire
+121,الحماس الزائد ثم الاستسلام: كيف تحافظ على استمراريتك؟,alhamas-azzaid-thumma-alistislam,liste numérotée,à auditer (SERP au moment de la rédaction),persévérance (sceptiques convertis),a_faire
+122,من أول مبيعة إلى أول 1000€: المراحل بالتفصيل,min-awwal-mabiaa-ila-1000-euro,liste numérotée,à auditer (SERP au moment de la rédaction),parcours premiers résultats,a_faire
+123,كيف حققت أم تونسية 9000$ في أقل من 12 ساعة؟ (قصة موثقة),qissat-um-tunisiya-9000,récit documenté (étude de cas),à auditer (SERP au moment de la rédaction),"étude de cas (Amna, sc-37) — prénom seul",a_faire
+124,من راتب 1100€ إلى 50 ألف يورو في شهر: قصة من إيطاليا,qissat-sufyan-min-italia,récit documenté (étude de cas),à auditer (SERP au moment de la rédaction),"étude de cas (Soufiane, sc-24) — prénom seul",a_faire
+125,كيف وصل متجر إلى 368 ألف دولار في شهر واحد؟ (تحليل كامل),kayfa-wasal-matjar-368-alf,récit documenté (analyse),à auditer (SERP au moment de la rédaction),"étude de cas (Amal, sc-41) — prénom seul",a_faire
+126,متى أوظف أول شخص في متجري؟,mata-owazzif-awwal-shakhs,réponse directe nuancée,à auditer (SERP au moment de la rédaction),scaling / équipe,a_faire
+127,كيف أتوسع من بلد واحد إلى عدة أسواق؟,kayfa-atawassae-ila-aswaq,liste numérotée,à auditer (SERP au moment de la rédaction),expansion multi-marchés,a_faire
+128,من متجر واحد إلى عدة متاجر: استراتيجية التعدد,min-matjar-ila-aiddat-matajir,liste numérotée,à auditer (SERP au moment de la rédaction),scaling multi-stores (Ismail…),a_faire
+129,كيف أبني فريقاً يدير متجري وأنا أشرف فقط؟,kayfa-abni-fariqan,liste numérotée,à auditer (SERP au moment de la rédaction),délégation / asset business,a_faire
+130,كم يستغرق الوصول إلى 3000€ شهرياً؟ (خط زمني واقعي),kam-yastaghriq-3000-euro,réponse directe nuancée,à auditer (SERP au moment de la rédaction),timeline réaliste (nuance),a_faire
+131,خطة 12 شهراً: من الصفر إلى بزنس مستقر — الدليل الكامل,khittat-12-shahr,liste numérotée (étapes),à auditer (SERP au moment de la rédaction),parcours complet 12 mois,a_faire
+132,أفضل أدوات الذكاء الاصطناعي لصناعة صور المنتجات,afdal-adawat-ai-suwar-almontajat,liste numérotée,à auditer (SERP au moment de la rédaction),démos outils IA (images),a_faire
+133,كيف أصنع فيديوهات إعلانية بالذكاء الاصطناعي؟,kayfa-asnae-videohat-bilai,liste numérotée,à auditer (SERP au moment de la rédaction),démos vidéos IA,a_faire
+134,هل سيقتل الذكاء الاصطناعي التجارة الإلكترونية أم يطورها؟,hal-sayaqtul-alai-tijara,réponse directe nuancée,à auditer (SERP au moment de la rédaction),analyse (pas de preuves de gains),a_faire
+135,كيف أبني متجراً كاملاً بمساعدة الذكاء الاصطناعي في يوم واحد؟,kayfa-abni-matjar-bilai-fi-yawm,liste numérotée,à auditer (SERP au moment de la rédaction),démo construction rapide IA,a_faire
+136,أتمتة خدمة العملاء بالذكاء الاصطناعي: الأدوات والطرق,atmatat-khidmat-alumalaa-bilai,liste numérotée,à auditer (SERP au moment de la rédaction),automatisation IA,a_faire
+137,الذكاء الاصطناعي في الإعلانات: الاستهداف والتحسين الذكي,alai-fi-alielanat,liste numérotée,à auditer (SERP au moment de la rédaction),IA pub (ciblage/optimisation),a_faire
+138,10 أدوات ذكاء اصطناعي مجانية لكل صاحب متجر,ashr-adawat-ai-majaniya,liste numérotée,à auditer (SERP au moment de la rédaction),démos outils IA gratuits,a_faire
+139,ما هو أفضل مشروع على الإنترنت للمبتدئين في 2026؟,ma-houa-afdal-machrue-internet,réponse directe nuancée,à auditer (SERP au moment de la rédaction),crédibilité e-commerce vs autres modèles,a_faire
+140,كيف أتعلم التجارة الإلكترونية من البيت؟,kayfa-ataallam-tijara-min-albayt,liste numérotée,à auditer (SERP au moment de la rédaction),apprentissage à domicile (parcours),a_faire
+141,كم من الوقت أحتاج لأرى أول نتائج في التجارة الإلكترونية؟,kam-min-alwaqt-li-awwal-nataij,réponse directe nuancée,à auditer (SERP au moment de la rédaction),timeline premiers résultats,a_faire
+142,ما هي أنواع التجارة الإلكترونية؟ وأيها الأنسب للمبتدئ؟,ma-hiya-anwae-tijara,réponse directe + tableau comparatif,à auditer (SERP au moment de la rédaction),types/modèles comparés,a_faire
+143,هل التجارة الإلكترونية صعبة؟ الحقيقة بدون مبالغة,hal-tijara-saaba,réponse directe nuancée,à auditer (SERP au moment de la rédaction),débutants sans expérience,a_faire
+144,ما الفرق بين التجارة الإلكترونية والتجارة التقليدية؟,alfarq-bayna-tijara-electroniya-wataqlidiya,réponse directe + tableau comparatif,à auditer (SERP au moment de la rédaction),comparaison modèles,a_faire
+145,هل أحتاج شهادة أو دراسة لأعمل في التجارة الإلكترونية؟,hal-ahtaj-shahada-aw-dirasa,réponse directe nuancée,à auditer (SERP au moment de la rédaction),débutants autodidactes,a_faire
+146,كم ساعة في اليوم تحتاج التجارة الإلكترونية؟,kam-saaa-fi-alyawm,réponse directe nuancée,à auditer (SERP au moment de la rédaction),salariés/étudiants à temps partiel,a_faire
+147,هل أستطيع العمل في التجارة الإلكترونية بجانب وظيفتي؟,hal-astatie-alaml-bijanib-wazifati,réponse directe nuancée,à auditer (SERP au moment de la rédaction),salariés (résultats à côté du job),a_faire
+148,كيف أعرف أن منتجاً ما سيبيع قبل أن أستثمر فيه؟,kayfa-aarif-anna-montajan-sayabie,liste numérotée,à auditer (SERP au moment de la rédaction),validation produit,a_faire
+149,أين أجد موردين موثوقين لمتجري الإلكتروني؟,ayna-ajid-muwaridin-mawthuqin,réponse directe + liste numérotée,à auditer (SERP au moment de la rédaction),sourcing fournisseurs,a_faire
+150,كيف أبدأ التجارة الإلكترونية وأنا خائف من الفشل؟,kayfa-abda-wa-ana-khaif,liste numérotée,à auditer (SERP au moment de la rédaction),persévérance / sceptiques convertis,a_faire
+151,ما هي أفضل النيشات الرابحة في 2026؟,ma-hiya-afdal-annichat,liste numérotée,à auditer (SERP au moment de la rédaction),variété de niches gagnantes,a_faire
+152,كم فيديو يومياً أنشر لأبني جمهوراً يشتري؟,kam-video-yawmiyan,réponse directe nuancée,à auditer (SERP au moment de la rédaction),trafic organique,a_faire
+153,كيف أصنع Reels تجلب مبيعات حقيقية؟,kayfa-asnae-reels,liste numérotée,à auditer (SERP au moment de la rédaction),organique (ventes via contenu),a_faire
+154,السيو للمتاجر الإلكترونية: كيف أظهر في جوجل؟,seo-lilmatajir,liste numérotée,à auditer (SERP au moment de la rédaction),trafic gratuit SEO,a_faire
+155,التسويق عبر البريد الإلكتروني للمتاجر: يستحق أم لا؟,attaswiq-aabr-albarid,réponse directe nuancée,à auditer (SERP au moment de la rédaction),email marketing ROI,a_faire
+156,كيف أبني صفحة إنستغرام لماركتي من الصفر؟,kayfa-abni-safhat-instagram,liste numérotée,à auditer (SERP au moment de la rédaction),croissance organique Instagram,a_faire
+157,واتساب بزنس للمتاجر: كيف أستعمله للبيع والمتابعة؟,whatsapp-business-lilmatajir,liste numérotée,à auditer (SERP au moment de la rédaction),WhatsApp Maghreb (suivi/COD),a_faire
+158,المحتوى أم الإعلانات: من أين أبدأ بميزانية محدودة؟,almuhtawa-am-alielanat,tableau comparatif,à auditer (SERP au moment de la rédaction),petit budget (contenu vs pub),a_faire
+159,الأفلييت أم متجرك الخاص: مقارنة صادقة,affiliate-am-matjaruk,tableau comparatif,à auditer (SERP au moment de la rédaction),comparaison modèles,a_faire
+160,العمل الحر (فريلانس) أم التجارة الإلكترونية؟,freelance-am-tijara,tableau comparatif,à auditer (SERP au moment de la rédaction),comparaison crédibilité e-commerce,a_faire
+161,اليوتيوب والمحتوى أم التجارة الإلكترونية: أيهما يربح أسرع؟,youtube-am-tijara,tableau comparatif,à auditer (SERP au moment de la rédaction),comparaison revenus,a_faire
+162,العملات الرقمية أم بزنس حقيقي: لماذا اخترنا التجارة؟,alaumlat-arraqamiya-am-bizns,tableau comparatif,à auditer (SERP au moment de la rédaction),crédibilité e-commerce vs crypto,a_faire
+163,التجارة الإلكترونية أم العقارات للمبتدئ بميزانية صغيرة؟,tijara-am-alaqarat,tableau comparatif,à auditer (SERP au moment de la rédaction),comparaison petit budget,a_faire
+164,لماذا فشلت مع دورات سابقة؟ وكيف تختلف المرة القادمة؟,limadha-fashalt-mae-dawrat,réponse directe nuancée,à auditer (SERP au moment de la rédaction),sceptiques convertis (cours sans résultat),a_faire
+165,البيع على أمازون وإيباي أم متجر مستقل؟,amazon-ebay-am-matjar-mustaqil,tableau comparatif,à auditer (SERP au moment de la rédaction),comparaison plateformes/propriété,a_faire
+166,ميرش باي أمازون للمبتدئين العرب: يستحق؟,merch-by-amazon-lilarab,réponse directe nuancée,à auditer (SERP au moment de la rédaction),modèle POD (analyse),a_faire
+167,الخدمات المصغرة (فايفر) أم بيع المنتجات؟,fiverr-am-baye-almontajat,tableau comparatif,à auditer (SERP au moment de la rédaction),comparaison modèles,a_faire
+168,بيع المنتجات الرقمية أم الفيزيائية: أيهما أسهل وأربح؟,almontajat-arraqamiya-am-alfiziyaiya,tableau comparatif,à auditer (SERP au moment de la rédaction),comparaison marges,a_faire
+169,وظيفة ثانية أم بزنس أونلاين: حسبة الوقت والمال,wazifa-thaniya-am-bizns,tableau comparatif,à auditer (SERP au moment de la rédaction),comparaison temps/argent,a_faire
+170,التجارة الإلكترونية للطلاب: ابدأ بجانب دراستك,tijara-littullab,liste numérotée,à auditer (SERP au moment de la rédaction),"étudiants (Sami, Fatima-Zahra)",a_faire
+171,كيف يبدأ الموظف التجارة الإلكترونية بساعة إلى ساعتين يومياً؟,kayfa-yabda-almuwazzaf,liste numérotée,à auditer (SERP au moment de la rédaction),salariés à temps partiel,a_faire
+172,هل العمر مهم؟ التجارة الإلكترونية بعد الأربعين والخمسين,hal-alumr-muhim,réponse directe nuancée,à auditer (SERP au moment de la rédaction),40-50+ (Nour Elhouda 57…),a_faire
+173,التجارة الإلكترونية بدون ظهور: للمحجبات ومن لا يريد الظهور,tijara-bidun-zuhur,liste numérotée,à auditer (SERP au moment de la rédaction),sans visage (femmes),a_faire
+174,من موظف إلى صاحب بزنس: متى وكيف تستقيل بأمان؟,min-muwazzaf-ila-sahib-bizns,liste numérotée,à auditer (SERP au moment de la rédaction),reconversion (démission),a_faire
+175,كيف يتعاون الزوجان في بناء متجر إلكتروني؟ (قصص ناجحة),kayfa-yataaawan-azzawjan,liste numérotée,à auditer (SERP au moment de la rédaction),"couples (Adel+épouse, Khadija…)",a_faire
+176,من اللجوء إلى البزنس: كيف بدأ لاجئون عرب تجارتهم في أوروبا,min-allujue-ila-albizns,liste numérotée,à auditer (SERP au moment de la rédaction),réfugiés (Reem…),a_faire
+177,سترايب (Stripe): كيف أفتح حساباً وأنا في بلد غير مدعوم؟,stripe-fi-balad-ghayr-madaum,liste numérotée,à auditer (SERP au moment de la rédaction),paiements (solutions Stripe),a_faire
+178,كم تستغرق مدة الشحن؟ وكيف أتعامل مع زبون مستعجل؟,kam-tastaghriq-muddat-ashahn,réponse directe + liste numérotée,à auditer (SERP au moment de la rédaction),logistique / service client,a_faire
+179,كيف أتعامل مع طلبات الاسترجاع والاستبدال؟,kayfa-ataamal-mae-alistirjae,liste numérotée,à auditer (SERP au moment de la rédaction),SAV (retours/échanges),a_faire
+180,ماذا أفعل عندما يصل المنتج تالفاً للزبون؟,madha-afal-montaj-talif,réponse directe + liste numérotée,à auditer (SERP au moment de la rédaction),gestion litiges / SAV,a_faire
+181,كيف أتابع طلباتي وأرسلها أوتوماتيكياً؟,kayfa-atabie-talabati,liste numérotée,à auditer (SERP au moment de la rédaction),automatisation fulfillment,a_faire
+182,التغليف والباكيجينغ: كيف يضاعف قيمة ماركتك؟,attaghlif-walbakaging,liste numérotée,à auditer (SERP au moment de la rédaction),branding (packaging × valeur),a_faire
+183,كيف أختار وكيل شحن (Agent) موثوق؟,kayfa-akhtar-wakil-shahn,liste numérotée,à auditer (SERP au moment de la rédaction),sourcing agent fiable,a_faire
+184,خدمة العملاء للمتاجر: الرسائل الجاهزة والأدوات,khidmat-alumalaa-lilmatajir,liste numérotée,à auditer (SERP au moment de la rédaction),outils service client,a_faire
+185,حكم بيع ما لا تملك في الدروبشيبينغ: آراء العلماء والحلول,hukm-baye-ma-la-tamlik,réponse directe nuancée + sources,à auditer (SERP au moment de la rédaction),crédibilité religieuse (pas de preuves de gains),a_faire
+186,ما هي الوثائق القانونية الضرورية لمتجر إلكتروني؟,alwathaiq-alqanuniya,réponse directe + liste numérotée,à auditer (SERP au moment de la rédaction),légal (crédibilité, pas de gains),a_faire
+187,سياسة الإرجاع وشروط الاستخدام: قوالب جاهزة لمتجرك,siyasat-alirjae-washurut,liste numérotée,à auditer (SERP au moment de la rédaction),modèles juridiques (crédibilité),a_faire
+188,هل بيع المنتجات المقلدة قانوني؟ المخاطر الحقيقية,hal-baye-almuqallada-qanuni,réponse directe nuancée,à auditer (SERP au moment de la rédaction),légal (risques, pas de gains),a_faire
+189,حقوق الصور والمحتوى: ماذا يمكنني استعماله في إعلاناتي؟,huquq-asuwar-walmuhtawa,réponse directe nuancée,à auditer (SERP au moment de la rédaction),légal contenu/pub,a_faire
+190,التصريح بالدخل من التجارة الإلكترونية في فرنسا وأوروبا,attasrih-bidakhl-fi-faransa,liste numérotée,à auditer (SERP au moment de la rédaction),fiscal diaspora Europe,a_faire
+191,الفرق بين التهرب الضريبي والتحسين الضريبي لأصحاب المتاجر,alfarq-tahrub-watahsin-daribi,réponse directe nuancée + tableau,à auditer (SERP au moment de la rédaction),"fiscal (crédibilité, pas de gains)",a_faire
