@@ -9,7 +9,12 @@
       "Bash(npm run build)",
       "Bash(grep -A 20 \"coaching_blocked_slots\" /c/Users/user/Desktop/lexmo-saas-ai/supabase/migrations/*.sql)",
       "Bash(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/blog/__TRACKED_VAR__)",
-      "Bash(awk -F',' 'NR>=15 {print NR\": \"NF\" cols\"}' content/editorial/plan.csv)"
+      "Bash(awk -F',' 'NR>=15 {print NR\": \"NF\" cols\"}' content/editorial/plan.csv)",
+      "Bash(ls -la \"/c/Users/user/Downloads/ECOMY - Covers blog.zip\" 2>/dev/null || ls \"/mnt/c/Users/user/Downloads/\" 2>/dev/null | grep -i cover)",
+      "Read(//mnt/c/Users/user/**)",
+      "Bash(mkdir -p public/images/blog/covers)",
+      "Bash(cp /c/Users/user/Downloads/_covers_extract/covers/exports/*.png public/images/blog/covers/)",
+      "Read(//c/c/Users/user/Desktop/lexmo-saas-ai/public/images/blog/**)"
     ]
   }
 }
