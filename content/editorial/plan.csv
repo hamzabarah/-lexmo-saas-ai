@@ -37,3 +37,28 @@ ordre,titre_cible,slug,format_snippet,concurrent_a_battre,preuves,statut
 36,هل يمكن بدء التجارة الإلكترونية بدون رأس مال (0€)؟,hal-bidaya-bidun-ras-mal,réponse directe nuancée,à auditer (SERP au moment de la rédaction),preuves petit budget / sans capital,publie
 37,كيف أختار النيش المناسب لمتجري الإلكتروني؟,kayfa-akhtar-niche-munasib,liste numérotée,à auditer (SERP au moment de la rédaction),preuves variété de niches,publie
 38,ما هي مراحل إطلاق متجر إلكتروني ناجح؟,marahil-itlaq-matjar-electroni-najih,liste numérotée,à auditer (SERP au moment de la rédaction),preuves parcours complet (vidéos + premiers résultats),publie
+39,كيف أحمي ماركتي من النسخ والتقليد؟,kayfa-ahmi-markati-min-annaskh,liste numérotée,à auditer (SERP au moment de la rédaction),preuves système de marque (protection + marge ×3),a_faire
+40,كيف أبني ماركة خاصة بدل بيع منتجات عامة؟,kayfa-abni-marka-khassa,liste numérotée,à auditer (SERP au moment de la rédaction),preuves système de marque (marge ×3 vs produits génériques),a_faire
+41,ما هو البراندينغ؟ ولماذا يضاعف أرباحك؟,ma-houa-albranding,réponse directe,à auditer (SERP au moment de la rédaction),preuves branding (avant/après + marge ×3),a_faire
+42,كيف أحوّل متجر دروبشيبينغ إلى ماركة؟,kayfa-ohawil-dropshipping-ila-marka,liste numérotée,à auditer (SERP au moment de la rédaction),preuves transition dropshipping → marque (screens dashboards),a_faire
+43,أمازون FBA أم الماركة الخاصة؟ مقارنة 2026,amazon-fba-am-almarka-alkhassa,tableau comparatif,à auditer (SERP au moment de la rédaction),preuves comparées Amazon FBA vs marque propre (résultats documentés),a_faire
+44,أفضل تطبيقات شوبيفاي الضرورية لمتجرك,afdal-tatbiqat-shopify,liste numérotée,à auditer (SERP au moment de la rédaction),démos apps Shopify utilisées dans la formation,a_faire
+45,كيف أربط وسائل الدفع بمتجر شوبيفاي؟,kayfa-arbit-wasail-addafe-shopify,liste numérotée,à auditer (SERP au moment de la rédaction),"screens configuration paiements (CMI, Stripe, COD)",a_faire
+46,كيف أحسّن سرعة متجري على شوبيفاي؟,kayfa-ohassin-suraat-matjar-shopify,liste numérotée,à auditer (SERP au moment de la rédaction),screens vitesse/performance avant-après,a_faire
+47,هل يمكن إنشاء متجر شوبيفاي بالعربية بالكامل؟,hal-yumkin-matjar-shopify-bilarabiya,réponse directe,à auditer (SERP au moment de la rédaction),screens magasins Shopify 100% arabes,a_faire
+48,شوبيفاي أم ووكومرس: أيهما أفضل للمبتدئ العربي؟,shopify-am-woocommerce,tableau comparatif,à auditer (SERP au moment de la rédaction),screens Shopify vs WooCommerce (métiers réels),a_faire
+49,التكاليف الحقيقية لشوبيفاي: الاشتراك والرسوم الخفية,takalif-haqiqiya-shopify-rusum-khafiya,tableau de coûts + réponse chiffrée,à auditer (SERP au moment de la rédaction),"tableau coûts réels Shopify (abonnement, frais transaction, apps)",a_faire
+50,أفضل قوالب شوبيفاي المجانية والمدفوعة 2026,afdal-qawalib-shopify,liste numérotée,à auditer (SERP au moment de la rédaction),screens templates utilisés par les étudiants,a_faire
+51,أفضل أدوات البحث عن المنتجات الرابحة,afdal-adawat-bahth-montajat-rabiha,liste numérotée,à auditer (SERP au moment de la rédaction),démos outils de recherche produits (produits gagnants Maghreb),a_faire
+52,كيف أوسّع (Scale) إعلاناً رابحاً بدون أن أحرقه؟,kayfa-owassie-scale-ielan-rabih,liste numérotée,à auditer (SERP au moment de la rédaction),preuves chiffrées scaling (ROAS maintenu),a_faire
+53,ما هو البيكسل (Pixel)؟ ولماذا هو أهم أداة في إعلاناتك؟,ma-houa-albixel-pixel,réponse directe,à auditer (SERP au moment de la rédaction),démos installation Pixel + données récoltées,a_faire
+54,لماذا أخسر المال في إعلاناتي؟ وكيف أوقف النزيف؟,limadha-akhsar-almal-fi-ielanati,liste numérotée,à auditer (SERP au moment de la rédaction),preuves petit budget / erreurs corrigées (ROI),a_faire
+55,لماذا لا تبيع إعلاناتي؟ الأخطاء العشرة الشائعة,limadha-la-tabie-ielanati-akhtae,liste numérotée,à auditer (SERP au moment de la rédaction),preuves annonces corrigées (avant/après ventes),a_faire
+56,ما هو الـ ROAS؟ وكيف أحسب ربحية إعلاناتي؟,ma-houa-roas-ribhiyat-ielanat,réponse directe chiffrée,à auditer (SERP au moment de la rédaction),preuves chiffrées ROAS (calculs réels),a_faire
+57,هل يمكن البدء بـ 100 يورو فقط؟ وماذا أحقق بها؟,hal-yumkin-bidaya-bi-100-euro,réponse directe chiffrée,à auditer (SERP au moment de la rédaction),preuves petit budget — démarrage 100€,a_faire
+58,كيف أتعامل مع الموردين وأتفاوض على الأسعار؟,kayfa-ataamal-mae-almuwaridin,liste numérotée,à auditer (SERP au moment de la rédaction),screens négociation fournisseurs / agents,a_faire
+59,كيف أقلل الطلبات المرفوضة عند التسليم؟ (مشكل COD),kayfa-oqallil-talabat-marfuda-cod,liste numérotée,à auditer (SERP au moment de la rédaction),preuves COD Maghreb (taux de livraison améliorés),a_faire
+60,كيف أبدأ متجراً إلكترونياً في الإمارات؟,tijara-electroniya-fi-alimarat,liste numérotée + spécificités locales,à auditer (SERP au moment de la rédaction),preuves Émirats / Golfe (screens),a_faire
+61,كيف أحوّل متجري إلى ماركة تُباع بملايين؟,kayfa-ohawil-matjari-marka-bimalayin,liste numérotée,à auditer (SERP au moment de la rédaction),preuves grosses sorties / scaling (résultats documentés),a_faire
+62,قصة نجاح موثقة لطالب,qissat-najah-muwathaqa-talib,récit documenté (étude de cas),à auditer (SERP au moment de la rédaction),"preuve étudiant (vidéo + screens, prénom seul)",a_faire
+63,خارطة الطريق الكاملة للمبتدئ في التجارة الإلكترونية 2026,kharitat-attariq-lil-mobtadi,liste numérotée (étapes),à auditer (SERP au moment de la rédaction),preuves parcours complet (vidéos + premiers résultats),a_faire
