@@ -33,7 +33,10 @@
       "Skill(update-config:*)",
       "Bash(cat .claude/settings.local.json)",
       "Bash(cat .claude/settings.json)",
-      "Bash(grep -n \"claude\" .gitignore)"
-    ]
+      "Bash(grep -n \"claude\" .gitignore)",
+      "PowerShell(git add content/blog/ma-hiya-tijara-electroniya.mdx content/blog/shira-min-aliexpress.mdx content/blog/dalil-shira-min-alibaba.mdx content/editorial/plan.csv content/editorial/reservoir-vague5.csv)",
+      "PowerShell(git commit -m \"feat\\(blog\\): lot auto - ?? ?? ??????? ???????????? ?????? ?? ??? ??????? ???? ???? \\(PALIER 192-194\\) - a_faire=24\" 2>&1)"
+    ],
+    "defaultMode": "bypassPermissions"
   }
 }
