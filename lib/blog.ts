@@ -10,6 +10,88 @@ import matter from "gray-matter";
 
 export const BLOG_DIR = path.join(process.cwd(), "content", "blog");
 
+/** Editorial CSV mapping each slug to its French theme (canonical grouping). */
+export const EDITORIAL_CSV = path.join(
+  process.cwd(),
+  "content",
+  "editorial",
+  "liste-titres.csv",
+);
+
+/**
+ * Ordered blog categories. `fr` matches the CSV `theme` column exactly;
+ * `ar` is the label shown in the UI filter bar.
+ */
+export const BLOG_CATEGORIES: { fr: string; ar: string }[] = [
+  { fr: "Fondamentaux e-commerce", ar: "الأساسيات" },
+  { fr: "Publicite et marketing", ar: "الإعلانات والتسويق" },
+  { fr: "Produits, recherche et fournisseurs", ar: "المنتجات والموردين" },
+  { fr: "Par pays", ar: "حسب الدولة" },
+  { fr: "Paiement et logistique", ar: "الدفع والشحن" },
+  { fr: "Legal, fiscalite et couts", ar: "القانون والضرائب" },
+  { fr: "Outils et IA", ar: "الأدوات والذكاء الاصطناعي" },
+  { fr: "Creation et optimisation du magasin", ar: "إنشاء المتجر" },
+  { fr: "Marque et dropshipping", ar: "العلامة والدروبشيبينغ" },
+  { fr: "Temoignages et histoires", ar: "قصص النجاح" },
+  { fr: "Choix de formation", ar: "اختيار التكوين" },
+];
+
+const THEME_FR_TO_AR: Record<string, string> = Object.fromEntries(
+  BLOG_CATEGORIES.map((c) => [c.fr, c.ar]),
+);
+
+/** Parse one CSV line, honouring double-quoted fields (with "" escaping). */
+function parseCsvLine(line: string): string[] {
+  const out: string[] = [];
+  let cur = "";
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (inQuotes) {
+      if (ch === '"') {
+        if (line[i + 1] === '"') {
+          cur += '"';
+          i++;
+        } else {
+          inQuotes = false;
+        }
+      } else {
+        cur += ch;
+      }
+    } else if (ch === '"') {
+      inQuotes = true;
+    } else if (ch === ",") {
+      out.push(cur);
+      cur = "";
+    } else {
+      cur += ch;
+    }
+  }
+  out.push(cur);
+  return out;
+}
+
+/**
+ * Build a `slug -> Arabic theme label` map from the editorial CSV.
+ * Unknown / unmapped themes fall back to their raw value.
+ */
+export function getThemeMap(): Record<string, string> {
+  if (!fs.existsSync(EDITORIAL_CSV)) return {};
+  const lines = fs
+    .readFileSync(EDITORIAL_CSV, "utf8")
+    .split(/\r?\n/)
+    .filter((l) => l.trim().length > 0);
+  const map: Record<string, string> = {};
+  // Skip header row (numero,titre,slug,theme).
+  for (const line of lines.slice(1)) {
+    const cols = parseCsvLine(line);
+    const slug = (cols[2] ?? "").trim();
+    const theme = (cols[3] ?? "").trim();
+    if (slug) map[slug] = THEME_FR_TO_AR[theme] ?? theme;
+  }
+  return map;
+}
+
 /** Canonical site origin (no trailing slash). Override via env in deployment. */
 export const SITE_URL = (
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://ecomy.ai"
