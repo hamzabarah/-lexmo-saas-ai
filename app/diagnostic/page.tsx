@@ -207,7 +207,7 @@ export default function DiagnosticPage() {
             <img
               src="/images/sales/hero-diagnostic.png"
               alt="تشخيص بزنس"
-              className="w-full h-[300px] lg:h-[400px] rounded-2xl object-cover"
+              className="w-full h-auto lg:h-[400px] object-contain lg:object-cover rounded-2xl"
             />
 
             {/* Mobile only: Rating + Price + CTA before title */}
