@@ -205,7 +205,7 @@ export default function DiagnosticPage() {
 
             {/* Hero image */}
             <img
-              src="/images/diagnostic-banner.png"
+              src="/images/sales/hero-diagnostic.png"
               alt="تشخيص بزنس"
               className="w-full h-[300px] lg:h-[400px] rounded-2xl object-cover"
             />
@@ -240,7 +240,7 @@ export default function DiagnosticPage() {
               >
                 {/* Banner image */}
                 <img
-                  src="/images/diagnostic-banner.png"
+                  src="/images/sales/petite-diagnostic.webp"
                   alt="تشخيص بزنس"
                   className="w-full aspect-video object-cover"
                 />

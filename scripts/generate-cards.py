@@ -51,9 +51,26 @@ MAX_RETRIES = 3
 # donc on n'impose pas de « safe zone for text » — on laisse le visuel respirer.
 
 ROOT = Path(__file__).resolve().parents[1]
-CSV_FILE = ROOT / "content" / "editorial" / "cards.csv"
-OUT_DIR = ROOT / "public" / "images" / "cards"
-ERROR_LOG = ROOT / "cards-errors.log"
+
+
+def _resolve(arg, default):
+    """Résout un chemin CLI (relatif -> depuis la racine du projet)."""
+    if arg is None:
+        return default
+    p = Path(arg)
+    return p if p.is_absolute() else ROOT / p
+
+
+# Surcouche CLI optionnelle pour réutiliser le même pipeline sur un autre lot :
+#   python scripts/generate-cards.py [csv] [out_dir] [error_log]
+# Sans argument -> comportement par défaut (les 6 cartes de la landing).
+_argv = sys.argv[1:]
+CSV_FILE = _resolve(_argv[0] if len(_argv) > 0 else None,
+                    ROOT / "content" / "editorial" / "cards.csv")
+OUT_DIR = _resolve(_argv[1] if len(_argv) > 1 else None,
+                   ROOT / "public" / "images" / "cards")
+ERROR_LOG = _resolve(_argv[2] if len(_argv) > 2 else None,
+                     ROOT / "cards-errors.log")
 
 # Tarifs publics gpt-image-1 (USD) : output image $40/Mtok, input texte $5/Mtok.
 COST_OUT = 40e-6
