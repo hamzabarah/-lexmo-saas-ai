@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { BookOpen, Users } from "lucide-react";
 import { useState, useEffect, useCallback, useRef } from "react";
 
 function StarRating({ count, total }: { count: number; total: string }) {
@@ -513,7 +512,7 @@ export default function HomePage() {
           <div className="relative flex flex-col bg-[#0A0A0A] rounded-2xl overflow-hidden ring-1 ring-white/5" style={{ boxShadow: '0 4px 24px rgba(197,160,78,0.10)' }}>
             {showClosed ? (
               <>
-                <img src="/images/diagnostic-banner.png" alt="تشخيص بزنس" className="w-full aspect-video object-cover" />
+                <img src="/images/cards/card-diagnostic.png" alt="تشخيص بزنس" className="w-full aspect-video object-cover" />
                 <div className="p-5 space-y-3 flex-1 flex flex-col">
                   <StarRating count={5} total="120" />
                   <h3 className="text-white font-bold text-[15px] leading-snug">تشخيص بزنس | اكتشف البزنس المناسب لك</h3>
@@ -535,7 +534,7 @@ export default function HomePage() {
               </>
             ) : (
               <Link href="/diagnostic" className="group flex flex-col flex-1">
-                <img src="/images/diagnostic-banner.png" alt="تشخيص بزنس" className="w-full aspect-video object-cover" />
+                <img src="/images/cards/card-diagnostic.png" alt="تشخيص بزنس" className="w-full aspect-video object-cover" />
                 <div className="p-5 space-y-3 flex-1 flex flex-col">
                   <StarRating count={5} total="120" />
                   <h3 className="text-white font-bold text-[15px] leading-snug">تشخيص بزنس | اكتشف البزنس المناسب لك</h3>
@@ -557,7 +556,7 @@ export default function HomePage() {
           <div className="relative flex flex-col bg-[#0A0A0A] rounded-2xl overflow-hidden ring-1 ring-white/5" style={{ boxShadow: '0 4px 24px rgba(197,160,78,0.10)' }}>
             {showClosed ? (
               <>
-                <img src="/images/ecommerce-banner.png" alt="تكوين التجارة الإلكترونية — بدون مرافقة" className="w-full aspect-video object-cover" />
+                <img src="/images/cards/card-formation.png" alt="تكوين التجارة الإلكترونية — بدون مرافقة" className="w-full aspect-video object-cover" />
                 <div className="p-5 space-y-3 flex-1 flex flex-col">
                   <StarRating count={5} total="453" />
                   <h3 className="text-white font-bold text-[15px] leading-snug">أطلق متجرك بنفسك — من الصفر إلى أول مبيعة أونلاين 🚀</h3>
@@ -580,7 +579,7 @@ export default function HomePage() {
               </>
             ) : (
               <Link href="/formation-basic" className="group flex flex-col flex-1">
-                <img src="/images/ecommerce-banner.png" alt="تكوين التجارة الإلكترونية — بدون مرافقة" className="w-full aspect-video object-cover" />
+                <img src="/images/cards/card-formation.png" alt="تكوين التجارة الإلكترونية — بدون مرافقة" className="w-full aspect-video object-cover" />
                 <div className="p-5 space-y-3 flex-1 flex flex-col">
                   <StarRating count={5} total="453" />
                   <h3 className="text-white font-bold text-[15px] leading-snug">أطلق متجرك بنفسك — من الصفر إلى أول مبيعة أونلاين 🚀</h3>
@@ -608,7 +607,7 @@ export default function HomePage() {
             </div>
             {showClosed ? (
               <>
-                <img src="/images/ecommerce-banner.png" alt="تكوين التجارة الإلكترونية" className="w-full aspect-video object-cover" />
+                <img src="/images/cards/card-accompagnement.png" alt="تكوين التجارة الإلكترونية" className="w-full aspect-video object-cover" />
                 <div className="p-5 space-y-3 flex-1 flex flex-col">
                   <StarRating count={5} total="453" />
                   <h3 className="text-white font-bold text-[15px] leading-snug">ما غاديش تمشي بوحدك — مرافقة شخصية حتى أول مبيعة 🤝</h3>
@@ -631,7 +630,7 @@ export default function HomePage() {
               </>
             ) : (
               <Link href="/formation" className="group flex flex-col flex-1">
-                <img src="/images/ecommerce-banner.png" alt="تكوين التجارة الإلكترونية" className="w-full aspect-video object-cover" />
+                <img src="/images/cards/card-accompagnement.png" alt="تكوين التجارة الإلكترونية" className="w-full aspect-video object-cover" />
                 <div className="p-5 space-y-3 flex-1 flex flex-col">
                   <StarRating count={5} total="453" />
                   <h3 className="text-white font-bold text-[15px] leading-snug">ما غاديش تمشي بوحدك — مرافقة شخصية حتى أول مبيعة 🤝</h3>
@@ -660,9 +659,9 @@ export default function HomePage() {
             className="group flex flex-col bg-[#0A0A0A] rounded-2xl overflow-hidden ring-1 ring-white/5 hover:ring-[#C5A04E]/30 hover:scale-[1.02] transition-all duration-200"
             style={{ boxShadow: '0 4px 20px rgba(197,160,78,0.06)' }}
           >
-            <div className="relative w-full aspect-video flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#1A1408] via-[#120E04] to-[#0A0A0A]">
-              <span className="absolute top-3 right-3 bg-[#C5A04E] text-[#0A0A0A] text-[11px] font-black px-3 py-1 rounded-full shadow-lg">مجاني</span>
-              <BookOpen className="w-14 h-14 text-[#C5A04E]" strokeWidth={1.5} />
+            <div className="relative w-full aspect-video overflow-hidden">
+              <img src="/images/cards/card-blog.png" alt="محتوى مجاني" className="w-full aspect-video object-cover" />
+              <span className="absolute top-3 right-3 z-10 bg-[#C5A04E] text-[#0A0A0A] text-[11px] font-black px-3 py-1 rounded-full shadow-lg">مجاني</span>
             </div>
             <div className="p-5 space-y-2.5 flex-1 flex flex-col">
               <h3 className="text-white font-bold text-[15px] leading-snug">محتوى مجاني</h3>
@@ -681,8 +680,8 @@ export default function HomePage() {
             className="group flex flex-col bg-[#0A0A0A] rounded-2xl overflow-hidden ring-1 ring-white/5 hover:ring-[#10B981]/30 hover:scale-[1.02] transition-all duration-200"
             style={{ boxShadow: '0 4px 20px rgba(16,185,129,0.05)' }}
           >
-            <div className="relative w-full aspect-video flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#0C1712] via-[#0A0F0C] to-[#0A0A0A]">
-              <Users className="w-14 h-14 text-[#10B981]" strokeWidth={1.5} />
+            <div className="relative w-full aspect-video overflow-hidden">
+              <img src="/images/cards/card-anous.png" alt="من نحن" className="w-full aspect-video object-cover" />
             </div>
             <div className="p-5 space-y-2.5 flex-1 flex flex-col">
               <h3 className="text-white font-bold text-[15px] leading-snug">من نحن</h3>
@@ -700,7 +699,7 @@ export default function HomePage() {
             className="group flex flex-col bg-[#0A0A0A] rounded-2xl overflow-hidden ring-1 ring-white/5 hover:ring-white/15 hover:scale-[1.02] transition-all duration-200"
             style={{ boxShadow: '0 4px 20px rgba(255,255,255,0.03)' }}
           >
-            <img src="/images/members-area.png" alt="منطقة الأعضاء" className="w-full aspect-video object-cover" />
+            <img src="/images/cards/card-login.png" alt="منطقة الأعضاء" className="w-full aspect-video object-cover" />
             <div className="p-5 space-y-3 flex-1 flex flex-col">
               <h3 className="text-white font-bold text-[15px] leading-snug">عندي حساب بالفعل</h3>
               <p className="text-gray-500 text-sm">الدخول إلى المنصة</p>
