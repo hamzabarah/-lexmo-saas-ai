@@ -1,5 +1,10 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/legal/terms" },
+};
 
 async function getShowCompanyInfo(): Promise<boolean> {
   try {

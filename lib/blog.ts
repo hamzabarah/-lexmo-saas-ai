@@ -92,9 +92,10 @@ export function getThemeMap(): Record<string, string> {
   return map;
 }
 
-/** Canonical site origin (no trailing slash). Override via env in deployment. */
+/** Canonical site origin (no trailing slash). Version www = canonique.
+ *  Override via env en déploiement (doit rester en www.ecomy.ai). */
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://ecomy.ai"
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.ecomy.ai"
 ).replace(/\/$/, "");
 
 export interface BlogFaqItem {

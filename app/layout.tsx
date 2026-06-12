@@ -19,6 +19,9 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.ecomy.ai"),
   title: "ECOMY",
   description: "Next Generation E-commerce Training",
+  // Canonical par défaut = page d'accueil (www). Chaque autre route indexée
+  // surcharge avec son propre canonical (voir layouts/pages dédiés).
+  alternates: { canonical: "/" },
   openGraph: {
     title: "أكاديمية إيكومي — ECOMY",
     description: "التجارة الإلكترونية بالعربي — تكوين، مرافقة، و+300 دليل مجاني.",
