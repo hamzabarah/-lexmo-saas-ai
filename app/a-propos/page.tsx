@@ -27,6 +27,7 @@ export const metadata: Metadata = {
     siteName: "ECOMY",
     locale: "ar_AR",
     type: "website",
+    images: [{ url: "/images/brand/og-image.png", width: 1200, height: 630 }],
   },
 };
 
@@ -37,7 +38,7 @@ const orgJsonLd = {
   name: "أكاديمية إيكومي",
   alternateName: "ECOMY",
   url: SITE_URL,
-  logo: `${SITE_URL}/favicon.ico`,
+  logo: `${SITE_URL}/images/brand/logo.png`,
   description:
     "أكاديمية عربية متخصّصة في تعليم التجارة الإلكترونية والدروبشيبينغ بصدق وبلا وعود زائفة، مع محتوى مجاني ومرافقة حقيقية حتى أول مبيعة.",
   sameAs: ["https://t.me/ecom_europe", "https://t.me/ecomyyy"],
@@ -99,8 +100,11 @@ export default function AProposPage() {
       {/* Slim header — wordmark + CTA haut */}
       <header className="w-full px-6 py-6">
         <div className="mx-auto flex max-w-[1000px] items-center justify-between">
-          <Link href="/" className="text-2xl font-bold font-orbitron tracking-tighter text-[#C5A04E]">
-            ECOMY
+          <Link href="/" className="flex items-center gap-2.5">
+            <img src="/images/brand/logo.png" alt="" aria-hidden className="h-8 w-8" />
+            <span className="text-2xl font-bold font-orbitron tracking-tighter text-[#C5A04E]">
+              ECOMY
+            </span>
           </Link>
           <Link
             href="/formation"

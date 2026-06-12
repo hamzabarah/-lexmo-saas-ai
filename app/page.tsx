@@ -499,11 +499,17 @@ export default function HomePage() {
         .animate-promo-pulse { animation: promo-pulse 2s ease-in-out infinite; }
       `}</style>
 
-      {/* Header retiré — landing ultra-épurée, zéro distraction : le prospect
-          voit directement les cartes et passe à l'action. */}
+      {/* Brand lockup — discret, centré : identification immédiate de la marque
+          (visiteurs venant des réseaux) sans casser l'épure. */}
+      <header className="w-full flex items-center justify-center gap-3 pt-8 pb-1">
+        <img src="/images/brand/logo.png" alt="" aria-hidden className="h-11 w-11" />
+        <span className="text-2xl font-bold font-orbitron tracking-tighter text-[#C5A04E]">
+          ECOMY
+        </span>
+      </header>
 
       {/* Card Grid */}
-      <section className="flex-1 flex items-center justify-center w-full px-4 py-12 md:py-16">
+      <section className="flex-1 flex items-center justify-center w-full px-4 pt-6 pb-12 md:pb-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-[1180px] w-full md:auto-rows-[1fr]">
 
           {/* ───────── Rangée 1 : offres payantes ───────── */}

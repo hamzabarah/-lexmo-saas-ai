@@ -22,6 +22,7 @@ export const metadata: Metadata = {
     siteName: "ECOMY",
     locale: "ar_AR",
     type: "website",
+    images: [{ url: "/images/brand/og-image.png", width: 1200, height: 630 }],
   },
 };
 
