@@ -100,11 +100,8 @@ export default function AProposPage() {
       {/* Slim header — wordmark + CTA haut */}
       <header className="w-full px-6 py-6">
         <div className="mx-auto flex max-w-[1000px] items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5">
-            <img src="/images/brand/logo.png" alt="" aria-hidden className="h-8 w-8" />
-            <span className="text-2xl font-bold font-orbitron tracking-tighter text-[#C5A04E]">
-              ECOMY
-            </span>
+          <Link href="/" className="text-2xl font-bold font-orbitron tracking-tighter text-[#C5A04E]">
+            ECOMY
           </Link>
           <Link
             href="/formation"

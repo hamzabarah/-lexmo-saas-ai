@@ -176,13 +176,6 @@ export default function FormationPage() {
 
   return (
     <main className="min-h-screen bg-[#0A0A0A] font-cairo" dir="rtl">
-      {/* Brand header — icône émeraude + wordmark */}
-      <header className="mx-auto flex items-center px-6 pt-6" style={{ maxWidth: '1100px' }}>
-        <a href="/" className="flex items-center gap-2.5">
-          <img src="/images/brand/logo.png" alt="ECOMY" className="h-8 w-8" />
-          <span className="text-2xl font-bold font-orbitron tracking-tighter text-[#C5A04E]">ECOMY</span>
-        </a>
-      </header>
       <div className="mx-auto py-8" style={{ maxWidth: '1100px', padding: '32px 24px' }}>
         <div className="flex flex-col lg:flex-row gap-8">
 
