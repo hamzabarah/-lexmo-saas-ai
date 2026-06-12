@@ -11,6 +11,18 @@ const nextConfig: NextConfig = {
   outputFileTracingExcludes: {
     "*": ["public/**"],
   },
+  // Ancien slug (avant alignement nom de fichier ↔ slug) -> nouveau slug, en
+  // permanent : évite un 404 sur une URL qui a pu être indexée / listée au
+  // sitemap auparavant.
+  async redirects() {
+    return [
+      {
+        source: "/blog/hal-tijara-electroniya-murbiha",
+        destination: "/blog/hal-tijara-electroniya-murbiha-2026",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
