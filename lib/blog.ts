@@ -20,21 +20,24 @@ export const EDITORIAL_CSV = path.join(
 
 /**
  * Ordered blog categories. `fr` matches the CSV `theme` column exactly;
- * `ar` is the label shown in the UI filter bar.
+ * `ar` is the label shown in the UI filter bar; `slug` is the stable latin
+ * URL segment used by /blog/categorie/[cat].
  */
-export const BLOG_CATEGORIES: { fr: string; ar: string }[] = [
-  { fr: "Fondamentaux e-commerce", ar: "الأساسيات" },
-  { fr: "Publicite et marketing", ar: "الإعلانات والتسويق" },
-  { fr: "Produits, recherche et fournisseurs", ar: "المنتجات والموردين" },
-  { fr: "Par pays", ar: "حسب الدولة" },
-  { fr: "Paiement et logistique", ar: "الدفع والشحن" },
-  { fr: "Legal, fiscalite et couts", ar: "القانون والضرائب" },
-  { fr: "Outils et IA", ar: "الأدوات والذكاء الاصطناعي" },
-  { fr: "Creation et optimisation du magasin", ar: "إنشاء المتجر" },
-  { fr: "Marque et dropshipping", ar: "العلامة والدروبشيبينغ" },
-  { fr: "Temoignages et histoires", ar: "قصص النجاح" },
-  { fr: "Choix de formation", ar: "اختيار التكوين" },
+export const BLOG_CATEGORIES: { fr: string; ar: string; slug: string }[] = [
+  { fr: "Fondamentaux e-commerce", ar: "الأساسيات", slug: "fondamentaux" },
+  { fr: "Publicite et marketing", ar: "الإعلانات والتسويق", slug: "marketing-publicite" },
+  { fr: "Produits, recherche et fournisseurs", ar: "المنتجات والموردين", slug: "produits-fournisseurs" },
+  { fr: "Par pays", ar: "حسب الدولة", slug: "par-pays" },
+  { fr: "Paiement et logistique", ar: "الدفع والشحن", slug: "paiement-logistique" },
+  { fr: "Legal, fiscalite et couts", ar: "القانون والضرائب", slug: "legal-fiscalite" },
+  { fr: "Outils et IA", ar: "الأدوات والذكاء الاصطناعي", slug: "outils-ia" },
+  { fr: "Creation et optimisation du magasin", ar: "إنشاء المتجر", slug: "creation-magasin" },
+  { fr: "Marque et dropshipping", ar: "العلامة والدروبشيبينغ", slug: "marque-dropshipping" },
+  { fr: "Temoignages et histoires", ar: "قصص النجاح", slug: "temoignages" },
+  { fr: "Choix de formation", ar: "اختيار التكوين", slug: "choix-formation" },
 ];
+
+export type BlogCategory = (typeof BLOG_CATEGORIES)[number];
 
 const THEME_FR_TO_AR: Record<string, string> = Object.fromEntries(
   BLOG_CATEGORIES.map((c) => [c.fr, c.ar]),
@@ -88,6 +91,27 @@ export function getThemeMap(): Record<string, string> {
     const slug = (cols[2] ?? "").trim();
     const theme = (cols[3] ?? "").trim();
     if (slug) map[slug] = THEME_FR_TO_AR[theme] ?? theme;
+  }
+  return map;
+}
+
+/**
+ * Build a `slug -> FR theme` map from the editorial CSV. The FR theme is the
+ * canonical grouping key (matches `BLOG_CATEGORIES[].fr` exactly).
+ */
+export function getThemeFrMap(): Record<string, string> {
+  if (!fs.existsSync(EDITORIAL_CSV)) return {};
+  const lines = fs
+    .readFileSync(EDITORIAL_CSV, "utf8")
+    .split(/\r?\n/)
+    .filter((l) => l.trim().length > 0);
+  const map: Record<string, string> = {};
+  // Skip header row (numero,titre,slug,theme).
+  for (const line of lines.slice(1)) {
+    const cols = parseCsvLine(line);
+    const slug = (cols[2] ?? "").trim();
+    const theme = (cols[3] ?? "").trim();
+    if (slug) map[slug] = theme;
   }
   return map;
 }
@@ -195,6 +219,44 @@ export function getRelatedPosts(slug: string, category: string, limit = 3): Blog
   return getAllPosts()
     .filter((p) => p.slug !== slug && p.category === category)
     .slice(0, limit);
+}
+
+/** Canonical category for a given URL slug, or null if unknown. */
+export function getCategoryBySlug(catSlug: string): BlogCategory | null {
+  return BLOG_CATEGORIES.find((c) => c.slug === catSlug) ?? null;
+}
+
+/**
+ * All published posts belonging to a canonical category (by category slug),
+ * newest first. Grouping uses the editorial CSV (FR theme); for the rare post
+ * absent from the CSV, falls back to matching the raw front-matter category
+ * against the category's Arabic label.
+ */
+export function getPostsByCategorySlug(catSlug: string): BlogPost[] {
+  const cat = getCategoryBySlug(catSlug);
+  if (!cat) return [];
+  const frMap = getThemeFrMap();
+  return getAllPosts().filter((p) => {
+    const fr = frMap[p.slug];
+    return fr ? fr === cat.fr : p.category === cat.ar;
+  });
+}
+
+/** Canonical categories that actually have at least one published post. */
+export function getNonEmptyCategories(): (BlogCategory & { count: number })[] {
+  const frMap = getThemeFrMap();
+  const counts: Record<string, number> = {};
+  for (const p of getAllPosts()) {
+    const fr = frMap[p.slug];
+    const cat = fr
+      ? BLOG_CATEGORIES.find((c) => c.fr === fr)
+      : BLOG_CATEGORIES.find((c) => c.ar === p.category);
+    if (cat) counts[cat.slug] = (counts[cat.slug] ?? 0) + 1;
+  }
+  return BLOG_CATEGORIES.filter((c) => (counts[c.slug] ?? 0) > 0).map((c) => ({
+    ...c,
+    count: counts[c.slug],
+  }));
 }
 
 /** Format an ISO date into Arabic (Gregorian) long form. */

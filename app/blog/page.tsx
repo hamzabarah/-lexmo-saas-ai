@@ -4,6 +4,7 @@ import {
   getAllPosts,
   formatArabicDate,
   getThemeMap,
+  getNonEmptyCategories,
   BLOG_CATEGORIES,
   SITE_URL,
 } from "@/lib/blog";
@@ -38,6 +39,8 @@ export default function BlogIndexPage() {
     category: themeMap[post.slug] || post.category || "",
   }));
   const categories = BLOG_CATEGORIES.map((c) => c.ar);
+  // Liens vers les pages-catégories (maillage interne + crawl SEO).
+  const categoryLinks = getNonEmptyCategories();
 
   return (
     <main dir="rtl" lang="ar" className="min-h-screen bg-[#0A0A0A] font-cairo text-white">
@@ -55,6 +58,32 @@ export default function BlogIndexPage() {
             متاجر شوبيفاي، وإعلانات فيسبوك وتيكتوك.
           </p>
         </header>
+
+        {/* Catégories — liens crawlables vers chaque page-catégorie */}
+        {categoryLinks.length > 0 && (
+          <nav aria-label="أقسام المدونة" className="mb-12">
+            <h2 className="mb-4 text-center text-sm font-bold text-gray-400">
+              تصفّح حسب القسم
+            </h2>
+            <div className="flex flex-wrap justify-center gap-2.5">
+              {categoryLinks.map((cat) => (
+                <Link
+                  key={cat.slug}
+                  href={`/blog/categorie/${cat.slug}`}
+                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#111111] px-4 py-2 text-sm font-bold text-gray-300 transition-all duration-200 hover:border-[#C5A04E]/40 hover:text-white"
+                >
+                  {cat.ar}
+                  <span
+                    className="rounded-full bg-white/5 px-1.5 py-0.5 text-[11px] font-bold leading-none text-gray-500"
+                    style={{ fontFamily: "Inter, system-ui, sans-serif" }}
+                  >
+                    {cat.count}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </nav>
+        )}
 
         {/* Empty state */}
         {posts.length === 0 ? (

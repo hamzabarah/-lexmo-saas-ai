@@ -1,18 +1,27 @@
 import type { MetadataRoute } from "next";
-import { getAllPosts, SITE_URL } from "@/lib/blog";
+import { getAllPosts, getNonEmptyCategories, SITE_URL } from "@/lib/blog";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   // Public static pages of the site.
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: `${SITE_URL}/`, changeFrequency: "weekly", priority: 1 },
     { url: `${SITE_URL}/formation`, changeFrequency: "weekly", priority: 0.9 },
-    { url: `${SITE_URL}/formation-basic`, changeFrequency: "weekly", priority: 0.9 },
+    // /formation-basic volontairement absent : espace membre bloqué dans robots.txt.
     { url: `${SITE_URL}/diagnostic`, changeFrequency: "weekly", priority: 0.9 },
     { url: `${SITE_URL}/blog`, changeFrequency: "daily", priority: 0.8 },
     { url: `${SITE_URL}/legal/terms`, changeFrequency: "yearly", priority: 0.2 },
     { url: `${SITE_URL}/legal/privacy`, changeFrequency: "yearly", priority: 0.2 },
     { url: `${SITE_URL}/legal/refund`, changeFrequency: "yearly", priority: 0.2 },
   ];
+
+  // Blog category pages (internal linking + faster crawl of all articles).
+  const categoryRoutes: MetadataRoute.Sitemap = getNonEmptyCategories().map(
+    (cat) => ({
+      url: `${SITE_URL}/blog/categorie/${cat.slug}`,
+      changeFrequency: "weekly",
+      priority: 0.6,
+    }),
+  );
 
   // Published blog articles, lastModified from front-matter `updated`.
   const postRoutes: MetadataRoute.Sitemap = getAllPosts().map((post) => ({
@@ -22,5 +31,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...postRoutes];
+  return [...staticRoutes, ...categoryRoutes, ...postRoutes];
 }
