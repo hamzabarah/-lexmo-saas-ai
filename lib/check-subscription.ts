@@ -12,6 +12,12 @@ export interface SubscriptionCheckResult {
     hasAccess: boolean;
     isAdmin?: boolean;
     subscription: SubscriptionData | null;
+    // Marqueurs de diagnostic (présents même quand hasAccess=false) : servent
+    // à identifier compte + déploiement + projet Supabase sur une capture.
+    email?: string | null;
+    build?: string;
+    env?: string;
+    supabaseRef?: string;
 }
 
 /**
@@ -22,6 +28,7 @@ export async function checkUserSubscription(): Promise<SubscriptionCheckResult> 
     try {
         const res = await fetch('/api/check-subscription', {
             credentials: 'include',
+            cache: 'no-store',
         });
 
         if (!res.ok) {

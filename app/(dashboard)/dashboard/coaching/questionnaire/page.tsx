@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { checkUserSubscription, SubscriptionCheckResult } from "@/lib/check-subscription";
+import AccessDebugFooter from "@/components/AccessDebugFooter";
 import {
     BLOCKS, TOTAL_QUESTIONS, QUESTIONS, getQuestion,
     getNextVisibleQuestionId, getFirstVisibleQuestionId, isQuestionVisible,
@@ -268,6 +269,8 @@ export default function QuestionnairePage() {
                     <Lock className="w-10 h-10 text-red-500 mx-auto mb-4" />
                     <h2 className="text-2xl font-bold text-white mb-2">الوصول مقيد</h2>
                     <p className="text-gray-400">هاد المنطقة مخصصة لعملاء التشخيص</p>
+                    {/* Marqueur de diagnostic (discret, non destiné à l'élève) */}
+                    <AccessDebugFooter sub={subscriptionCheck} />
                 </div>
             </div>
         );

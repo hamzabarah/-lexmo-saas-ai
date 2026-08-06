@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import StepCard from "@/app/components/dashboard/StepCard";
 import { checkUserSubscription, SubscriptionCheckResult } from "@/lib/check-subscription";
+import AccessDebugFooter from "@/components/AccessDebugFooter";
 import { useProgress } from "@/lib/hooks/useProgress";
 import { Lock, Mail } from 'lucide-react';
 
@@ -58,6 +59,9 @@ export default function PhasesPage() {
                         <p className="text-xl text-gray-400 mb-8 leading-relaxed" dir="rtl">
                             يجب تفعيل اشتراكك للوصول إلى المحتوى
                         </p>
+
+                        {/* Marqueur de diagnostic (discret, non destiné à l'élève) */}
+                        <AccessDebugFooter sub={subscriptionCheck} />
 
                         <div className="h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent my-8" />
 

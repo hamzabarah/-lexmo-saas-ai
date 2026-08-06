@@ -5,6 +5,7 @@ import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { checkUserSubscription, SubscriptionCheckResult } from "@/lib/check-subscription";
+import AccessDebugFooter from "@/components/AccessDebugFooter";
 import {
     Lock, CheckCircle, Sparkles, ClipboardList, Hourglass, FileText, ListChecks,
     Activity, MessageCircle, ArrowLeft,
@@ -214,6 +215,8 @@ export default function CoachingPage() {
                     </div>
                     <h2 className="text-2xl font-bold text-white mb-4">الوصول مقيد</h2>
                     <p className="text-gray-400 mb-6">هاد المنطقة مخصصة لعملاء التشخيص</p>
+                    {/* Marqueur de diagnostic (discret, non destiné à l'élève) */}
+                    <AccessDebugFooter sub={subscriptionCheck} />
                     <a
                         href="/diagnostic"
                         className="inline-block bg-[#E8600A] hover:bg-[#D15509] text-white font-bold px-8 py-3 rounded-xl transition-colors"
