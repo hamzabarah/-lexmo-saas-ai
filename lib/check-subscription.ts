@@ -18,6 +18,14 @@ export interface SubscriptionCheckResult {
     build?: string;
     env?: string;
     supabaseRef?: string;
+    // Renseigné uniquement quand l'accès vient d'un lien d'accès (pas d'une session).
+    accessLabel?: string;
+}
+
+/** Token du lien d'accès, lu dans l'URL courante (jamais dans un cookie). */
+function currentAccessToken(): string | null {
+    if (typeof window === 'undefined') return null;
+    return new URLSearchParams(window.location.search).get('access');
 }
 
 /**
@@ -26,7 +34,14 @@ export interface SubscriptionCheckResult {
  */
 export async function checkUserSubscription(): Promise<SubscriptionCheckResult> {
     try {
-        const res = await fetch('/api/check-subscription', {
+        // Le token voyage dans l'URL de l'appel, pas dans un en-tête ni un
+        // cookie : même source de vérité que côté middleware.
+        const token = currentAccessToken();
+        const url = token
+            ? `/api/check-subscription?access=${encodeURIComponent(token)}`
+            : '/api/check-subscription';
+
+        const res = await fetch(url, {
             credentials: 'include',
             cache: 'no-store',
         });

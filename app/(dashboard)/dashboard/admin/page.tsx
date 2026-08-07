@@ -6,6 +6,7 @@ import { User } from '@supabase/supabase-js';
 import { Shield, Mail, AlertCircle, UserPlus, TrendingUp, Copy, Check, Settings, Eye, EyeOff, Calendar, Trash2, ChevronLeft, ChevronRight, X, MessageSquare, FileText, Send, Lock, Gift, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import DiagnosticSubmissionsSection from './DiagnosticSubmissionsSection';
+import AccessLinksSection from './AccessLinksSection';
 
 
 interface UserData {
@@ -597,8 +598,7 @@ export default function AdminPage() {
                 body: JSON.stringify({
                     name: newStudentName,
                     email: newStudentEmail,
-                    plan: newStudentPlan,
-                    adminEmail: ADMIN_EMAIL
+                    plan: newStudentPlan
                 })
             });
 
@@ -1436,6 +1436,9 @@ ${LOGIN_URL}
                         </div>
                     )}
                 </div>
+
+                {/* ===== Liens d'accès ===== */}
+                <AccessLinksSection />
 
                 {/* ===== Diagnostic V2 (180 questions) ===== */}
                 <DiagnosticSubmissionsSection />

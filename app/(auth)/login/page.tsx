@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { Suspense, useState, useTransition } from "react";
 import { login } from "../actions";
 import Link from "next/link";
 import { Mail, Lock, Loader2 } from "lucide-react";
 import Card from "@/app/components/dashboard/Card";
+import AccessLinkRecovery from "@/components/AccessLinkRecovery";
 
 export default function LoginPage() {
     const [isPending, startTransition] = useTransition();
@@ -26,6 +27,12 @@ export default function LoginPage() {
 
     return (
         <Card className="w-full">
+            {/* Renvoie l'élève dans la formation s'il détient un lien d'accès.
+                Sans token mémorisé, ne fait rien. */}
+            <Suspense fallback={null}>
+                <AccessLinkRecovery />
+            </Suspense>
+
             <h2 className="text-2xl font-bold text-center text-white mb-2">تسجيل الدخول</h2>
             <p className="text-center text-gray-500 mb-8 text-sm">أدخل بياناتك للوصول إلى التدريب</p>
 

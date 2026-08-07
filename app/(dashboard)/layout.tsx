@@ -1,4 +1,6 @@
+import { Suspense } from "react";
 import Sidebar from "@/app/components/dashboard/Sidebar";
+import AccessLinkKeeper from "@/components/AccessLinkKeeper";
 
 export default function DashboardLayout({
     children,
@@ -7,6 +9,12 @@ export default function DashboardLayout({
 }) {
     return (
         <div className="min-h-screen bg-[#0A0A0A] text-white font-cairo" dir="rtl">
+            {/* Conserve le token du lien d'accès dans les liens internes.
+                Inactif s'il n'y a pas de paramètre ?access dans l'URL. */}
+            <Suspense fallback={null}>
+                <AccessLinkKeeper />
+            </Suspense>
+
             {/* Top Navbar */}
             <Sidebar />
 

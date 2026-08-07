@@ -1,7 +1,7 @@
-import { NextResponse, type NextRequest } from 'next/server'
+import { NextResponse, type NextRequest, type NextFetchEvent } from 'next/server'
 import { updateSession } from '@/utils/supabase/middleware'
 
-export async function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest, event: NextFetchEvent) {
     // Canonicalisation du domaine : apex ecomy.ai -> www.ecomy.ai en 301
     // permanent (consolide les signaux SEO sur une seule version).
     const host = request.headers.get('host')
@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
         url.port = ''
         return NextResponse.redirect(url, 301)
     }
-    return await updateSession(request)
+    return await updateSession(request, event)
 }
 
 export const config = {

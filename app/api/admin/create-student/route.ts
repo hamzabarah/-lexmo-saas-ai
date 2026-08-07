@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { requireAdmin } from '@/lib/admin-auth';
 
 // Generate a secure random password
 function generatePassword(length: number = 8): string {
@@ -25,20 +26,19 @@ function generatePassword(length: number = 8): string {
 
 export async function POST(request: NextRequest) {
     try {
-        // Verify admin access
-        const authHeader = request.headers.get('authorization');
-        if (!authHeader) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        // Contrôle admin à partir de la SESSION uniquement.
+        // Avant, cette route comparait un champ `adminEmail` lu dans le corps de
+        // la requête : une valeur fournie par l'appelant, donc trivialement
+        // falsifiable — n'importe qui pouvait créer un élève avec un abonnement
+        // actif. Le corps ne prouve rien, seule la session fait foi.
+        const admin = await requireAdmin();
+        if (!admin) {
+            return NextResponse.json({ error: 'Unauthorized: Admin access only' }, { status: 401 });
         }
 
         // Get request body
         const body = await request.json();
-        const { name, email, plan, adminEmail } = body;
-
-        // Verify admin email
-        if (adminEmail !== 'academyfrance75@gmail.com') {
-            return NextResponse.json({ error: 'Unauthorized: Admin access only' }, { status: 403 });
-        }
+        const { name, email, plan } = body;
 
         // Validate inputs
         if (!name || !email || !plan) {
