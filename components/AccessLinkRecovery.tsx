@@ -31,6 +31,23 @@ export default function AccessLinkRecovery() {
             const token = sessionStorage.getItem(ACCESS_TOKEN_STORAGE_KEY);
             if (!token) return;
 
+            // On ne rebondit que si l'élève a été REJETÉ depuis /dashboard.
+            // Sans ce garde-fou, quelqu'un ayant ouvert un lien d'accès dans cet
+            // onglet ne pourrait plus atteindre la page de connexion pour se
+            // connecter normalement : il serait renvoyé dans la formation.
+            const from = document.referrer;
+            if (!from) return;
+
+            let cameFromDashboard = false;
+            try {
+                const url = new URL(from);
+                cameFromDashboard =
+                    url.origin === window.location.origin && url.pathname.startsWith('/dashboard');
+            } catch {
+                return;
+            }
+            if (!cameFromDashboard) return;
+
             window.location.replace(`/dashboard/phases?access=${encodeURIComponent(token)}`);
         } catch {
             // Stockage indisponible : on laisse la page de connexion normale.

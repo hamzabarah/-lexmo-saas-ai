@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { withAccessToken } from "@/lib/access-token-client";
 
 export type CompletionMethod = "manual" | "auto_video" | "quiz";
 
@@ -40,7 +41,7 @@ export function useProgress() {
 
     const refresh = useCallback(async () => {
         try {
-            const res = await fetch("/api/progress", { credentials: "include" });
+            const res = await fetch(withAccessToken("/api/progress"), { credentials: "include" });
             if (!res.ok) return;
             const json = await res.json();
             setData(json);
@@ -63,7 +64,7 @@ export function useProgress() {
             quiz_total?: number;
         }) => {
             try {
-                const res = await fetch("/api/progress", {
+                const res = await fetch(withAccessToken("/api/progress"), {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     credentials: "include",

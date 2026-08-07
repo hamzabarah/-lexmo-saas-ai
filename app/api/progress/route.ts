@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { createClient as createAdminClient } from '@supabase/supabase-js';
 import { stepsContent } from '@/app/(dashboard)/dashboard/phases/stepsData';
+import { findValidAccessLink } from '@/lib/access-links';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,6 +12,36 @@ function getAdmin() {
         process.env.SUPABASE_SERVICE_ROLE_KEY!,
         { auth: { autoRefreshToken: false, persistSession: false } }
     );
+}
+
+/**
+ * À qui appartient cette progression ?
+ *
+ * Un élève connecté écrit dans lesson_progress (clé user_id). Un porteur de
+ * lien n'ayant pas de compte, sa progression va dans access_link_progress
+ * (clé link_id) — table séparée, pour ne rien changer à celle des élèves.
+ *
+ * La session prime toujours : un admin qui ouvre un lien d'accès continue
+ * d'écrire dans SA progression, pas dans celle du lien.
+ */
+type Owner =
+    | { table: 'lesson_progress'; column: 'user_id'; id: string }
+    | { table: 'access_link_progress'; column: 'link_id'; id: string };
+
+async function resolveOwner(request: NextRequest): Promise<Owner | null> {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+        return { table: 'lesson_progress', column: 'user_id', id: user.id };
+    }
+
+    const token = request.nextUrl.searchParams.get('access');
+    if (!token) return null;
+
+    const link = await findValidAccessLink(token);
+    if (!link) return null;
+
+    return { table: 'access_link_progress', column: 'link_id', id: link.id };
 }
 
 // Build phase totals from stepsData (single source of truth for lesson catalog)
@@ -25,19 +56,18 @@ function getPhaseTotals(): { byPhase: Record<number, number>; total: number } {
     return { byPhase, total };
 }
 
-// GET: return user's full progress + computed stats
-export async function GET() {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+// GET: return full progress + computed stats
+export async function GET(request: NextRequest) {
+    const owner = await resolveOwner(request);
+    if (!owner) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const admin = getAdmin();
     const { data: rows, error } = await admin
-        .from('lesson_progress')
+        .from(owner.table)
         .select('*')
-        .eq('user_id', user.id);
+        .eq(owner.column, owner.id);
 
     if (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
@@ -82,9 +112,8 @@ export async function GET() {
 
 // POST: upsert lesson progress
 export async function POST(req: NextRequest) {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+    const owner = await resolveOwner(req);
+    if (!owner) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -99,9 +128,9 @@ export async function POST(req: NextRequest) {
 
     // Read existing row to preserve fields not sent in this request
     const { data: existing } = await admin
-        .from('lesson_progress')
+        .from(owner.table)
         .select('*')
-        .eq('user_id', user.id)
+        .eq(owner.column, owner.id)
         .eq('phase_id', phase_id)
         .eq('lesson_id', lesson_id)
         .maybeSingle();
@@ -110,7 +139,7 @@ export async function POST(req: NextRequest) {
     const isCompletionEvent = completion_method === 'manual' || completion_method === 'auto_video' || completion_method === 'quiz';
 
     const payload: Record<string, any> = {
-        user_id: user.id,
+        [owner.column]: owner.id,
         phase_id,
         lesson_id,
         updated_at: now,
@@ -138,8 +167,8 @@ export async function POST(req: NextRequest) {
     }
 
     const { data, error } = await admin
-        .from('lesson_progress')
-        .upsert(payload, { onConflict: 'user_id,phase_id,lesson_id' })
+        .from(owner.table)
+        .upsert(payload, { onConflict: `${owner.column},phase_id,lesson_id` })
         .select()
         .single();
 

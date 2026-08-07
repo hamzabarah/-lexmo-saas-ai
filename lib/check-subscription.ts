@@ -1,3 +1,5 @@
+import { withAccessToken } from './access-token-client';
+
 export interface SubscriptionData {
     id: string;
     user_id: string;
@@ -22,12 +24,6 @@ export interface SubscriptionCheckResult {
     accessLabel?: string;
 }
 
-/** Token du lien d'accès, lu dans l'URL courante (jamais dans un cookie). */
-function currentAccessToken(): string | null {
-    if (typeof window === 'undefined') return null;
-    return new URLSearchParams(window.location.search).get('access');
-}
-
 /**
  * Check if the current user has an active subscription
  * Calls server API route that uses service role to bypass RLS
@@ -36,12 +32,7 @@ export async function checkUserSubscription(): Promise<SubscriptionCheckResult> 
     try {
         // Le token voyage dans l'URL de l'appel, pas dans un en-tête ni un
         // cookie : même source de vérité que côté middleware.
-        const token = currentAccessToken();
-        const url = token
-            ? `/api/check-subscription?access=${encodeURIComponent(token)}`
-            : '/api/check-subscription';
-
-        const res = await fetch(url, {
+        const res = await fetch(withAccessToken('/api/check-subscription'), {
             credentials: 'include',
             cache: 'no-store',
         });
