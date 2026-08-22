@@ -7,6 +7,20 @@
 
 ---
 
+## ⚠️ Règle de vérification — à lire avant d'écrire quoi que ce soit dans ce document
+
+> **Ne jamais inférer l'état de la production à partir de fichiers locaux.**
+> `.env.local` est ignoré par git et ne dit rien de Vercel.
+> Toute affirmation sur la production doit s'appuyer sur un comportement observé, pas sur un fichier de développement.
+> Si l'information n'est pas vérifiable depuis le dépôt, l'écrire explicitement comme non vérifiée plutôt que de conclure.
+
+Cette règle est née d'une erreur réelle : les versions d'avril **et** du 22/08 de ce document affirmaient toutes deux que Stripe tournait en mode test, sur la seule foi du préfixe de clé lu dans `.env.local`. Les paiements réels arrivaient en fait sur le compte live — l'encaissement ne passe même pas par cette variable. Reconduire une vérification sur le même fichier local a reproduit la faute au lieu de la corriger.
+
+**Ce qui est observable depuis le dépôt** : le code, les migrations, les dépendances, et les réponses HTTP de la production (`curl`).
+**Ce qui ne l'est pas** : les variables d'environnement Vercel, l'état réel du schéma Supabase, la configuration du dashboard Stripe, les DNS, et tout réglage fait dans une interface tierce. Pour ces sujets, écrire « non vérifiable depuis le dépôt ».
+
+---
+
 ## 📑 Table des matières
 
 1. [Vue d'ensemble](#1-vue-densemble)
@@ -51,7 +65,7 @@ Débutants arabophones intéressés par le e-commerce. Pays couverts (articles +
 
 ### État global
 - **Production active** sur Vercel, déploiement automatique sur push `main`
-- **Stripe toujours en mode TEST** — la clé Stripe de `.env.local` porte un préfixe de test, pas de production (point à trancher, §20)
+- **Paiements en production** — l'encaissement passe par des **Payment Links statiques** dont le mode est défini côté Stripe, pas par une variable de ce dépôt. `.env.local` contient une clé de test, ce qui est normal en développement local et **ne dit rien de la production**, dont les variables vivent chez Vercel
 - Working tree : plusieurs dossiers non suivis (`ecomy-video-factory/`, brouillons de logos, visuels de vente)
 
 ### Modèle économique
@@ -110,7 +124,7 @@ Débutants arabophones intéressés par le e-commerce. Pays couverts (articles +
 - Contrat de rédaction : [content/editorial/GUIDE-REDACTION.md](content/editorial/GUIDE-REDACTION.md)
 
 ### Paiement, email, hébergement
-- **Stripe 20.2** en mode TEST · webhook sur `checkout.session.completed`
+- **Stripe 20.2** · encaissement par Payment Links statiques · webhook sur `checkout.session.completed`. Le SDK n'est instancié que dans le webhook, et uniquement pour `webhooks.constructEvent` — une vérification HMAC locale qui n'appelle pas l'API Stripe
 - **Resend 6.9** ([lib/resend.ts](lib/resend.ts)) : activation post-paiement, confirmation de réservation · [lib/telegram.ts](lib/telegram.ts) pour les notifications Telegram
 - **Vercel**, déploiement sur push `main`, **aucun fichier CI/CD** dans le repo
 - **Google Analytics 4** via `@next/third-parties/google`
@@ -659,7 +673,7 @@ Quasi absent. **Seule exception** : `/api/verify-payment` (5 req/min/IP, en mém
 | [tsconfig.json](tsconfig.json), [postcss.config.mjs](postcss.config.mjs), [eslint.config.mjs](eslint.config.mjs) | Standard Next |
 
 ### 15.3 Dev / staging / prod
-Aucune distinction explicite. Pas de `.env.development` / `.env.production`. Stripe en TEST alors que le domaine est en prod.
+Aucune distinction explicite dans le dépôt : pas de `.env.development` / `.env.production`. Les variables de production sont configurées **dans le dashboard Vercel** et ne sont pas consultables depuis le dépôt — `.env.local` ne concerne que le poste de développement.
 
 ---
 
@@ -752,7 +766,7 @@ Le webhook Stripe journalise emails, IDs de session et montants. `[check-subscri
 | Domaine | État |
 |---|---|
 | Homepage, pages de vente (497/197/97), `/a-propos` | Fonctionnelles |
-| Paiement Stripe + webhook + email d'activation | Fonctionnel (**en mode TEST**) |
+| Paiement Stripe + webhook + email d'activation | Fonctionnel en production (paiements réels confirmés par le propriétaire) |
 | Inscription / connexion / reset (PKCE) | Fonctionnels |
 | Formation : 26 phases, 136 leçons, 84 vidéos, quiz | Complète |
 | **Suivi de progression** (auto-complétion vidéo à 90 %, temps passé, quiz) | Fonctionnel |
@@ -766,7 +780,6 @@ Le webhook Stripe journalise emails, IDs de session et montants. `[check-subscri
 ### 🟡 En cours / à confirmer
 - **Le parcours complet d'un porteur de lien n'a pas encore été validé de bout en bout par un humain** : ouvrir le lien → cliquer une phase → cliquer un chapitre → lancer une vidéo. Les étages ont été vérifiés séparément (serveur, HTML, interception de clic testée sous jsdom, 12/12), mais pas la chaîne complète dans un vrai navigateur.
 - **Migration `20260807_access_link_progress.sql` : appliquée ?** Au dernier contrôle (07/08), elle ne l'était pas — `/api/progress` répondait `500 Could not find the table 'public.access_link_progress'`. Tant qu'elle n'est pas passée, **les leçons d'un porteur de lien ne se cochent pas**. Rien d'autre ne casse : le hook avale l'erreur.
-- **Stripe en mode TEST** alors que le site est en production. À trancher : soit c'est voulu, soit les paiements réels ne sont pas traités.
 
 ### 🔴 Cassé / incorrect
 - **`app/sitemap.ts` déclare `/legal/privacy` et `/legal/refund`**, qui **n'existent plus** (seul `/legal/terms` subsiste). Le sitemap soumet donc deux URLs en 404 aux moteurs — soit recréer les pages, soit les retirer du sitemap.
