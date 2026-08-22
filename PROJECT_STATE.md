@@ -50,15 +50,15 @@ Cette règle est née d'une erreur réelle : les versions d'avril **et** du 22/0
 
 ### Identité
 - **Nom commercial** : `ECOMY` (logo `font-orbitron`, doré `#C5A04E`)
-- **Domaine de production** : `www.ecomy.ai` — l'apex `ecomy.ai` est redirigé en 301 vers `www` par le middleware ([middleware.ts:7-14](middleware.ts#L7-L14))
+- **Domaine de production** : `www.ecomy.ai` — l'apex `ecomy.ai` est redirigé en 301 vers `www` par le middleware ([middleware.ts:7-14](middleware.ts#L7-L14)). 🔍 *Source : code. La redirection n'a pas été testée sur l'apex et dépend aussi du DNS — hors dépôt.*
 - **Nom du repo / package** : `temp_app` ([package.json:2](package.json#L2)) — le dossier `lexmo-saas-ai` est historique
 - **Email admin** : `academyfrance75@gmail.com` (hardcodé, pas via variable d'environnement)
-- **Email d'envoi (Resend)** : ⚠️ toujours configuré sur l'ancien domaine `lexmo.ai` (voir §20)
+- **Email d'envoi (Resend)** : le code retombe sur `noreply@ecomy.ai` par défaut si `RESEND_FROM_EMAIL` n'est pas définie ([lib/resend.ts:5](lib/resend.ts#L5)). 🔍 **La valeur en production n'est pas vérifiable depuis le dépôt** (variables Vercel). Le fait que les clients soient bien activés après paiement indique que les emails partent.
 
 ### Type & objectif
 Plateforme **e-learning + coaching 1-to-1 + vente de formations**, en **arabe (RTL)**, ciblant le **monde arabophone (MENA + diaspora européenne)**. Contenu : **dropshipping / e-commerce Shopify + publicité Facebook & TikTok**, sur **26 phases** et **136 leçons** dont **84 vidéos YouTube**.
 
-Depuis mai 2026 s'y ajoute un **blog SEO arabe de 326 articles** (§7), devenu le principal canal d'acquisition.
+Depuis mai 2026 s'y ajoute un **blog SEO arabe de 326 articles** (§7). 🔍 *Sa part réelle dans l'acquisition n'est pas vérifiable depuis le dépôt* — aucune donnée d'audience n'a été consultée.
 
 ### Public cible
 Débutants arabophones intéressés par le e-commerce. Pays couverts (articles + sélecteurs) : Maroc, Algérie, Tunisie, Arabie Saoudite, Émirats, Koweït, Qatar, Bahreïn, Oman, Égypte, Irak, Jordanie, Libye, Liban, Syrie, Yémen, Soudan, Mauritanie, Palestine + diaspora (France, Belgique, Allemagne, Italie, Espagne, UK, Pays-Bas, Suède, Canada, Australie).
@@ -93,7 +93,7 @@ Débutants arabophones intéressés par le e-commerce. Pays couverts (articles +
 - **next-mdx-remote 6** — rendu des articles de blog
 - `react-markdown` + `remark-gfm` + `react-syntax-highlighter` — bilans diagnostic, contenus riches
 - `flag-icons` — drapeaux pays
-- `zustand 5` — **présent en dépendance, quasi inutilisé** (state en `useState` local ou hooks maison)
+- `zustand 5` — **présent en dépendance, totalement inutilisé** : zéro occurrence dans `app/`, `lib/`, `components/`, `utils/`. Le state est en `useState` local ou dans des hooks maison
 - Polices : **Cairo** (arabe), **Orbitron** (logo) via `next/font/google`
 
 ### Backend (in-process Next.js)
@@ -104,7 +104,7 @@ Débutants arabophones intéressés par le e-commerce. Pays couverts (articles +
 ### Base de données
 - **Supabase (Postgres managé)** — la référence du projet vit dans les variables d'environnement, non reproduite ici
 - Pas d'ORM : `@supabase/supabase-js@2.90` + `@supabase/ssr@0.8`
-- **RLS activé partout**, policies admin par email hardcodé
+- **RLS activé partout**, policies admin par email hardcodé. ✅ *Vérifié en base le 22/08 par test comportemental — voir §4.0.*
 - Le code serveur utilise systématiquement la **service-role key** (bypass RLS) et refait le contrôle d'accès en TypeScript
 
 ### Authentification
@@ -226,7 +226,7 @@ Voie lien :      ?access=<token> dans l'URL → middleware valide en base → pa
 ### Patterns
 - **Route Groups** `(auth)` / `(dashboard)` pour des layouts distincts sans impacter l'URL
 - **Service-role bypass RLS** dans toutes les routes serveur, contrôle d'accès refait en TS
-- **Polling client** plutôt que websockets (15 s pour la promo)
+- **Polling client** plutôt que websockets (60 s pour la promo)
 - **Contenu de cours en TypeScript hardcodé**, contenu de blog en fichiers MDX — rien en base
 - **Admin par email hardcodé** (anti-pattern assumé, §14)
 
@@ -236,25 +236,63 @@ Voie lien :      ?access=<token> dans l'URL → middleware valide en base → pa
 
 > Le contenu de cours n'est **pas** en base : il vit dans `stepsData.ts`, `quizData.ts` et `LessonContentRenderer.tsx`. Le blog vit en fichiers MDX. La base ne stocke que les **utilisateurs, paiements, parcours et progression**.
 
-### Migrations (`supabase/migrations/`, à appliquer dans l'ordre du nom)
-| Fichier | Apport |
-|---|---|
-| `20260127_init_live_dashboard.sql` | `live_dashboard_state` |
-| `20260318_coaching_profiles.sql` | `coaching_profiles` |
-| `20260318_coaching_system.sql` | `availability_slots`, colonnes de `bookings` |
-| `20260323_coaching_diagnostics.sql` | `coaching_diagnostics` |
-| `20260419_ecommerce_plans.sql` | Valeurs `ecommerce` / `ecommerce_basic` au CHECK |
-| `20260426_lesson_progress.sql` | `lesson_progress` |
-| `20260427_focus_*.sql` (×4) | `focus_sessions`, `focus_tasks`, `focus_subtasks`, types |
-| `20260509_diagnostic_v2.sql` | `diagnostic_submissions` |
-| `20260807_access_links.sql` | `access_links`, `access_link_uses` + 2 fonctions |
-| `20260807_access_link_progress.sql` | `access_link_progress` |
+### 4.0 État réel des migrations — vérifié en base le 22/08/2026
+
+> **Méthode** : chaque table et chaque colonne ajoutée a été interrogée via l'API REST Supabase avec la clé service-role (lectures seules). Un fichier de migration ne prouve pas son application : c'est la base qui tranche.
+
+| Fichier | Apport | Statut en base |
+|---|---|---|
+| `20260127_init_live_dashboard.sql` | `live_dashboard_state` | ✅ appliquée |
+| `20260318_coaching_profiles.sql` | `coaching_profiles` | ✅ appliquée |
+| `20260318_coaching_system.sql` | `availability_slots` + colonnes de `bookings` | ⚠️ **partielle** — voir ci-dessous |
+| `20260323_coaching_diagnostics.sql` | `coaching_diagnostics` | ✅ appliquée |
+| `20260419_ecommerce_plans.sql` | Valeurs `ecommerce` / `ecommerce_basic` au CHECK | ✅ appliquée (165 lignes `ecommerce`, 21 `ecommerce_basic` en base) |
+| `20260426_lesson_progress.sql` | `lesson_progress` | ✅ appliquée (4483 lignes) |
+| `20260427_focus_sessions.sql` | `focus_sessions` | ✅ appliquée |
+| `20260427_focus_tasks.sql` | `focus_tasks` | ✅ appliquée |
+| `20260427_focus_subtasks.sql` | `focus_subtasks` | ✅ appliquée |
+| `20260427_focus_task_types.sql` | `focus_tasks.task_type` | ✅ appliquée |
+| `20260509_diagnostic_v2.sql` | `diagnostic_submissions` | ✅ appliquée |
+| `20260807_access_links.sql` | `access_links`, `access_link_uses` | ✅ appliquée (4 liens, 120 usages) |
+| `20260807_access_link_progress.sql` | `access_link_progress` | ✅ appliquée (9 lignes) |
+
+**Les 16 tables attendues existent.** Une seule migration est incomplète :
+
+**`20260318_coaching_system.sql` — partiellement appliquée.** La table `availability_slots` existe et la colonne `bookings.product_type` aussi, mais les deux autres colonnes de `bookings` **manquent** :
+
+| Colonne | État | Utilisée par le code ? |
+|---|---|---|
+| `product_type` | ✅ existe | oui — [bookings/route.ts:152](app/api/bookings/route.ts#L152), [coaching-profile/route.ts:39](app/api/coaching-profile/route.ts#L39), admin |
+| `telegram_link` | ❌ absente | non |
+| `admin_notes` | ❌ absente | non |
+| `module_id` | ❌ absente | non (colonne legacy) |
+
+> **Aucun impact fonctionnel** : le code ne référence aucune des trois colonnes manquantes. Soit on rejoue la partie `ALTER TABLE` de la migration, soit on la retire du fichier pour que fichier et base coïncident. À arbitrer.
+
+**Test de RLS (comportemental, clé anon vs service-role)**
+
+| Table | Lignes (service-role) | Lignes (anon) | Verdict |
+|---|---|---|---|
+| `users` | 192 | 0 | bloquée |
+| `user_subscriptions` | 198 | 0 | bloquée |
+| `lesson_progress` | 4483 | 0 | bloquée |
+| `diagnostic_submissions` | 1 | refus | bloquée |
+| `access_links` | 4 | 0 | bloquée |
+| `access_link_uses` | 120 | 0 | bloquée |
+| `access_link_progress` | 9 | 0 | bloquée |
+| `focus_tasks` | 7 | 0 | bloquée |
+| `bookings` | 2 | 0 | bloquée |
+| `live_dashboard_state` | 1 | **1** | lisible publiquement — **par conception** |
+
+Les tokens de `access_links` sont donc bien inaccessibles avec la clé anon, comme voulu (§4.13).
+
+> 🔍 **Non vérifiés en base** : le détail des policies RLS (seul leur *effet* a été testé), les triggers, les contraintes CHECK elles-mêmes, et les `REVOKE`/`GRANT` sur les fonctions. PostgREST n'expose pas le catalogue Postgres.
 
 ### 4.1 `auth.users`
 Géré par Supabase Auth. `raw_user_meta_data` contient `name`, `phone`, `country` (alimentés par `signup()`).
 
 ### 4.2 `public.users` (profil étendu)
-Table historique alimentée par le trigger `on_auth_user_created` ([supabase/triggers.sql](supabase/triggers.sql)). Colonnes : `id`, `email`, `name`, `phone`, `country`, `level`, `avatar_url`, `ref_code` (`LEX-XXXXX`), `promo_code`, timestamps. Le code récent lit surtout `auth.users` via `auth.admin.listUsers()`.
+Table historique alimentée par le trigger `on_auth_user_created` ([supabase/triggers.sql](supabase/triggers.sql)). 🔍 *Source : fichier SQL — l'existence du trigger n'a pas été vérifiée en base. La table, elle, existe et contient 192 lignes.* Colonnes : `id`, `email`, `name`, `phone`, `country`, `level`, `avatar_url`, `ref_code` (`LEX-XXXXX`), `promo_code`, timestamps. Le code récent lit surtout `auth.users` via `auth.admin.listUsers()`.
 
 ### 4.3 `public.user_subscriptions` ⭐
 Table centrale des paiements ([supabase/user_subscriptions.sql](supabase/user_subscriptions.sql)).
@@ -501,7 +539,7 @@ Section « Liens d'accès » en tête de `/dashboard/admin` ([AccessLinksSection
 ## 9. Autres fonctionnalités
 
 ### 9.1 Promo cinématique (homepage)
-Compteur de places (réel `promo_places_prises` + simulé par intervalle), countdown, compteur de viewers aléatoire, ticker de noms simulés. Auto-fermeture quand le timer expire ou que les places sont pleines. Config dans `live_dashboard_state.data.settings`, pilotée depuis l'admin, lue par la homepage en polling 15 s.
+Compteur de places (réel `promo_places_prises` + simulé par intervalle), countdown, compteur de viewers aléatoire, ticker de noms simulés. Auto-fermeture quand le timer expire ou que les places sont pleines. Config dans `live_dashboard_state.data.settings`, pilotée depuis l'admin, lue par la homepage en polling **60 s** ([app/page.tsx:39](app/page.tsx#L39)).
 
 ### 9.2 Dashboard ventes en direct (`/dashboard/ventes-live`)
 Compteurs, liste des ventes, stats agrégées, graphique de cumul. APIs : `GET /api/live/data` (public), `POST /api/live/update` (header `x-api-secret`), `GET /api/live/reset` et `/api/live/fix-date` (**désormais protégés par session admin**).
@@ -778,12 +816,11 @@ Le webhook Stripe journalise emails, IDs de session et montants. `[check-subscri
 | **Protection de `/dashboard`** | Corrigée et vérifiée (307 → `/login`) |
 
 ### 🟡 En cours / à confirmer
-- **Le parcours complet d'un porteur de lien n'a pas encore été validé de bout en bout par un humain** : ouvrir le lien → cliquer une phase → cliquer un chapitre → lancer une vidéo. Les étages ont été vérifiés séparément (serveur, HTML, interception de clic testée sous jsdom, 12/12), mais pas la chaîne complète dans un vrai navigateur.
-- **Migration `20260807_access_link_progress.sql` : appliquée ?** Au dernier contrôle (07/08), elle ne l'était pas — `/api/progress` répondait `500 Could not find the table 'public.access_link_progress'`. Tant qu'elle n'est pas passée, **les leçons d'un porteur de lien ne se cochent pas**. Rien d'autre ne casse : le hook avale l'erreur.
+- **Le parcours complet d'un porteur de lien n'a pas encore été validé de bout en bout par un humain** : ouvrir le lien → cliquer une phase → cliquer un chapitre → lancer une vidéo. Les étages ont été vérifiés séparément (serveur, HTML, interception de clic testée sous jsdom, 12/12), mais pas la chaîne complète dans un vrai navigateur. **Faisceau d'indices favorable relevé en base le 22/08** : 4 liens créés, 120 usages journalisés et 9 lignes de progression — des leçons ont donc bien été ouvertes *et* cochées par un porteur de lien. Cela ne remplace pas une validation humaine du parcours.
+- **Migration `20260807_access_link_progress.sql`** : non appliquée au 07/08, ✅ **appliquée depuis** — vérifié en base le 22/08 (la table existe et contient 9 lignes).
 
 ### 🔴 Cassé / incorrect
 - **`app/sitemap.ts` déclare `/legal/privacy` et `/legal/refund`**, qui **n'existent plus** (seul `/legal/terms` subsiste). Le sitemap soumet donc deux URLs en 404 aux moteurs — soit recréer les pages, soit les retirer du sitemap.
-- **Expéditeur Resend toujours sur `lexmo.ai`** alors que le domaine de production est `ecomy.ai`. Selon l'état DNS de l'ancien domaine, les emails d'activation partent d'un domaine obsolète ou échouent silencieusement. **À vérifier en priorité : c'est le premier email que reçoit un client qui vient de payer.**
 - **`/dashboard/phases/[id]` sans contrôle d'abonnement** (§19.1).
 
 ### 📉 Dette technique connue
@@ -793,16 +830,15 @@ Le webhook Stripe journalise emails, IDs de session et montants. `[check-subscri
 | `admin/page.tsx` | **1716 lignes** — à découper en sections comme l'a été le diagnostic v2 |
 | Clients Supabase admin | Recréés à la volée dans 10+ fichiers ; [lib/supabaseAdmin.ts](lib/supabaseAdmin.ts) existe mais reste sous-utilisé |
 | `SUPABASE_URL` vs `NEXT_PUBLIC_SUPABASE_URL` | Deux variables pour la même cible, usage incohérent selon les fichiers |
-| CHECK `user_subscriptions.plan` | Autorise encore `spark`, `emperor`, `legend` — d'où le fallback du §19.3 |
+| CHECK `user_subscriptions.plan` | Autorise encore `spark`, `emperor`, `legend` — d'où le fallback du §19.3. ✅ Vérifié en base le 22/08 : **8 lignes portent effectivement `plan='spark'`**, contre 165 `ecommerce`, 21 `ecommerce_basic` et 4 `diagnostic`. À examiner : soit d'anciens comptes, soit le fallback qui a réellement tiré |
 | `tailwind.config.ts` | Inerte depuis le passage en v4, mais toujours présent : piège pour la prochaine session |
 | `availability_slots` | Table jamais lue — `/api/bookings` génère 9h-19h en dur |
 | Tables legacy | `progress`, `user_progress`, `user_phase_progress`, `affiliates`, `commissions`, `phases`, `modules`, `tasks`, `lessons` |
 | Aucun test automatisé | Toute vérification est manuelle |
 | Aucune migration automatisée | Étape manuelle facile à oublier entre push et mise en service |
-| `zustand` | Dépendance quasi inutilisée |
+| `zustand` | Dépendance **totalement inutilisée** (zéro occurrence dans le code) — désinstallable |
 | Contenu non éditable | Modifier une leçon exige un déploiement |
 | Message français résiduel | « Erreur lors de la mise à jour du mot de passe. » dans une UI 100 % arabe |
-| Polling 15 s | La homepage interroge `/api/admin/settings` toutes les 15 s — coûteux en quota Supabase si le trafic monte |
 | GA4 partout | Chargé aussi sur `/dashboard/*`, non filtré |
 
 ### 🧭 Pour la prochaine session
