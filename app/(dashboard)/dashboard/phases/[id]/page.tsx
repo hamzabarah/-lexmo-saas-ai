@@ -1,351 +1,72 @@
-"use client";
+import Link from 'next/link';
+import { ArrowRight, Lock, Mail } from 'lucide-react';
+import StepDetailClient from './StepDetailClient';
+import { hasFormationAccess } from '@/lib/server-access';
+import { ADMIN_EMAIL } from '@/lib/admin-auth';
 
-import { useState, useMemo, useEffect, useRef } from "react";
-import Link from "next/link";
-import { useParams } from "next/navigation";
-import { ArrowRight, ArrowLeft, BookOpen, Play, FileText, HelpCircle, CheckCircle2, Circle, Clock } from "lucide-react";
-import { getStepContent, Lesson } from "../stepsData";
-import LessonContentRenderer from "./LessonContentRenderer";
-import QuizRenderer from "./QuizRenderer";
-import { checkUserSubscription } from "@/lib/check-subscription";
-import { useProgress } from "@/lib/hooks/useProgress";
+export const dynamic = 'force-dynamic';
 
-// Parse "7m" / "10m" → seconds. Falls back to 0 if not parseable.
-function parseDurationToSeconds(duration?: string): number {
-    if (!duration) return 0;
-    const m = duration.match(/(\d+)/);
-    if (!m) return 0;
-    return parseInt(m[1], 10) * 60;
-}
+/**
+ * Garde d'accès de la page de leçon.
+ *
+ * Ce Server Component existe uniquement pour trancher AVANT le rendu : le
+ * lecteur ({@link StepDetailClient}) est un composant client, et un contrôle
+ * fait à l'intérieur laisserait tout le contenu de la leçon partir dans le HTML
+ * avant d'être masqué à l'écran.
+ *
+ * Le contrôle porte sur le DROIT D'ACCÈS, pas sur le plan : c'est ce qui laisse
+ * passer les porteurs de lien d'accès, qui n'ont ni compte ni abonnement.
+ */
+export default async function StepDetailPage({
+    searchParams,
+}: {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+    const params = await searchParams;
+    const raw = params.access;
+    const accessToken = Array.isArray(raw) ? raw[0] : raw;
 
-export default function StepDetailPage() {
-    const params = useParams();
-    const stepNumber = parseInt(params.id as string);
-    const step = getStepContent(stepNumber);
+    const allowed = await hasFormationAccess(accessToken);
 
-    const [activeLessonIndex, setActiveLessonIndex] = useState(0);
-    const [userPlan, setUserPlan] = useState<string | null>(null);
-
-    const {
-        markLessonComplete,
-        recordQuizScore,
-        recordTimeSpent,
-        getPhaseProgress,
-        isLessonCompleted,
-    } = useProgress();
-
-    useEffect(() => {
-        checkUserSubscription().then((result) => {
-            setUserPlan(result?.subscription?.plan ?? null);
-        });
-    }, []);
-
-    const hasTelegramSupport = userPlan !== 'ecommerce_basic';
-
-    // Flatten all lessons for navigation
-    const allLessons = useMemo(() => {
-        if (!step) return [];
-        const lessons: { lesson: Lesson; chapterTitle: string }[] = [];
-        step.chapters.forEach(ch => {
-            ch.lessons.forEach(l => {
-                lessons.push({ lesson: l, chapterTitle: ch.title });
-            });
-        });
-        return lessons;
-    }, [step]);
-
-    const lessonKey = (lesson: Lesson, chapterTitle: string) => `${chapterTitle}-${lesson.id}`;
-
-    const activeItem = allLessons[activeLessonIndex];
-    const activeLesson = activeItem?.lesson;
-    const activeKey = activeItem ? lessonKey(activeLesson!, activeItem.chapterTitle) : null;
-
-    // ─── Auto-completion vidéo (90% de la durée estimée) + tracking temps ───
-    const watchedRef = useRef(0); // seconds since user landed on current video lesson
-    useEffect(() => {
-        if (!step) return;
-        if (!activeLesson || activeLesson.type !== 'video') return;
-        if (!activeKey) return;
-
-        const targetSeconds = parseDurationToSeconds(activeLesson.duration);
-        watchedRef.current = 0;
-        let alreadyAutoCompleted = isLessonCompleted(stepNumber, activeKey);
-
-        const id = setInterval(() => {
-            watchedRef.current += 1;
-            // Buffer time-spent every second; the hook flushes batches every 30s
-            recordTimeSpent(stepNumber, activeKey, 1);
-
-            if (
-                !alreadyAutoCompleted &&
-                targetSeconds > 0 &&
-                watchedRef.current >= targetSeconds * 0.9
-            ) {
-                alreadyAutoCompleted = true;
-                markLessonComplete(stepNumber, activeKey, 'auto_video');
-            }
-        }, 1000);
-
-        return () => clearInterval(id);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeKey, activeLesson?.type, activeLesson?.duration, stepNumber]);
-
-    // No content for this step
-    if (!step) {
+    if (!allowed) {
         return (
             <>
                 <div className="mb-8">
-                    <Link href="/dashboard/phases" className="flex items-center gap-2 text-gray-500 hover:text-white transition-colors">
+                    <Link
+                        href="/dashboard/phases"
+                        className="flex items-center gap-2 text-gray-500 hover:text-white transition-colors"
+                    >
                         <ArrowRight size={16} />
                         <span>العودة للدروس</span>
                     </Link>
                 </div>
-                <div className="flex flex-col items-center justify-center min-h-[50vh] text-center">
-                    <div className="w-20 h-20 bg-[#C5A04E]/10 rounded-full flex items-center justify-center mb-6">
-                        <BookOpen className="w-10 h-10 text-[#C5A04E]" />
+
+                <div className="flex items-center justify-center min-h-[60vh]">
+                    <div className="bg-[#111111]/50 border border-[#C5A04E]/10 rounded-2xl p-12 max-w-2xl text-center">
+                        <div className="flex justify-center mb-6">
+                            <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center">
+                                <Lock className="w-10 h-10 text-red-500" />
+                            </div>
+                        </div>
+
+                        <h2 className="text-3xl font-bold text-white mb-4">الوصول مقيد 🔒</h2>
+
+                        <p className="text-xl text-gray-400 mb-8 leading-relaxed" dir="rtl">
+                            يجب تفعيل اشتراكك للوصول إلى المحتوى
+                        </p>
+
+                        <a
+                            href={`mailto:${ADMIN_EMAIL}?subject=طلب تفعيل الاشتراك`}
+                            className="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold px-8 py-4 rounded-xl transition-all duration-200"
+                        >
+                            <Mail className="w-5 h-5" />
+                            <span>تواصل معنا للتفعيل</span>
+                        </a>
                     </div>
-                    <h1 className="text-2xl font-bold text-white mb-3">المرحلة {stepNumber}</h1>
-                    <p className="text-gray-500 text-lg">المحتوى قيد الإعداد... قريباً</p>
                 </div>
             </>
         );
     }
 
-    const phaseStats = getPhaseProgress(stepNumber);
-    const totalLessons = allLessons.length;
-    const completedCount = phaseStats.completed;
-    const progressPercent = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
-
-    const toggleComplete = (key: string, currentlyCompleted: boolean) => {
-        if (currentlyCompleted) return; // un-complete not supported by API; ignore
-        markLessonComplete(stepNumber, key, 'manual');
-    };
-
-    const goNext = () => {
-        if (activeLessonIndex < allLessons.length - 1) {
-            setActiveLessonIndex(activeLessonIndex + 1);
-        }
-    };
-
-    const goPrev = () => {
-        if (activeLessonIndex > 0) {
-            setActiveLessonIndex(activeLessonIndex - 1);
-        }
-    };
-
-    const getLessonIcon = (type: string, isActive: boolean) => {
-        if (type === 'quiz') return <HelpCircle size={18} className={isActive ? "text-[#C5A04E]" : "text-gray-500"} />;
-        if (type === 'pdf') return <FileText size={18} className={isActive ? "text-[#C5A04E]" : "text-gray-500"} />;
-        return <Play size={18} className={isActive ? "text-[#C5A04E]" : "text-gray-500"} />;
-    };
-
-    // Track global lesson index for sidebar
-    let globalIndex = 0;
-
-    const activeKeyCompleted = activeKey ? isLessonCompleted(stepNumber, activeKey) : false;
-
-    return (
-        <div className="space-y-6">
-            {/* Header */}
-            <div className="flex items-center justify-between">
-                <Link href="/dashboard/phases" className="flex items-center gap-2 text-gray-500 hover:text-white transition-colors">
-                    <ArrowRight size={16} />
-                    <span>العودة للدروس</span>
-                </Link>
-            </div>
-
-            {/* Title + Progress */}
-            <div className="bg-[#111111] border border-[#C5A04E]/10 rounded-2xl p-6">
-                <h1 className="text-2xl font-bold text-white mb-4">{step.title}</h1>
-                <div className="flex items-center gap-4">
-                    <div className="flex-1 h-2 bg-[#1A1A1A] rounded-full overflow-hidden">
-                        <div
-                            className="h-full bg-gradient-to-l from-[#C5A04E] to-[#0ea5e9] rounded-full transition-all duration-500"
-                            style={{ width: `${progressPercent}%` }}
-                        />
-                    </div>
-                    <span className="text-sm text-gray-500 font-mono shrink-0">{completedCount}/{totalLessons}</span>
-                </div>
-            </div>
-
-            {/* Main Content: Video + Sidebar */}
-            <div className="flex flex-col lg:flex-row gap-6">
-                {/* Video Area (right in RTL = main content) */}
-                <div className="flex-1 space-y-4">
-                    {/* Video Player / Content */}
-                    <div className="bg-[#111111] border border-white/[0.08] rounded-2xl overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
-                        {activeLesson?.type === 'video' && activeLesson.videoUrl ? (
-                            <div
-                                className="relative w-full"
-                                style={{ paddingBottom: '56.25%' }}
-                                onContextMenu={(e) => e.preventDefault()}
-                            >
-                                <iframe
-                                    src={`${activeLesson.videoUrl}?rel=0&modestbranding=1&iv_load_policy=3&showinfo=0&controls=1&disablekb=1`}
-                                    className="absolute inset-0 w-full h-full"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowFullScreen
-                                    title={activeLesson.title}
-                                />
-                                {/* Top transparent overlay: blocks clicks on title, channel, share, copy link */}
-                                <div className="absolute top-0 left-0 right-0 h-[72px] z-10 cursor-default" onContextMenu={(e) => e.preventDefault()} />
-                                {/* Opaque corner overlays: visually hide "Watch on YouTube" (bottom-left) and YouTube logo (bottom-right) while keeping playback controls accessible */}
-                                <div className="absolute bottom-0 left-0 h-[42px] w-[140px] bg-[#111111] z-10 cursor-default" onContextMenu={(e) => e.preventDefault()} />
-                                <div className="absolute bottom-0 right-0 h-[42px] w-[140px] bg-[#111111] z-10 cursor-default" onContextMenu={(e) => e.preventDefault()} />
-                            </div>
-                        ) : activeLesson?.type === 'quiz' ? (
-                            <QuizRenderer
-                                phaseNumber={stepNumber}
-                                onComplete={(score, total) => {
-                                    if (!activeKey) return;
-                                    void recordQuizScore(stepNumber, activeKey, score, total);
-                                    void markLessonComplete(stepNumber, activeKey, 'quiz');
-                                }}
-                            />
-                        ) : activeLesson?.content ? (
-                            <LessonContentRenderer contentKey={activeLesson.content} />
-                        ) : (
-                            <div className="flex flex-col items-center justify-center py-20 text-center">
-                                <FileText className="w-16 h-16 text-[#C5A04E]/30 mb-4" />
-                                <p className="text-xl text-gray-500">قريباً — سيتم الإضافة قريباً</p>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Lesson Title + Nav */}
-                    <div className="bg-[#111111] border border-[#C5A04E]/10 rounded-2xl p-5">
-                        <div className="flex items-center justify-between">
-                            <h2 className="text-lg font-bold text-white">{activeLesson?.title}</h2>
-                            {activeLesson?.duration && (
-                                <span className="flex items-center gap-1 text-sm text-gray-500">
-                                    <Clock size={14} />
-                                    {activeLesson.duration}
-                                </span>
-                            )}
-                        </div>
-
-                        {/* Navigation Buttons */}
-                        <div className="flex items-center justify-between mt-6 pt-4 border-t border-[#C5A04E]/10">
-                            <button
-                                onClick={goPrev}
-                                disabled={activeLessonIndex === 0}
-                                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1A1A1A] hover:bg-[#1A1A1A] text-gray-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                            >
-                                <ArrowRight size={16} />
-                                <span>السابق</span>
-                            </button>
-
-                            <button
-                                onClick={() => activeKey && toggleComplete(activeKey, activeKeyCompleted)}
-                                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl transition-colors ${
-                                    activeKeyCompleted
-                                        ? "bg-green-500/20 text-green-400 border border-green-500/30 cursor-default"
-                                        : "bg-[#C5A04E]/10 text-[#C5A04E] border border-[#C5A04E]/20 hover:bg-[#C5A04E]/20"
-                                }`}
-                            >
-                                <CheckCircle2 size={16} />
-                                <span>{activeKeyCompleted ? "مكتمل" : "إكمال الدرس"}</span>
-                            </button>
-
-                            <button
-                                onClick={goNext}
-                                disabled={activeLessonIndex === allLessons.length - 1}
-                                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1A1A1A] hover:bg-[#1A1A1A] text-gray-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                            >
-                                <span>التالي</span>
-                                <ArrowLeft size={16} />
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Telegram Help Block — hidden for ecommerce_basic (plan without support) */}
-                    {hasTelegramSupport && (
-                        <div className="bg-[#111111] border border-[#C5A04E]/10 rounded-2xl p-5 text-center" dir="rtl">
-                            <p className="text-lg font-bold text-white mb-2">💬 محتاج مساعدة؟</p>
-                            <p className="text-gray-400 text-sm mb-4 leading-relaxed">إذا واجهت أي مشكلة في هذه المرحلة، تواصل معي مباشرة وأنا أساعدك</p>
-                            <a
-                                href="https://t.me/ecomyyy"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-white font-bold transition-colors hover:opacity-90"
-                                style={{ backgroundColor: '#0088cc' }}
-                            >
-                                <span>تواصل معي على تلغرام</span>
-                                <span>📩</span>
-                            </a>
-                        </div>
-                    )}
-                </div>
-
-                {/* Lesson Sidebar (left in RTL) */}
-                <div className="lg:w-80 shrink-0">
-                    <div className="bg-[#111111] border border-[#C5A04E]/10 rounded-2xl overflow-hidden">
-                        <div className="p-4 border-b border-[#C5A04E]/10">
-                            <h3 className="font-bold text-white">المحتوى</h3>
-                        </div>
-
-                        <div className="max-h-[calc(100vh-300px)] overflow-y-auto">
-                            {step.chapters.map((chapter, ci) => (
-                                <div key={ci}>
-                                    {/* Chapter Header */}
-                                    <div className="px-4 py-3 bg-[#1A1A1A] border-b border-[#C5A04E]/10">
-                                        <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                                            {chapter.title}
-                                        </span>
-                                    </div>
-
-                                    {/* Lessons */}
-                                    {chapter.lessons.map((lesson) => {
-                                        const currentGlobalIndex = globalIndex;
-                                        globalIndex++;
-                                        const isActive = currentGlobalIndex === activeLessonIndex;
-                                        const key = lessonKey(lesson, chapter.title);
-                                        const isCompleted = isLessonCompleted(stepNumber, key);
-
-                                        return (
-                                            <button
-                                                key={key}
-                                                onClick={() => setActiveLessonIndex(currentGlobalIndex)}
-                                                className={`w-full flex items-center gap-3 px-4 py-3 text-right transition-colors border-b border-[#C5A04E]/10 last:border-b-0 ${
-                                                    isActive
-                                                        ? "bg-[#C5A04E]/10 border-r-2 border-r-[#C5A04E]"
-                                                        : "hover:bg-[#1A1A1A]"
-                                                }`}
-                                            >
-                                                {/* Checkbox */}
-                                                <button
-                                                    onClick={(e) => { e.stopPropagation(); toggleComplete(key, isCompleted); }}
-                                                    className="shrink-0"
-                                                >
-                                                    {isCompleted ? (
-                                                        <CheckCircle2 size={18} className="text-green-500" />
-                                                    ) : (
-                                                        <Circle size={18} className="text-gray-400" />
-                                                    )}
-                                                </button>
-
-                                                {/* Icon */}
-                                                {getLessonIcon(lesson.type, isActive)}
-
-                                                {/* Title + Duration */}
-                                                <div className="flex-1 min-w-0">
-                                                    <p className={`text-sm truncate ${isActive ? "text-white font-bold" : isCompleted ? "text-gray-500 line-through" : "text-gray-400"}`}>
-                                                        {lesson.title}
-                                                    </p>
-                                                </div>
-
-                                                {lesson.duration && (
-                                                    <span className="text-xs text-gray-400 shrink-0">{lesson.duration}</span>
-                                                )}
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
+    return <StepDetailClient />;
 }
