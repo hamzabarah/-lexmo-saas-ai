@@ -188,7 +188,7 @@ Tout tient dans **une seule page**, `/dashboard/admin` (1716 lignes), plus deux 
 ### `/dashboard/ventes-live`
 Tableau de bord des ventes en direct : places disponibles et restantes, total des gains du jour, nombre de ventes, dernière vente, graphique de croissance des revenus. Les données sont poussées depuis l'extérieur par `POST /api/live/update`.
 
-> ⚠️ Cette page **n'a aucun contrôle d'accès**. Elle est seulement absente du menu pour les non-administrateurs — tout utilisateur connecté peut l'ouvrir en tapant l'URL.
+Réservée à l'administrateur. Le contrôle est fait **côté serveur, avant la lecture des données** : la page est un Server Component, un contrôle côté client aurait laissé les chiffres dans le HTML envoyé au visiteur, simplement masqués à l'affichage. Un non-administrateur voit l'écran `الوصول مقيد`, comme sur les pages `focus`.
 
 ### `/dashboard/focus` et `/dashboard/focus/stats`
 Minuteur de concentration à usage personnel de l'administrateur : session en cours, sessions du jour, saisie de ce qui a été accompli, tâches et sous-tâches. La page de statistiques montre l'activité quotidienne et la répartition par catégorie. Ces deux pages vérifient l'e-mail administrateur côté client.
@@ -208,7 +208,6 @@ Paiement et activation, authentification, formation complète, suivi de progress
 | Sujet | Détail |
 |---|---|
 | `/dashboard/phases/[id]` | **Aucun contrôle d'abonnement.** Tout utilisateur connecté, même sans abonnement actif, lit toute la formation en tapant l'URL. Le contrôle n'existe que sur la page d'index |
-| `/dashboard/ventes-live` | Aucun contrôle d'accès (voir §7) |
 | `app/sitemap.ts` | Déclare `/legal/privacy` et `/legal/refund`, qui n'existent plus : deux 404 soumis aux moteurs |
 | `/api/live/update` | Protégé par un en-tête secret, mais avec une **valeur de repli écrite en dur dans le fichier**, donc présente dans le dépôt |
 | Webhook Stripe | Contient un repli qui écrit `plan='spark'` si l'insertion échoue. Il n'a jamais tiré, mais masquerait un vrai bug le jour où il tirerait |
