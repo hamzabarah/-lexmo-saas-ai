@@ -142,7 +142,7 @@ export async function POST(req: NextRequest) {
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await req.json();
-    const { title, description, category, scheduled_date, task_type } = body;
+    const { title, description, category, scheduled_date, task_type, project_id, priority } = body;
 
     if (typeof title !== 'string' || !title.trim()) {
         return NextResponse.json({ error: 'title required' }, { status: 400 });
@@ -177,6 +177,8 @@ export async function POST(req: NextRequest) {
             scheduled_date: ttype === 'recurring' ? null : scheduled_date,
             task_type: ttype,
             status: 'todo',
+            project_id: project_id || null,
+            priority: priority === 'urgent' ? 'urgent' : 'normal',
         })
         .select()
         .single();
@@ -192,7 +194,7 @@ export async function PATCH(req: NextRequest) {
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await req.json();
-    const { id, title, description, category, scheduled_date, status, task_type } = body;
+    const { id, title, description, category, scheduled_date, status, task_type, project_id, priority } = body;
 
     if (!id) return NextResponse.json({ error: 'id required' }, { status: 400 });
     if (status && !['todo', 'in_progress', 'done'].includes(status)) {
@@ -217,6 +219,13 @@ export async function PATCH(req: NextRequest) {
     }
 
     const update: Record<string, any> = { updated_at: new Date().toISOString() };
+    if (project_id !== undefined) update.project_id = project_id || null;
+    if (priority !== undefined) {
+        if (priority !== 'urgent' && priority !== 'normal') {
+            return NextResponse.json({ error: 'Invalid priority' }, { status: 400 });
+        }
+        update.priority = priority;
+    }
     if (typeof title === 'string') update.title = title.trim();
     if (description !== undefined) update.description = description || null;
     if (category !== undefined) update.category = category || null;

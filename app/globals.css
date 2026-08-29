@@ -9,6 +9,29 @@
 
   --font-orbitron: var(--font-orbitron);
   --font-cairo: var(--font-cairo);
+
+  /* Module « عُمق » (/dashboard/focus) — theme clair chaud.
+     Jetons prefixes omq- : ils n'affectent aucune autre page. */
+  --color-omq-bg: #F0EEE6;
+  --color-omq-panel: #FAF9F5;
+  --color-omq-surface: #FFFFFF;
+  --color-omq-border: #E8E6DF;
+  --color-omq-border-strong: #DDD9CE;
+  --color-omq-divider: #F0EEE6;
+  --color-omq-ink: #1A1915;
+  --color-omq-muted: #6B6A64;
+  --color-omq-faint: #9B998F;
+  --color-omq-dot: #CFCCC2;
+  --color-omq-accent: #D97757;
+  --color-omq-accent-hover: #C56A4C;
+  --color-omq-urgent: #C0392B;
+  --color-omq-urgent-bg: #F9E9E6;
+  --color-omq-progress: #B0713F;
+  --color-omq-progress-bg: #F6EBDD;
+  --color-omq-sage: #8A9A5B;
+  --color-omq-track: #EEE9DF;
+
+  --font-almarai: var(--font-almarai), var(--font-tajawal), sans-serif;
 }
 
 html {
