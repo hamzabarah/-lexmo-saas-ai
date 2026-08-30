@@ -64,6 +64,81 @@ export interface StatsDay {
     sessions: number;
 }
 
+// ─────────────────── habitudes a eviter ───────────────────
+
+export type HabitState = 'avoided' | 'failed';
+
+export interface BadHabit {
+    id: string;
+    user_id: string;
+    title: string;
+    rule_note: string | null;
+    position: number;
+    archived_at: string | null;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface HabitCheck {
+    id: string;
+    habit_id: string;
+    check_date: string;
+    state: HabitState;
+}
+
+/** Une habitude et ses releves, indexes par date. */
+export interface BadHabitWithChecks extends BadHabit {
+    checks: Record<string, HabitState>;
+}
+
+/** Nombre de jours affiches dans la bande. */
+export const HABIT_WINDOW_DAYS = 7;
+
+/** Les `count` derniers jours en ISO, du plus ancien au plus recent. */
+export function lastDays(count: number, todayIso: string): string[] {
+    const out: string[] = [];
+    const cursor = new Date(`${todayIso}T00:00:00Z`);
+    cursor.setUTCDate(cursor.getUTCDate() - (count - 1));
+    for (let i = 0; i < count; i += 1) {
+        out.push(cursor.toISOString().slice(0, 10));
+        cursor.setUTCDate(cursor.getUTCDate() + 1);
+    }
+    return out;
+}
+
+/** Etat suivant dans le cycle : vide -> evitee -> craque -> vide. */
+export function nextHabitState(current: HabitState | undefined): HabitState | null {
+    if (current === undefined) return 'avoided';
+    if (current === 'avoided') return 'failed';
+    return null;
+}
+
+/**
+ * Serie de jours consecutifs evites, en remontant depuis aujourd'hui.
+ *
+ * Un « craque » casse la serie. Une journee non renseignee ne la casse pas
+ * mais ne compte pas non plus : on la traverse. La remontee s'arrete au
+ * premier releve d'echec, ou faute de releve au-dela de la fenetre connue.
+ */
+export function habitStreak(
+    checks: Record<string, HabitState>,
+    todayIso: string,
+    maxLookbackDays = 365
+): number {
+    const cursor = new Date(`${todayIso}T00:00:00Z`);
+    let streak = 0;
+
+    for (let i = 0; i < maxLookbackDays; i += 1) {
+        const key = cursor.toISOString().slice(0, 10);
+        const state = checks[key];
+        if (state === 'failed') break;
+        if (state === 'avoided') streak += 1;
+        cursor.setUTCDate(cursor.getUTCDate() - 1);
+    }
+
+    return streak;
+}
+
 // ────────────────────────────── libellés ──────────────────────────────
 
 export const KANBAN_COLUMNS: { status: TaskStatus; label: string }[] = [

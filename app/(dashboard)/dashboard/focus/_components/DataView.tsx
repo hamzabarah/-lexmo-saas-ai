@@ -3,10 +3,13 @@
 import {
     DAILY_SESSION_GOAL,
     PROJECT_STATUS_LABELS,
+    type BadHabitWithChecks,
     type FocusProject,
     type FocusTask,
+    type HabitState,
 } from '@/lib/focus/types';
 import { Card, Dot, Num, Pill, TaskBadges } from './ui';
+import { HabitsTracker } from './HabitsTracker';
 
 function StatCard({
     label,
@@ -48,6 +51,12 @@ export function DataView({
     todayMinutes,
     onToggleDone,
     busyTaskId,
+    habits,
+    todayIso,
+    busyHabitId,
+    onCycleHabit,
+    onCreateHabit,
+    onArchiveHabit,
 }: {
     projects: FocusProject[];
     tasks: FocusTask[];
@@ -56,6 +65,12 @@ export function DataView({
     todayMinutes: number;
     onToggleDone: (task: FocusTask) => void;
     busyTaskId: string | null;
+    habits: BadHabitWithChecks[];
+    todayIso: string;
+    busyHabitId: string | null;
+    onCycleHabit: (habit: BadHabitWithChecks, iso: string, next: HabitState | null) => void;
+    onCreateHabit: (title: string, ruleNote: string) => Promise<boolean>;
+    onArchiveHabit: (habit: BadHabitWithChecks) => void;
 }) {
     const today = new Date().toLocaleDateString('ar', {
         weekday: 'long',
@@ -226,6 +241,15 @@ export function DataView({
                     })}
                 </div>
             )}
+
+            <HabitsTracker
+                habits={habits}
+                todayIso={todayIso}
+                busyHabitId={busyHabitId}
+                onCycle={onCycleHabit}
+                onCreate={onCreateHabit}
+                onArchive={onArchiveHabit}
+            />
         </>
     );
 }

@@ -9,6 +9,10 @@ import {
     type FocusProject,
     type FocusSession,
     type FocusTask,
+    type BadHabit,
+    type BadHabitWithChecks,
+    type HabitCheck,
+    type HabitState,
     type StatsDay,
     type TaskStatus,
 } from '@/lib/focus/types';
@@ -40,7 +44,10 @@ export function OmqShell() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+    const [habits, setHabits] = useState<BadHabitWithChecks[]>([]);
+
     const [busyTaskId, setBusyTaskId] = useState<string | null>(null);
+    const [busyHabitId, setBusyHabitId] = useState<string | null>(null);
     const [busy, setBusy] = useState(false);
 
     const [plannedMinutes, setPlannedMinutes] = useState<number>(DEFAULT_DURATION);
@@ -59,12 +66,33 @@ export function OmqShell() {
         if (res.ok) setDay(await res.json());
     }, []);
 
+    const loadHabits = useCallback(async () => {
+        const res = await fetch('/api/focus/habits', { credentials: 'include' });
+        if (!res.ok) return;
+        const { habits: rows, checks } = (await res.json()) as {
+            habits: BadHabit[];
+            checks: Pick<HabitCheck, 'habit_id' | 'check_date' | 'state'>[];
+        };
+
+        // Les relevés arrivent à plat : on les indexe par habitude puis par
+        // date, forme dans laquelle la bande et la série se lisent en O(1).
+        const byHabit = new Map<string, Record<string, HabitState>>();
+        for (const c of checks ?? []) {
+            const bucket = byHabit.get(c.habit_id) ?? {};
+            bucket[c.check_date] = c.state;
+            byHabit.set(c.habit_id, bucket);
+        }
+
+        setHabits((rows ?? []).map((h) => ({ ...h, checks: byHabit.get(h.id) ?? {} })));
+    }, []);
+
     const loadAll = useCallback(async () => {
         try {
             const [pRes, tRes, sRes] = await Promise.all([
                 fetch('/api/focus/projects', { credentials: 'include' }),
                 fetch('/api/focus/tasks', { credentials: 'include' }),
                 fetch('/api/focus/stats?period=month&compare=false', { credentials: 'include' }),
+                loadHabits(),
             ]);
 
             if (pRes.ok) setProjects((await pRes.json()).projects ?? []);
@@ -82,7 +110,7 @@ export function OmqShell() {
         } finally {
             setLoading(false);
         }
-    }, [loadDay]);
+    }, [loadDay, loadHabits]);
 
     useEffect(() => {
         loadAll();
@@ -243,6 +271,93 @@ export function OmqShell() {
         [patchSession, reloadTasks]
     );
 
+    // ─────────────────────── habitudes a eviter ───────────────────────
+
+    /** Pose ou efface l'etat d'un jour. Mise a jour optimiste, retour arriere en cas d'echec. */
+    const cycleHabit = useCallback(
+        async (habit: BadHabitWithChecks, iso: string, next: HabitState | null) => {
+            setBusyHabitId(habit.id);
+
+            const before = habit.checks;
+            const after: Record<string, HabitState> = { ...before };
+            if (next === null) delete after[iso];
+            else after[iso] = next;
+
+            setHabits((prev) => prev.map((h) => (h.id === habit.id ? { ...h, checks: after } : h)));
+
+            try {
+                const res = await fetch('/api/focus/habits/checks', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ habit_id: habit.id, check_date: iso, state: next }),
+                });
+                if (!res.ok) throw new Error('check failed');
+            } catch {
+                setHabits((prev) =>
+                    prev.map((h) => (h.id === habit.id ? { ...h, checks: before } : h))
+                );
+                setError('تعذر حفظ التغيير');
+            } finally {
+                setBusyHabitId(null);
+            }
+        },
+        []
+    );
+
+    const createHabit = useCallback(
+        async (title: string, ruleNote: string): Promise<boolean> => {
+            try {
+                const res = await fetch('/api/focus/habits', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ title, rule_note: ruleNote }),
+                });
+                if (!res.ok) {
+                    setError(res.status === 409 ? 'هذه العادة موجودة بالفعل' : 'تعذر إضافة العادة');
+                    return false;
+                }
+                await loadHabits();
+                return true;
+            } catch {
+                setError('تعذر إضافة العادة');
+                return false;
+            }
+        },
+        [loadHabits]
+    );
+
+    /**
+     * Archive une habitude : elle quitte la liste, son historique reste en base.
+     * Aucune donnee de suivi n'est jamais perdue — c'est pour cela qu'on pose
+     * `archived_at` au lieu de supprimer la ligne, qui emporterait ses releves
+     * en cascade.
+     */
+    const archiveHabit = useCallback(
+        async (habit: BadHabitWithChecks) => {
+            setBusyHabitId(habit.id);
+            const before = habits;
+            setHabits((prev) => prev.filter((h) => h.id !== habit.id));
+
+            try {
+                const res = await fetch('/api/focus/habits', {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ id: habit.id, archived: true }),
+                });
+                if (!res.ok) throw new Error('archive failed');
+            } catch {
+                setHabits(before);
+                setError('تعذر أرشفة العادة');
+            } finally {
+                setBusyHabitId(null);
+            }
+        },
+        [habits]
+    );
+
     // ───────────────────────────── rendu ─────────────────────────────
 
     return (
@@ -279,6 +394,12 @@ export function OmqShell() {
                             todayMinutes={todayMinutes}
                             onToggleDone={toggleDone}
                             busyTaskId={busyTaskId}
+                            habits={habits}
+                            todayIso={todayIso()}
+                            busyHabitId={busyHabitId}
+                            onCycleHabit={cycleHabit}
+                            onCreateHabit={createHabit}
+                            onArchiveHabit={archiveHabit}
                         />
                     ) : view === 'kanban' ? (
                         <KanbanView
