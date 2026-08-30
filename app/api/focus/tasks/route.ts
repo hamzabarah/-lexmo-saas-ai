@@ -43,7 +43,9 @@ export async function GET(req: NextRequest) {
     const type = req.nextUrl.searchParams.get('type');
 
     const admin = getAdmin();
-    let query = admin.from('focus_tasks').select('*').eq('user_id', user.id);
+    // Les taches archivees (via le serveur MCP) sortent des listes, ici comme
+    // la-bas : l'interface web et le MCP doivent voir exactement la meme chose.
+    let query = admin.from('focus_tasks').select('*').eq('user_id', user.id).is('archived_at', null);
     if (dateStr) query = query.eq('scheduled_date', dateStr);
     if (status) query = query.eq('status', status);
     if (type && (VALID_TYPES as readonly string[]).includes(type)) {
