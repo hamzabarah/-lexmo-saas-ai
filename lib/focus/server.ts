@@ -192,18 +192,31 @@ export async function archiveTask(taskId: string): Promise<FocusTask> {
 
 // ──────────────────────────────── sessions ────────────────────────────────
 
-export async function getRunningSession(): Promise<FocusSession | null> {
+/**
+ * Toutes les sessions non cloturees, de la plus ancienne a la plus recente.
+ *
+ * AUCUN filtre de date, volontairement : une session oubliee reste ouverte
+ * indefiniment, et c'est justement celle-la qu'il faut voir. Filtrer sur une
+ * fenetre glissante la rendrait invisible ici tout en la laissant bloquer le
+ * demarrage d'une nouvelle session.
+ */
+export async function listOpenSessions(): Promise<FocusSession[]> {
     const userId = await resolveAdminUserId();
     const { data, error } = await getAdmin()
         .from('focus_sessions')
         .select('*')
         .eq('user_id', userId)
         .in('status', ['running', 'paused'])
-        .order('started_at', { ascending: false })
-        .limit(1);
+        .order('started_at', { ascending: true });
 
     if (error) throw new FocusError(error.message);
-    return (data?.[0] as FocusSession) ?? null;
+    return (data ?? []) as FocusSession[];
+}
+
+/** La plus recente des sessions ouvertes, ou null. */
+export async function getRunningSession(): Promise<FocusSession | null> {
+    const open = await listOpenSessions();
+    return open.length > 0 ? open[open.length - 1] : null;
 }
 
 /**
@@ -215,10 +228,13 @@ export async function startSession(taskId: string, plannedMinutes: number): Prom
     const userId = await resolveAdminUserId();
     const task = await getTask(taskId);
 
-    const running = await getRunningSession();
-    if (running) {
+    const open = await listOpenSessions();
+    if (open.length > 0) {
+        const detail = open
+            .map((s) => `${s.id} — « ${s.task_title} », ouverte depuis le ${s.started_at.slice(0, 10)}`)
+            .join(' | ');
         throw new FocusError(
-            `Une session est déjà en cours sur « ${running.task_title} ». Termine-la d'abord (end_session).`
+            `${open.length} session(s) déjà ouverte(s) : ${detail}. Termine-la d'abord avec end_session.`
         );
     }
 
@@ -257,17 +273,35 @@ export async function startSession(taskId: string, plannedMinutes: number): Prom
  * minutes, puisque c'est ainsi que le reste du code mesure le temps travaillé.
  */
 export async function endSession(
-    sessionId: string,
+    sessionId?: string,
     note?: string,
     actualMinutes?: number
 ): Promise<FocusSession> {
     const userId = await resolveAdminUserId();
     const admin = getAdmin();
 
+    // Garde-fou : sans identifiant, on cloture l'unique session ouverte.
+    // On refuse de deviner des qu'il y en a plusieurs — fermer la mauvaise
+    // fausserait le temps de travail sans que personne ne s'en apercoive.
+    let targetId = sessionId;
+    if (!targetId) {
+        const open = await listOpenSessions();
+        if (open.length === 0) throw new FocusError('Aucune session ouverte.');
+        if (open.length > 1) {
+            const detail = open
+                .map((s) => `${s.id} — « ${s.task_title} », ouverte depuis le ${s.started_at.slice(0, 10)}`)
+                .join(' | ');
+            throw new FocusError(
+                `${open.length} sessions sont ouvertes, precise session_id : ${detail}.`
+            );
+        }
+        targetId = open[0].id;
+    }
+
     const { data: existing, error: readErr } = await admin
         .from('focus_sessions')
         .select('*')
-        .eq('id', sessionId)
+        .eq('id', targetId)
         .maybeSingle();
 
     if (readErr) throw new FocusError(readErr.message);
@@ -291,7 +325,7 @@ export async function endSession(
     const { data, error } = await admin
         .from('focus_sessions')
         .update(update)
-        .eq('id', sessionId)
+        .eq('id', targetId)
         .select()
         .single();
 
@@ -395,7 +429,15 @@ export async function createHabit(title: string, ruleNote?: string): Promise<Bad
 export interface Overview {
     date: string;
     today: { sessions: number; minutes: number; streak: number };
-    runningSession: { id: string; task_title: string; planned_minutes: number } | null;
+    runningSession: { id: string; task_title: string; planned_minutes: number; started_at: string } | null;
+    /** Toutes les sessions non cloturees, quelle que soit leur date. */
+    openSessions: {
+        id: string;
+        task_title: string;
+        status: string;
+        started_at: string;
+        age_days: number;
+    }[];
     projects: {
         name: string;
         status: string;
@@ -447,7 +489,11 @@ export async function getOverview(): Promise<Overview> {
         cursor.setUTCDate(cursor.getUTCDate() - 1);
     }
 
-    const running = sessions.find((s) => s.status === 'running' || s.status === 'paused') ?? null;
+    // Les sessions ouvertes sont lues SANS fenetre de date : une session
+    // oubliee il y a des mois doit rester visible ici, sinon elle bloque
+    // start_session tout en etant invisible dans la vue d'ensemble.
+    const openSessions = await listOpenSessions();
+    const running = openSessions.length > 0 ? openSessions[openSessions.length - 1] : null;
 
     // Relevés d'habitudes
     const habitIds = habits.map((h) => h.id);
@@ -483,8 +529,18 @@ export async function getOverview(): Promise<Overview> {
                   id: running.id,
                   task_title: running.task_title,
                   planned_minutes: running.planned_duration_minutes,
+                  started_at: running.started_at,
               }
             : null,
+        openSessions: openSessions.map((s) => ({
+            id: s.id,
+            task_title: s.task_title,
+            status: s.status,
+            started_at: s.started_at,
+            age_days: Math.floor(
+                (Date.now() - new Date(s.started_at).getTime()) / 86_400_000
+            ),
+        })),
         projects: projects.map((p) => ({
             name: p.name,
             status: p.status,

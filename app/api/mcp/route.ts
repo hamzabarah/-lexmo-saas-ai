@@ -96,7 +96,7 @@ const mcp = createMcpHandler(
             {
                 title: 'Vue d’ensemble',
                 description:
-                    "État complet du module focus : statistiques du jour (sessions, minutes, série), session en cours s'il y en a une, projets avec leurs tâches, et habitudes à éviter avec leur état du jour.",
+                    "État complet du module focus : statistiques du jour (sessions, minutes, série), TOUTES les sessions encore ouvertes avec leur identifiant et leur ancienneté — quelle que soit leur date, y compris oubliées depuis des mois —, projets avec leurs tâches, et habitudes à éviter avec leur état du jour.",
                 inputSchema: z.object({}),
             },
             async () => guard(() => getOverview())
@@ -216,9 +216,13 @@ const mcp = createMcpHandler(
             {
                 title: 'Terminer une session',
                 description:
-                    "Clôture une session en cours. `note` enregistre ce qui a été accompli. `actual_minutes` force la durée effective si elle diffère du temps écoulé.",
+                    "Clôture une session ouverte. `session_id` est facultatif : s'il est omis et qu'une seule session est ouverte, c'est celle-là qui est clôturée ; s'il y en a plusieurs, la liste est renvoyée pour que tu choisisses. `note` enregistre ce qui a été accompli. `actual_minutes` force la durée effective si elle diffère du temps écoulé.",
                 inputSchema: z.object({
-                    session_id: z.string().min(1).describe('Identifiant de la session'),
+                    session_id: z
+                        .string()
+                        .min(1)
+                        .optional()
+                        .describe('Facultatif — omis, clôture l’unique session ouverte'),
                     note: z.string().max(2000).optional().describe('Ce qui a été accompli'),
                     actual_minutes: z.number().int().min(0).max(480).optional(),
                 }),
