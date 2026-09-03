@@ -6,7 +6,6 @@ import {
   BookOpen,
   GraduationCap,
   Users,
-  Star,
   Sparkles,
   CheckCircle2,
 } from "lucide-react";
@@ -136,24 +135,13 @@ export default function AProposPage() {
 
         {/* 2 ─ Preuve sociale : chiffres */}
         <section>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="flex flex-col items-center gap-1 rounded-2xl border border-white/10 bg-[#111111] p-6 text-center">
               <Users className="mb-1 h-6 w-6 text-[#C5A04E]" />
               <span className="text-3xl font-black text-white" style={{ fontFamily: "Inter, system-ui, sans-serif" }}>
                 +1000
               </span>
               <span className="text-sm text-gray-400">عضو مسجّل</span>
-            </div>
-            <div className="flex flex-col items-center gap-1 rounded-2xl border border-white/10 bg-[#111111] p-6 text-center">
-              <div className="mb-1 flex gap-0.5">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={16} className="fill-[#D4A843] text-[#D4A843]" />
-                ))}
-              </div>
-              <span className="text-3xl font-black text-white" style={{ fontFamily: "Inter, system-ui, sans-serif" }}>
-                5.0
-              </span>
-              <span className="text-sm text-gray-400">453 تقييم موثّق</span>
             </div>
             <div className="flex flex-col items-center gap-1 rounded-2xl border border-white/10 bg-[#111111] p-6 text-center">
               <BookOpen className="mb-1 h-6 w-6 text-[#C5A04E]" />

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { ChevronRight, ChevronLeft, Star } from "lucide-react";
+import { ChevronRight, ChevronLeft } from "lucide-react";
 import Flag from "./Flag";
 import Lightbox from "./Lightbox";
 import { getScreens, type Testimonial } from "@/data/testimonials";
@@ -9,41 +9,6 @@ import { getScreens, type Testimonial } from "@/data/testimonials";
 /** featured:true en premier, ordre stable pour le reste. */
 function orderFeaturedFirst(list: Testimonial[]): Testimonial[] {
   return [...list].sort((a, b) => Number(!!b.featured) - Number(!!a.featured));
-}
-
-/** Bloc note globale 5.0 + histogramme. */
-function RatingSummary() {
-  return (
-    <div className="flex flex-col sm:flex-row gap-6">
-      <div className="flex flex-col items-center gap-1 shrink-0">
-        <span className="text-5xl font-black text-white" style={{ fontFamily: "Inter, system-ui, sans-serif" }}>
-          5.0
-        </span>
-        <div className="flex gap-0.5">
-          {[...Array(5)].map((_, i) => (
-            <Star key={i} size={18} className="text-[#D4A843] fill-[#D4A843]" />
-          ))}
-        </div>
-        <span className="text-gray-500 text-sm">453 تقييم</span>
-      </div>
-      <div className="flex-1 space-y-1.5">
-        {[5, 4, 3, 2, 1].map((stars) => (
-          <div key={stars} className="flex items-center gap-3">
-            <span className="text-sm text-gray-500 w-4 text-center" style={{ fontFamily: "Inter, system-ui, sans-serif" }}>
-              {stars}
-            </span>
-            <Star size={12} className="text-[#D4A843] fill-[#D4A843] shrink-0" />
-            <div className="flex-1 h-2.5 bg-[#2A2A2A] rounded-full overflow-hidden">
-              <div className="h-full bg-[#D4A843] rounded-full" style={{ width: stars === 5 ? "100%" : "0%" }} />
-            </div>
-            <span className="text-sm text-gray-500 w-8 text-center" style={{ fontFamily: "Inter, system-ui, sans-serif" }}>
-              {stars === 5 ? 453 : 0}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
 }
 
 /**
@@ -139,9 +104,6 @@ export default function ProofGallery({
           </button>
         </div>
       </div>
-
-      {/* Note globale + histogramme */}
-      <RatingSummary />
 
       {/* Carrousel des captures */}
       <div

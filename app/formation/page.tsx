@@ -6,7 +6,7 @@ import VideoCarousel from "@/components/testimonials/VideoCarousel";
 import ProofGallery from "@/components/testimonials/ProofGallery";
 import { WhyItWorks, CoachingCard, WhatYouGet, IsThisForYou } from "@/components/sales/SalesSections";
 
-const CTA_TEXT = "سجل قبل إغلاق التسجيل";
+const CTA_TEXT = "ابدأ الآن — وصول فوري";
 const STRIPE_LINK = "https://buy.stripe.com/4gM4gz4SQ5fP7lP44rgfu04";
 const PRODUCT_TITLE = "اربح من الإنترنت | التجارة الإلكترونية";
 
@@ -18,10 +18,6 @@ const faqData: {
   {
     q: "هل الكورس مناسب للمبتدئين؟",
     a: "نعم، الكورس مصمم خصيصاً للمبتدئين من الصفر. نبدأ معك من إنشاء المتجر خطوة بخطوة حتى تحقيق أول مبيعة وما بعدها — ومع المرافقة الشخصية تمسك يدك في كل خطوة.",
-  },
-  {
-    q: "كم من الوقت أحتاج لأبدأ أربح؟",
-    a: "معظم الطلاب يبدأون بتحقيق مبيعات خلال 2-4 أسابيع من بداية التطبيق. النتائج تعتمد على مدى التزامك بالتطبيق.",
   },
   {
     q: "هل أحتاج رأس مال كبير للبدء؟",
@@ -75,17 +71,6 @@ export default function FormationPage() {
       className="w-full h-auto lg:h-[400px] object-contain lg:object-cover rounded-2xl"
       onError={() => setImgError(true)}
     />
-  );
-
-  const RatingLine = (
-    <div className="flex items-center gap-1.5">
-      <div className="flex gap-0.5">
-        {[...Array(5)].map((_, i) => (
-          <Star key={i} size={14} className="text-[#D4A843] fill-[#D4A843]" />
-        ))}
-      </div>
-      <span className="text-gray-500 text-sm" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>5.0 (453)</span>
-    </div>
   );
 
   const PriceLine = (
@@ -170,7 +155,7 @@ export default function FormationPage() {
       >
         ابدأ الآن — وصول فوري
       </a>
-      <p className="text-xs text-gray-400">دفعة واحدة · وصول مدى الحياة · ⭐ 5.0 من 453 تقييم</p>
+      <p className="text-xs text-gray-400">دفعة واحدة · وصول مدى الحياة</p>
     </div>
   );
 
@@ -187,7 +172,6 @@ export default function FormationPage() {
 
             {/* Mobile only: Rating + Price + CTA before hero */}
             <div className="lg:hidden space-y-4">
-              {RatingLine}
               <p className="text-white text-lg font-bold">{PRODUCT_TITLE}</p>
               {PriceLine}
               {CTAButton}
@@ -240,7 +224,6 @@ export default function FormationPage() {
 
                 {/* Content */}
                 <div className="p-5 space-y-3">
-                  {RatingLine}
 
                   <h3 className="text-white font-bold text-[15px] leading-snug">
                     {PRODUCT_TITLE}

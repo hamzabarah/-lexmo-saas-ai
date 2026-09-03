@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Star, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 const CTA_TEXT = "احجز جلستك الآن";
 const CTA_URL = "https://buy.stripe.com/9B68wP5WU7nX5dH7gDgfu05";
@@ -38,17 +38,6 @@ export default function DiagnosticPage() {
     if (ctaRef.current) observer.observe(ctaRef.current);
     return () => observer.disconnect();
   }, []);
-
-  const RatingLine = (
-    <div className="flex items-center gap-1.5">
-      <div className="flex gap-0.5">
-        {[...Array(5)].map((_, i) => (
-          <Star key={i} size={14} className="text-[#D4A843] fill-[#D4A843]" />
-        ))}
-      </div>
-      <span className="text-gray-500 text-sm" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>5.0 (97)</span>
-    </div>
-  );
 
   const PriceLine = (
     <div className="flex items-center gap-3 flex-wrap">
@@ -119,71 +108,6 @@ export default function DiagnosticPage() {
     </div>
   );
 
-  const Reviews = (
-    <div className="space-y-5">
-      <h2 className="text-white text-xl font-bold">تقييمات العملاء</h2>
-
-      {/* Overall rating */}
-      <div className="flex flex-col sm:flex-row gap-6">
-        <div className="flex flex-col items-center gap-1 shrink-0">
-          <span className="text-5xl font-black text-white" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>5.0</span>
-          <div className="flex gap-0.5">
-            {[...Array(5)].map((_, i) => (
-              <Star key={i} size={18} className="text-[#D4A843] fill-[#D4A843]" />
-            ))}
-          </div>
-          <span className="text-gray-500 text-sm">97 تقييم</span>
-        </div>
-        <div className="flex-1 space-y-1.5">
-          {[5, 4, 3, 2, 1].map((stars) => (
-            <div key={stars} className="flex items-center gap-3">
-              <span className="text-sm text-gray-500 w-4 text-center" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{stars}</span>
-              <Star size={12} className="text-[#D4A843] fill-[#D4A843] shrink-0" />
-              <div className="flex-1 h-2.5 bg-[#2A2A2A] rounded-full overflow-hidden">
-                <div className="h-full bg-[#D4A843] rounded-full" style={{ width: stars === 5 ? '100%' : '0%' }} />
-              </div>
-              <span className="text-sm text-gray-500 w-8 text-center" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{stars === 5 ? 97 : 0}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Separator */}
-      <div className="border-t border-[#C5A04E]/10" />
-
-      {/* Sub-header */}
-      <div className="flex items-center justify-between">
-        <h3 className="text-white font-bold text-base">أفضل التقييمات</h3>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {[
-          { flag: "\uD83C\uDDF2\uD83C\uDDE6", name: "كريم", date: "منذ 3 أيام", text: "كنت تائه بين عدة مشاريع وما عرفتش أيهم نبدأ. الجلسة ساعدتني نوضح الرؤية ودابا عندي خطة واضحة. شكراً بزاف!" },
-          { flag: "\uD83C\uDDE9\uD83C\uDDFF", name: "نور الدين", date: "منذ أسبوع", text: "جلسة ممتازة! خلال 45 دقيقة فهمت وين كانت المشكلة وعلاش ما كنتش كنتقدم. النصائح كانت عملية ومباشرة." },
-          { flag: "\uD83C\uDDF8\uD83C\uDDE6", name: "فهد", date: "منذ أسبوعين", text: "أفضل استثمار ممكن للمبتدئين. بدل ما تضيع وقتك وفلوسك، خذ هاذ الجلسة واعرف بالضبط من وين تبدأ. جداً مفيدة." },
-          { flag: "\uD83C\uDDF9\uD83C\uDDF3", name: "ياسين", date: "منذ 3 أسابيع", text: "كنت محتار بين dropshipping و coaching. بعد الجلسة عرفت بالضبط شنو يناسب وضعي ووقتي. نصيحة: لا تتردد!" },
-          { flag: "\uD83C\uDDEA\uD83C\uDDEC", name: "أحمد", date: "منذ شهر", text: "جلسة التشخيص وفرت عليا شهور من التخبط. طلعت بخطة عمل واضحة وبدأت التنفيذ من نفس اليوم. ربنا يبارك فيك!" },
-        ].map((review, i) => (
-          <div key={i} className="bg-[#111111] border border-[#C5A04E]/10 rounded-2xl p-5 space-y-3" dir="rtl">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span style={{ fontSize: '24px', lineHeight: 1 }}>{review.flag}</span>
-                <span className="text-white font-bold text-sm">{review.name}</span>
-              </div>
-              <span className="text-gray-500 text-xs">{review.date}</span>
-            </div>
-            <div className="flex gap-0.5">
-              {[...Array(5)].map((_, j) => (
-                <Star key={j} size={14} className="text-[#D4A843] fill-[#D4A843]" />
-              ))}
-            </div>
-            <p className="text-gray-300 text-sm leading-relaxed">{review.text}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-
   const CTAButton = (
     <a
       ref={ctaRef}
@@ -212,7 +136,6 @@ export default function DiagnosticPage() {
 
             {/* Mobile only: Rating + Price + CTA before title */}
             <div className="lg:hidden space-y-4">
-              {RatingLine}
               <p className="text-white text-lg font-bold">تشخيص بزنس | اكتشف البزنس المناسب لك</p>
               {PriceLine}
               {CTAButton}
@@ -228,7 +151,6 @@ export default function DiagnosticPage() {
             {FAQ}
 
             {/* Reviews */}
-            {Reviews}
           </div>
 
           {/* ===== RIGHT SIDEBAR (sticky) — desktop only ===== */}
@@ -247,7 +169,6 @@ export default function DiagnosticPage() {
 
                 {/* Content */}
                 <div className="p-5 space-y-3">
-                  {RatingLine}
 
                   <h3 className="text-white font-bold text-[15px] leading-snug">
                     تشخيص بزنس | اكتشف البزنس المناسب لك

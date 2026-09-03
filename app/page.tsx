@@ -3,23 +3,6 @@
 import Link from "next/link";
 import { useState, useEffect, useCallback, useRef } from "react";
 
-function StarRating({ count, total }: { count: number; total: string }) {
-  return (
-    <div className="flex items-center gap-1.5">
-      <div className="flex gap-0.5">
-        {[...Array(5)].map((_, i) => (
-          <svg key={i} width="14" height="14" viewBox="0 0 24 24" fill="#D4A843" stroke="#D4A843" strokeWidth="1">
-            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-          </svg>
-        ))}
-      </div>
-      <span className="text-gray-500 text-sm" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-        {count}.0 ({total})
-      </span>
-    </div>
-  );
-}
-
 function ClosedTimer({ closedAt }: { closedAt: string }) {
   const [elapsed, setElapsed] = useState('');
 
@@ -514,7 +497,6 @@ export default function HomePage() {
               <>
                 <img src="/images/cards/card-diagnostic.png" alt="تشخيص بزنس" className="w-full aspect-video object-cover" />
                 <div className="p-5 space-y-3 flex-1 flex flex-col">
-                  <StarRating count={5} total="120" />
                   <h3 className="text-white font-bold text-[15px] leading-snug">تشخيص بزنس | اكتشف البزنس المناسب لك</h3>
                   <div className="flex items-center gap-3 flex-wrap">
                     <span className="text-gray-500 text-xl font-black line-through" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>970 €</span>
@@ -536,7 +518,6 @@ export default function HomePage() {
               <Link href="/diagnostic" className="group flex flex-col flex-1">
                 <img src="/images/cards/card-diagnostic.png" alt="تشخيص بزنس" className="w-full aspect-video object-cover" />
                 <div className="p-5 space-y-3 flex-1 flex flex-col">
-                  <StarRating count={5} total="120" />
                   <h3 className="text-white font-bold text-[15px] leading-snug">تشخيص بزنس | اكتشف البزنس المناسب لك</h3>
                   <div className="flex items-center gap-3 flex-wrap">
                     <span className="text-gray-500 text-xl font-black line-through" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>970 €</span>
@@ -558,7 +539,6 @@ export default function HomePage() {
               <>
                 <img src="/images/cards/card-formation.png" alt="تكوين التجارة الإلكترونية — بدون مرافقة" className="w-full aspect-video object-cover" />
                 <div className="p-5 space-y-3 flex-1 flex flex-col">
-                  <StarRating count={5} total="453" />
                   <h3 className="text-white font-bold text-[15px] leading-snug">أطلق متجرك بنفسك — من الصفر إلى أول مبيعة أونلاين 🚀</h3>
                   <p className="text-gray-400 text-[13px] leading-relaxed">النظام الكامل بين يديك: خطة واضحة نحو أول 1000€ — تطبق بوتيرتك، حتى لو ما عندك أي خبرة</p>
                   <div className="flex items-center gap-3 flex-wrap">
@@ -581,7 +561,6 @@ export default function HomePage() {
               <Link href="/formation-basic" className="group flex flex-col flex-1">
                 <img src="/images/cards/card-formation.png" alt="تكوين التجارة الإلكترونية — بدون مرافقة" className="w-full aspect-video object-cover" />
                 <div className="p-5 space-y-3 flex-1 flex flex-col">
-                  <StarRating count={5} total="453" />
                   <h3 className="text-white font-bold text-[15px] leading-snug">أطلق متجرك بنفسك — من الصفر إلى أول مبيعة أونلاين 🚀</h3>
                   <p className="text-gray-400 text-[13px] leading-relaxed">النظام الكامل بين يديك: خطة واضحة نحو أول 1000€ — تطبق بوتيرتك، حتى لو ما عندك أي خبرة</p>
                   <div className="flex items-center gap-3 flex-wrap">
@@ -609,7 +588,6 @@ export default function HomePage() {
               <>
                 <img src="/images/cards/card-accompagnement.png" alt="تكوين التجارة الإلكترونية" className="w-full aspect-video object-cover" />
                 <div className="p-5 space-y-3 flex-1 flex flex-col">
-                  <StarRating count={5} total="453" />
                   <h3 className="text-white font-bold text-[15px] leading-snug">ما غاديش تمشي بوحدك — مرافقة شخصية حتى أول مبيعة 🤝</h3>
                   <p className="text-gray-400 text-[13px] leading-relaxed">نفس النظام الكامل + خبير يراجع متجرك ويرافقك خطوة بخطوة نحو أول 1000€ — أسرع وأأمن طريق</p>
                   <div className="flex items-center gap-3 flex-wrap">
@@ -632,7 +610,6 @@ export default function HomePage() {
               <Link href="/formation" className="group flex flex-col flex-1">
                 <img src="/images/cards/card-accompagnement.png" alt="تكوين التجارة الإلكترونية" className="w-full aspect-video object-cover" />
                 <div className="p-5 space-y-3 flex-1 flex flex-col">
-                  <StarRating count={5} total="453" />
                   <h3 className="text-white font-bold text-[15px] leading-snug">ما غاديش تمشي بوحدك — مرافقة شخصية حتى أول مبيعة 🤝</h3>
                   <p className="text-gray-400 text-[13px] leading-relaxed">نفس النظام الكامل + خبير يراجع متجرك ويرافقك خطوة بخطوة نحو أول 1000€ — أسرع وأأمن طريق</p>
                   <div className="flex items-center gap-3 flex-wrap">
