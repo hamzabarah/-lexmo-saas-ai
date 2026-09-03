@@ -841,6 +841,12 @@ ${LOGIN_URL}
                 </div>
 
                 {/* Promo Section */}
+                {/* NOTE (conformite Stripe, AUDIT_STRIPE.md C1) : ces reglages
+                    n'ont PLUS AUCUN EFFET sur la page d'accueil. Le compteur de
+                    places, le compteur de spectateurs et le bandeau de dernieres
+                    inscriptions etaient simules — ils ont ete supprimes du front
+                    public. Les champs et la base sont conserves en attendant une
+                    decision sur leur sort. */}
                 <div className="bg-[#111111]/50 border border-[#C5A04E]/10 rounded-xl p-6 mb-8">
                     <div className="flex items-center gap-3 mb-6">
                         <Gift className="w-6 h-6 text-[#C5A04E]" />
