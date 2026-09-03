@@ -19,7 +19,7 @@ import {
 // Fully static: only pre-rendered slugs exist, anything else 404s.
 export const dynamicParams = false;
 
-// Composants riches exposés au MDX (DirectAnswer, ProofImage, FAQ, CTABox…).
+// Composants riches exposés au MDX (DirectAnswer, VideoCarousel, FAQ, CTABox…).
 const mdxComponents = blogMdxComponents;
 
 export function generateStaticParams() {

@@ -9,7 +9,6 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { SITE_URL } from "@/lib/blog";
-import ProofGallery from "@/components/testimonials/ProofGallery";
 import VideoCarousel from "@/components/testimonials/VideoCarousel";
 
 export const metadata: Metadata = {
@@ -145,8 +144,7 @@ export default function AProposPage() {
           </div>
         </section>
 
-        {/* 2 (suite) ─ Captures + vidéos réelles (réutilisées du site) */}
-        <ProofGallery />
+        {/* 2 (suite) ─ Témoignages vidéo réels (réutilisés du site) */}
         <VideoCarousel />
 
         {/* 3 ─ Pourquoi nous */}

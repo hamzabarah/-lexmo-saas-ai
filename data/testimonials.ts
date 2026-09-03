@@ -28,7 +28,7 @@ export interface Testimonial {
   gender: Gender; // profil : homme / femme
   result: string; // 1 phrase en arabe
   videoUrl?: string; // YouTube (watch?v=ID) / Vimeo / .mp4
-  image?: string; // chemin /images/preuves/...
+  image?: string; // chemin d’une capture (aucune entree n’en porte depuis la mise en conformite)
   quote?: string; // citation texte optionnelle
   tags: Tag[];
   date?: string; // ISO "2026-05-12"
@@ -344,10 +344,6 @@ export function getByTag(tag: Tag): Testimonial[] {
 
 export function getVideos(): Testimonial[] {
   return TESTIMONIALS.filter((t) => t.type === "video");
-}
-
-export function getScreens(): Testimonial[] {
-  return TESTIMONIALS.filter((t) => t.type === "screen");
 }
 
 /** Témoignages filtrés par genre (profil). */

@@ -1,8 +1,6 @@
 import DirectAnswer from "./DirectAnswer";
 import TableOfContents from "./TableOfContents";
 import ClientVideo from "./ClientVideo";
-import ProofImage from "./ProofImage";
-import ProofCarousel from "./ProofCarousel";
 import VideoCarousel from "./VideoCarousel";
 import ComparisonTable from "./ComparisonTable";
 import HonestList from "./HonestList";
@@ -17,8 +15,6 @@ export const blogMdxComponents = {
   DirectAnswer,
   TableOfContents,
   ClientVideo,
-  ProofImage,
-  ProofCarousel,
   VideoCarousel,
   ComparisonTable,
   HonestList,

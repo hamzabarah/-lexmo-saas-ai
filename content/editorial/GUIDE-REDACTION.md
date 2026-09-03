@@ -18,7 +18,7 @@
    - `كيف` → liste numérotée des étapes juste après l'encadré, puis un H3 par étape.
    - `هل` / `كم` → réponse directe nuancée en paragraphe court, puis développement.
 4. **Un tableau de données concret** (coûts, comparaison, ou chiffres) par article — utiliser `<ComparisonTable>` si c'est le composant du projet (ou un tableau Markdown selon le besoin).
-5. **Preuves** : 1 `<VideoCarousel ids={[...]} />` + 1-2 `<ProofCarousel ids={[...]} />` dans une section "شاهد نتائج..." aux 2/3 de l'article. Ids choisis dans `data/testimonials.ts` selon la pertinence (pays, profil, sujet). **JAMAIS d'élément seul** (pas de `<ClientVideo>`/`<ProofImage>` isolé).
+5. **Preuves** : 1 `<VideoCarousel ids={[...]} />` dans une section "شاهد نتائج..." aux 2/3 de l'article. Ids choisis dans `data/testimonials.ts` selon la pertinence (pays, profil, sujet). **JAMAIS d'élément seul** (pas de `<ClientVideo>` isolé). Les captures de résultats chiffrés ne sont plus publiées : `<ProofCarousel>` et le dossier `public/images/preuves/` ont été supprimés (conformité Stripe).
 6. **CTA** : `<BlogCTA variant="diagnostic" />` au premier tiers ; le CTA formation de fin est **automatique**, ne pas le dupliquer (ne pas ajouter de `<CTABox>` ni de second `<BlogCTA>` formation).
 7. **Section localisation** quand pertinent : المغرب / الجزائر / أوروبا / الخليج (devises locales DH/DA/€).
 8. **Maillage interne** : 1 à 2 liens vers les articles déjà publiés du blog (URLs relatives `/blog/...`).
@@ -31,7 +31,6 @@
 - `<TableOfContents />` — sommaire auto depuis les H2.
 - `<ComparisonTable title rows={[[...]]} />` — tableau RTL, en-tête or.
 - `<VideoCarousel ids={[...]} />` — carrousel de témoignages vidéo (façade YouTube lazy).
-- `<ProofCarousel ids={[...]} />` — carrousel de captures/preuves (lightbox).
 - `<HonestList items={[[titre, texte]]} />` · `<GeoTabs tabs={[[pays, texte]]} />` · `<Timeline steps={[[label, texte]]} />`.
 - `<FAQ items={[[q, a]]} />` (in-content, génère JSON-LD) — OU `faq:` dans le front-matter (rendu auto en bas).
 - `<BlogCTA variant="diagnostic" />` — CTA diagnostic.

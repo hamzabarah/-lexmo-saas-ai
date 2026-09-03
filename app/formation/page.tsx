@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { Star, ChevronDown } from "lucide-react";
 import VideoCarousel from "@/components/testimonials/VideoCarousel";
-import ProofGallery from "@/components/testimonials/ProofGallery";
 import { WhyItWorks, CoachingCard, WhatYouGet, IsThisForYou } from "@/components/sales/SalesSections";
 
 const CTA_TEXT = "ابدأ الآن — وصول فوري";
@@ -194,8 +193,6 @@ export default function FormationPage() {
             {/* Est-ce pour toi ? */}
             <IsThisForYou />
 
-            {/* تقييمات وإثباتات (section fusionnée) */}
-            <ProofGallery />
 
             {/* FAQ */}
             {FAQ}
