@@ -75,11 +75,7 @@ export default function FormationPage() {
 
   const PriceLine = (
     <div className="flex items-center gap-3 flex-wrap">
-      <span className="text-gray-500 text-2xl font-black line-through" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{"1970 €"}</span>
       <span className="text-white text-2xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{"497 €"}</span>
-      <span className="inline-block bg-[#C5A04E]/10 text-[#C5A04E] text-[11px] font-bold px-2.5 py-0.5 rounded-full">
-        {"تخفيض %75"}
-      </span>
     </div>
   );
 
@@ -192,7 +188,7 @@ export default function FormationPage() {
             {/* Ce que tu reçois */}
             <WhatYouGet
               withCoaching={true}
-              bandeau="كل هذا اليوم بـ 497€ فقط بدل 1970€ — دفعة واحدة، بلا اشتراك شهري"
+              bandeau="كل هذا اليوم بـ 497€ — دفعة واحدة، بلا اشتراك شهري"
             />
 
             {/* Est-ce pour toi ? */}

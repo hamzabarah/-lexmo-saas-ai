@@ -18,7 +18,6 @@ interface VariantConfig {
   badge: string;
   title: string;
   subtitle: string;
-  oldPrice?: string;
   price?: string;
   button: string;
   href: string;
@@ -32,7 +31,6 @@ const VARIANTS: Record<Variant, VariantConfig> = {
     title: "ابدأ تجارتك الإلكترونية من الصفر",
     subtitle:
       "تكوين كامل خطوة بخطوة في الدروبشيبينغ وإعلانات فيسبوك وتيكتوك — من اختيار المنتج حتى أول مبيعة.",
-    oldPrice: "970€",
     price: "197€",
     button: "احصل على التكوين الآن",
     href: "/formation-basic",
@@ -43,7 +41,6 @@ const VARIANTS: Record<Variant, VariantConfig> = {
     title: "احجز جلسة تشخيص بزنس خاصة بك",
     subtitle:
       "جلسة فردية 45 دقيقة مع خبير لتحديد البزنس المناسب لك وخطة عمل واضحة حسب إمكانياتك وميزانيتك.",
-    oldPrice: "970€",
     price: "97€",
     button: "احجز جلستك الآن",
     href: "/diagnostic",
@@ -87,11 +84,6 @@ export default function BlogCTA({ variant = "formation" }: BlogCTAProps) {
 
       {c.price && (
         <div className="mt-5 flex items-center justify-end gap-3">
-          {c.oldPrice && (
-            <span className="text-lg text-gray-500 line-through decoration-red-500/70">
-              {c.oldPrice}
-            </span>
-          )}
           <span className="text-3xl font-extrabold text-[#C5A04E]">{c.price}</span>
         </div>
       )}
