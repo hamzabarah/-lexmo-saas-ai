@@ -8,7 +8,7 @@ import { WhyItWorks, WhatYouGet, IsThisForYou } from "@/components/sales/SalesSe
 
 const CTA_TEXT = "ابدأ الآن — وصول فوري";
 const STRIPE_LINK = "https://buy.stripe.com/9B63cvbhe4bLay17gDgfu06";
-const PRODUCT_TITLE = "اربح من الإنترنت | الطريق نحو أول 1000€";
+const PRODUCT_TITLE = "تكوين التجارة الإلكترونية — بدون مرافقة";
 
 const faqData: {
   q: string;
@@ -89,7 +89,7 @@ export default function FormationBasicPage() {
         أطلق متجرك بنفسك — من الصفر إلى أول مبيعة أونلاين 🚀
       </h1>
       <p className="text-gray-300 text-[15px] lg:text-base leading-[1.9]">
-        النظام الكامل بين يديك: 27 مرحلة مرتبة خطوة بخطوة نحو أول 1000€ — تطبق بوتيرتك، حتى لو ما عندك أي خبرة
+        النظام الكامل بين يديك: 27 مرحلة مرتبة خطوة بخطوة من الصفر إلى أول مبيعة — تطبق بوتيرتك، حتى لو ما عندك أي خبرة
       </p>
       <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-sm text-gray-400">
         <span>✅ بدون مخزون</span>

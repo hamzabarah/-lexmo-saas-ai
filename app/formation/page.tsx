@@ -8,7 +8,7 @@ import { WhyItWorks, CoachingCard, WhatYouGet, IsThisForYou } from "@/components
 
 const CTA_TEXT = "ابدأ الآن — وصول فوري";
 const STRIPE_LINK = "https://buy.stripe.com/4gM4gz4SQ5fP7lP44rgfu04";
-const PRODUCT_TITLE = "اربح من الإنترنت | التجارة الإلكترونية";
+const PRODUCT_TITLE = "تكوين التجارة الإلكترونية — مع مرافقة شخصية";
 
 const faqData: {
   q: string;
@@ -89,7 +89,7 @@ export default function FormationPage() {
         ما غاديش تمشي بوحدك: من الصفر إلى أول مبيعة بمرافقة شخصية 🤝
       </h1>
       <p className="text-gray-300 text-[15px] lg:text-base leading-[1.9]">
-        نفس النظام الكامل + خبير يراجع متجرك ومنتجاتك ويرافقك خطوة بخطوة نحو أول 1000€ — أسرع وأأمن طريق
+        نفس النظام الكامل + خبير يراجع متجرك ومنتجاتك ويرافقك خطوة بخطوة من الصفر إلى أول مبيعة — أسرع وأأمن طريق
       </p>
       <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-sm text-gray-400">
         <span>✅ بدون مخزون</span>
