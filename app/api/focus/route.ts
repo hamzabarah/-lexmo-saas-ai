@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { createClient as createAdminClient } from '@supabase/supabase-js';
+import { closeExpiredSessions } from '@/lib/focus-session-expiry';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,6 +25,7 @@ export async function GET(req: NextRequest) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    await closeExpiredSessions(user.id);
 
     const dateStr = req.nextUrl.searchParams.get('date');
     const target = dateStr ? new Date(`${dateStr}T00:00:00`) : new Date();
@@ -65,6 +67,7 @@ export async function POST(req: NextRequest) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    await closeExpiredSessions(user.id);
 
     const body = await req.json();
     const { task_title, category, planned_duration_minutes, task_id, subtask_id } = body;
@@ -137,6 +140,7 @@ export async function PATCH(req: NextRequest) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    await closeExpiredSessions(user.id);
 
     const body = await req.json();
     const { id, action, notes, paused_seconds } = body;

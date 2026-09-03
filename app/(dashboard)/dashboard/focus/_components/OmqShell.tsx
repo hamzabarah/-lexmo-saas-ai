@@ -271,6 +271,28 @@ export function OmqShell() {
         [patchSession, reloadTasks]
     );
 
+    /**
+     * Cloture automatique quand le compte a rebours atteint zero.
+     *
+     * Pur confort d'interface : si l'onglet est ferme avant l'echeance, ou si
+     * cet appel echoue, le serveur rattrape au prochain acces au module
+     * (closeExpiredSessions, lib/focus-session-expiry.ts). La session n'est
+     * donc jamais laissee ouverte, et le temps enregistre reste plafonne a la
+     * duree prevue dans les deux cas.
+     */
+    const autoStoppedRef = useRef<string | null>(null);
+
+    useEffect(() => {
+        if (breakEndsAt !== null) return;
+        if (!session || session.status !== 'running') return;
+        if (remainingSeconds > 0) return;
+        // Une seule tentative par session, sinon le battement d'une seconde
+        // relancerait la requete tant que le rechargement n'a pas eu lieu.
+        if (autoStoppedRef.current === session.id) return;
+        autoStoppedRef.current = session.id;
+        void stop('');
+    }, [session, remainingSeconds, breakEndsAt, stop]);
+
     // ─────────────────────── habitudes a eviter ───────────────────────
 
     /** Pose ou efface l'etat d'un jour. Mise a jour optimiste, retour arriere en cas d'echec. */

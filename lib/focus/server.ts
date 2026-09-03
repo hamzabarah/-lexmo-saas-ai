@@ -7,6 +7,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { ADMIN_EMAIL } from '@/lib/admin-auth';
+import { closeExpiredSessions } from '@/lib/focus-session-expiry';
 import type {
     BadHabit,
     FocusProject,
@@ -226,6 +227,9 @@ export async function getRunningSession(): Promise<FocusSession | null> {
  */
 export async function startSession(taskId: string, plannedMinutes: number): Promise<FocusSession> {
     const userId = await resolveAdminUserId();
+    // Avant de refuser le demarrage : une session perimee ne doit JAMAIS
+    // bloquer. On la cloture, puis on relit les sessions reellement ouvertes.
+    await closeExpiredSessions(userId);
     const task = await getTask(taskId);
 
     const open = await listOpenSessions();
@@ -278,6 +282,7 @@ export async function endSession(
     actualMinutes?: number
 ): Promise<FocusSession> {
     const userId = await resolveAdminUserId();
+    await closeExpiredSessions(userId);
     const admin = getAdmin();
 
     // Garde-fou : sans identifiant, on cloture l'unique session ouverte.
@@ -449,6 +454,7 @@ export interface Overview {
 
 export async function getOverview(): Promise<Overview> {
     const userId = await resolveAdminUserId();
+    await closeExpiredSessions(userId);
     const admin = getAdmin();
     const today = todayIso();
 

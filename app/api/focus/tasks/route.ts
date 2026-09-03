@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { createClient as createAdminClient } from '@supabase/supabase-js';
+import { closeExpiredSessions } from '@/lib/focus-session-expiry';
 
 export const dynamic = 'force-dynamic';
 
@@ -37,6 +38,7 @@ export async function GET(req: NextRequest) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    await closeExpiredSessions(user.id);
 
     const dateStr = req.nextUrl.searchParams.get('date');
     const status = req.nextUrl.searchParams.get('status');
@@ -142,6 +144,7 @@ export async function POST(req: NextRequest) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    await closeExpiredSessions(user.id);
 
     const body = await req.json();
     const { title, description, category, scheduled_date, task_type, project_id, priority } = body;
@@ -194,6 +197,7 @@ export async function PATCH(req: NextRequest) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    await closeExpiredSessions(user.id);
 
     const body = await req.json();
     const { id, title, description, category, scheduled_date, status, task_type, project_id, priority } = body;
@@ -267,6 +271,7 @@ export async function DELETE(req: NextRequest) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    await closeExpiredSessions(user.id);
 
     let id: string | null = req.nextUrl.searchParams.get('id');
     if (!id) {
