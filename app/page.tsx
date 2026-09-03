@@ -250,21 +250,6 @@ export default function HomePage() {
             <div className="p-5 space-y-3 flex-1 flex flex-col">
               <h3 className="text-white font-bold text-[15px] leading-snug">عندي حساب بالفعل</h3>
               <p className="text-gray-500 text-sm">الدخول إلى المنصة</p>
-              <div className="flex items-center gap-3">
-                <div className="flex -space-x-2 rtl:space-x-reverse">
-                  {[...Array(4)].map((_, i) => (
-                    <div key={i} className="w-7 h-7 rounded-full bg-[#1A1A1A] border-2 border-[#0A0A0A] flex items-center justify-center">
-                      <svg className="w-3.5 h-3.5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                      </svg>
-                    </div>
-                  ))}
-                  <div className="w-7 h-7 rounded-full bg-[#C5A04E]/20 border-2 border-[#0A0A0A] flex items-center justify-center">
-                    <span className="text-[#C5A04E] text-[9px] font-bold" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>+</span>
-                  </div>
-                </div>
-                <span className="text-gray-400 text-xs font-bold">+1000 عضو مسجل</span>
-              </div>
               <div className="flex-1" />
               <div className="w-full text-center bg-[#1A1A1A] group-hover:bg-[#222222] text-white text-[15px] font-bold py-3.5 rounded-xl transition-colors border border-white/10">
                 تسجيل الدخول

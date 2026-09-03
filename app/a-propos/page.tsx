@@ -5,7 +5,6 @@ import {
   HeartHandshake,
   BookOpen,
   GraduationCap,
-  Users,
   Sparkles,
   CheckCircle2,
 } from "lucide-react";
@@ -16,12 +15,12 @@ import VideoCarousel from "@/components/testimonials/VideoCarousel";
 export const metadata: Metadata = {
   title: "من نحن | أكاديمية إيكومي ECOMY — تعلّم التجارة الإلكترونية بصدق",
   description:
-    "أكاديمية إيكومي (ECOMY): منصّة عربية تعلّمك التجارة الإلكترونية والدروبشيبينغ بصدق وبلا وعود زائفة. +1000 عضو، تقييم 5★، +300 دليل مجاني، ومرافقة حقيقية حتى أول مبيعة.",
+    "أكاديمية إيكومي (ECOMY): منصّة عربية تعلّمك التجارة الإلكترونية والدروبشيبينغ بصدق وبلا وعود زائفة. +300 دليل مجاني، ومرافقة حقيقية حتى أول مبيعة.",
   alternates: { canonical: `${SITE_URL}/a-propos` },
   openGraph: {
     title: "من نحن — أكاديمية إيكومي ECOMY",
     description:
-      "نعلّمك التجارة الإلكترونية بصدق وبلا وعود زائفة — +1000 عضو، +300 دليل مجاني، ومرافقة حقيقية.",
+      "نعلّمك التجارة الإلكترونية بصدق وبلا وعود زائفة — +300 دليل مجاني، ومرافقة حقيقية.",
     url: `${SITE_URL}/a-propos`,
     siteName: "ECOMY",
     locale: "ar_AR",
@@ -135,14 +134,7 @@ export default function AProposPage() {
 
         {/* 2 ─ Preuve sociale : chiffres */}
         <section>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="flex flex-col items-center gap-1 rounded-2xl border border-white/10 bg-[#111111] p-6 text-center">
-              <Users className="mb-1 h-6 w-6 text-[#C5A04E]" />
-              <span className="text-3xl font-black text-white" style={{ fontFamily: "Inter, system-ui, sans-serif" }}>
-                +1000
-              </span>
-              <span className="text-sm text-gray-400">عضو مسجّل</span>
-            </div>
+          <div className="mx-auto max-w-sm">
             <div className="flex flex-col items-center gap-1 rounded-2xl border border-white/10 bg-[#111111] p-6 text-center">
               <BookOpen className="mb-1 h-6 w-6 text-[#C5A04E]" />
               <span className="text-3xl font-black text-white" style={{ fontFamily: "Inter, system-ui, sans-serif" }}>
@@ -162,7 +154,7 @@ export default function AProposPage() {
           <div className="mb-8 text-center">
             <h2 className="text-2xl font-bold text-white sm:text-3xl">لماذا نحن؟</h2>
             <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-gray-400">
-              ما الذي يميّزنا عن غيرنا — ولماذا يثق بنا أكثر من 1000 عضو.
+              ما الذي يميّزنا عن غيرنا.
             </p>
           </div>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
