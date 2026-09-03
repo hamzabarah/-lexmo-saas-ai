@@ -22,7 +22,7 @@ export default function ClientVideo({ id }: { id: string }) {
       >
         {playing && ytId ? (
           <iframe
-            src={`https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0&playsinline=1`}
+            src={`https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&rel=0&playsinline=1`}
             title={t.name}
             className="absolute inset-0 h-full w-full"
             allow="accelerated-content; autoplay; encrypted-media; picture-in-picture"

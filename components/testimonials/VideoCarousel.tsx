@@ -32,7 +32,7 @@ function VideoCard({ t }: { t: Testimonial }) {
     >
       {playing && id ? (
         <iframe
-          src={`https://www.youtube.com/embed/${id}?autoplay=1&rel=0&playsinline=1`}
+          src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1`}
           title={t.name}
           className="absolute inset-0 h-full w-full"
           allow="accelerated-content; autoplay; encrypted-media; picture-in-picture"

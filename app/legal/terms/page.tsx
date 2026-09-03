@@ -99,7 +99,7 @@ export default async function TermsPage() {
             <p>The contract is formed when the Customer definitively validates their order on the payment platform. Prior to this validation, the Customer:</p>
             <ul className="list-disc list-inside mt-2 space-y-1 text-gray-500">
               <li>Has read and expressly accepted these T&amp;C by checking the box provided for this purpose</li>
-              <li>Has confirmed understanding and acceptance of the no-refund policy</li>
+              <li>Has confirmed understanding and acceptance of the <a href="/legal/refund" className="text-[#C5A04E] hover:underline">no-refund policy</a></li>
               <li>Has expressly consented to the immediate activation of the digital content</li>
               <li>Has acknowledged thereby waiving their right of withdrawal</li>
             </ul>

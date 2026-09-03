@@ -146,6 +146,14 @@ export default async function BlogCategoryPage({
         <a href="/legal/terms" className="text-xs text-gray-500 hover:text-gray-400 transition-colors">
           Terms &amp; Conditions
         </a>
+        <span className="text-gray-700">·</span>
+        <a href="/legal/refund" className="text-xs text-gray-500 hover:text-gray-400 transition-colors">
+          سياسة الاسترجاع
+        </a>
+        <span className="text-gray-700">·</span>
+        <a href="/legal/privacy" className="text-xs text-gray-500 hover:text-gray-400 transition-colors">
+          سياسة الخصوصية
+        </a>
       </footer>
     </main>
   );

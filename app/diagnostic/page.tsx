@@ -209,6 +209,14 @@ export default function DiagnosticPage() {
         <a href="/legal/terms" className="text-xs text-gray-400 no-underline hover:text-gray-500 transition-colors">
           Terms & Conditions
         </a>
+        <span className="text-gray-700">·</span>
+        <a href="/legal/refund" className="text-xs text-gray-400 no-underline hover:text-gray-500 transition-colors">
+          سياسة الاسترجاع
+        </a>
+        <span className="text-gray-700">·</span>
+        <a href="/legal/privacy" className="text-xs text-gray-400 no-underline hover:text-gray-500 transition-colors">
+          سياسة الخصوصية
+        </a>
       </div>
     </main>
   );
