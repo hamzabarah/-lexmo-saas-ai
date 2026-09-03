@@ -7,13 +7,22 @@ const supabaseAdmin = createClient(
     process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-const API_SECRET = process.env.API_SECRET_LIVE_UPDATE || 'ecomy-live-secret-2026';
-
 export async function POST(req: NextRequest) {
     try {
         // 1. Security Check
+        //
+        // AUCUNE valeur de repli : le secret vient exclusivement de
+        // l'environnement. Un repli code en dur est present dans le depot,
+        // donc connu de quiconque lit le code — il vaut absence de controle.
+        // Variable absente => toutes les requetes sont refusees.
+        const expected = process.env.API_SECRET_LIVE_UPDATE;
+        if (!expected) {
+            console.error('[live/update] API_SECRET_LIVE_UPDATE absent de l’environnement — requete refusee.');
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         const secret = req.headers.get('x-api-secret');
-        if (secret !== API_SECRET) {
+        if (secret !== expected) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 

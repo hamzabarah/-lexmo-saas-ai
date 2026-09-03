@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { requireAdmin } from '@/lib/admin-auth';
+
+export const dynamic = 'force-dynamic';
 
 // Initialize Supabase Anon Client (Public Read)
 const supabase = createClient(
@@ -8,6 +11,14 @@ const supabase = createClient(
 );
 
 export async function GET() {
+    // Reserve a l'administrateur, comme /dashboard/ventes-live qui consomme
+    // cette route. Le controle est fait ICI, AVANT toute lecture : cet
+    // endpoint servait publiquement l'etat du tableau de bord des ventes.
+    const admin = await requireAdmin();
+    if (!admin) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     try {
         const { data, error } = await supabase
             .from('live_dashboard_state')
