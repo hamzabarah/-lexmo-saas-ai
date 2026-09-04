@@ -23,7 +23,15 @@ import { DisciplineView } from './DisciplineView';
 import type { FocusSubtask } from '@/lib/hooks/useFocusSubtasks';
 import { DeepWorkView } from './DeepWorkView';
 
-const todayIso = () => new Date().toISOString().slice(0, 10);
+// Date LOCALE. toISOString() donne la date UTC : passe minuit en UTC+n,
+// le client reclamait la fenetre de la veille alors que GET /api/focus la
+// calcule en heure locale — la session du soir devenait invisible.
+const todayIso = () => {
+    const d = new Date();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${d.getFullYear()}-${m}-${day}`;
+};
 
 /**
  * Coquille du module « عُمق ».
@@ -42,6 +50,9 @@ export function OmqShell() {
     const [projects, setProjects] = useState<FocusProject[]>([]);
     const [tasks, setTasks] = useState<FocusTask[]>([]);
     const [day, setDay] = useState<DayResponse | null>(null);
+    // Session ouverte, telle que le serveur la connait. Distincte de `day` :
+    // elle n'est bornee par aucune fenetre de date.
+    const [current, setCurrent] = useState<FocusSession | null>(null);
     const [streak, setStreak] = useState(0);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -69,6 +80,34 @@ export function OmqShell() {
     const loadDay = useCallback(async () => {
         const res = await fetch(`/api/focus?date=${todayIso()}`, { credentials: 'include' });
         if (res.ok) setDay(await res.json());
+    }, []);
+
+    /**
+     * Interroge le serveur sur la session en cours et hydrate l'ecran :
+     * tache selectionnee et duree prevue. Le temps restant, lui, se
+     * recalcule en continu depuis `started_at` (voir remainingSeconds).
+     */
+    const loadCurrent = useCallback(async () => {
+        const res = await fetch('/api/focus/current', { credentials: 'include' });
+        if (!res.ok) return;
+        const found: FocusSession | null = (await res.json()).session ?? null;
+        setCurrent(found);
+        if (found) {
+            if (found.task_id) setSelectedTaskId(found.task_id);
+            setPlannedMinutes(found.planned_duration_minutes);
+
+            // pausedAtRef n'existe que dans l'onglet qui a clique sur pause.
+            // Sur une page rechargee, on la reconstruit depuis updated_at :
+            // sans elle, une session en pause continuerait de decompter.
+            if (found.status === 'paused') {
+                const at = found.updated_at ? new Date(found.updated_at).getTime() : NaN;
+                pausedAtRef.current = Number.isFinite(at) ? at : Date.now();
+            } else {
+                pausedAtRef.current = null;
+            }
+        } else {
+            pausedAtRef.current = null;
+        }
     }, []);
 
     const loadSubtasks = useCallback(async () => {
@@ -108,6 +147,7 @@ export function OmqShell() {
                 fetch('/api/focus/stats?period=month&compare=false', { credentials: 'include' }),
                 loadHabits(),
                 loadSubtasks(),
+                loadCurrent(),
             ]);
 
             if (pRes.ok) setProjects((await pRes.json()).projects ?? []);
@@ -125,16 +165,42 @@ export function OmqShell() {
         } finally {
             setLoading(false);
         }
-    }, [loadDay, loadHabits, loadSubtasks]);
+    }, [loadDay, loadHabits, loadSubtasks, loadCurrent]);
 
     useEffect(() => {
         loadAll();
     }, [loadAll]);
 
+    /**
+     * Resynchronise au retour sur l'onglet. Une session peut avoir ete
+     * demarree ou close ailleurs — serveur MCP, autre onglet, autre appareil
+     * — sans que cette page en sache rien : le compteur « الجلسة N » et
+     * l'etat du minuteur doivent refleter le serveur, pas notre memoire.
+     */
+    useEffect(() => {
+        const resync = () => {
+            if (document.visibilityState !== 'visible') return;
+            void loadDay();
+            void loadCurrent();
+        };
+        document.addEventListener('visibilitychange', resync);
+        window.addEventListener('focus', resync);
+        return () => {
+            document.removeEventListener('visibilitychange', resync);
+            window.removeEventListener('focus', resync);
+        };
+    }, [loadDay, loadCurrent]);
+
     // Battement d'une seconde, uniquement quand un compteur tourne.
+    // /api/focus/current fait autorite : il ignore la fenetre de date, donc
+    // il voit une session demarree hier soir ou depuis le serveur MCP. La
+    // liste du jour ne sert que de repli immediat apres une action locale.
     const session = useMemo(
-        () => day?.sessions.find((s) => s.status === 'running' || s.status === 'paused') ?? null,
-        [day]
+        () =>
+            current ??
+            day?.sessions.find((s) => s.status === 'running' || s.status === 'paused') ??
+            null,
+        [current, day]
     );
 
     useEffect(() => {
@@ -278,13 +344,13 @@ export function OmqShell() {
             pausedAtRef.current = null;
             setBreakEndsAt(null);
             // L'API bascule la tâche en « قيد التنفيذ » : on recharge les deux.
-            await Promise.all([loadDay(), reloadTasks()]);
+            await Promise.all([loadDay(), reloadTasks(), loadCurrent()]);
         } catch {
             setError('تعذر بدء الجلسة');
         } finally {
             setBusy(false);
         }
-    }, [tasks, selectedTaskId, plannedMinutes, loadDay, reloadTasks]);
+    }, [tasks, selectedTaskId, plannedMinutes, loadDay, reloadTasks, loadCurrent]);
 
     const patchSession = useCallback(
         async (action: string, extra: Record<string, unknown> = {}) => {
@@ -298,14 +364,14 @@ export function OmqShell() {
                     body: JSON.stringify({ id: session.id, action, ...extra }),
                 });
                 if (!res.ok) throw new Error('patch failed');
-                await loadDay();
+                await Promise.all([loadDay(), loadCurrent()]);
             } catch {
                 setError('تعذر تحديث الجلسة');
             } finally {
                 setBusy(false);
             }
         },
-        [session, loadDay]
+        [session, loadDay, loadCurrent]
     );
 
     const pause = useCallback(async () => {

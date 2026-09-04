@@ -49,6 +49,8 @@ export interface FocusSession {
     ended_at: string | null;
     paused_seconds: number | null;
     status: SessionStatus;
+    /** Derniere ecriture. Pour une session en pause, l'instant de la pause. */
+    updated_at?: string | null;
 }
 
 /** Réponse de GET /api/focus?date=… */
