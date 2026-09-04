@@ -70,14 +70,18 @@ export async function POST(req: NextRequest) {
     await closeExpiredSessions(user.id);
 
     const body = await req.json();
-    const { task_title, category, planned_duration_minutes, task_id, subtask_id } = body;
+    const { category, planned_duration_minutes, task_id, subtask_id } = body;
 
-    if (typeof task_title !== 'string' || !task_title.trim()) {
-        return NextResponse.json({ error: 'task_title required' }, { status: 400 });
-    }
-
-    if (subtask_id && !task_id) {
-        return NextResponse.json({ error: 'subtask_id requires task_id' }, { status: 400 });
+    // Aucune session orpheline : une جلسة تركيز part TOUJOURS d'une carte du
+    // kanban. Le controle est ici, cote serveur, et non dans l'interface.
+    if (typeof task_id !== 'string' || !task_id.trim()) {
+        return NextResponse.json(
+            {
+                error: 'لا يمكن بدء جلسة بدون مهمة. اختر بطاقة من لوحة القيادة.',
+                code: 'task_id_required',
+            },
+            { status: 400 }
+        );
     }
 
     const planned =
@@ -87,22 +91,48 @@ export async function POST(req: NextRequest) {
 
     const admin = getAdmin();
 
-    // If linked to a task, verify ownership and bump task to in_progress
-    if (task_id) {
-        const { data: task } = await admin
+    // La tache fait autorite : titre et categorie viennent d'elle, jamais du
+    // corps de la requete — sinon deux vues pourraient diverger.
+    const { data: task } = await admin
+        .from('focus_tasks')
+        .select('id, user_id, status, title, category')
+        .eq('id', task_id)
+        .single();
+
+    if (!task || task.user_id !== user.id) {
+        return NextResponse.json(
+            { error: 'المهمة غير موجودة.', code: 'task_not_found' },
+            { status: 403 }
+        );
+    }
+
+    // Demarrer une session assied la tache dans « قيد التنفيذ » : la regle du
+    // siege unique s'applique donc ici aussi.
+    if (task.status !== 'in_progress') {
+        const { data: seated } = await admin
             .from('focus_tasks')
-            .select('id, user_id, status')
-            .eq('id', task_id)
-            .single();
-        if (!task || task.user_id !== user.id) {
-            return NextResponse.json({ error: 'Invalid task_id' }, { status: 403 });
+            .select('id, title')
+            .eq('user_id', user.id)
+            .eq('status', 'in_progress')
+            .neq('id', task_id)
+            .limit(1);
+
+        const taken = seated?.[0];
+        if (taken) {
+            return NextResponse.json(
+                {
+                    error: `مهمة اليوم محجوزة بالفعل: « ${taken.title} ». أنهِها أو أعِدها إلى « للتنفيذ » أولاً.`,
+                    code: 'in_progress_seat_taken',
+                    occupied_by: { id: taken.id, title: taken.title },
+                },
+                { status: 409 }
+            );
         }
-        if (task.status === 'todo') {
-            await admin
-                .from('focus_tasks')
-                .update({ status: 'in_progress', updated_at: new Date().toISOString() })
-                .eq('id', task_id);
-        }
+
+        await admin
+            .from('focus_tasks')
+            .update({ status: 'in_progress', updated_at: new Date().toISOString() })
+            .eq('id', task_id);
     }
 
     // If linked to a subtask, verify it belongs to the parent task
@@ -121,8 +151,8 @@ export async function POST(req: NextRequest) {
         .from('focus_sessions')
         .insert({
             user_id: user.id,
-            task_title: task_title.trim(),
-            category: category || null,
+            task_title: task.title,
+            category: task.category ?? category ?? null,
             planned_duration_minutes: planned,
             status: 'running',
             task_id: task_id || null,

@@ -103,6 +103,32 @@ export async function listTasks(filter: {
     return (data ?? []) as FocusTask[];
 }
 
+/**
+ * Regle du siege unique : la colonne « قيد التنفيذ » n'accepte qu'une seule
+ * tache a la fois. Leve si le siege est deja pris par une AUTRE tache.
+ *
+ * Duplique volontairement le controle de PATCH /api/focus/tasks : le module
+ * MCP n'emprunte pas les routes HTTP, la regle doit donc tenir des deux
+ * cotes ou elle ne tient nulle part.
+ */
+async function assertSeatFree(userId: string, taskId: string): Promise<void> {
+    const { data } = await getAdmin()
+        .from('focus_tasks')
+        .select('id, title')
+        .eq('user_id', userId)
+        .eq('status', 'in_progress')
+        .neq('id', taskId)
+        .limit(1);
+
+    const taken = data?.[0];
+    if (taken) {
+        throw new FocusError(
+            `« قيد التنفيذ » est deja occupe par « ${taken.title} » (${taken.id}). ` +
+                'Termine-la ou remets-la en « todo » avant den asseoir une autre.'
+        );
+    }
+}
+
 export async function getTask(taskId: string): Promise<FocusTask> {
     const userId = await resolveAdminUserId();
     const { data, error } = await getAdmin()
@@ -155,7 +181,11 @@ export async function updateTask(
         projectName?: string;
     }
 ): Promise<FocusTask> {
-    await getTask(taskId); // vérifie l'existence et la propriété
+    const current = await getTask(taskId); // vérifie l'existence et la propriété
+
+    if (patch.status === 'in_progress' && current.status !== 'in_progress') {
+        await assertSeatFree(current.user_id, taskId);
+    }
 
     const update: Record<string, unknown> = { updated_at: new Date().toISOString() };
     if (patch.title !== undefined) update.title = patch.title.trim();
@@ -232,6 +262,10 @@ export async function startSession(taskId: string, plannedMinutes: number): Prom
     await closeExpiredSessions(userId);
     const task = await getTask(taskId);
 
+    // Demarrer une session assied la tache : le siege doit etre libre, sinon
+    // deux taches se retrouveraient en « قيد التنفيذ ».
+    if (task.status !== 'in_progress') await assertSeatFree(userId, task.id);
+
     const open = await listOpenSessions();
     if (open.length > 0) {
         const detail = open
@@ -259,7 +293,7 @@ export async function startSession(taskId: string, plannedMinutes: number): Prom
 
     if (error) throw new FocusError(error.message);
 
-    if (task.status === 'todo') {
+    if (task.status !== 'in_progress') {
         await admin
             .from('focus_tasks')
             .update({ status: 'in_progress', updated_at: new Date().toISOString() })

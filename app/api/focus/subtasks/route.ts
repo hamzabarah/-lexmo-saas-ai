@@ -27,24 +27,27 @@ export async function GET(req: NextRequest) {
     await closeExpiredSessions(user.id);
 
     const taskId = req.nextUrl.searchParams.get('task_id');
-    if (!taskId) return NextResponse.json({ error: 'task_id required' }, { status: 400 });
-
     const admin = getAdmin();
 
     // Ownership check on parent task
-    const { data: parentTask } = await admin
-        .from('focus_tasks')
-        .select('id, user_id')
-        .eq('id', taskId)
-        .single();
-    if (!parentTask || parentTask.user_id !== user.id) {
-        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    if (taskId) {
+        const { data: parentTask } = await admin
+            .from('focus_tasks')
+            .select('id, user_id')
+            .eq('id', taskId)
+            .single();
+        if (!parentTask || parentTask.user_id !== user.id) {
+            return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+        }
     }
 
-    const { data: subtasks, error } = await admin
-        .from('focus_subtasks')
-        .select('*')
-        .eq('task_id', taskId)
+    // Sans task_id : toutes les sous-taches de l'utilisateur. Le kanban en a
+    // besoin d'un coup pour afficher le compteur et la barre de chaque carte
+    // — une requete par carte serait un N+1 a l'ouverture de l'ecran.
+    let query = admin.from('focus_subtasks').select('*').eq('user_id', user.id);
+    if (taskId) query = query.eq('task_id', taskId);
+
+    const { data: subtasks, error } = await query
         .order('position', { ascending: true })
         .order('created_at', { ascending: true });
 
@@ -162,6 +165,22 @@ export async function PATCH(req: NextRequest) {
     if (typeof is_completed === 'boolean') {
         update.is_completed = is_completed;
         update.completed_at = is_completed ? new Date().toISOString() : null;
+
+        // Rattache la sous-tache a la session ouverte au moment du clic, pour
+        // que l'agenda hebdomadaire puisse afficher « ce qui a ete valide
+        // PENDANT cette session ». Decocher rompt le rattachement.
+        if (is_completed) {
+            const { data: openSession } = await admin
+                .from('focus_sessions')
+                .select('id')
+                .eq('user_id', user.id)
+                .in('status', ['running', 'paused'])
+                .order('started_at', { ascending: false })
+                .limit(1);
+            update.completed_session_id = openSession?.[0]?.id ?? null;
+        } else {
+            update.completed_session_id = null;
+        }
     }
 
     const { data, error } = await admin

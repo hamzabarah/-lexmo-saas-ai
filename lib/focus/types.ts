@@ -199,3 +199,71 @@ export function computeStreak(days: StatsDay[], todayIso: string): number {
 
     return streak;
 }
+
+// ───────────────────── agenda hebdomadaire (البيانات) ─────────────────────
+
+/** Objectif quotidien de minutes travaillées, tracé en pointillés. */
+export const DAILY_MINUTES_GOAL = 90;
+
+/** Libellés des sept jours, du samedi au vendredi. */
+export const WEEK_DAY_LABELS = [
+    'السبت',
+    'الأحد',
+    'الاثنين',
+    'الثلاثاء',
+    'الأربعاء',
+    'الخميس',
+    'الجمعة',
+] as const;
+
+/** `YYYY-MM-DD` en heure locale — jamais toISOString(), qui décale d'un jour. */
+export function isoDate(d: Date): string {
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${d.getFullYear()}-${m}-${day}`;
+}
+
+export function addDays(d: Date, n: number): Date {
+    const out = new Date(d);
+    out.setDate(out.getDate() + n);
+    out.setHours(0, 0, 0, 0);
+    return out;
+}
+
+/** Samedi de la semaine contenant `d` — la semaine arabe commence le samedi. */
+export function startOfWeek(d: Date): Date {
+    const out = new Date(d);
+    out.setHours(0, 0, 0, 0);
+    // getDay(): 0 = dimanche … 6 = samedi. Décalage jusqu'au samedi précédent.
+    out.setDate(out.getDate() - ((out.getDay() + 1) % 7));
+    return out;
+}
+
+/** Une session telle que la renvoie GET /api/focus/week. */
+export interface WeekSession {
+    id: string;
+    task_id: string | null;
+    task_title: string;
+    notes: string | null;
+    planned_duration_minutes: number;
+    started_at: string;
+    ended_at: string | null;
+    paused_seconds: number | null;
+    status: SessionStatus;
+    focus_tasks: { id: string; title: string; project_id: string | null } | null;
+}
+
+export interface WeekResponse {
+    weekStart: string;
+    sessions: WeekSession[];
+    subtasksBySession: { id: string; title: string; completed_session_id: string | null }[];
+    projects: { id: string; name: string; color: string }[];
+    completedTasks: number;
+}
+
+/** Minutes effectivement travaillées sur une session terminée. */
+export function weekSessionMinutes(s: WeekSession): number {
+    if (!s.ended_at) return 0;
+    const elapsed = (new Date(s.ended_at).getTime() - new Date(s.started_at).getTime()) / 1000;
+    return Math.max(0, Math.round((elapsed - (s.paused_seconds ?? 0)) / 60));
+}

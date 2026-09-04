@@ -17,8 +17,10 @@ import {
     type TaskStatus,
 } from '@/lib/focus/types';
 import { OmqSidebar, type OmqView } from './OmqSidebar';
-import { DataView } from './DataView';
 import { KanbanView } from './KanbanView';
+import { WeekAgendaView } from './WeekAgendaView';
+import { DisciplineView } from './DisciplineView';
+import type { FocusSubtask } from '@/lib/hooks/useFocusSubtasks';
 import { DeepWorkView } from './DeepWorkView';
 
 const todayIso = () => new Date().toISOString().slice(0, 10);
@@ -45,6 +47,9 @@ export function OmqShell() {
     const [error, setError] = useState<string | null>(null);
 
     const [habits, setHabits] = useState<BadHabitWithChecks[]>([]);
+    // Toutes les sous-taches, indexees par tache : le kanban en affiche le
+    // compteur et la barre sur chaque carte.
+    const [subtasksByTask, setSubtasksByTask] = useState<Record<string, FocusSubtask[]>>({});
 
     const [busyTaskId, setBusyTaskId] = useState<string | null>(null);
     const [busyHabitId, setBusyHabitId] = useState<string | null>(null);
@@ -64,6 +69,15 @@ export function OmqShell() {
     const loadDay = useCallback(async () => {
         const res = await fetch(`/api/focus?date=${todayIso()}`, { credentials: 'include' });
         if (res.ok) setDay(await res.json());
+    }, []);
+
+    const loadSubtasks = useCallback(async () => {
+        const res = await fetch('/api/focus/subtasks', { credentials: 'include' });
+        if (!res.ok) return;
+        const list: FocusSubtask[] = (await res.json()).subtasks ?? [];
+        const grouped: Record<string, FocusSubtask[]> = {};
+        for (const st of list) (grouped[st.task_id] ??= []).push(st);
+        setSubtasksByTask(grouped);
     }, []);
 
     const loadHabits = useCallback(async () => {
@@ -93,6 +107,7 @@ export function OmqShell() {
                 fetch('/api/focus/tasks', { credentials: 'include' }),
                 fetch('/api/focus/stats?period=month&compare=false', { credentials: 'include' }),
                 loadHabits(),
+                loadSubtasks(),
             ]);
 
             if (pRes.ok) setProjects((await pRes.json()).projects ?? []);
@@ -110,7 +125,7 @@ export function OmqShell() {
         } finally {
             setLoading(false);
         }
-    }, [loadDay, loadHabits]);
+    }, [loadDay, loadHabits, loadSubtasks]);
 
     useEffect(() => {
         loadAll();
@@ -151,6 +166,18 @@ export function OmqShell() {
         if (breakEndsAt !== null && breakRemaining === 0) setBreakEndsAt(null);
     }, [breakEndsAt, breakRemaining]);
 
+    /** « الخميس 4 سبتمبر 2026 » — en-tete des ecrans qui datent la journee. */
+    const longDateLabel = useMemo(
+        () =>
+            new Intl.DateTimeFormat('ar', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+            }).format(new Date()),
+        []
+    );
+
     const urgentCount = useMemo(
         () => tasks.filter((t) => t.priority === 'urgent' && t.status !== 'done').length,
         [tasks]
@@ -173,17 +200,50 @@ export function OmqShell() {
                 credentials: 'include',
                 body: JSON.stringify({ id: task.id, status }),
             });
-            if (!res.ok) throw new Error('patch failed');
+            if (!res.ok) {
+                // Le serveur explique pourquoi il refuse (siege unique
+                // occupe) : on montre SON message, pas un texte generique.
+                const payload = await res.json().catch(() => null);
+                throw new Error(payload?.error || 'patch failed');
+            }
             const { task: updated } = await res.json();
             if (updated) {
                 setTasks((prev) => prev.map((t) => (t.id === task.id ? { ...t, ...updated } : t)));
             }
-        } catch {
+        } catch (e) {
             // Retour à l'état précédent : l'affichage ne doit pas mentir.
             setTasks((prev) => prev.map((t) => (t.id === task.id ? task : t)));
-            setError('تعذر حفظ التغيير');
+            setError(e instanceof Error && e.message !== 'patch failed' ? e.message : 'تعذر حفظ التغيير');
         } finally {
             setBusyTaskId(null);
+        }
+    }, []);
+
+    /** Coche/décoche une sous-tâche. Le serveur la rattache à la session ouverte. */
+    const toggleSubtask = useCallback(async (st: FocusSubtask) => {
+        const next = !st.is_completed;
+        setSubtasksByTask((prev) => ({
+            ...prev,
+            [st.task_id]: (prev[st.task_id] ?? []).map((x) =>
+                x.id === st.id ? { ...x, is_completed: next } : x
+            ),
+        }));
+        try {
+            const res = await fetch('/api/focus/subtasks', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ id: st.id, is_completed: next }),
+            });
+            if (!res.ok) throw new Error('subtask patch failed');
+        } catch {
+            setSubtasksByTask((prev) => ({
+                ...prev,
+                [st.task_id]: (prev[st.task_id] ?? []).map((x) =>
+                    x.id === st.id ? { ...x, is_completed: st.is_completed } : x
+                ),
+            }));
+            setError('تعذر تحديث المهمة الفرعية');
         }
     }, []);
 
@@ -407,28 +467,28 @@ export function OmqShell() {
                         <div className="py-24 text-center text-[13px] text-omq-faint">
                             جارٍ التحميل…
                         </div>
-                    ) : view === 'data' ? (
-                        <DataView
-                            projects={projects}
-                            tasks={tasks}
-                            urgentCount={urgentCount}
-                            todaySessions={todaySessions}
-                            todayMinutes={todayMinutes}
-                            onToggleDone={toggleDone}
-                            busyTaskId={busyTaskId}
+                    ) : view === 'discipline' ? (
+                        <DisciplineView
                             habits={habits}
                             todayIso={todayIso()}
                             busyHabitId={busyHabitId}
+                            urgentCount={urgentCount}
                             onCycleHabit={cycleHabit}
                             onCreateHabit={createHabit}
                             onArchiveHabit={archiveHabit}
+                            todayLabel={longDateLabel}
                         />
+                    ) : view === 'data' ? (
+                        <WeekAgendaView />
                     ) : view === 'kanban' ? (
                         <KanbanView
                             projects={projects}
                             tasks={tasks}
+                            subtasksByTask={subtasksByTask}
                             onMove={setTaskStatus}
+                            onToggleSubtask={toggleSubtask}
                             busyTaskId={busyTaskId}
+                            todayLabel={longDateLabel}
                         />
                     ) : (
                         <DeepWorkView

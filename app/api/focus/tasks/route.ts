@@ -247,6 +247,32 @@ export async function PATCH(req: NextRequest) {
         update.scheduled_date = scheduled_date || null;
     }
     if (status) {
+        // Regle du siege unique : la colonne « قيد التنفيذ » n'accepte qu'une
+        // seule tache a la fois. Le controle est ici, cote serveur, et pas
+        // seulement dans l'interface : le kanban, le module MCP et tout appel
+        // direct a l'API passent par ce meme point d'ecriture.
+        if (status === 'in_progress' && existing.status !== 'in_progress') {
+            const { data: seated } = await admin
+                .from('focus_tasks')
+                .select('id, title')
+                .eq('user_id', user.id)
+                .eq('status', 'in_progress')
+                .neq('id', id)
+                .limit(1);
+
+            const taken = seated?.[0];
+            if (taken) {
+                return NextResponse.json(
+                    {
+                        error: `مهمة اليوم محجوزة بالفعل: « ${taken.title} ». أنهِها أو أعِدها إلى « للتنفيذ » أولاً.`,
+                        code: 'in_progress_seat_taken',
+                        occupied_by: { id: taken.id, title: taken.title },
+                    },
+                    { status: 409 }
+                );
+            }
+        }
+
         update.status = status;
         if (status === 'done') {
             update.completed_at = new Date().toISOString();

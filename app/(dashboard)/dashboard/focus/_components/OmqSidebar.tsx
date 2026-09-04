@@ -3,17 +3,20 @@
 import { formatClock } from '@/lib/focus/types';
 import { Dot } from './ui';
 
-export type OmqView = 'data' | 'kanban' | 'focus';
+export type OmqView = 'data' | 'kanban' | 'focus' | 'discipline';
 
+// Les identifiants restent techniques ('kanban') ; seuls les libelles
+// changent. Renommer la cle casserait l'etat sans rien gagner.
 const NAV: { id: OmqView; label: string }[] = [
     { id: 'data', label: 'البيانات' },
-    { id: 'kanban', label: 'لوحة كانبان' },
+    { id: 'kanban', label: 'لوحة القيادة' },
     { id: 'focus', label: 'جلسات التركيز' },
+    { id: 'discipline', label: 'الانضباط' },
 ];
 
 /**
  * Navigation du module, fidèle aux maquettes : 232 px, fond sable, logo عُمق,
- * quatre entrées dont التقارير désactivée, et le minuteur de la session en
+ * cinq entrées dont التقارير désactivée, et le minuteur de la session en
  * cours épinglé en bas — visible depuis n'importe quelle section.
  */
 export function OmqSidebar({
