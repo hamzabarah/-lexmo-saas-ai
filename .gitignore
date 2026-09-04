@@ -42,3 +42,9 @@ next-env.d.ts
 
 # jeton MCP, local uniquement
 .mcp-token.local.txt
+
+# design-reference/ ne garde que les maquettes HTML/CSS.
+# Le runtime de l'editeur Claude Design et sa vignette sont reimportes
+# a chaque export du zip : inutile de les versionner.
+design-reference/support.js
+design-reference/.thumbnail
