@@ -380,7 +380,7 @@ export function WeekAgendaView() {
                                                     isToday ? 'text-omq-accent-hover' : 'text-omq-ink'
                                                 }`}
                                             >
-                                                {d.minutes}
+                                                {Math.round(d.minutes)}
                                             </Num>
                                             <span
                                                 className={`text-[11px] ${
