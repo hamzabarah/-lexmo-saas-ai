@@ -209,7 +209,10 @@ test('web and MCP commands share services; read paths contain no cleanup writes'
     const server=readFileSync('lib/focus/server.ts','utf8');
     assert.match(server,/createTaskFor/); assert.match(server,/sessionCommand/);
     assert.match(server,/createProjectFor/);
-    assert.match(readFileSync('app/api/focus/projects/route.ts','utf8'),/focusMutation\(req, createProjectFor/);
+    const projectRoute=readFileSync('app/api/focus/projects/route.ts','utf8');
+    // Strategy adds an admin guard around the same shared creation service.
+    assert.match(projectRoute,/focusStrategyResponse/);
+    assert.match(projectRoute,/createProjectFor\(userId, await req\.json\(\)\)/);
     assert.doesNotMatch(server,/closeExpiredSessions/);
     for(const file of ['route.ts','tasks/route.ts','subtasks/route.ts','current/route.ts','week/route.ts','stats/route.ts']) {
         const text=readFileSync(`app/api/focus/${file}`,'utf8');

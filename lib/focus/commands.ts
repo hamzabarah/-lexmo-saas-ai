@@ -1,13 +1,9 @@
-import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { parisDate } from './time';
+import { focusAdmin, FocusError } from './db';
+export { focusAdmin, FocusError } from './db';
+export { createProjectFor } from './strategy';
 
-export class FocusError extends Error {}
-export function focusAdmin() {
-    return createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
-        auth: { autoRefreshToken: false, persistSession: false },
-    });
-}
 const uuid = z.string().uuid();
 const title = z.string().trim().min(1).max(200);
 const taskFields = z.object({
@@ -27,13 +23,6 @@ async function ownedTask(userId: string, id: string) {
     check(error);
     if (!data) throw new FocusError('focus_task_forbidden');
     return data;
-}
-// Minimal bootstrap for an empty Focus database; strategic project fields remain deferred.
-export async function createProjectFor(userId: string, input: unknown) {
-    const p = z.object({ name: title }).parse(input);
-    const { data, error } = await focusAdmin().from('focus_projects')
-        .insert({ ...p, user_id: uuid.parse(userId) }).select().single();
-    check(error); return data;
 }
 export async function createTaskFor(userId: string, input: unknown) {
     const p = taskFields.extend({ title }).parse(input);

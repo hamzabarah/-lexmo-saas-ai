@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:focus": "tsx --test tests/focus-execution.test.ts",
+    "test:focus": "tsx --test tests/focus-*.test.ts",
     "focus:preflight": "node scripts/focus-preflight.mjs"
   },
   "dependencies": {

@@ -6,7 +6,10 @@ export type TaskStatus = 'todo' | 'in_progress' | 'done';
 export type TaskPriority = 'urgent' | 'normal';
 export type TaskType = 'recurring' | 'one_time' | 'long_term';
 export type TaskCategory = 'personal' | 'professional' | null;
-export type ProjectStatus = 'vital' | 'paused' | 'queued';
+export type ProjectStatus = 'vital' | 'paused' | 'queued' | 'evaluating' | 'completed' | 'cancelled';
+export type ProjectEngine = 'acquisition' | 'conversion' | 'expansion' | 'systeme' | 'risque';
+export type PhaseStatus = 'planned' | 'active' | 'paused' | 'completed' | 'cancelled';
+export type ProjectRecordType = 'decision' | 'output' | 'result' | 'lesson' | 'cost';
 export type SessionStatus = 'running' | 'paused' | 'completed' | 'abandoned';
 
 export interface FocusProject {
@@ -19,6 +22,42 @@ export interface FocusProject {
     position: number;
     created_at: string;
     updated_at: string;
+    phase_id?: string | null;
+    objective_id?: string | null;
+    engine?: ProjectEngine | null;
+    purpose?: string | null;
+    hypothesis?: string | null;
+    expected_outcome?: string | null;
+    success_criteria?: string | null;
+    priority?: TaskPriority;
+    delivery_deadline?: string | null;
+    evaluation_deadline?: string | null;
+    planned_time_minutes?: number | null;
+    planned_cost_eur?: number | null;
+}
+
+export interface OsPhase {
+    id: string;
+    user_id: string;
+    name: string;
+    position: number;
+    starts_on: string | null;
+    ends_on: string | null;
+    mission: string | null;
+    status: PhaseStatus;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface ProjectRecord {
+    id: string;
+    user_id: string;
+    project_id: string;
+    type: ProjectRecordType;
+    title: string;
+    content: string | null;
+    payload: Record<string, unknown>;
+    created_at: string;
 }
 
 export interface FocusTask {
@@ -154,6 +193,9 @@ export const KANBAN_COLUMNS: { status: TaskStatus; label: string }[] = [
 ];
 
 export const PROJECT_STATUS_LABELS: Record<ProjectStatus, string> = {
+    evaluating: 'قيد التقييم',
+    completed: 'مكتمل',
+    cancelled: 'متروك',
     vital: 'حيوي — يحقق دخلاً',
     paused: 'متوقف مؤقتاً',
     queued: 'قائمة الانتظار',

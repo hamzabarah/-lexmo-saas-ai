@@ -5,7 +5,7 @@ import {
     archiveTask,
     createHabit,
     createTask,
-    createProject,
+    resolveAdminUserId,
     changeSession,
     endSession,
     findHabit,
@@ -16,6 +16,8 @@ import {
     todayIso,
     updateTask,
 } from '@/lib/focus/server';
+import * as focusStrategy from '@/lib/focus/strategy';
+import { registerFocusStrategyTools } from '@/lib/focus/strategy-mcp';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
@@ -93,11 +95,7 @@ const IsoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Format attendu : AAAA-M
 
 const mcp = createMcpHandler(
     (server) => {
-        server.registerTool('create_project', {
-            title: 'Créer un projet Focus',
-            description: 'Crée un projet simple par son nom. Aucun champ stratégique.',
-            inputSchema: z.object({ name: z.string().trim().min(1).max(200) }),
-        }, async ({ name }) => guard(() => createProject(name)));
+        registerFocusStrategyTools(server, { resolveAdminUserId, services: focusStrategy });
         server.registerTool(
             'get_overview',
             {

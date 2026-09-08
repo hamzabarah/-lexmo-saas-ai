@@ -1,35 +1,31 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createProjectFor } from '@/lib/focus/commands';
-import { focusMutation } from '@/lib/focus/http';
-import { createClient } from '@/utils/supabase/server';
-import { createClient as createAdminClient } from '@supabase/supabase-js';
+import { NextRequest } from 'next/server';
+import { z } from 'zod';
+import { createProjectFor, listProjectsFor, updateProjectFor } from '@/lib/focus/strategy';
+import { projectFilterSchema } from '@/lib/focus/strategy-schemas';
+import { focusStrategyResponse } from '@/lib/focus/strategy-http';
 
 export const dynamic = 'force-dynamic';
 
+export async function GET(req: NextRequest) {
+    return focusStrategyResponse(async (userId) => {
+        const query = Object.fromEntries(req.nextUrl.searchParams);
+        const filter = projectFilterSchema.parse({
+            ...query,
+            ...(query.active_only === undefined ? {} : {
+                active_only: z.enum(['true', 'false']).parse(query.active_only) === 'true',
+            }),
+        });
+        return listProjectsFor(userId, filter);
+    }, 'projects');
+}
+
 export async function POST(req: NextRequest) {
-    return focusMutation(req, createProjectFor, 'project');
+    return focusStrategyResponse(async (userId) => createProjectFor(userId, await req.json()), 'project');
 }
 
-function getAdmin() {
-    return createAdminClient(
-        process.env.SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!,
-        { auth: { autoRefreshToken: false, persistSession: false } }
-    );
-}
-
-// GET: projets de l'utilisateur, dans l'ordre d'affichage des maquettes.
-export async function GET() {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-
-    const { data, error } = await getAdmin()
-        .from('focus_projects')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('position', { ascending: true });
-
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    return NextResponse.json({ projects: data ?? [] });
+export async function PATCH(req: NextRequest) {
+    return focusStrategyResponse(async (userId) => {
+        const { id, ...input } = z.object({ id: z.string().uuid() }).passthrough().parse(await req.json());
+        return updateProjectFor(userId, id, input);
+    }, 'project');
 }
