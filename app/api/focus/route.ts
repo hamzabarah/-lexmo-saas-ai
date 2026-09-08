@@ -33,7 +33,8 @@ export async function GET(req: NextRequest) {
     const admin = getAdmin();
     const { data: sessions, error } = await admin
         .from('focus_sessions')
-        .select('*, focus_tasks(id, title, category), focus_subtasks(id, title)')
+        // Select the session's subtask, not the inverse completed_session_id relation.
+        .select('*, focus_tasks(id, title, category), focus_subtasks!focus_sessions_subtask_id_fkey(id, title)')
         .eq('user_id', user.id)
         .gte('started_at', target.toISOString())
         .lt('started_at', next.toISOString())
