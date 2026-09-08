@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { createClient as createAdminClient } from '@supabase/supabase-js';
-import { closeExpiredSessions } from '@/lib/focus-session-expiry';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,15 +28,11 @@ export async function GET() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    // Clôture d'abord les sessions périmées : une session dont la durée est
-    // écoulée ne doit jamais ressortir comme « en cours ».
-    await closeExpiredSessions(user.id);
-
     const { data, error } = await getAdmin()
         .from('focus_sessions')
         .select('*, focus_tasks(id, title, category)')
         .eq('user_id', user.id)
-        .in('status', ['running', 'paused'])
+        .in('status', ['running', 'paused']).is('ended_at', null)
         .order('started_at', { ascending: false })
         .limit(1);
 
@@ -46,13 +41,5 @@ export async function GET() {
     const session = data?.[0] ?? null;
     if (!session) return NextResponse.json({ session: null });
 
-    // Filet : si le balayage n'a pas pu clôturer (durée prévue absente ou
-    // nulle), on ne présente pas pour autant une session déjà expirée.
-    const planned = session.planned_duration_minutes ?? 0;
-    if (planned > 0) {
-        const expiresAt = new Date(session.started_at).getTime() + planned * 60_000;
-        if (expiresAt <= Date.now()) return NextResponse.json({ session: null });
-    }
-
-    return NextResponse.json({ session });
+    return NextResponse.json({ session }, { headers: { 'Cache-Control': 'no-store' } });
 }

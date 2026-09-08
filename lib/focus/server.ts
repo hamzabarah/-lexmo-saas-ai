@@ -7,7 +7,9 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { ADMIN_EMAIL } from '@/lib/admin-auth';
-import { closeExpiredSessions } from '@/lib/focus-session-expiry';
+import { createProjectFor, createTaskFor, updateTaskFor, archiveTaskFor, sessionCommand, FocusError } from './commands';
+import { parisDate, recordedSeconds } from './time';
+export { FocusError } from './commands';
 import type {
     BadHabit,
     FocusProject,
@@ -24,10 +26,14 @@ function getAdmin() {
     });
 }
 
-export const todayIso = () => new Date().toISOString().slice(0, 10);
+export const todayIso = parisDate;
+
+export async function createProject(name: string): Promise<FocusProject> {
+    return createProjectFor(await resolveAdminUserId(), { name });
+}
 
 /** Erreur métier destinée à être montrée telle quelle à l'appelant. */
-export class FocusError extends Error {}
+
 
 // ──────────────────────── identité de l'administrateur ────────────────────────
 
@@ -103,32 +109,6 @@ export async function listTasks(filter: {
     return (data ?? []) as FocusTask[];
 }
 
-/**
- * Regle du siege unique : la colonne « قيد التنفيذ » n'accepte qu'une seule
- * tache a la fois. Leve si le siege est deja pris par une AUTRE tache.
- *
- * Duplique volontairement le controle de PATCH /api/focus/tasks : le module
- * MCP n'emprunte pas les routes HTTP, la regle doit donc tenir des deux
- * cotes ou elle ne tient nulle part.
- */
-async function assertSeatFree(userId: string, taskId: string): Promise<void> {
-    const { data } = await getAdmin()
-        .from('focus_tasks')
-        .select('id, title')
-        .eq('user_id', userId)
-        .eq('status', 'in_progress')
-        .neq('id', taskId)
-        .limit(1);
-
-    const taken = data?.[0];
-    if (taken) {
-        throw new FocusError(
-            `« قيد التنفيذ » est deja occupe par « ${taken.title} » (${taken.id}). ` +
-                'Termine-la ou remets-la en « todo » avant den asseoir une autre.'
-        );
-    }
-}
-
 export async function getTask(taskId: string): Promise<FocusTask> {
     const userId = await resolveAdminUserId();
     const { data, error } = await getAdmin()
@@ -142,102 +122,28 @@ export async function getTask(taskId: string): Promise<FocusTask> {
     return data as FocusTask;
 }
 
-export async function createTask(input: {
-    title: string;
-    projectName: string;
-    priority: TaskPriority;
-    status?: TaskStatus;
-}): Promise<FocusTask> {
+export async function createTask(input: { title: string; projectName: string; priority: TaskPriority; status?: TaskStatus }): Promise<FocusTask> {
     const userId = await resolveAdminUserId();
     const project = await findProjectByName(input.projectName);
-
-    // Mêmes conventions que POST /api/focus/tasks : une tâche datée est de type
-    // 'one_time', ce qui la rend visible dans l'interface web du jour.
-    const { data, error } = await getAdmin()
-        .from('focus_tasks')
-        .insert({
-            user_id: userId,
-            project_id: project.id,
-            title: input.title.trim(),
-            priority: input.priority,
-            status: input.status ?? 'todo',
-            task_type: 'one_time',
-            scheduled_date: todayIso(),
-            category: 'professional',
-        })
-        .select()
-        .single();
-
-    if (error) throw new FocusError(error.message);
-    return data as FocusTask;
+    return createTaskFor(userId, { title: input.title, project_id: project.id, priority: input.priority,
+        status: input.status, category: 'professional' });
 }
-
-export async function updateTask(
-    taskId: string,
-    patch: {
-        title?: string;
-        status?: TaskStatus;
-        priority?: TaskPriority;
-        projectName?: string;
-    }
-): Promise<FocusTask> {
-    const current = await getTask(taskId); // vérifie l'existence et la propriété
-
-    if (patch.status === 'in_progress' && current.status !== 'in_progress') {
-        await assertSeatFree(current.user_id, taskId);
-    }
-
-    const update: Record<string, unknown> = { updated_at: new Date().toISOString() };
-    if (patch.title !== undefined) update.title = patch.title.trim();
-    if (patch.status !== undefined) update.status = patch.status;
-    if (patch.priority !== undefined) update.priority = patch.priority;
-    if (patch.projectName !== undefined) {
-        update.project_id = (await findProjectByName(patch.projectName)).id;
-    }
-
-    const { data, error } = await getAdmin()
-        .from('focus_tasks')
-        .update(update)
-        .eq('id', taskId)
-        .select()
-        .single();
-
-    if (error) throw new FocusError(error.message);
-    return data as FocusTask;
+export async function updateTask(taskId: string, patch: { title?: string; status?: TaskStatus; priority?: TaskPriority; projectName?: string }): Promise<FocusTask> {
+    const project = patch.projectName === undefined ? undefined : await findProjectByName(patch.projectName);
+    return updateTaskFor(await resolveAdminUserId(), taskId, { title: patch.title, status: patch.status,
+        priority: patch.priority, ...(project ? { project_id: project.id } : {}) });
 }
-
-/** Retire la tâche des listes sans rien effacer : ses sessions restent en base. */
 export async function archiveTask(taskId: string): Promise<FocusTask> {
-    await getTask(taskId);
-
-    const { data, error } = await getAdmin()
-        .from('focus_tasks')
-        .update({ archived_at: new Date().toISOString(), updated_at: new Date().toISOString() })
-        .eq('id', taskId)
-        .select()
-        .single();
-
-    if (error) throw new FocusError(error.message);
-    return data as FocusTask;
+    return archiveTaskFor(await resolveAdminUserId(), taskId);
 }
 
-// ──────────────────────────────── sessions ────────────────────────────────
-
-/**
- * Toutes les sessions non cloturees, de la plus ancienne a la plus recente.
- *
- * AUCUN filtre de date, volontairement : une session oubliee reste ouverte
- * indefiniment, et c'est justement celle-la qu'il faut voir. Filtrer sur une
- * fenetre glissante la rendrait invisible ici tout en la laissant bloquer le
- * demarrage d'une nouvelle session.
- */
 export async function listOpenSessions(): Promise<FocusSession[]> {
     const userId = await resolveAdminUserId();
     const { data, error } = await getAdmin()
         .from('focus_sessions')
         .select('*')
         .eq('user_id', userId)
-        .in('status', ['running', 'paused'])
+        .in('status', ['running', 'paused']).is('ended_at', null)
         .order('started_at', { ascending: true });
 
     if (error) throw new FocusError(error.message);
@@ -256,134 +162,17 @@ export async function getRunningSession(): Promise<FocusSession | null> {
  * « in_progress » — l'interface web voit donc le même état.
  */
 export async function startSession(taskId: string, plannedMinutes: number): Promise<FocusSession> {
-    const userId = await resolveAdminUserId();
-    // Avant de refuser le demarrage : une session perimee ne doit JAMAIS
-    // bloquer. On la cloture, puis on relit les sessions reellement ouvertes.
-    await closeExpiredSessions(userId);
-    const task = await getTask(taskId);
-
-    // Demarrer une session assied la tache : le siege doit etre libre, sinon
-    // deux taches se retrouveraient en « قيد التنفيذ ».
-    if (task.status !== 'in_progress') await assertSeatFree(userId, task.id);
-
-    const open = await listOpenSessions();
-    if (open.length > 0) {
-        const detail = open
-            .map((s) => `${s.id} — « ${s.task_title} », ouverte depuis le ${s.started_at.slice(0, 10)}`)
-            .join(' | ');
-        throw new FocusError(
-            `${open.length} session(s) déjà ouverte(s) : ${detail}. Termine-la d'abord avec end_session.`
-        );
-    }
-
-    const admin = getAdmin();
-
-    const { data, error } = await admin
-        .from('focus_sessions')
-        .insert({
-            user_id: userId,
-            task_id: task.id,
-            task_title: task.title,
-            category: task.category,
-            planned_duration_minutes: plannedMinutes,
-            status: 'running',
-        })
-        .select()
-        .single();
-
-    if (error) throw new FocusError(error.message);
-
-    if (task.status !== 'in_progress') {
-        await admin
-            .from('focus_tasks')
-            .update({ status: 'in_progress', updated_at: new Date().toISOString() })
-            .eq('id', task.id);
-    }
-
-    return data as FocusSession;
+    return sessionCommand(await resolveAdminUserId(), 'start', { task_id: taskId, planned_duration_minutes: plannedMinutes });
 }
-
-/**
- * Clôture une session.
- *
- * `actualMinutes` force la durée effective : on place `ended_at` de sorte que
- * (ended_at − started_at − paused_seconds) vaille exactement ce nombre de
- * minutes, puisque c'est ainsi que le reste du code mesure le temps travaillé.
- */
-export async function endSession(
-    sessionId?: string,
-    note?: string,
-    actualMinutes?: number
-): Promise<FocusSession> {
-    const userId = await resolveAdminUserId();
-    await closeExpiredSessions(userId);
-    const admin = getAdmin();
-
-    // Garde-fou : sans identifiant, on cloture l'unique session ouverte.
-    // On refuse de deviner des qu'il y en a plusieurs — fermer la mauvaise
-    // fausserait le temps de travail sans que personne ne s'en apercoive.
-    let targetId = sessionId;
-    if (!targetId) {
-        const open = await listOpenSessions();
-        if (open.length === 0) throw new FocusError('Aucune session ouverte.');
-        if (open.length > 1) {
-            const detail = open
-                .map((s) => `${s.id} — « ${s.task_title} », ouverte depuis le ${s.started_at.slice(0, 10)}`)
-                .join(' | ');
-            throw new FocusError(
-                `${open.length} sessions sont ouvertes, precise session_id : ${detail}.`
-            );
-        }
-        targetId = open[0].id;
-    }
-
-    const { data: existing, error: readErr } = await admin
-        .from('focus_sessions')
-        .select('*')
-        .eq('id', targetId)
-        .maybeSingle();
-
-    if (readErr) throw new FocusError(readErr.message);
-    if (!existing || existing.user_id !== userId) throw new FocusError('Session introuvable.');
-    if (existing.ended_at) throw new FocusError('Cette session est déjà terminée.');
-
-    const started = new Date(existing.started_at).getTime();
-    const paused = existing.paused_seconds ?? 0;
-    const endedAt =
-        actualMinutes !== undefined
-            ? new Date(started + (actualMinutes * 60 + paused) * 1000)
-            : new Date();
-
-    const update: Record<string, unknown> = {
-        status: 'completed',
-        ended_at: endedAt.toISOString(),
-        updated_at: new Date().toISOString(),
-    };
-    if (note) update.notes = note;
-
-    const { data, error } = await admin
-        .from('focus_sessions')
-        .update(update)
-        .eq('id', targetId)
-        .select()
-        .single();
-
-    if (error) throw new FocusError(error.message);
-    return data as FocusSession;
+export async function endSession(sessionId?: string, note?: string, actualMinutes?: number): Promise<FocusSession> {
+    return sessionCommand(await resolveAdminUserId(), 'stop', {
+        ...(sessionId ? { id: sessionId } : {}), ...(note !== undefined ? { notes: note } : {}),
+        ...(actualMinutes !== undefined ? { actual_minutes: actualMinutes } : {}) });
 }
-
-/** Secondes effectivement travaillées, pauses déduites. */
-function effectiveSeconds(s: {
-    started_at: string;
-    ended_at: string | null;
-    paused_seconds: number | null;
-}): number {
-    if (!s.ended_at) return 0;
-    const elapsed = (new Date(s.ended_at).getTime() - new Date(s.started_at).getTime()) / 1000;
-    return Math.max(0, Math.floor(elapsed - (s.paused_seconds ?? 0)));
+export async function changeSession(action: 'pause' | 'resume' | 'expire', sessionId: string): Promise<FocusSession> {
+    return sessionCommand(await resolveAdminUserId(), action, { id: sessionId });
 }
-
-// ──────────────────────────────── habitudes ────────────────────────────────
+const effectiveSeconds = recordedSeconds;
 
 export async function listHabits(): Promise<BadHabit[]> {
     const userId = await resolveAdminUserId();
@@ -488,7 +277,6 @@ export interface Overview {
 
 export async function getOverview(): Promise<Overview> {
     const userId = await resolveAdminUserId();
-    await closeExpiredSessions(userId);
     const admin = getAdmin();
     const today = todayIso();
 
@@ -498,7 +286,7 @@ export async function getOverview(): Promise<Overview> {
     const [sessionsRes, projects, tasks, habits] = await Promise.all([
         admin
             .from('focus_sessions')
-            .select('id, task_title, planned_duration_minutes, started_at, ended_at, paused_seconds, status')
+            .select('id, task_title, planned_duration_minutes, started_at, ended_at, paused_seconds, duration_override_seconds, status')
             .eq('user_id', userId)
             .gte('started_at', since.toISOString()),
         listProjects(),
@@ -511,7 +299,7 @@ export async function getOverview(): Promise<Overview> {
 
     // Chiffres du jour
     const todaySessions = sessions.filter(
-        (s) => s.started_at.slice(0, 10) === today && s.status === 'completed'
+        (s) => parisDate(s.started_at) === today && Boolean(s.ended_at)
     );
     const minutes = Math.round(
         todaySessions.reduce((sum, s) => sum + effectiveSeconds(s), 0) / 60
@@ -519,7 +307,7 @@ export async function getOverview(): Promise<Overview> {
 
     // Série de jours consécutifs avec au moins une session terminée.
     const activeDays = new Set(
-        sessions.filter((s) => s.status === 'completed').map((s) => s.started_at.slice(0, 10))
+        sessions.filter((s) => s.status === 'completed').map((s) => parisDate(s.started_at))
     );
     const cursor = new Date(`${today}T00:00:00Z`);
     if (!activeDays.has(today)) cursor.setUTCDate(cursor.getUTCDate() - 1);

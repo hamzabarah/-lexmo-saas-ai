@@ -5,6 +5,8 @@ import {
     archiveTask,
     createHabit,
     createTask,
+    createProject,
+    changeSession,
     endSession,
     findHabit,
     getOverview,
@@ -91,10 +93,16 @@ const IsoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Format attendu : AAAA-M
 
 const mcp = createMcpHandler(
     (server) => {
+        server.registerTool('create_project', {
+            title: 'Créer un projet Focus',
+            description: 'Crée un projet simple par son nom. Aucun champ stratégique.',
+            inputSchema: z.object({ name: z.string().trim().min(1).max(200) }),
+        }, async ({ name }) => guard(() => createProject(name)));
         server.registerTool(
             'get_overview',
             {
                 title: 'Vue d’ensemble',
+                annotations: { readOnlyHint: true },
                 description:
                     "État complet du module focus : statistiques du jour (sessions, minutes, série), TOUTES les sessions encore ouvertes avec leur identifiant et leur ancienneté — quelle que soit leur date, y compris oubliées depuis des mois —, projets avec leurs tâches, et habitudes à éviter avec leur état du jour.",
                 inputSchema: z.object({}),
@@ -106,6 +114,7 @@ const mcp = createMcpHandler(
             'list_tasks',
             {
                 title: 'Lister les tâches',
+                annotations: { readOnlyHint: true },
                 description:
                     'Liste les tâches non archivées. Filtres facultatifs par statut et par nom de projet.',
                 inputSchema: z.object({
@@ -276,6 +285,16 @@ const mcp = createMcpHandler(
                     return { id: h.id, title: h.title, rule_note: h.rule_note };
                 })
         );
+        for (const [tool, action, description] of [
+            ['pause_session', 'pause', 'Met en pause la session. Horodatage serveur.'],
+            ['resume_session', 'resume', 'Reprend la session et cumule la pause côté serveur.'],
+            ['expire_session', 'expire', 'Écriture explicite : clôture une session v1 arrivée à échéance. Durée marquée comme estimation. Ne modifie jamais une ancienne session.'],
+        ] as const) {
+            server.registerTool(tool, {
+                description,
+                inputSchema: z.object({ session_id: z.string().uuid() }),
+            }, async ({ session_id }) => guard(() => changeSession(action, session_id)));
+        }
     },
     {
         serverInfo: { name: 'ecomy-focus', version: '1.0.0' },

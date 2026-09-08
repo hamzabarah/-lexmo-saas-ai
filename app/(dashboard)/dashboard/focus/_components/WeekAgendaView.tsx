@@ -1,5 +1,6 @@
 'use client';
 
+import { addCalendarDays, parisDate } from '@/lib/focus/time';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
     DAILY_MINUTES_GOAL,
@@ -75,8 +76,8 @@ function SessionBlock({
     today: boolean;
 }) {
     const running = session.status === 'running' || session.status === 'paused';
-    const minutes = weekSessionMinutes(session);
-    const note = session.notes?.trim() ?? '';
+    const minutes = Math.round(weekSessionMinutes(session));
+    const note = [session.notes?.trim(), session.completion_source === 'estimated_expiry' ? '[estimated expiry]' : null].filter(Boolean).join(' | ');
 
     return (
         <div
@@ -186,7 +187,7 @@ export function WeekAgendaView() {
         for (let i = 0; i < 7; i += 1) {
             const date = addDays(weekStart, i);
             const iso = isoDate(date);
-            const sessions = (data?.sessions ?? []).filter((s) => s.started_at.slice(0, 10) === iso);
+            const sessions = (data?.sessions ?? []).filter((s) => isoDate(new Date(s.started_at)) === iso);
             const minutes = sessions.reduce((acc, s) => acc + weekSessionMinutes(s), 0);
             out.push({ date, iso, label: WEEK_DAY_LABELS[i], sessions, minutes });
         }
@@ -194,7 +195,7 @@ export function WeekAgendaView() {
     }, [weekStart, data]);
 
     const totals = useMemo(() => {
-        const sessions = (data?.sessions ?? []).filter((s) => s.status === 'completed');
+        const sessions = (data?.sessions ?? []).filter((s) => Boolean(s.ended_at));
         const minutes = sessions.reduce((acc, s) => acc + weekSessionMinutes(s), 0);
         return {
             hours: (minutes / 60).toFixed(minutes % 60 === 0 ? 0 : 2).replace(/\.?0+$/, '') || '0',
@@ -228,15 +229,12 @@ export function WeekAgendaView() {
     /** Série de jours consécutifs travaillés, en remontant depuis aujourd'hui. */
     const streak = useMemo(() => {
         const active = new Set(days.filter((d) => d.minutes > 0).map((d) => d.iso));
-        const cursor = new Date();
-        cursor.setHours(0, 0, 0, 0);
-        if (!active.has(isoDate(cursor))) cursor.setDate(cursor.getDate() - 1);
-        let n = 0;
-        while (active.has(isoDate(cursor))) {
-            n += 1;
-            cursor.setDate(cursor.getDate() - 1);
-        }
-        return n;
+        let cursor = parisDate();
+        if (!active.has(cursor)) cursor = addCalendarDays(cursor,-1);
+        let count = 0;
+        while (active.has(cursor)) { count++; cursor = addCalendarDays(cursor,-1); }
+
+        return count;
     }, [days]);
 
     const subtasksOf = useCallback(
@@ -245,7 +243,7 @@ export function WeekAgendaView() {
         [data]
     );
 
-    const rangeLabel = `${weekStart.getDate()}/${weekStart.getMonth() + 1} – ${addDays(weekStart, 6).getDate()}/${addDays(weekStart, 6).getMonth() + 1}`;
+    const rangeLabel = `${Number(isoDate(weekStart).slice(8))}/${Number(isoDate(weekStart).slice(5,7))} – ${Number(isoDate(addDays(weekStart,6)).slice(8))}/${Number(isoDate(addDays(weekStart,6)).slice(5,7))}`;
     const maxMinutes = Math.max(DAILY_MINUTES_GOAL, ...days.map((d) => d.minutes));
 
     return (
@@ -365,7 +363,7 @@ export function WeekAgendaView() {
                                                         : 'text-omq-faint'
                                                 }`}
                                             >
-                                                {d.date.getDate()}/{d.date.getMonth() + 1}
+                                                {Number(d.iso.slice(8))}/{Number(d.iso.slice(5,7))}
                                             </Num>
                                         </div>
                                         {isToday && (

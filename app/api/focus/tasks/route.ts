@@ -1,12 +1,13 @@
+import { recordedSeconds, parisDate, parisMidnight, monday } from '@/lib/focus/time';
+import { createTaskFor, updateTaskFor, archiveTaskFor } from '@/lib/focus/commands';
+import { focusMutation } from '@/lib/focus/http';
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { createClient as createAdminClient } from '@supabase/supabase-js';
-import { closeExpiredSessions } from '@/lib/focus-session-expiry';
 
 export const dynamic = 'force-dynamic';
 
 const VALID_TYPES = ['recurring', 'one_time', 'long_term'] as const;
-type TaskType = typeof VALID_TYPES[number];
 
 function getAdmin() {
     return createAdminClient(
@@ -16,21 +17,13 @@ function getAdmin() {
     );
 }
 
-function effectiveSeconds(s: { started_at: string; ended_at: string | null; paused_seconds: number | null }): number {
-    if (!s.ended_at) return 0;
-    const elapsed = (new Date(s.ended_at).getTime() - new Date(s.started_at).getTime()) / 1000;
-    return Math.max(0, Math.floor(elapsed - (s.paused_seconds || 0)));
-}
+const effectiveSeconds = recordedSeconds;
 
 // Period boundaries in UTC ms — keeps stats consistent across server invocations
 function getPeriodBoundaries() {
-    const now = new Date();
-    const todayStart = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
-    const dow = new Date(todayStart).getUTCDay(); // 0=Sun
-    const daysSinceMonday = dow === 0 ? 6 : dow - 1;
-    const weekStart = todayStart - daysSinceMonday * 86400000;
-    const monthStart = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1);
-    return { todayStart, weekStart, monthStart };
+    const today = parisDate();
+    return { todayStart: +parisMidnight(today), weekStart: +parisMidnight(monday(today)),
+        monthStart: +parisMidnight(today.slice(0,7)+'-01') };
 }
 
 // GET: tasks (filterable by date / status / type) + per-task time stats
@@ -38,7 +31,6 @@ export async function GET(req: NextRequest) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    await closeExpiredSessions(user.id);
 
     const dateStr = req.nextUrl.searchParams.get('date');
     const status = req.nextUrl.searchParams.get('status');
@@ -71,10 +63,11 @@ export async function GET(req: NextRequest) {
 
     if (taskIds.length > 0) {
         // Subtasks counters in one query
-        const { data: subtaskRows } = await admin
+        const { data: subtaskRows, error: subtasksError } = await admin
             .from('focus_subtasks')
             .select('task_id, is_completed')
-            .in('task_id', taskIds);
+            .in('task_id', taskIds).is('archived_at', null);
+        if (subtasksError) return NextResponse.json({ error: subtasksError.message }, { status: 500 });
         for (const st of subtaskRows || []) {
             const entry = subtaskMap.get(st.task_id) || { count: 0, completed: 0 };
             entry.count++;
@@ -82,10 +75,11 @@ export async function GET(req: NextRequest) {
             subtaskMap.set(st.task_id, entry);
         }
 
-        const { data: sessions } = await admin
+        const { data: sessions, error: sessionsError } = await admin
             .from('focus_sessions')
-            .select('task_id, started_at, ended_at, paused_seconds, status')
+            .select('task_id, started_at, ended_at, paused_seconds, duration_override_seconds, status')
             .in('task_id', taskIds);
+        if (sessionsError) return NextResponse.json({ error: sessionsError.message }, { status: 500 });
 
         const { todayStart, weekStart, monthStart } = getPeriodBoundaries();
 
@@ -99,7 +93,7 @@ export async function GET(req: NextRequest) {
                 sessions_count_total: 0,
             };
             entry.sessions_count_total += 1;
-            if (s.status === 'completed') {
+            if (s.ended_at) {
                 const sec = effectiveSeconds(s);
                 const startedMs = new Date(s.started_at).getTime();
                 entry.time_total_seconds += sec;
@@ -141,186 +135,11 @@ export async function GET(req: NextRequest) {
 
 // POST: create a task
 export async function POST(req: NextRequest) {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    await closeExpiredSessions(user.id);
-
-    const body = await req.json();
-    const { title, description, category, scheduled_date, task_type, project_id, priority } = body;
-
-    if (typeof title !== 'string' || !title.trim()) {
-        return NextResponse.json({ error: 'title required' }, { status: 400 });
-    }
-    if (category && category !== 'personal' && category !== 'professional') {
-        return NextResponse.json({ error: 'invalid category' }, { status: 400 });
-    }
-
-    const ttype: TaskType = (task_type && (VALID_TYPES as readonly string[]).includes(task_type))
-        ? task_type as TaskType
-        : 'one_time';
-
-    // Date rules
-    if (ttype === 'recurring') {
-        if (scheduled_date) {
-            return NextResponse.json({ error: 'recurring tasks must not have a scheduled_date' }, { status: 400 });
-        }
-    } else {
-        if (!scheduled_date) {
-            return NextResponse.json({ error: 'scheduled_date required for one_time/long_term' }, { status: 400 });
-        }
-    }
-
-    const admin = getAdmin();
-    const { data, error } = await admin
-        .from('focus_tasks')
-        .insert({
-            user_id: user.id,
-            title: title.trim(),
-            description: description || null,
-            category: category || null,
-            scheduled_date: ttype === 'recurring' ? null : scheduled_date,
-            task_type: ttype,
-            status: 'todo',
-            project_id: project_id || null,
-            priority: priority === 'urgent' ? 'urgent' : 'normal',
-        })
-        .select()
-        .single();
-
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    return NextResponse.json({ task: data });
+    return focusMutation(req, (user, body) => createTaskFor(user, body), 'task');
 }
-
-// PATCH: update a task
 export async function PATCH(req: NextRequest) {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    await closeExpiredSessions(user.id);
-
-    const body = await req.json();
-    const { id, title, description, category, scheduled_date, status, task_type, project_id, priority } = body;
-
-    if (!id) return NextResponse.json({ error: 'id required' }, { status: 400 });
-    if (status && !['todo', 'in_progress', 'done'].includes(status)) {
-        return NextResponse.json({ error: 'invalid status' }, { status: 400 });
-    }
-    if (category && category !== 'personal' && category !== 'professional') {
-        return NextResponse.json({ error: 'invalid category' }, { status: 400 });
-    }
-    if (task_type && !(VALID_TYPES as readonly string[]).includes(task_type)) {
-        return NextResponse.json({ error: 'invalid task_type' }, { status: 400 });
-    }
-
-    const admin = getAdmin();
-
-    const { data: existing } = await admin
-        .from('focus_tasks')
-        .select('id, user_id, status, task_type')
-        .eq('id', id)
-        .single();
-    if (!existing || existing.user_id !== user.id) {
-        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-    }
-
-    const update: Record<string, any> = { updated_at: new Date().toISOString() };
-    if (project_id !== undefined) update.project_id = project_id || null;
-    if (priority !== undefined) {
-        if (priority !== 'urgent' && priority !== 'normal') {
-            return NextResponse.json({ error: 'Invalid priority' }, { status: 400 });
-        }
-        update.priority = priority;
-    }
-    if (typeof title === 'string') update.title = title.trim();
-    if (description !== undefined) update.description = description || null;
-    if (category !== undefined) update.category = category || null;
-    if (task_type) {
-        update.task_type = task_type;
-        // Switching to recurring: clear scheduled_date regardless of what client sent
-        if (task_type === 'recurring') {
-            update.scheduled_date = null;
-        } else if (scheduled_date !== undefined) {
-            update.scheduled_date = scheduled_date || null;
-        }
-    } else if (scheduled_date !== undefined) {
-        update.scheduled_date = scheduled_date || null;
-    }
-    if (status) {
-        // Regle du siege unique : la colonne « قيد التنفيذ » n'accepte qu'une
-        // seule tache a la fois. Le controle est ici, cote serveur, et pas
-        // seulement dans l'interface : le kanban, le module MCP et tout appel
-        // direct a l'API passent par ce meme point d'ecriture.
-        if (status === 'in_progress' && existing.status !== 'in_progress') {
-            const { data: seated } = await admin
-                .from('focus_tasks')
-                .select('id, title')
-                .eq('user_id', user.id)
-                .eq('status', 'in_progress')
-                .neq('id', id)
-                .limit(1);
-
-            const taken = seated?.[0];
-            if (taken) {
-                return NextResponse.json(
-                    {
-                        error: `مهمة اليوم محجوزة بالفعل: « ${taken.title} ». أنهِها أو أعِدها إلى « للتنفيذ » أولاً.`,
-                        code: 'in_progress_seat_taken',
-                        occupied_by: { id: taken.id, title: taken.title },
-                    },
-                    { status: 409 }
-                );
-            }
-        }
-
-        update.status = status;
-        if (status === 'done') {
-            update.completed_at = new Date().toISOString();
-        } else if (existing.status === 'done') {
-            update.completed_at = null;
-        }
-    }
-
-    const { data, error } = await admin
-        .from('focus_tasks')
-        .update(update)
-        .eq('id', id)
-        .select()
-        .single();
-
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    return NextResponse.json({ task: data });
+    return focusMutation(req, (user, body) => updateTaskFor(user, String(body.id), body), 'task');
 }
-
-// DELETE
 export async function DELETE(req: NextRequest) {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    await closeExpiredSessions(user.id);
-
-    let id: string | null = req.nextUrl.searchParams.get('id');
-    if (!id) {
-        try {
-            const body = await req.json();
-            id = body?.id || null;
-        } catch {
-            /* */
-        }
-    }
-    if (!id) return NextResponse.json({ error: 'id required' }, { status: 400 });
-
-    const admin = getAdmin();
-    const { data: existing } = await admin
-        .from('focus_tasks')
-        .select('id, user_id')
-        .eq('id', id)
-        .single();
-    if (!existing || existing.user_id !== user.id) {
-        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-    }
-
-    const { error } = await admin.from('focus_tasks').delete().eq('id', id);
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    return NextResponse.json({ success: true });
+    return focusMutation(req, (user, body) => archiveTaskFor(user, String(body.id)));
 }

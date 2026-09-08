@@ -1,7 +1,7 @@
+import { recordedSeconds, parisDate, parisMidnight, addCalendarDays, monday } from '@/lib/focus/time';
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { createClient as createAdminClient } from '@supabase/supabase-js';
-import { closeExpiredSessions } from '@/lib/focus-session-expiry';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,58 +15,30 @@ function getAdmin() {
     );
 }
 
-function effectiveSeconds(s: { started_at: string; ended_at: string | null; paused_seconds: number | null }): number {
-    if (!s.ended_at) return 0;
-    const elapsed = (new Date(s.ended_at).getTime() - new Date(s.started_at).getTime()) / 1000;
-    return Math.max(0, Math.floor(elapsed - (s.paused_seconds || 0)));
-}
+const effectiveSeconds = recordedSeconds;
 
-function isoDay(d: Date): string {
-    return d.toISOString().slice(0, 10);
-}
-
-// UTC-based period boundaries.
-// week = Monday 00:00 UTC of current week  →  next Monday 00:00 UTC (exclusive)
-// month = 1st of current month 00:00 UTC  →  1st of next month 00:00 UTC (exclusive)
-function periodBounds(period: Period): {
-    current: { start: Date; end: Date };
-    previous: { start: Date; end: Date };
-} {
-    const now = new Date();
-
-    if (period === 'month') {
-        const currStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
-        const currEnd = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1));
-        const prevStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 1, 1));
-        const prevEnd = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
-        return { current: { start: currStart, end: currEnd }, previous: { start: prevStart, end: prevEnd } };
+const isoDay = parisDate;
+function periodBounds(period: Period) {
+    const today = parisDate();
+    if (period === 'week') {
+        const start = monday(today);
+        return { current: { start: parisMidnight(start), end: parisMidnight(addCalendarDays(start,7)) },
+            previous: { start: parisMidnight(addCalendarDays(start,-7)), end: parisMidnight(start) } };
     }
-
-    // week
-    const todayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-    const dow = todayUTC.getUTCDay(); // 0=Sun
-    const offsetToMonday = dow === 0 ? 6 : dow - 1;
-    const currStart = new Date(todayUTC);
-    currStart.setUTCDate(currStart.getUTCDate() - offsetToMonday);
-    const currEnd = new Date(currStart);
-    currEnd.setUTCDate(currStart.getUTCDate() + 7);
-    const prevStart = new Date(currStart);
-    prevStart.setUTCDate(currStart.getUTCDate() - 7);
-    const prevEnd = new Date(currStart);
-    return { current: { start: currStart, end: currEnd }, previous: { start: prevStart, end: prevEnd } };
+    const first = today.slice(0,7)+'-01';
+    const next = new Date(first+'T12:00:00Z'); next.setUTCMonth(next.getUTCMonth()+1);
+    const prev = new Date(first+'T12:00:00Z'); prev.setUTCMonth(prev.getUTCMonth()-1);
+    return { current: { start: parisMidnight(first), end: parisMidnight(next.toISOString().slice(0,10)) },
+        previous: { start: parisMidnight(prev.toISOString().slice(0,10)), end: parisMidnight(first) } };
 }
-
-function generateDayKeys(start: Date, end: Date): string[] {
+function generateDayKeys(start: Date, end: Date) {
     const days: string[] = [];
-    const d = new Date(start);
-    while (d < end) {
-        days.push(isoDay(d));
-        d.setUTCDate(d.getUTCDate() + 1);
-    }
+    for (let day = parisDate(start); day < parisDate(end); day = addCalendarDays(day,1)) days.push(day);
     return days;
 }
 
 interface SessionRow {
+    duration_override_seconds?: number | null;
     id: string;
     started_at: string;
     ended_at: string | null;
@@ -98,9 +70,9 @@ function summarize(sessions: SessionRow[], dayKeys: string[]) {
         const dayBucket = byDayMap.get(dayKey);
         if (dayBucket) dayBucket.sessions += 1;
 
-        if (s.status !== 'completed') continue;
+        if (!s.ended_at) continue;
 
-        completedSessions++;
+        if (s.status === 'completed') completedSessions++;
         const sec = effectiveSeconds(s);
         totalSeconds += sec;
         if (dayBucket) dayBucket.seconds += sec;
@@ -152,7 +124,6 @@ export async function GET(req: NextRequest) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    await closeExpiredSessions(user.id);
 
     const periodParam = (req.nextUrl.searchParams.get('period') || 'week') as Period;
     if (periodParam !== 'week' && periodParam !== 'month') {
@@ -168,7 +139,7 @@ export async function GET(req: NextRequest) {
     const earliest = compare ? previous.start : current.start;
     const { data: rows, error } = await admin
         .from('focus_sessions')
-        .select('id, started_at, ended_at, paused_seconds, status, task_id, focus_tasks(category, title, task_type)')
+        .select('id, started_at, ended_at, paused_seconds, duration_override_seconds, status, task_id, focus_tasks(category, title, task_type)')
         .eq('user_id', user.id)
         .gte('started_at', earliest.toISOString())
         .lt('started_at', current.end.toISOString())
@@ -193,7 +164,7 @@ export async function GET(req: NextRequest) {
     const result: any = {
         current: {
             period_start: isoDay(current.start),
-            period_end: isoDay(new Date(current.end.getTime() - 86400000)), // last day inclusive
+            period_end: addCalendarDays(parisDate(current.end), -1), // last day inclusive
             ...currentSummary,
         },
     };
@@ -203,7 +174,7 @@ export async function GET(req: NextRequest) {
         const prevSummary = summarize(inPrevious, prevDays);
         result.previous = {
             period_start: isoDay(previous.start),
-            period_end: isoDay(new Date(previous.end.getTime() - 86400000)),
+            period_end: addCalendarDays(parisDate(previous.end), -1),
             total_seconds: prevSummary.total_seconds,
             total_sessions: prevSummary.total_sessions,
             completed_sessions: prevSummary.completed_sessions,

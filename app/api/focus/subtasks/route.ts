@@ -1,7 +1,9 @@
+import { recordedSeconds } from '@/lib/focus/time';
+import { createSubtaskFor, updateSubtaskFor, archiveSubtaskFor } from '@/lib/focus/commands';
+import { focusMutation } from '@/lib/focus/http';
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { createClient as createAdminClient } from '@supabase/supabase-js';
-import { closeExpiredSessions } from '@/lib/focus-session-expiry';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,18 +15,13 @@ function getAdmin() {
     );
 }
 
-function effectiveSeconds(s: { started_at: string; ended_at: string | null; paused_seconds: number | null }): number {
-    if (!s.ended_at) return 0;
-    const elapsed = (new Date(s.ended_at).getTime() - new Date(s.started_at).getTime()) / 1000;
-    return Math.max(0, Math.floor(elapsed - (s.paused_seconds || 0)));
-}
+const effectiveSeconds = recordedSeconds;
 
 // GET: subtasks of a task + per-subtask aggregates
 export async function GET(req: NextRequest) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    await closeExpiredSessions(user.id);
 
     const taskId = req.nextUrl.searchParams.get('task_id');
     const admin = getAdmin();
@@ -44,7 +41,7 @@ export async function GET(req: NextRequest) {
     // Sans task_id : toutes les sous-taches de l'utilisateur. Le kanban en a
     // besoin d'un coup pour afficher le compteur et la barre de chaque carte
     // — une requete par carte serait un N+1 a l'ouverture de l'ecran.
-    let query = admin.from('focus_subtasks').select('*').eq('user_id', user.id);
+    let query = admin.from('focus_subtasks').select('*').eq('user_id', user.id).is('archived_at', null);
     if (taskId) query = query.eq('task_id', taskId);
 
     const { data: subtasks, error } = await query
@@ -57,16 +54,17 @@ export async function GET(req: NextRequest) {
     const aggMap = new Map<string, { total_time_seconds: number; sessions_count: number }>();
 
     if (subtaskIds.length > 0) {
-        const { data: sessions } = await admin
+        const { data: sessions, error: sessionsError } = await admin
             .from('focus_sessions')
-            .select('subtask_id, started_at, ended_at, paused_seconds, status')
+            .select('subtask_id, started_at, ended_at, paused_seconds, duration_override_seconds, status')
             .in('subtask_id', subtaskIds);
+        if (sessionsError) return NextResponse.json({ error: sessionsError.message }, { status: 500 });
 
         for (const s of sessions || []) {
             if (!s.subtask_id) continue;
             const entry = aggMap.get(s.subtask_id) || { total_time_seconds: 0, sessions_count: 0 };
             entry.sessions_count += 1;
-            if (s.status === 'completed') {
+            if (s.ended_at) {
                 entry.total_time_seconds += effectiveSeconds(s);
             }
             aggMap.set(s.subtask_id, entry);
@@ -84,145 +82,11 @@ export async function GET(req: NextRequest) {
 
 // POST: create a subtask
 export async function POST(req: NextRequest) {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    await closeExpiredSessions(user.id);
-
-    const body = await req.json();
-    const { task_id, title } = body;
-
-    if (!task_id) return NextResponse.json({ error: 'task_id required' }, { status: 400 });
-    if (typeof title !== 'string' || !title.trim()) {
-        return NextResponse.json({ error: 'title required' }, { status: 400 });
-    }
-
-    const admin = getAdmin();
-
-    // Ownership check on parent task
-    const { data: parentTask } = await admin
-        .from('focus_tasks')
-        .select('id, user_id')
-        .eq('id', task_id)
-        .single();
-    if (!parentTask || parentTask.user_id !== user.id) {
-        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-    }
-
-    // Compute next position
-    const { data: maxRow } = await admin
-        .from('focus_subtasks')
-        .select('position')
-        .eq('task_id', task_id)
-        .order('position', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-    const nextPosition = (maxRow?.position ?? -1) + 1;
-
-    const { data, error } = await admin
-        .from('focus_subtasks')
-        .insert({
-            task_id,
-            user_id: user.id,
-            title: title.trim(),
-            position: nextPosition,
-            is_completed: false,
-        })
-        .select()
-        .single();
-
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    return NextResponse.json({ subtask: { ...data, total_time_seconds: 0, sessions_count: 0 } });
+    return focusMutation(req, (user, body) => createSubtaskFor(user, body), 'subtask');
 }
-
-// PATCH: update title or completion
 export async function PATCH(req: NextRequest) {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    await closeExpiredSessions(user.id);
-
-    const body = await req.json();
-    const { id, title, is_completed } = body;
-    if (!id) return NextResponse.json({ error: 'id required' }, { status: 400 });
-
-    const admin = getAdmin();
-
-    const { data: existing } = await admin
-        .from('focus_subtasks')
-        .select('id, user_id')
-        .eq('id', id)
-        .single();
-    if (!existing || existing.user_id !== user.id) {
-        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-    }
-
-    const update: Record<string, any> = { updated_at: new Date().toISOString() };
-    if (typeof title === 'string') {
-        if (!title.trim()) return NextResponse.json({ error: 'title cannot be empty' }, { status: 400 });
-        update.title = title.trim();
-    }
-    if (typeof is_completed === 'boolean') {
-        update.is_completed = is_completed;
-        update.completed_at = is_completed ? new Date().toISOString() : null;
-
-        // Rattache la sous-tache a la session ouverte au moment du clic, pour
-        // que l'agenda hebdomadaire puisse afficher « ce qui a ete valide
-        // PENDANT cette session ». Decocher rompt le rattachement.
-        if (is_completed) {
-            const { data: openSession } = await admin
-                .from('focus_sessions')
-                .select('id')
-                .eq('user_id', user.id)
-                .in('status', ['running', 'paused'])
-                .order('started_at', { ascending: false })
-                .limit(1);
-            update.completed_session_id = openSession?.[0]?.id ?? null;
-        } else {
-            update.completed_session_id = null;
-        }
-    }
-
-    const { data, error } = await admin
-        .from('focus_subtasks')
-        .update(update)
-        .eq('id', id)
-        .select()
-        .single();
-
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    return NextResponse.json({ subtask: data });
+    return focusMutation(req, (user, body) => updateSubtaskFor(user, String(body.id), body), 'subtask');
 }
-
-// DELETE
 export async function DELETE(req: NextRequest) {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    await closeExpiredSessions(user.id);
-
-    let id: string | null = req.nextUrl.searchParams.get('id');
-    if (!id) {
-        try {
-            const body = await req.json();
-            id = body?.id || null;
-        } catch {
-            /* */
-        }
-    }
-    if (!id) return NextResponse.json({ error: 'id required' }, { status: 400 });
-
-    const admin = getAdmin();
-    const { data: existing } = await admin
-        .from('focus_subtasks')
-        .select('id, user_id')
-        .eq('id', id)
-        .single();
-    if (!existing || existing.user_id !== user.id) {
-        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-    }
-
-    const { error } = await admin.from('focus_subtasks').delete().eq('id', id);
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    return NextResponse.json({ success: true });
+    return focusMutation(req, (user, body) => archiveSubtaskFor(user, String(body.id)));
 }

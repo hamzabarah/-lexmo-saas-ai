@@ -1,7 +1,9 @@
+import { recordedSeconds, parisDate, parisDayBounds } from '@/lib/focus/time';
+import { sessionCommand } from '@/lib/focus/commands';
+import { focusMutation } from '@/lib/focus/http';
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { createClient as createAdminClient } from '@supabase/supabase-js';
-import { closeExpiredSessions } from '@/lib/focus-session-expiry';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,24 +16,19 @@ function getAdmin() {
 }
 
 // Effective duration of a finished session (excluding paused time), in seconds.
-function effectiveSeconds(s: { started_at: string; ended_at: string | null; paused_seconds: number | null }): number {
-    if (!s.ended_at) return 0;
-    const elapsed = (new Date(s.ended_at).getTime() - new Date(s.started_at).getTime()) / 1000;
-    return Math.max(0, Math.floor(elapsed - (s.paused_seconds || 0)));
-}
+const effectiveSeconds = recordedSeconds;
 
 // GET: today's sessions (or ?date=YYYY-MM-DD) + computed stats + linked task info
 export async function GET(req: NextRequest) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    await closeExpiredSessions(user.id);
 
     const dateStr = req.nextUrl.searchParams.get('date');
-    const target = dateStr ? new Date(`${dateStr}T00:00:00`) : new Date();
-    target.setHours(0, 0, 0, 0);
-    const next = new Date(target);
-    next.setDate(target.getDate() + 1);
+    let bounds;
+    try { bounds = parisDayBounds(dateStr || parisDate()); }
+    catch { return NextResponse.json({ error: 'Invalid date' }, { status: 400 }); }
+    const target = bounds.start, next = bounds.end;
 
     const admin = getAdmin();
     const { data: sessions, error } = await admin
@@ -48,9 +45,10 @@ export async function GET(req: NextRequest) {
     let completedCount = 0;
     let abandonedCount = 0;
     for (const s of sessions || []) {
+        totalMinutes += effectiveSeconds(s) / 60;
         if (s.status === 'completed') {
             completedCount++;
-            totalMinutes += Math.floor(effectiveSeconds(s) / 60);
+
         } else if (s.status === 'abandoned') {
             abandonedCount++;
         }
@@ -58,185 +56,14 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({
         sessions: sessions || [],
-        stats: { totalMinutes, completedCount, abandonedCount },
+        stats: { totalMinutes: Math.round(totalMinutes), completedCount, abandonedCount },
     });
 }
 
 // POST: start a new session (optionally linked to a task)
 export async function POST(req: NextRequest) {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    await closeExpiredSessions(user.id);
-
-    const body = await req.json();
-    const { category, planned_duration_minutes, task_id, subtask_id } = body;
-
-    // Aucune session orpheline : une جلسة تركيز part TOUJOURS d'une carte du
-    // kanban. Le controle est ici, cote serveur, et non dans l'interface.
-    if (typeof task_id !== 'string' || !task_id.trim()) {
-        return NextResponse.json(
-            {
-                error: 'لا يمكن بدء جلسة بدون مهمة. اختر بطاقة من لوحة القيادة.',
-                code: 'task_id_required',
-            },
-            { status: 400 }
-        );
-    }
-
-    const planned =
-        typeof planned_duration_minutes === 'number' && planned_duration_minutes > 0
-            ? Math.min(planned_duration_minutes, 60 * 8)
-            : 40;
-
-    const admin = getAdmin();
-
-    // La tache fait autorite : titre et categorie viennent d'elle, jamais du
-    // corps de la requete — sinon deux vues pourraient diverger.
-    const { data: task } = await admin
-        .from('focus_tasks')
-        .select('id, user_id, status, title, category')
-        .eq('id', task_id)
-        .single();
-
-    if (!task || task.user_id !== user.id) {
-        return NextResponse.json(
-            { error: 'المهمة غير موجودة.', code: 'task_not_found' },
-            { status: 403 }
-        );
-    }
-
-    // Demarrer une session assied la tache dans « قيد التنفيذ » : la regle du
-    // siege unique s'applique donc ici aussi.
-    if (task.status !== 'in_progress') {
-        const { data: seated } = await admin
-            .from('focus_tasks')
-            .select('id, title')
-            .eq('user_id', user.id)
-            .eq('status', 'in_progress')
-            .neq('id', task_id)
-            .limit(1);
-
-        const taken = seated?.[0];
-        if (taken) {
-            return NextResponse.json(
-                {
-                    error: `مهمة اليوم محجوزة بالفعل: « ${taken.title} ». أنهِها أو أعِدها إلى « للتنفيذ » أولاً.`,
-                    code: 'in_progress_seat_taken',
-                    occupied_by: { id: taken.id, title: taken.title },
-                },
-                { status: 409 }
-            );
-        }
-
-        await admin
-            .from('focus_tasks')
-            .update({ status: 'in_progress', updated_at: new Date().toISOString() })
-            .eq('id', task_id);
-    }
-
-    // If linked to a subtask, verify it belongs to the parent task
-    if (subtask_id) {
-        const { data: subtask } = await admin
-            .from('focus_subtasks')
-            .select('id, user_id, task_id')
-            .eq('id', subtask_id)
-            .single();
-        if (!subtask || subtask.user_id !== user.id || subtask.task_id !== task_id) {
-            return NextResponse.json({ error: 'Invalid subtask_id' }, { status: 403 });
-        }
-    }
-
-    const { data, error } = await admin
-        .from('focus_sessions')
-        .insert({
-            user_id: user.id,
-            task_title: task.title,
-            category: task.category ?? category ?? null,
-            planned_duration_minutes: planned,
-            status: 'running',
-            task_id: task_id || null,
-            subtask_id: subtask_id || null,
-        })
-        .select()
-        .single();
-
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    return NextResponse.json({ session: data });
+    return focusMutation(req, (user, body) => sessionCommand(user, 'start', body), 'session');
 }
-
-// PATCH: pause / resume / stop / abandon
 export async function PATCH(req: NextRequest) {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    await closeExpiredSessions(user.id);
-
-    const body = await req.json();
-    const { id, action, notes, paused_seconds } = body;
-
-    if (!id || !action) {
-        return NextResponse.json({ error: 'id & action required' }, { status: 400 });
-    }
-
-    const admin = getAdmin();
-
-    const { data: existing } = await admin
-        .from('focus_sessions')
-        .select('id, user_id')
-        .eq('id', id)
-        .single();
-
-    if (!existing || existing.user_id !== user.id) {
-        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-    }
-
-    const update: Record<string, any> = { updated_at: new Date().toISOString() };
-
-    switch (action) {
-        case 'pause':
-            update.status = 'paused';
-            break;
-        case 'resume':
-            update.status = 'running';
-            break;
-        case 'stop':
-            update.status = 'completed';
-            update.ended_at = new Date().toISOString();
-            break;
-        case 'abandon':
-            update.status = 'abandoned';
-            update.ended_at = new Date().toISOString();
-            break;
-        case 'extend': {
-            const extra = body.extra_minutes;
-            if (typeof extra !== 'number' || extra <= 0 || extra > 480) {
-                return NextResponse.json({ error: 'Invalid extra_minutes (1-480)' }, { status: 400 });
-            }
-            const { data: cur } = await admin
-                .from('focus_sessions')
-                .select('planned_duration_minutes')
-                .eq('id', id)
-                .single();
-            update.planned_duration_minutes = (cur?.planned_duration_minutes || 0) + Math.floor(extra);
-            break;
-        }
-        default:
-            return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
-    }
-
-    if (typeof notes === 'string') update.notes = notes;
-    if (typeof paused_seconds === 'number' && paused_seconds >= 0) {
-        update.paused_seconds = Math.floor(paused_seconds);
-    }
-
-    const { data, error } = await admin
-        .from('focus_sessions')
-        .update(update)
-        .eq('id', id)
-        .select()
-        .single();
-
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    return NextResponse.json({ session: data });
+    return focusMutation(req, (user, body) => sessionCommand(user, String(body.action), body), 'session');
 }

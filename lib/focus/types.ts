@@ -1,3 +1,4 @@
+import { recordedSeconds, parisDate, parisMidnight, addCalendarDays, monday } from './time';
 // Types du module « عُمق » (/dashboard/focus).
 // Miroir du schéma focus_* existant, étendu par 20260830_focus_projects.sql.
 
@@ -37,6 +38,9 @@ export interface FocusTask {
 }
 
 export interface FocusSession {
+    paused_at?: string | null;
+    duration_override_seconds?: number | null;
+    completion_source?: string | null;
     id: string;
     user_id: string;
     task_id: string | null;
@@ -167,8 +171,9 @@ export const DAILY_SESSION_GOAL = 5;
 
 /** Secondes réellement travaillées sur une session, pauses déduites. */
 export function sessionSeconds(s: FocusSession, now = Date.now()): number {
+    if (s.ended_at) return recordedSeconds(s);
     const start = new Date(s.started_at).getTime();
-    const end = s.ended_at ? new Date(s.ended_at).getTime() : now;
+    const end = s.ended_at ? new Date(s.ended_at).getTime() : s.paused_at ? Date.parse(s.paused_at) : now;
     return Math.max(0, Math.floor((end - start) / 1000) - (s.paused_seconds ?? 0));
 }
 
@@ -207,42 +212,27 @@ export function computeStreak(days: StatsDay[], todayIso: string): number {
 /** Objectif quotidien de minutes travaillées, tracé en pointillés. */
 export const DAILY_MINUTES_GOAL = 90;
 
-/** Libellés des sept jours, du samedi au vendredi. */
+/** Monday through Sunday, matching the Paris reporting calendar. */
 export const WEEK_DAY_LABELS = [
-    'السبت',
-    'الأحد',
     'الاثنين',
     'الثلاثاء',
     'الأربعاء',
     'الخميس',
     'الجمعة',
+    'السبت',
+    'الأحد',
 ] as const;
 
 /** `YYYY-MM-DD` en heure locale — jamais toISOString(), qui décale d'un jour. */
-export function isoDate(d: Date): string {
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${d.getFullYear()}-${m}-${day}`;
-}
-
+export const isoDate = parisDate;
 export function addDays(d: Date, n: number): Date {
-    const out = new Date(d);
-    out.setDate(out.getDate() + n);
-    out.setHours(0, 0, 0, 0);
-    return out;
+    return parisMidnight(addCalendarDays(parisDate(d),n));
 }
+export function startOfWeek(d: Date): Date { return parisMidnight(monday(parisDate(d))); }
 
-/** Samedi de la semaine contenant `d` — la semaine arabe commence le samedi. */
-export function startOfWeek(d: Date): Date {
-    const out = new Date(d);
-    out.setHours(0, 0, 0, 0);
-    // getDay(): 0 = dimanche … 6 = samedi. Décalage jusqu'au samedi précédent.
-    out.setDate(out.getDate() - ((out.getDay() + 1) % 7));
-    return out;
-}
-
-/** Une session telle que la renvoie GET /api/focus/week. */
 export interface WeekSession {
+    duration_override_seconds?: number | null;
+    completion_source?: string | null;
     id: string;
     task_id: string | null;
     task_title: string;
@@ -264,8 +254,4 @@ export interface WeekResponse {
 }
 
 /** Minutes effectivement travaillées sur une session terminée. */
-export function weekSessionMinutes(s: WeekSession): number {
-    if (!s.ended_at) return 0;
-    const elapsed = (new Date(s.ended_at).getTime() - new Date(s.started_at).getTime()) / 1000;
-    return Math.max(0, Math.round((elapsed - (s.paused_seconds ?? 0)) / 60));
-}
+export function weekSessionMinutes(s: WeekSession): number { return recordedSeconds(s) / 60; }

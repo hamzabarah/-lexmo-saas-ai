@@ -97,7 +97,7 @@ export function DeepWorkView({
     const [asking, setAsking] = useState(false);
     const [notes, setNotes] = useState('');
 
-    const today = new Date().toLocaleDateString('ar', {
+    const today = new Date().toLocaleDateString('ar', { timeZone: 'Europe/Paris',
         weekday: 'long',
         day: 'numeric',
         month: 'long',

@@ -1,5 +1,7 @@
 'use client';
 
+import { isSessionExpired } from '@/lib/focus-session-expiry';
+import { parisDate } from '@/lib/focus/time';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
     BREAK_MINUTES,
@@ -23,15 +25,8 @@ import { DisciplineView } from './DisciplineView';
 import type { FocusSubtask } from '@/lib/hooks/useFocusSubtasks';
 import { DeepWorkView } from './DeepWorkView';
 
-// Date LOCALE. toISOString() donne la date UTC : passe minuit en UTC+n,
-// le client reclamait la fenetre de la veille alors que GET /api/focus la
-// calcule en heure locale — la session du soir devenait invisible.
-const todayIso = () => {
-    const d = new Date();
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${d.getFullYear()}-${m}-${day}`;
-};
+// User calendar is Europe/Paris, irrespective of browser timezone.
+const todayIso = parisDate;
 
 /**
  * Coquille du module « عُمق ».
@@ -69,8 +64,7 @@ export function OmqShell() {
     const [plannedMinutes, setPlannedMinutes] = useState<number>(DEFAULT_DURATION);
     const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
 
-    // Instant de mise en pause, côté client : l'API attend que le client lui
-    // transmette le cumul des pauses au moment de la reprise.
+    // Server pause instant cached locally for display only.
     const pausedAtRef = useRef<number | null>(null);
     const [breakEndsAt, setBreakEndsAt] = useState<number | null>(null);
     const [tick, setTick] = useState(0);
@@ -96,11 +90,9 @@ export function OmqShell() {
             if (found.task_id) setSelectedTaskId(found.task_id);
             setPlannedMinutes(found.planned_duration_minutes);
 
-            // pausedAtRef n'existe que dans l'onglet qui a clique sur pause.
-            // Sur une page rechargee, on la reconstruit depuis updated_at :
-            // sans elle, une session en pause continuerait de decompter.
+            // Pause instant comes from the server, never from updated_at.
             if (found.status === 'paused') {
-                const at = found.updated_at ? new Date(found.updated_at).getTime() : NaN;
+                const at = found.paused_at ? new Date(found.paused_at).getTime() : NaN;
                 pausedAtRef.current = Number.isFinite(at) ? at : Date.now();
             } else {
                 pausedAtRef.current = null;
@@ -235,7 +227,7 @@ export function OmqShell() {
     /** « الخميس 4 سبتمبر 2026 » — en-tete des ecrans qui datent la journee. */
     const longDateLabel = useMemo(
         () =>
-            new Intl.DateTimeFormat('ar', {
+            new Intl.DateTimeFormat('ar', { timeZone: 'Europe/Paris',
                 weekday: 'long',
                 day: 'numeric',
                 month: 'long',
@@ -363,10 +355,10 @@ export function OmqShell() {
                     credentials: 'include',
                     body: JSON.stringify({ id: session.id, action, ...extra }),
                 });
-                if (!res.ok) throw new Error('patch failed');
+                if (!res.ok) { const body = await res.json(); throw new Error(body.error || 'Focus command failed'); }
                 await Promise.all([loadDay(), loadCurrent()]);
-            } catch {
-                setError('تعذر تحديث الجلسة');
+            } catch (error) {
+                setError(error instanceof Error ? error.message : 'تعذر تحديث الجلسة');
             } finally {
                 setBusy(false);
             }
@@ -380,12 +372,8 @@ export function OmqShell() {
     }, [patchSession]);
 
     const resume = useCallback(async () => {
-        const pausedAt = pausedAtRef.current;
-        const extraPaused = pausedAt ? Math.round((Date.now() - pausedAt) / 1000) : 0;
         pausedAtRef.current = null;
-        await patchSession('resume', {
-            paused_seconds: (session?.paused_seconds ?? 0) + extraPaused,
-        });
+        await patchSession('resume');
     }, [patchSession, session]);
 
     const stop = useCallback(
@@ -397,27 +385,20 @@ export function OmqShell() {
         [patchSession, reloadTasks]
     );
 
-    /**
-     * Cloture automatique quand le compte a rebours atteint zero.
-     *
-     * Pur confort d'interface : si l'onglet est ferme avant l'echeance, ou si
-     * cet appel echoue, le serveur rattrape au prochain acces au module
-     * (closeExpiredSessions, lib/focus-session-expiry.ts). La session n'est
-     * donc jamais laissee ouverte, et le temps enregistre reste plafonne a la
-     * duree prevue dans les deux cas.
-     */
+    /** Explicit v1 expiry command from the timer UI, never from read endpoints.
+     * Historical sessions remain open until the operator closes them explicitly. */
     const autoStoppedRef = useRef<string | null>(null);
 
     useEffect(() => {
         if (breakEndsAt !== null) return;
         if (!session || session.status !== 'running') return;
-        if (remainingSeconds > 0) return;
+        if (remainingSeconds > 0 || !isSessionExpired(session)) return;
         // Une seule tentative par session, sinon le battement d'une seconde
         // relancerait la requete tant que le rechargement n'a pas eu lieu.
         if (autoStoppedRef.current === session.id) return;
         autoStoppedRef.current = session.id;
-        void stop('');
-    }, [session, remainingSeconds, breakEndsAt, stop]);
+        void patchSession('expire');
+    }, [session, remainingSeconds, breakEndsAt, patchSession, tick]);
 
     // ─────────────────────── habitudes a eviter ───────────────────────
 
@@ -468,8 +449,8 @@ export function OmqShell() {
                 }
                 await loadHabits();
                 return true;
-            } catch {
-                setError('تعذر إضافة العادة');
+            } catch (error) {
+                setError(error instanceof Error ? error.message : 'تعذر إضافة العادة');
                 return false;
             }
         },

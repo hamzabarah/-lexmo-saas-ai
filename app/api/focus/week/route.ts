@@ -1,7 +1,7 @@
+import { parisMidnight } from '@/lib/focus/time';
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { createClient as createAdminClient } from '@supabase/supabase-js';
-import { closeExpiredSessions } from '@/lib/focus-session-expiry';
 import { startOfWeek, addDays, isoDate } from '@/lib/focus/types';
 
 export const dynamic = 'force-dynamic';
@@ -18,17 +18,17 @@ function getAdmin() {
  * Alimente l'agenda hebdomadaire de l'ecran « البيانات ». Lecture seule : cet
  * ecran n'ecrit rien, il ne fait que restituer les sessions enregistrees.
  *
- * `start` est ramene au samedi de la semaine concernee (la semaine arabe
- * commence le samedi). Sans parametre, la semaine courante.
+ * `start` is normalized to Monday in Europe/Paris. Defaults to this week.
  */
 export async function GET(req: NextRequest) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    await closeExpiredSessions(user.id);
 
     const raw = req.nextUrl.searchParams.get('start');
-    const anchor = raw && /^\d{4}-\d{2}-\d{2}$/.test(raw) ? new Date(`${raw}T00:00:00`) : new Date();
+    let anchor: Date;
+    try { anchor = raw ? parisMidnight(raw) : new Date(); }
+    catch { return NextResponse.json({ error: 'invalid start' }, { status: 400 }); }
     if (Number.isNaN(anchor.getTime())) {
         return NextResponse.json({ error: 'invalid start' }, { status: 400 });
     }
@@ -41,7 +41,7 @@ export async function GET(req: NextRequest) {
     const { data: sessions, error } = await admin
         .from('focus_sessions')
         .select(
-            'id, task_id, task_title, notes, planned_duration_minutes, started_at, ended_at, paused_seconds, status, focus_tasks(id, title, project_id)'
+            'id, task_id, task_title, notes, planned_duration_minutes, started_at, ended_at, paused_seconds, duration_override_seconds, completion_source, status, focus_tasks(id, title, project_id)'
         )
         .eq('user_id', user.id)
         .gte('started_at', from.toISOString())

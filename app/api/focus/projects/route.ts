@@ -1,8 +1,14 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { createProjectFor } from '@/lib/focus/commands';
+import { focusMutation } from '@/lib/focus/http';
 import { createClient } from '@/utils/supabase/server';
 import { createClient as createAdminClient } from '@supabase/supabase-js';
 
 export const dynamic = 'force-dynamic';
+
+export async function POST(req: NextRequest) {
+    return focusMutation(req, createProjectFor, 'project');
+}
 
 function getAdmin() {
     return createAdminClient(

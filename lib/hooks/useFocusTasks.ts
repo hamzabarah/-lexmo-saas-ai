@@ -1,5 +1,6 @@
 "use client";
 
+import { parisDate, monday, addCalendarDays } from '@/lib/focus/time';
 import { useCallback, useEffect, useState } from "react";
 
 export type TaskStatus = "todo" | "in_progress" | "done";
@@ -35,25 +36,8 @@ interface TasksResponse {
     stats: { todo: number; in_progress: number; done: number };
 }
 
-function todayLocalISO(): string {
-    const d = new Date();
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
-    const dd = String(d.getDate()).padStart(2, "0");
-    return `${yyyy}-${mm}-${dd}`;
-}
-
-// Monday of current week (local), inclusive — ISO date string.
-function weekStartLocalISO(): string {
-    const d = new Date();
-    const dow = d.getDay(); // 0=Sun
-    const offset = dow === 0 ? 6 : dow - 1;
-    d.setDate(d.getDate() - offset);
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
-    const dd = String(d.getDate()).padStart(2, "0");
-    return `${yyyy}-${mm}-${dd}`;
-}
+const todayLocalISO = parisDate;
+const weekStartLocalISO = monday;
 
 export function useFocusTasks(date?: string) {
     const [data, setData] = useState<TasksResponse | null>(null);
@@ -177,10 +161,7 @@ export function useFocusTasks(date?: string) {
         const today = todayLocalISO();
         // Include any one_time task scheduled between Monday and the end of week
         // (kept simple: scheduled_date between weekStart and weekStart+6)
-        const ws = new Date(`${weekStart}T00:00:00`);
-        const we = new Date(ws);
-        we.setDate(we.getDate() + 6);
-        const weekEndISO = `${we.getFullYear()}-${String(we.getMonth() + 1).padStart(2, "0")}-${String(we.getDate()).padStart(2, "0")}`;
+        const weekEndISO = addCalendarDays(weekStart,6);
         void today;
         return tasks.filter(
             (t) =>
