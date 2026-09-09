@@ -1,9 +1,6 @@
-import { NextRequest } from 'next/server';
-import { getProjectContextFor } from '@/lib/focus/strategy';
-import { focusStrategyResponse } from '@/lib/focus/strategy-http';
+import { retiredInternalResponse } from '@/lib/retired-internal';
 
 export const dynamic = 'force-dynamic';
-
-export async function GET(_req: NextRequest, context: { params: Promise<{ id: string }> }) {
-    return focusStrategyResponse(async (userId) => getProjectContextFor(userId, (await context.params).id));
-}
+export { retiredInternalResponse as GET, retiredInternalResponse as HEAD, retiredInternalResponse as POST,
+    retiredInternalResponse as PUT, retiredInternalResponse as PATCH, retiredInternalResponse as DELETE,
+    retiredInternalResponse as OPTIONS };

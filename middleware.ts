@@ -1,7 +1,11 @@
 import { NextResponse, type NextRequest, type NextFetchEvent } from 'next/server'
 import { updateSession } from '@/utils/supabase/middleware'
+import { isRetiredInternalPath, retiredInternalResponse } from '@/lib/retired-internal'
 
 export async function middleware(request: NextRequest, event: NextFetchEvent) {
+    // Stop retired internal requests before authentication or any database call.
+    if (isRetiredInternalPath(request.nextUrl.pathname)) return retiredInternalResponse()
+
     // Canonicalisation du domaine : apex ecomy.ai -> www.ecomy.ai en 301
     // permanent (consolide les signaux SEO sur une seule version).
     const host = request.headers.get('host')
