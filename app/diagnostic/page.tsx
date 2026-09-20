@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { ChevronDown, Send } from "lucide-react";
 
 const CTA_TEXT = "احجز جلستك الآن";
@@ -29,15 +29,17 @@ const faqData = [
 export default function DiagnosticPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showStickyBar, setShowStickyBar] = useState(false);
-  const ctaRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => setShowStickyBar(!entry.isIntersecting),
-      { threshold: 0 }
-    );
-    if (ctaRef.current) observer.observe(ctaRef.current);
-    return () => observer.disconnect();
+    const onScroll = () => {
+      const el = document.documentElement;
+      const max = el.scrollHeight - el.clientHeight;
+      const pct = max > 0 ? el.scrollTop / max : 0;
+      setShowStickyBar(pct > 0.35 && pct < 0.95);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const PriceLine = (
@@ -126,7 +128,6 @@ export default function DiagnosticPage() {
   const CTAButton = (
     <>
       <a
-        ref={ctaRef}
         href={CTA_URL}
         target="_blank"
         rel="noopener noreferrer"
