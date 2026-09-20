@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { ChevronDown } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ChevronDown, Send } from "lucide-react";
 
 const CTA_TEXT = "احجز جلستك الآن";
-const CTA_URL = "https://buy.stripe.com/9B68wP5WU7nX5dH7gDgfu05";
+const CTA_URL = "https://ecomy.sumupstore.com/product/tshkhys-almshrw";
+const TELEGRAM_LINK = "https://t.me/ecomyyy";
 
 const faqData = [
   {
@@ -17,7 +18,7 @@ const faqData = [
   },
   {
     q: "كيف يتم الحجز بعد الدفع؟",
-    a: "بعد الدفع ستصلك رسالة إلكترونية لإنشاء حسابك. بعد تسجيل الدخول، يمكنك اختيار موعدك المناسب من التواريخ المتاحة.",
+    a: "بعد إتمام الدفع، تواصل معنا عبر تيليغرام وأرسل إثبات الدفع مع بريدك الإلكتروني. سنقوم بتفعيل حسابك وإرسال بيانات الدخول خلال 24 ساعة، ثم نحدد معك موعد الجلسة.",
   },
   {
     q: "ماذا سأحصل عليه في نهاية الجلسة؟",
@@ -28,15 +29,17 @@ const faqData = [
 export default function DiagnosticPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showStickyBar, setShowStickyBar] = useState(false);
-  const ctaRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => setShowStickyBar(!entry.isIntersecting),
-      { threshold: 0 }
-    );
-    if (ctaRef.current) observer.observe(ctaRef.current);
-    return () => observer.disconnect();
+    const onScroll = () => {
+      const el = document.documentElement;
+      const max = el.scrollHeight - el.clientHeight;
+      const pct = max > 0 ? el.scrollTop / max : 0;
+      setShowStickyBar(pct > 0.35 && pct < 0.95);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const PriceLine = (
@@ -104,15 +107,37 @@ export default function DiagnosticPage() {
     </div>
   );
 
+  const PaymentNote = (
+    <div className="rounded-xl border border-[#C5A04E]/30 bg-[#111111] p-4 space-y-2.5 text-right">
+      <p className="text-white font-bold text-[15px]">⚠️ خطوة مهمة بعد الدفع</p>
+      <p className="text-gray-400 text-sm leading-[1.9]">
+        بعد إتمام الدفع، تواصل معنا عبر تيليغرام وأرسل لنا إثبات الدفع مع بريدك الإلكتروني. سنقوم بتفعيل حسابك وإرسال بيانات الدخول خلال 24 ساعة.
+      </p>
+      <a
+        href={TELEGRAM_LINK}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex w-full items-center justify-center gap-2 bg-[#229ED9] hover:bg-[#1E8BC0] text-white text-sm font-bold py-3 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
+      >
+        <Send size={16} className="shrink-0" />
+        تواصل معنا على تيليغرام
+      </a>
+    </div>
+  );
+
   const CTAButton = (
-    <a
-      ref={ctaRef}
-      href={CTA_URL}
-      className="block w-full text-center bg-[#E8600A] hover:bg-[#D15509] text-white text-lg font-bold py-4 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
-      style={{ boxShadow: '0 4px 14px rgba(232,96,10,0.2)' }}
-    >
-      {CTA_TEXT}
-    </a>
+    <>
+      <a
+        href={CTA_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block w-full text-center bg-[#E8600A] hover:bg-[#D15509] text-white text-lg font-bold py-4 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
+        style={{ boxShadow: '0 4px 14px rgba(232,96,10,0.2)' }}
+      >
+        {CTA_TEXT}
+      </a>
+      {PaymentNote}
+    </>
   );
 
   return (
@@ -174,11 +199,15 @@ export default function DiagnosticPage() {
 
                   <a
                     href={CTA_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="block w-full text-center bg-[#E8600A] hover:bg-[#D15509] text-white text-[15px] font-bold py-3.5 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
                     style={{ boxShadow: '0 4px 14px rgba(232,96,10,0.2)' }}
                   >
                     {CTA_TEXT}
                   </a>
+
+                  {PaymentNote}
                 </div>
               </div>
             </div>
@@ -197,6 +226,8 @@ export default function DiagnosticPage() {
           </div>
           <a
             href={CTA_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex-1 text-center bg-[#E8600A] hover:bg-[#D15509] text-white text-sm font-bold py-3 rounded-xl transition-all duration-200"
             style={{ boxShadow: '0 4px 14px rgba(232,96,10,0.2)' }}
           >

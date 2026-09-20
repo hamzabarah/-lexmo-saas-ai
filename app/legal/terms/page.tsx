@@ -40,7 +40,7 @@ export default async function TermsPage() {
         <h1 className="text-3xl lg:text-4xl font-bold text-white mb-2">
           Terms and Conditions of Sale and Use — ECOMY
         </h1>
-        <p className="text-sm text-gray-500 mb-12">Last updated: April 2026 — Version 4.0</p>
+        <p className="text-sm text-gray-500 mb-12">Last updated: 20 September 2026 — Version 5.0</p>
 
         <div className="space-y-10 text-[15px] leading-[1.85]">
 
@@ -90,7 +90,7 @@ export default async function TermsPage() {
             <p className="mt-3">This is a one-time service. The selling price is ninety-seven euros (€97.00) including all taxes, payable in a single installment at the time of purchase.</p>
 
             <h3 className="text-base font-bold text-white mt-4 mb-2">2.4 — Common provisions</h3>
-            <p>The products and services described in Articles 2.1, 2.2 and 2.3 are intangible digital goods or services. In accordance with Article L.221-28 of the French Consumer Code and Article 16(m) of European Directive 2011/83/EU, access to digital content is activated immediately and automatically upon payment confirmation, after the Customer&apos;s express consent. This immediate activation carries the consequences described in Article 5 herein.</p>
+            <p>The products and services described in Articles 2.1, 2.2 and 2.3 are intangible digital goods or services. Execution of the order begins upon payment confirmation. Access credentials are delivered within a maximum of 24 hours. By confirming the order, the customer expressly requests immediate performance and expressly waives the right of withdrawal, in accordance with Article L221-28 of the French Consumer Code and Article 16(m) of European Directive 2011/83/EU. This express waiver carries the consequences described in Article 5 herein.</p>
           </section>
 
           {/* Article 3 */}
@@ -100,7 +100,7 @@ export default async function TermsPage() {
             <ul className="list-disc list-inside mt-2 space-y-1 text-gray-500">
               <li>Has read and expressly accepted these T&amp;C by checking the box provided for this purpose</li>
               <li>Has confirmed understanding and acceptance of the <a href="/legal/refund" className="text-[#C5A04E] hover:underline">no-refund policy</a></li>
-              <li>Has expressly consented to the immediate activation of the digital content</li>
+              <li>Has expressly requested immediate performance of the order, execution beginning upon payment confirmation, with access credentials delivered within a maximum of 24 hours</li>
               <li>Has acknowledged thereby waiving their right of withdrawal</li>
             </ul>
             <p className="mt-3">The order confirmation is sent to the Customer by email at the address provided at the time of purchase. The Seller reserves the right to refuse or cancel any order for legitimate reasons.</p>
@@ -110,7 +110,7 @@ export default async function TermsPage() {
           <section>
             <h2 className="text-xl font-bold text-[#C5A04E] mb-3">Article 4 — Pricing, Payment and Transaction Security</h2>
             <p>The prices displayed on the Platform are expressed in euros including all taxes. The Seller reserves the right to modify prices at any time, it being understood that the applicable price is that in force at the time the order is validated.</p>
-            <p className="mt-3">Payment is made exclusively by credit card via the secure Stripe, Inc. platform. The Seller does not retain any banking data from the Customer. The transaction is secured by SSL protocol and PCI-DSS standards. Any attempt at fraud or misuse will be subject to legal proceedings.</p>
+            <p className="mt-3">Payment is made exclusively by credit card via the secure platform of SumUp Limited, a company registered in Ireland under number 505893, with registered office at Block 8, Harcourt Centre, Charlotte Way, Dublin 2, Ireland, an authorised electronic money institution regulated by the Central Bank of Ireland. The Seller does not retain any banking data from the Customer. The transaction is secured by SSL protocol and PCI-DSS standards. Any attempt at fraud or misuse will be subject to legal proceedings.</p>
             <p className="mt-3">In the event of non-payment or bank rejection, the Seller reserves the right to immediately suspend access to the training or service and to initiate any necessary recovery procedure, including legal action.</p>
           </section>
 
@@ -124,7 +124,7 @@ export default async function TermsPage() {
             <h3 className="text-base font-bold text-white mt-4 mb-2">5.2 — Express and Irrevocable Waiver</h3>
             <p>By proceeding with payment, the Customer expressly and irrevocably acknowledges and accepts that:</p>
             <ul className="list-disc list-inside mt-2 space-y-1 text-gray-500">
-              <li>Access to digital content is activated immediately and automatically upon payment confirmation</li>
+              <li>Execution of the order begins upon payment confirmation, and access credentials are delivered within a maximum of 24 hours</li>
               <li>The digital content is deemed fully delivered and consumed upon activation of access</li>
               <li>The Customer expressly and definitively waives any right of withdrawal</li>
               <li>No refund will be granted after activation of access, under any circumstances whatsoever</li>
@@ -228,7 +228,7 @@ export default async function TermsPage() {
             <p>In the context of the performance hereof, the Seller collects and processes the Customer&apos;s personal data in accordance with the General Data Protection Regulation (GDPR — EU Regulation 2016/679) and the French Data Protection Act.</p>
             <p className="mt-3">Data collected (name, email address, country of residence, IP address, connection and payment data) is used exclusively for contract performance, access management, and compliance with the Seller&apos;s legal obligations.</p>
             <p className="mt-3">The Customer has the right to access, rectify, erase and port their data, as well as the right to object to its processing. These rights may be exercised by sending a written request to the address indicated in the Platform&apos;s Legal Notice.</p>
-            <p className="mt-3">Payment data is processed exclusively by Stripe, Inc., in accordance with its own privacy policies and PCI-DSS standards. The Seller retains no banking data.</p>
+            <p className="mt-3">Payment data is processed exclusively by SumUp Limited (Ireland), in accordance with its own privacy policies and PCI-DSS standards. Payments made prior to September 2026 were processed by Stripe, Inc. under the same conditions. The Seller retains no banking data.</p>
           </section>
 
           {/* Article 11 */}

@@ -10,7 +10,8 @@ export const metadata: Metadata = {
 
 const TOOLS: { name: string; role: string }[] = [
   { name: "Supabase", role: "قاعدة البيانات والمصادقة (استضافة آمنة)" },
-  { name: "Stripe", role: "معالجة الدفع" },
+  { name: "SumUp Limited (إيرلندا)", role: "معالجة الدفع" },
+  { name: "Stripe, Inc.", role: "معالجة المدفوعات السابقة لشهر سبتمبر 2026 (لم يعد مستعملاً للمدفوعات الجديدة)" },
   { name: "Resend", role: "إرسال رسائل التفعيل" },
   { name: "Google Analytics", role: "إحصائيات الزيارات" },
   { name: "YouTube (nocookie)", role: "عرض فيديوهات الدروس بوضع الخصوصية المعزّز" },
@@ -30,7 +31,7 @@ export default function PrivacyPage() {
         <h1 className="text-3xl lg:text-4xl font-bold text-white mb-2">
           سياسة الخصوصية
         </h1>
-        <p className="text-sm text-gray-500 mb-12">آخر تحديث : 3 سبتمبر 2026</p>
+        <p className="text-sm text-gray-500 mb-12">آخر تحديث : 20 سبتمبر 2026</p>
 
         <div className="space-y-10 text-[15px] leading-[1.95]">
 
@@ -43,7 +44,7 @@ export default function PrivacyPage() {
             <h2 className="text-xl font-bold text-[#C5A04E] mb-3">2. البيانات التي نجمعها</h2>
             <ul className="list-disc list-inside space-y-2 marker:text-[#C5A04E]">
               <li><strong className="text-white font-bold">عند إنشاء الحساب</strong> : البريد الإلكتروني، الاسم، وكلمة مرور مشفّرة.</li>
-              <li><strong className="text-white font-bold">عند الدفع</strong> : تتم معالجة الدفع بالكامل لدى Stripe. نحن لا نرى ولا نخزّن رقم بطاقتك أبداً.</li>
+              <li><strong className="text-white font-bold">عند الدفع</strong> : تتم معالجة الدفع بالكامل لدى SumUp Limited (إيرلندا). أما المدفوعات السابقة لشهر سبتمبر 2026 فقد تمت معالجتها لدى Stripe, Inc. نحن لا نرى ولا نخزّن رقم بطاقتك أبداً.</li>
               <li><strong className="text-white font-bold">أثناء استخدام المنصة</strong> : تقدمك في الدروس (الدروس المكتملة، نتائج الاختبارات) لنحفظ لك مسارك.</li>
               <li><strong className="text-white font-bold">في مسار التشخيص</strong> : إجاباتك على الاستبيان، لإعداد التقييم وخطة العمل.</li>
               <li><strong className="text-white font-bold">تصفح الموقع</strong> : إحصائيات مجهولة عبر Google Analytics (صفحات مزارة، مدة الزيارة).</li>
