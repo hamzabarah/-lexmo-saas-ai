@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Star, ChevronDown } from "lucide-react";
+import { Star, ChevronDown, Send } from "lucide-react";
 import VideoCarousel from "@/components/testimonials/VideoCarousel";
 import { WhyItWorks, WhatYouGet, IsThisForYou } from "@/components/sales/SalesSections";
 
 const CTA_TEXT = "ابدأ الآن — وصول فوري";
-const STRIPE_LINK = "https://buy.stripe.com/9B63cvbhe4bLay17gDgfu06";
+const CHECKOUT_LINK = "https://ecomy.sumupstore.com/product/altkwyn-alkaml-bdwn-mrafqt";
+const TELEGRAM_LINK = "https://t.me/ecomyyy";
 const PRODUCT_TITLE = "تكوين التجارة الإلكترونية — بدون مرافقة";
 
 const faqData: {
@@ -127,14 +128,37 @@ export default function FormationBasicPage() {
     </div>
   );
 
+  const PaymentNote = (
+    <div className="rounded-xl border border-[#C5A04E]/30 bg-[#111111] p-4 space-y-2.5 text-right">
+      <p className="text-white font-bold text-[15px]">⚠️ خطوة مهمة بعد الدفع</p>
+      <p className="text-gray-400 text-sm leading-[1.9]">
+        بعد إتمام الدفع، تواصل معنا عبر تيليغرام وأرسل لنا إثبات الدفع مع بريدك الإلكتروني. سنقوم بتفعيل حسابك وإرسال بيانات الدخول خلال 24 ساعة.
+      </p>
+      <a
+        href={TELEGRAM_LINK}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex w-full items-center justify-center gap-2 bg-[#229ED9] hover:bg-[#1E8BC0] text-white text-sm font-bold py-3 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
+      >
+        <Send size={16} className="shrink-0" />
+        تواصل معنا على تيليغرام
+      </a>
+    </div>
+  );
+
   const CTAButton = (
-    <a
-      href={STRIPE_LINK}
-      className="block w-full text-center bg-[#C5A04E] hover:bg-[#D4B85C] text-white text-lg font-bold py-4 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
-      style={{ boxShadow: '0 4px 14px rgba(197,160,78,0.2)' }}
-    >
-      {CTA_TEXT}
-    </a>
+    <>
+      <a
+        href={CHECKOUT_LINK}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block w-full text-center bg-[#C5A04E] hover:bg-[#D4B85C] text-white text-lg font-bold py-4 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
+        style={{ boxShadow: '0 4px 14px rgba(197,160,78,0.2)' }}
+      >
+        {CTA_TEXT}
+      </a>
+      {PaymentNote}
+    </>
   );
 
   const FinalCta = (
@@ -144,12 +168,15 @@ export default function FormationBasicPage() {
       </h2>
       <div className="flex justify-center">{PriceLine}</div>
       <a
-        href={STRIPE_LINK}
+        href={CHECKOUT_LINK}
+        target="_blank"
+        rel="noopener noreferrer"
         className="block w-full text-center bg-[#C5A04E] hover:bg-[#D4B85C] text-white text-lg font-bold py-4 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
         style={{ boxShadow: '0 4px 14px rgba(197,160,78,0.25)' }}
       >
         ابدأ الآن — وصول فوري
       </a>
+      {PaymentNote}
       <p className="text-xs text-gray-400">دفعة واحدة · وصول مدى الحياة</p>
     </div>
   );
@@ -222,12 +249,16 @@ export default function FormationBasicPage() {
                   {PriceLine}
 
                   <a
-                    href={STRIPE_LINK}
+                    href={CHECKOUT_LINK}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="block w-full text-center bg-[#C5A04E] hover:bg-[#D4B85C] text-white text-[15px] font-bold py-3.5 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
                     style={{ boxShadow: '0 4px 14px rgba(197,160,78,0.2)' }}
                   >
                     {CTA_TEXT}
                   </a>
+
+                  {PaymentNote}
                 </div>
               </div>
             </div>
@@ -245,7 +276,9 @@ export default function FormationBasicPage() {
             <span className="text-white text-xl font-black" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>{"197 €"}</span>
           </div>
           <a
-            href={STRIPE_LINK}
+            href={CHECKOUT_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex-1 text-center bg-[#C5A04E] hover:bg-[#D4B85C] text-white text-sm font-bold py-3 rounded-xl transition-all duration-200"
             style={{ boxShadow: '0 4px 14px rgba(197,160,78,0.2)' }}
           >
