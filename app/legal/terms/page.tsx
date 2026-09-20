@@ -40,7 +40,7 @@ export default async function TermsPage() {
         <h1 className="text-3xl lg:text-4xl font-bold text-white mb-2">
           Terms and Conditions of Sale and Use — ECOMY
         </h1>
-        <p className="text-sm text-gray-500 mb-12">Last updated: April 2026 — Version 4.0</p>
+        <p className="text-sm text-gray-500 mb-12">Last updated: 20 September 2026 — Version 5.0</p>
 
         <div className="space-y-10 text-[15px] leading-[1.85]">
 

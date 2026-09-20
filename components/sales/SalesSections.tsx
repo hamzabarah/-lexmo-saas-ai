@@ -5,7 +5,7 @@ import { ChevronDown } from "lucide-react";
 
 /* ════════════════════════════════════════════════
    Sections statiques partagées par les 2 pages de vente.
-   La partie variable (prix, lien Stripe, coaching) est
+   La partie variable (prix, lien SumUp, coaching) est
    passée en props depuis chaque page.
    ════════════════════════════════════════════════ */
 

@@ -31,7 +31,7 @@ export default function PrivacyPage() {
         <h1 className="text-3xl lg:text-4xl font-bold text-white mb-2">
           سياسة الخصوصية
         </h1>
-        <p className="text-sm text-gray-500 mb-12">آخر تحديث : 3 سبتمبر 2026</p>
+        <p className="text-sm text-gray-500 mb-12">آخر تحديث : 20 سبتمبر 2026</p>
 
         <div className="space-y-10 text-[15px] leading-[1.95]">
 
