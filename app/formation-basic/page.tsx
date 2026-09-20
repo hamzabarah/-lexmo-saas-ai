@@ -5,7 +5,7 @@ import { Star, ChevronDown, Send } from "lucide-react";
 import VideoCarousel from "@/components/testimonials/VideoCarousel";
 import { WhyItWorks, WhatYouGet, IsThisForYou } from "@/components/sales/SalesSections";
 
-const CTA_TEXT = "ابدأ الآن — وصول فوري";
+const CTA_TEXT = "ابدأ الآن";
 const CHECKOUT_LINK = "https://ecomy.sumupstore.com/product/altkwyn-alkaml-bdwn-mrafqt";
 const TELEGRAM_LINK = "https://t.me/ecomyyy";
 const PRODUCT_TITLE = "تكوين التجارة الإلكترونية — بدون مرافقة";
@@ -174,7 +174,7 @@ export default function FormationBasicPage() {
         className="block w-full text-center bg-[#C5A04E] hover:bg-[#D4B85C] text-white text-lg font-bold py-4 rounded-xl transition-all duration-200 hover:-translate-y-[1px]"
         style={{ boxShadow: '0 4px 14px rgba(197,160,78,0.25)' }}
       >
-        ابدأ الآن — وصول فوري
+        ابدأ الآن
       </a>
       {PaymentNote}
       <p className="text-xs text-gray-400">دفعة واحدة · وصول مدى الحياة</p>

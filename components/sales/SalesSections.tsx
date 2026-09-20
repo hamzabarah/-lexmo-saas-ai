@@ -151,7 +151,7 @@ export function WhatYouGet({
     { icon: "📝", text: "اختبار (Quiz) في نهاية كل مرحلة — تتأكد أنك فهمت قبل ما تتقدم" },
     { icon: "📄", text: "ملخصات وأدلة PDF قابلة للتحميل — تراجع بسرعة بلا ما تعيد الفيديو" },
     { icon: "🔄", text: "تحديثات مدى الحياة — كل جديد في المجال يوصلك مجاناً" },
-    { icon: "🔓", text: "وصول فوري ومدى الحياة لكل المحتوى" },
+    { icon: "🔓", text: "وصول مدى الحياة لكل المحتوى" },
   ];
   if (withCoaching) {
     items.push({ icon: "🤝", text: "المرافقة الشخصية الكاملة طيلة مسارك" });
@@ -159,7 +159,7 @@ export function WhatYouGet({
 
   return (
     <section className="space-y-4">
-      <h2 className="text-white text-xl font-bold">شنو غادي تستلم فور تسجيلك اليوم؟ 🎁</h2>
+      <h2 className="text-white text-xl font-bold">شنو غادي تستلم بعد تسجيلك اليوم؟ 🎁</h2>
 
       <div className="space-y-3">
         {items.map((it, i) => (
