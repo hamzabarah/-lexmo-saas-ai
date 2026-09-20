@@ -90,7 +90,7 @@ export default async function TermsPage() {
             <p className="mt-3">This is a one-time service. The selling price is ninety-seven euros (€97.00) including all taxes, payable in a single installment at the time of purchase.</p>
 
             <h3 className="text-base font-bold text-white mt-4 mb-2">2.4 — Common provisions</h3>
-            <p>The products and services described in Articles 2.1, 2.2 and 2.3 are intangible digital goods or services. In accordance with Article L.221-28 of the French Consumer Code and Article 16(m) of European Directive 2011/83/EU, access to digital content is activated immediately and automatically upon payment confirmation, after the Customer&apos;s express consent. This immediate activation carries the consequences described in Article 5 herein.</p>
+            <p>The products and services described in Articles 2.1, 2.2 and 2.3 are intangible digital goods or services. Execution of the order begins upon payment confirmation. Access credentials are delivered within a maximum of 24 hours. By confirming the order, the customer expressly requests immediate performance and expressly waives the right of withdrawal, in accordance with Article L221-28 of the French Consumer Code and Article 16(m) of European Directive 2011/83/EU. This express waiver carries the consequences described in Article 5 herein.</p>
           </section>
 
           {/* Article 3 */}
@@ -100,7 +100,7 @@ export default async function TermsPage() {
             <ul className="list-disc list-inside mt-2 space-y-1 text-gray-500">
               <li>Has read and expressly accepted these T&amp;C by checking the box provided for this purpose</li>
               <li>Has confirmed understanding and acceptance of the <a href="/legal/refund" className="text-[#C5A04E] hover:underline">no-refund policy</a></li>
-              <li>Has expressly consented to the immediate activation of the digital content</li>
+              <li>Has expressly requested immediate performance of the order, execution beginning upon payment confirmation, with access credentials delivered within a maximum of 24 hours</li>
               <li>Has acknowledged thereby waiving their right of withdrawal</li>
             </ul>
             <p className="mt-3">The order confirmation is sent to the Customer by email at the address provided at the time of purchase. The Seller reserves the right to refuse or cancel any order for legitimate reasons.</p>
@@ -124,7 +124,7 @@ export default async function TermsPage() {
             <h3 className="text-base font-bold text-white mt-4 mb-2">5.2 — Express and Irrevocable Waiver</h3>
             <p>By proceeding with payment, the Customer expressly and irrevocably acknowledges and accepts that:</p>
             <ul className="list-disc list-inside mt-2 space-y-1 text-gray-500">
-              <li>Access to digital content is activated immediately and automatically upon payment confirmation</li>
+              <li>Execution of the order begins upon payment confirmation, and access credentials are delivered within a maximum of 24 hours</li>
               <li>The digital content is deemed fully delivered and consumed upon activation of access</li>
               <li>The Customer expressly and definitively waives any right of withdrawal</li>
               <li>No refund will be granted after activation of access, under any circumstances whatsoever</li>
