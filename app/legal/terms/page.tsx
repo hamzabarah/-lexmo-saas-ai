@@ -110,7 +110,7 @@ export default async function TermsPage() {
           <section>
             <h2 className="text-xl font-bold text-[#C5A04E] mb-3">Article 4 — Pricing, Payment and Transaction Security</h2>
             <p>The prices displayed on the Platform are expressed in euros including all taxes. The Seller reserves the right to modify prices at any time, it being understood that the applicable price is that in force at the time the order is validated.</p>
-            <p className="mt-3">Payment is made exclusively by credit card via the secure Stripe, Inc. platform. The Seller does not retain any banking data from the Customer. The transaction is secured by SSL protocol and PCI-DSS standards. Any attempt at fraud or misuse will be subject to legal proceedings.</p>
+            <p className="mt-3">Payment is made exclusively by credit card via the secure platform of SumUp Limited, a company registered in Ireland under number 505893, with registered office at Block 8, Harcourt Centre, Charlotte Way, Dublin 2, Ireland, an authorised electronic money institution regulated by the Central Bank of Ireland. The Seller does not retain any banking data from the Customer. The transaction is secured by SSL protocol and PCI-DSS standards. Any attempt at fraud or misuse will be subject to legal proceedings.</p>
             <p className="mt-3">In the event of non-payment or bank rejection, the Seller reserves the right to immediately suspend access to the training or service and to initiate any necessary recovery procedure, including legal action.</p>
           </section>
 
@@ -228,7 +228,7 @@ export default async function TermsPage() {
             <p>In the context of the performance hereof, the Seller collects and processes the Customer&apos;s personal data in accordance with the General Data Protection Regulation (GDPR — EU Regulation 2016/679) and the French Data Protection Act.</p>
             <p className="mt-3">Data collected (name, email address, country of residence, IP address, connection and payment data) is used exclusively for contract performance, access management, and compliance with the Seller&apos;s legal obligations.</p>
             <p className="mt-3">The Customer has the right to access, rectify, erase and port their data, as well as the right to object to its processing. These rights may be exercised by sending a written request to the address indicated in the Platform&apos;s Legal Notice.</p>
-            <p className="mt-3">Payment data is processed exclusively by Stripe, Inc., in accordance with its own privacy policies and PCI-DSS standards. The Seller retains no banking data.</p>
+            <p className="mt-3">Payment data is processed exclusively by SumUp Limited (Ireland), in accordance with its own privacy policies and PCI-DSS standards. Payments made prior to September 2026 were processed by Stripe, Inc. under the same conditions. The Seller retains no banking data.</p>
           </section>
 
           {/* Article 11 */}
