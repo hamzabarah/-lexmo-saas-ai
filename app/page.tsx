@@ -260,6 +260,37 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Shopify Affiliate Banner — always visible, sous la grille de cartes */}
+      <section className="w-full px-4 pb-8">
+        <a
+          href="https://shopify.pxf.io/c/5210052/1061744/13624?subId1=site"
+          target="_blank"
+          rel="sponsored noopener noreferrer"
+          className="group max-w-[1180px] mx-auto flex flex-col md:flex-row items-center gap-5 bg-[#0A0A0A] border border-[#95BF47]/20 rounded-2xl p-6 hover:border-[#95BF47]/50 transition-all duration-300"
+          style={{ boxShadow: '0 4px 20px rgba(149,191,71,0.08)' }}
+        >
+          {/* Shopify Icon */}
+          <div className="shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-[#95BF47]/10 border border-[#95BF47]/20 flex items-center justify-center">
+            <svg className="w-10 h-10 md:w-12 md:h-12 text-[#95BF47]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M15.337 23.979l7.216-1.561s-2.604-17.613-2.625-17.73c-.018-.116-.138-.192-.233-.192s-1.963-.135-1.963-.135-1.301-1.3-1.446-1.445c-.039-.04-.078-.06-.118-.073l-.955 21.136zM11.727 7.236l-.693 2.391s-.77-.366-1.7-.366c-1.378 0-1.446.865-1.446 1.083 0 1.188 3.096 1.644 3.096 4.428 0 2.19-1.39 3.6-3.263 3.6-2.248 0-3.394-1.398-3.394-1.398l.6-1.983s1.183.997 2.178.997c.65 0 .916-.512.916-.886 0-1.55-2.54-1.617-2.54-4.168 0-2.143 1.539-4.218 4.64-4.218.793 0 1.606.362 1.606.362v.158z"/>
+            </svg>
+          </div>
+
+          {/* Text content */}
+          <div className="flex-1 min-w-0 text-center md:text-right space-y-1.5">
+            <h3 className="text-white font-bold text-[17px] leading-snug">عرض Shopify عبر Ecomy: 1€ فقط في الشهر لمدة 3 أشهر</h3>
+            <p className="text-gray-400 text-xs leading-relaxed">رابط تابع: أحصل على عمولة، بدون أي تكلفة إضافية عليك.</p>
+          </div>
+
+          {/* CTA Button */}
+          <div className="shrink-0 w-full md:w-auto">
+            <div className="text-center bg-[#95BF47] group-hover:bg-[#7AB55C] text-white font-bold text-[15px] px-8 py-3.5 rounded-xl transition-colors whitespace-nowrap">
+              افتح متجرك الآن
+            </div>
+          </div>
+        </a>
+      </section>
+
       {/* Closed registrations banner */}
       {showClosed && (
         <section className="w-full px-4 pb-6">
