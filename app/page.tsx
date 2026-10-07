@@ -266,6 +266,7 @@ export default function HomePage() {
           href="https://shopify.pxf.io/c/5210052/1061744/13624?subId1=site"
           target="_blank"
           rel="sponsored noopener noreferrer"
+          dir="rtl"
           className="group max-w-[1180px] mx-auto flex flex-col md:flex-row items-center gap-5 bg-[#0A0A0A] border border-[#95BF47]/20 rounded-2xl p-6 hover:border-[#95BF47]/50 transition-all duration-300"
           style={{ boxShadow: '0 4px 20px rgba(149,191,71,0.08)' }}
         >
@@ -277,16 +278,17 @@ export default function HomePage() {
           </div>
 
           {/* Text content */}
-          <div className="flex-1 min-w-0 text-center md:text-right space-y-1.5">
-            <h3 className="text-white font-bold text-[17px] leading-snug">عرض Shopify عبر Ecomy: 1€ فقط في الشهر لمدة 3 أشهر</h3>
-            <p className="text-gray-400 text-xs leading-relaxed">رابط تابع: أحصل على عمولة، بدون أي تكلفة إضافية عليك.</p>
+          <div className="flex-1 min-w-0 text-center md:text-right space-y-1">
+            <h3 className="text-white font-bold text-[17px] leading-snug">افتح متجرك على <bdi>Shopify</bdi> بـ <bdi>1€</bdi> فقط في الشهر</h3>
+            <p className="text-gray-300 text-[15px] leading-snug">لمدة <bdi>3</bdi> أشهر</p>
           </div>
 
-          {/* CTA Button */}
-          <div className="shrink-0 w-full md:w-auto">
+          {/* CTA Button + mention d'affiliation */}
+          <div className="shrink-0 w-full md:w-auto space-y-2">
             <div className="text-center bg-[#95BF47] group-hover:bg-[#7AB55C] text-white font-bold text-[15px] px-8 py-3.5 rounded-xl transition-colors whitespace-nowrap">
               افتح متجرك الآن
             </div>
+            <p className="text-center text-gray-400 text-xs">رابط تابع</p>
           </div>
         </a>
       </section>
